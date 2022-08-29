@@ -1,0 +1,18 @@
+@media screen and (max-width: 992px) {
+    .btn.btn-icon.btn-light-success.total-mahasiswa{
+        height: 200px; 
+        width:200px; 
+        border-radius:100%;
+        font-size:50px;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .total-mahasiswa{
+        height: 160px;
+        width: 160px;
+        border-radius: 100%;
+        font-size: 30px;
+    }
+}
+
