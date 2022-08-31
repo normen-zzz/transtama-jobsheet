@@ -301,20 +301,25 @@
                             <span class="menu-text" style="font-size:11px">List Sales Order</span>
                         </a>
                     </li>
-                    <li class="menu-item" aria-haspopup="true">
-                        <a href="<?= base_url('cs/salesOrder/revisiSo') ?>" class="menu-link">
+                    <li class="d-flex ml-8 mb-2" aria-haspopup="true">
+                        <a href="<?= base_url('cs/SalesOrder/revisiSo') ?>" class="menu-link text-dark">
                             <i class="fa fa-book mt-3 fa-1x mr-2 text-danger"></i>
                             <span class="menu-text" style="font-size:11px">Request Revisi SO
+
                                 <pre class="badge badge-<?php if ($total_revisi == 0) {
                                                             echo "success";
                                                         } else {
                                                             echo "secondary";
-                                                        } ?> ml-1"> <?= $total_revisi ?></pre>
+                                                        } ?> ml-1"><a class="text-<?php if ($total_revisi == 0) {
+                                                                                        echo "white";
+                                                                                    } else {
+                                                                                        echo "dark";
+                                                                                    } ?>" href="<?= base_url('cs/SalesOrder/revisiSoNeedApprove') ?> "><?= $total_revisi ?></a> </pre>
                             </span>
                         </a>
                     </li>
-                    <li class="menu-item" aria-haspopup="true">
-                        <a href="<?= base_url('cs/salesOrder/viewRevisiSo') ?>" class="menu-link">
+                    <li class="d-flex ml-8" aria-haspopup="true">
+                        <a href="<?= base_url('cs/salesOrder/viewRevisiSo') ?>" class="menu-link text-dark">
                             <i class="fa fa-pen mt-3 fa-1x mr-2 text-danger"></i>
                             <span class="menu-text" style="font-size:11px">Revisi Sales Order
                                 <?php $id_atasan = $this->session->userdata('id_atasan');
@@ -327,7 +332,11 @@
                                                                 echo "success";
                                                             } else {
                                                                 echo "secondary";
-                                                            } ?> ml-1">  <?= $total_so_gm ?> </pre>
+                                                            } ?> ml-1"><a class="text-<?php if ($total_so_gm  == 0) {
+                                                                                            echo "white";
+                                                                                        } else {
+                                                                                            echo "dark";
+                                                                                        } ?>" href="<?= base_url('cs/SalesOrder/viewRevisiSoNeedApprove') ?> "><?= $total_so_gm  ?></a></pre>
                                 <?php   } else {
                                 ?>
                                     <pre class="badge badge-<?php if ($total_so_mgr == 0 || $total_so_cs == 0) {
@@ -336,11 +345,19 @@
                                                                 echo "secondary";
                                                             } ?> ml-1">
                                       <?php
-                                        if ($id_atasan == NULL || $id_atasan == 0) {
-                                            echo  $total_so_mgr;
-                                        } else {
-                                            echo $total_so_cs;
-                                        }
+                                        if ($id_atasan == NULL || $id_atasan == 0) { ?>
+                                            <a class="text-<?php if ($total_so_mgr  == 0) {
+                                                                echo "white";
+                                                            } else {
+                                                                echo "dark";
+                                                            } ?>" href="<?= base_url('cs/SalesOrder/viewRevisiSoNeedApprove') ?> "><?= $total_so_mgr  ?></a>
+                                       <?php } else { ?>
+                                        <a class="text-<?php if ($total_so_cs  == 0) {
+                                                            echo "white";
+                                                        } else {
+                                                            echo "dark";
+                                                        } ?>" href="<?= base_url('cs/SalesOrder/viewRevisiSoNeedApprove') ?> "><?= $total_so_cs  ?></a>
+                                       <?php }
 
                                         ?>
                                     </pre>
@@ -401,39 +418,51 @@
                             <h4 class="menu-text">REQUEST</h4>
                             <i class="menu-icon ki ki-bold-more-hor icon-md"></i>
                         </li>
-                        <li class="menu-item" aria-haspopup="true">
-                            <a href="<?= base_url('cs/ap') ?>" class="menu-link">
+                        <li class="d-flex ml-8" aria-haspopup="true">
+                            <a href="<?= base_url('cs/ap') ?>" class="menu-link text-dark">
                                 <i class="fa fa-dollar-sign mt-3 fa-1x mr-2 text-danger"></i>
                                 <span class="menu-text" style="font-size:11px">Request AP
                                     <pre class="badge badge-<?php if ($total_ap == 0) {
                                                                 echo "success";
                                                             } else {
                                                                 echo "secondary";
-                                                            } ?> ml-1"> <?= $total_ap ?></pre>
+                                                            } ?> ml-1"> <a class="text-<?php if ($total_ap == 0) {
+                                                                                            echo "white";
+                                                                                        } else {
+                                                                                            echo "dark";
+                                                                                        } ?>" href="<?= base_url('cs/Ap/apNeedApprove') ?> "><?= $total_ap ?></a> </pre>
                                 </span>
                             </a>
                         </li>
-                        <li class="menu-item" aria-haspopup="true">
-                            <a href="<?= base_url('cs/salesOrder/requestAktivasi') ?>" class="menu-link">
+                        <li class="d-flex ml-8 mb-4" aria-haspopup="true">
+                            <a href="<?= base_url('cs/salesOrder/requestAktivasi') ?>" class="menu-link text-dark">
                                 <i class="fa fa-book mt-3 fa-1x mr-2 text-danger"></i>
                                 <span class="menu-text" style="font-size:11px">Aktivasi SO
                                     <pre class="badge badge-<?php if ($total_aktivasi == 0) {
                                                                 echo "success";
                                                             } else {
                                                                 echo "secondary";
-                                                            } ?> ml-1"> <?= $total_aktivasi ?></pre>
+                                                            } ?> ml-1"><a class="text-<?php if ($total_aktivasi == 0) {
+                                                                                            echo "white";
+                                                                                        } else {
+                                                                                            echo "dark";
+                                                                                        } ?>" href="<?= base_url('cs/SalesOrder/requestAktivasiNeedActivate') ?> "><?= $total_aktivasi ?></a> </pre>
                                 </span>
                             </a>
                         </li>
-                        <li class="menu-item" aria-haspopup="true" style="margin-top:-15px;">
-                            <a href="<?= base_url('cs/jobsheet/requestAktivasi') ?>" class="menu-link">
+                        <li class="d-flex ml-8" aria-haspopup="true" style="margin-top:-15px;">
+                            <a href="<?= base_url('cs/jobsheet/requestAktivasi') ?>" class="menu-link text-dark">
                                 <i class="fa fa-book mt-3 fa-1x mr-2 text-danger"></i>
                                 <span class="menu-text" style="font-size:11px">Aktivasi Jobsheet
                                     <pre class="badge badge-<?php if ($total_aktivasi_sales == 0) {
                                                                 echo "success";
                                                             } else {
                                                                 echo "secondary";
-                                                            } ?> ml-1"> <?= $total_aktivasi_sales ?></pre>
+                                                            } ?> ml-1"> <a class="text-<?php if ($total_aktivasi_sales == 0) {
+                                                                                            echo "white";
+                                                                                        } else {
+                                                                                            echo "dark";
+                                                                                        } ?>" href="<?= base_url('cs/Jobsheet/requestAktivasiNeedActivate') ?> "><?= $total_aktivasi_sales ?></a> </pre>
                                 </span>
                             </a>
                         </li>

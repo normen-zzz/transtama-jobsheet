@@ -44,6 +44,17 @@ class SalesOrder extends CI_Controller
         $data['js'] = $this->cs->getRevisiJs()->result_array();
         $this->backend->display('cs/v_js_revisi', $data);
     }
+    public function revisiSoNeedApprove()
+    {
+        $data['title'] = 'List Request Revisi Sales Order (Need Approve)';
+        $breadcrumb_items = [];
+        $data['subtitle'] = 'List Request Revisi Sales Order (Need Approve)';
+        // $data['sub_header_page'] = 'exist';
+        $this->breadcrumb->add_item($breadcrumb_items);
+        $data['breadcrumb_bootstrap_style'] = $this->breadcrumb->generate();
+        $data['js'] = $this->cs->getRevisiJs()->result_array();
+        $this->backend->display('cs/v_js_revisi_need_approve', $data);
+    }
     public function viewRevisiSo()
     {
         $data['title'] = 'List Revisi Sales Order';
@@ -54,6 +65,18 @@ class SalesOrder extends CI_Controller
         $data['breadcrumb_bootstrap_style'] = $this->breadcrumb->generate();
         $data['js'] = $this->cs->getRevisiSoNew()->result_array();
         $this->backend->display('cs/v_js_revisi_so', $data);
+    }
+
+    public function viewRevisiSoNeedApprove()
+    {
+        $data['title'] = 'List Revisi Sales Order';
+        $breadcrumb_items = [];
+        $data['subtitle'] = 'List Revisi Sales Order';
+        // $data['sub_header_page'] = 'exist';
+        $this->breadcrumb->add_item($breadcrumb_items);
+        $data['breadcrumb_bootstrap_style'] = $this->breadcrumb->generate();
+        $data['js'] = $this->cs->getRevisiSoNew()->result_array();
+        $this->backend->display('cs/v_js_revisi_so_need_approve', $data);
     }
     public function detail($id)
     {
@@ -333,6 +356,19 @@ class SalesOrder extends CI_Controller
         $data['js'] = $this->cs->getRequestAktivasi()->result_array();
 
         $this->backend->display('cs/v_request_so', $data);
+    }
+
+    public function requestAktivasiNeedActivate()
+    {
+        $data['title'] = 'Request Aktivasi SO (Need Activate)';
+        $breadcrumb_items = [];
+        $data['subtitle'] = 'Request Aktivasi SO (Need Activate)';
+        // $data['sub_header_page'] = 'exist';
+        $this->breadcrumb->add_item($breadcrumb_items);
+        $data['breadcrumb_bootstrap_style'] = $this->breadcrumb->generate();
+        $data['js'] = $this->cs->getRequestAktivasi()->result_array();
+
+        $this->backend->display('cs/v_request_so_need_activate', $data);
     }
 
     public function approveAktivasi($id_request, $id_so)

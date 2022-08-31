@@ -432,6 +432,7 @@ class CsModel extends M_Datatables
 		$where = array('YEAR(a.tgl_pickup)' => $tahun, 'MONTH(a.tgl_pickup)' => $bulan, 'a.deleted' => 0);
 		if ($bulan == NULL && $tahun == NULL) {
 			$this->db->select('b.*,c.*,a.*,e.nama_user, b.status as status_invoice, d.service_name');
+
 			$this->db->from('tbl_shp_order a');
 			$this->db->join('tbl_invoice b', 'b.shipment_id=a.id', 'LEFT');
 			$this->db->join('tbl_modal c', 'c.shipment_id=a.id');

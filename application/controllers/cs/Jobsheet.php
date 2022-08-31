@@ -588,7 +588,7 @@ class Jobsheet extends CI_Controller
             redirect('cs/jobsheet/');
         }
     }
-    // get revisi SO
+    // get revisi JS
     public function requestAktivasi()
     {
         $data['title'] = 'Request Aktivasi Jobsheet';
@@ -599,6 +599,19 @@ class Jobsheet extends CI_Controller
         $data['breadcrumb_bootstrap_style'] = $this->breadcrumb->generate();
         $data['js'] = $this->cs->getRequestAktivasiJs()->result_array();
         $this->backend->display('cs/v_request_js', $data);
+    }
+
+    // get revisi JS Need Activate
+    public function requestAktivasiNeedActivate()
+    {
+        $data['title'] = 'Request Aktivasi Jobsheet';
+        $breadcrumb_items = [];
+        $data['subtitle'] = 'Request Aktivasi Jobsheet';
+        // $data['sub_header_page'] = 'exist';
+        $this->breadcrumb->add_item($breadcrumb_items);
+        $data['breadcrumb_bootstrap_style'] = $this->breadcrumb->generate();
+        $data['js'] = $this->cs->getRequestAktivasiJs()->result_array();
+        $this->backend->display('cs/v_request_js_need_activate', $data);
     }
 
     public function approveAktivasi($id_request, $shipment_id, $is_atasan, $id_role)

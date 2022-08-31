@@ -51,7 +51,7 @@
                                                             <td class="text-danger"><?= bulan_indo($j['tgl_pickup']) ?></td>
                                                             <td class="text-danger"><?= $j['shipment_id'] ?></td>
                                                             <td class="text-danger"><?php foreach ($no_do as $do) {
-                                                                                        echo $do['no_do'] + ',';
+                                                                                        echo $do['no_do'] . ',';
                                                                                     } ?></td>
                                                             <td class="text-danger"><?= $j['so_id'] ?></td>
                                                             <td class="text-danger"><?= $j['jobsheet_id'] ?></td>
@@ -64,7 +64,7 @@
                                                             <td class="text-danger"><?= bulan_indo($j['tgl_pickup']) ?></td>
                                                             <td class="text-danger"><?= $j['shipment_id'] ?></td>
                                                             <td class="text-danger"><?php foreach ($no_do as $do) {
-                                                                                        echo $do['no_do'] + ',';
+                                                                                        echo $do['no_do'] . ',';
                                                                                     } ?></td>
                                                             <td class="text-danger"><?= $j['so_id'] ?></td>
                                                             <td class="text-danger"><?= $j['jobsheet_id'] ?></td>
@@ -76,7 +76,7 @@
                                                             <td class="text-danger"><?= bulan_indo($j['tgl_pickup']) ?></td>
                                                             <td class="text-danger"><?= $j['shipment_id'] ?></td>
                                                             <td class="text-danger"><?php foreach ($no_do as $do) {
-                                                                                        echo $do['no_do'] + ',';
+                                                                                        echo $do['no_do'] . ',';
                                                                                     } ?></td>
                                                             <td class="text-danger"><?= $j['so_id'] ?></td>
                                                             <td class="text-danger"><?= $j['jobsheet_id'] ?></td>
@@ -88,7 +88,7 @@
                                                             <td><?= bulan_indo($j['tgl_pickup']) ?></td>
                                                             <td><?= $j['shipment_id'] ?></td>
                                                             <td><?php foreach ($no_do as $do) {
-                                                                    echo $do['no_do'] + ',';
+                                                                    echo $do['no_do'] . ',';
                                                                 } ?></td>
                                                             <td><?= $j['so_id'] ?></td>
                                                             <td><?= $j['jobsheet_id'] ?></td>

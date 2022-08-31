@@ -27,6 +27,15 @@ class Ap extends CI_Controller
         $data['ap'] = $this->ap->getMyApCs()->result_array();
         $this->backend->display('cs/v_ap', $data);
     }
+
+    public function apNeedApprove()
+    {
+
+        $data['title'] = 'Account Payable (Need Approve)';
+        $data['ap'] = $this->ap->getMyApCs()->result_array();
+        $this->backend->display('cs/v_ap_need_approve', $data);
+    }
+
     public function detail($no_ap)
     {
 

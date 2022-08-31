@@ -50,6 +50,7 @@
 
                                                     $perbedaan = $jarak / 60 / 60 / 24;
                                                     $get_revisi_so = $this->db->get_where('tbl_revisi_so', ['shipment_id' => $j['id']])->row_array();
+                                                    $no_do = $this->db->get_where('tbl_no_do', array('shipment_id' => $j['shipment_id']))->result_array();
                                                 ?>
                                                     <tr>
                                                         <td><?= bulan_indo($j['tgl_pickup']) ?></td>
@@ -57,7 +58,7 @@
                                                         <td><?= $j['shipment_id'] ?></td>
                                                         <!-- Do -->
                                                         <td><?php foreach ($no_do as $do) {
-                                                                $do['no_do'] + ' , ';
+                                                                $do['no_do'] . ' , ';
                                                             } ?></td>
                                                         <!-- SO -->
                                                         <td><?php if ($get_revisi_so) {
