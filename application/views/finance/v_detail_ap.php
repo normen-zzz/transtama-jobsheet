@@ -266,16 +266,16 @@
 						</button>
 					</div>
 					<div class="modal-body">
-						<form action="<?= base_url('superadmin/role/addRole') ?>" method="POST">
-							<div class="col-md-12">
-								<img src="https://tesla-smartwork.transtama.com/uploads/ap/<?= $c['attachment'] ?>" alt="attachment" width="100%">
+						<!-- <form action="<?= base_url('superadmin/role/addRole') ?>" method="POST"> -->
+						<div class="col-md-12">
+							<img src="https://tesla-smartwork.transtama.com/uploads/ap/<?= $c['attachment'] ?>" alt="attachment" width="100%">
 
-							</div>
+						</div>
 					</div>
 					<div class="modal-footer justify-content-between">
 						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 					</div>
-					</form>
+					<!-- </form> -->
 				</div>
 				<!-- /.modal-content -->
 			</div>

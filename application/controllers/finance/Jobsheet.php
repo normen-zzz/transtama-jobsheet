@@ -212,13 +212,13 @@ class Jobsheet extends CI_Controller
         // 000010122
         if ($cek_no_invoice['no_invoice'] == NULL) {
             $no_invoice = "$bulan$tahun";
-            $no_invoice = '00001' . $no_invoice;
+            $no_invoice = '1' . $no_invoice;
         } else {
             $no_invoice = "$bulan$tahun";
-            $potong = substr($cek_no_invoice['no_invoice'], 0, 5);
-            $no = $potong + 1;
-            $kode =  sprintf("%05s", $no);
-            $no_invoice  = "$kode$no_invoice";
+            $potongNolInvoice = ltrim($cek_no_invoice['no_invoice'], '0');
+            $potongDateInvoice = substr($potongNolInvoice, 0, -4);
+            $no = $potongDateInvoice + 1;
+            $no_invoice  = "$no$no_invoice";
         }
         // KALO DIA ADA PPN DAN PPH
         if ($is_ppn != 1) {
@@ -271,13 +271,13 @@ class Jobsheet extends CI_Controller
                 // 000010122
                 if ($cek_no_invoice['no_invoice'] == NULL) {
                     $no_invoice_reimbursment = "$bulan$tahun";
-                    $no_invoice_reimbursment = '00001' . $no_invoice_reimbursment;
+                    $no_invoice_reimbursment = '1' . $no_invoice_reimbursment;
                 } else {
                     $no_invoice_reimbursment = "$bulan$tahun";
-                    $potong = substr($cek_no_invoice['no_invoice'], 0, 5);
-                    $no = $potong + 1;
-                    $kode =  sprintf("%05s", $no);
-                    $no_invoice_reimbursment  = "$kode$no_invoice_reimbursment";
+                    $potongNolInvoice = ltrim($cek_no_invoice['no_invoice'], '0');
+                    $potongDateInvoice = substr($potongNolInvoice, 0, -4);
+                    $no = $potongDateInvoice + 1;
+                    $no_invoice_reimbursment  = "$no$no_invoice_reimbursment";
                 }
                 $data = array(
                     'shipment_id' => $shipment_id[$i],

@@ -291,6 +291,11 @@
                                 <input type="text" name="id_invoice" hidden value="<?= $inv['id_invoice'] ?>" class="form-control">
                             </div>
                             <div class="col-md-3">
+                                <label for="date" class="font-weight-bold">Date</label>
+                                <input type="date" class="form-control" name="date" value="<?= $inv['date'] ?>" required>
+
+                            </div>
+                            <div class="col-md-3">
                                 <label for="due_date" class="font-weight-bold">Due Date</label>
                                 <input type="date" class="form-control" name="due_date" value="<?= $inv['due_date'] ?>" required>
 

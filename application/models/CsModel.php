@@ -456,6 +456,7 @@ class CsModel extends M_Datatables
 			// $this->db->where('MONTH(a.tgl_pickup)', $bulan);
 			// $this->db->where('YEAR(a.tgl_pickup)', $tahun);
 			$this->db->order_by('a.tgl_pickup');
+			$this->db->group_by('a.shipment_id');
 			$query = $this->db->get();
 			return $query;
 		}

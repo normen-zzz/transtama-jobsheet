@@ -315,10 +315,10 @@ class SalesOrder extends CI_Controller
         $sql = $this->db->query("SELECT max(jobsheet_id) as kode FROM tbl_shp_order")->row_array();
         $no = $sql['kode'];
         // $potong = substr($no, 11, 9);
-        $potong = substr($no, 3);
+        $potongJS = ltrim($no, 'JS-');
+        $potong = ltrim($potongJS, '0');
         $noUrut = $potong + 1;
-        $kode =  sprintf("%09s", $noUrut);
-        $kode  = "JS-$kode";
+        $kode  = "JS-$noUrut";
         // var_dump($kode);
         // die;
         $data = array(

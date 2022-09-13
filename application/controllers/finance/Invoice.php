@@ -339,6 +339,7 @@ class Invoice extends CI_Controller
         $is_packing = $this->input->post('is_packing');
         $is_insurance = $this->input->post('is_insurance');
         $id_invoice = $this->input->post('id_invoice');
+        $date = $this->input->post('date');
         $due_date = $this->input->post('due_date');
         $total_invoice = $this->input->post('total_invoice');
         $invoice = $this->input->post('invoice');
@@ -354,7 +355,9 @@ class Invoice extends CI_Controller
         $address = $this->input->post('address');
         $shipper = $this->input->post('shipper');
         $shipment_id =  $this->input->post('shipment_id');
+        $id_berat = $this->input->post('id_berat');
         $note_cs = $this->input->post('note_cs');
+        $no_do = $this->input->post('no_do');
         $so_note = $this->input->post('so_note');
         // KALO DIA ADA PPN DAN PPH
         if ($is_ppn != 1) {
@@ -376,8 +379,16 @@ class Invoice extends CI_Controller
             );
             $this->db->update('tbl_shp_order', $data, ['id' => $shipment_id[$i]]);
         }
+        for ($k = 0; $k < sizeof($id_berat); $k++) {
+            $data_do = array(
+                'no_do' => $no_do[$k],
+
+            );
+            $this->db->update('tbl_no_do', $data_do, ['id_berat' => $id_berat[$k]]);
+        }
 
         $data = array(
+            'date' => $date,
             'due_date' => $due_date,
             'pic' => $pic,
             'terbilang' => $terbilang,
@@ -419,6 +430,7 @@ class Invoice extends CI_Controller
         $is_revisi = $this->input->post('is_revisi');
         $id_invoice = $this->input->post('id_invoice');
         $is_others = $this->input->post('is_others');
+        $date = $this->input->post('date');
         $due_date = $this->input->post('due_date');
         $total_invoice = $this->input->post('total_invoice');
         $invoice = $this->input->post('invoice');
@@ -455,6 +467,7 @@ class Invoice extends CI_Controller
             $this->db->update('tbl_shp_order', $data, ['id' => $shipment_id[$i]]);
         }
         $data = array(
+            'date' => $date,
             'due_date' => $due_date,
             'pic' => $pic,
             'terbilang' => $terbilang,
