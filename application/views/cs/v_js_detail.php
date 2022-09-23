@@ -582,7 +582,7 @@
                                             <table class="table table-bordered" style="width:100%">
                                                 <thead>
                                                     <tr>
-                                                        <th>Nama Vendo/Agent</th>
+                                                        <th>Nama Vendor/Agent</th>
                                                         <th>Type</th>
                                                         <th>Action</th>
                                                     </tr>

@@ -44,6 +44,7 @@ class SalesOrder extends CI_Controller
         $data['js'] = $this->cs->getRevisiJs()->result_array();
         $this->backend->display('cs/v_js_revisi', $data);
     }
+
     public function revisiSoNeedApprove()
     {
         $data['title'] = 'List Request Revisi Sales Order (Need Approve)';

@@ -84,6 +84,18 @@
                                                             <td class="text-danger"><?= $j['tree_consignee'] ?></td>
                                                             <td class="text-danger"><?= $j['tgl_so_new'] ?></td>
                                                             <td class="text-danger"><?= $j['nama_user'] ?></td>
+                                                        <?php } elseif ($jabatan == 9 && $j['status_revisi'] == 3) { ?>
+                                                            <td class="text-danger"><?= bulan_indo($j['tgl_pickup']) ?></td>
+                                                            <td class="text-danger"><?= $j['shipment_id'] ?></td>
+                                                            <td class="text-danger"><?php foreach ($no_do as $do) {
+                                                                                        echo $do['no_do'] . ',';
+                                                                                    } ?></td>
+                                                            <td class="text-danger"><?= $j['so_id'] ?></td>
+                                                            <td class="text-danger"><?= $j['jobsheet_id'] ?></td>
+                                                            <td class="text-danger"><?= $j['shipper'] ?></td>
+                                                            <td class="text-danger"><?= $j['tree_consignee'] ?></td>
+                                                            <td class="text-danger"><?= $j['tgl_so_new'] ?></td>
+                                                            <td class="text-danger"><?= $j['nama_user'] ?></td>
                                                         <?php } else { ?>
                                                             <td><?= bulan_indo($j['tgl_pickup']) ?></td>
                                                             <td><?= $j['shipment_id'] ?></td>
