@@ -80,6 +80,7 @@
                                                 <thead>
                                                     <tr>
                                                         <th>NO DO</th>
+                                                        <th>NO PO/SO</th>
                                                         <th>Collie</th>
                                                         <th>Weight</th>
                                                         <!-- <th>Note</th> -->
@@ -94,7 +95,11 @@
                                                         <tr>
                                                             <td>
                                                                 <input type="text" disabled class="form-control" name="note_cs[]" value="<?= $do['no_do'] ?>">
+
                                                                 <input type="text" class="form-control" hidden name="id_do[]" value="<?= $do['id_berat'] ?>">
+                                                            </td>
+                                                            <td>
+                                                                <input type="text" disabled class="form-control" name="note_cs[]" value="<?= $do['no_so'] ?>">
                                                             </td>
                                                             <td>
                                                                 <input type="text" disabled class="form-control" name="collie[]" value="<?= $do['koli'] ?>">

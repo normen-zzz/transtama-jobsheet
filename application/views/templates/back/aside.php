@@ -230,7 +230,7 @@
                                     </a>
                                 </li>
                                 <li class="menu-item" aria-haspopup="true">
-                                    <a href="<?= base_url('finance/report/profit') ?>" class="menu-link">
+                                    <a href="<?= base_url('finance/report/profitLoss') ?>" class="menu-link">
                                         <i class="menu-bullet menu-bullet-dot">
                                             <span></span>
                                         </i>

@@ -67,6 +67,80 @@ class Report extends CI_Controller
             $this->backend->display('finance/v_report_ap_filter', $data);
         }
     }
+
+    public function profitLoss()
+    {
+        $bulan = $this->input->post('bulan');
+        $tahun = $this->input->post('tahun');
+        if ($bulan == NULL && $tahun == NULL) {
+            $data['title'] = 'Report';
+            $breadcrumb_items = [];
+            $data['subtitle'] = 'Report AP';
+            $this->breadcrumb->add_item($breadcrumb_items);
+            $data['breadcrumb_bootstrap_style'] = $this->breadcrumb->generate();
+            $data['heading'] = 'Profit Loss Report';
+            $data['total_shipments'] = $this->cs->getInvoiceReport($bulan = null, $tahun = null)->num_rows();
+            $data['invoice_created'] =  $this->cs->getTotalInvoice($bulan = null, $tahun = null)->num_rows();
+            $data['invoice_paid'] =  $this->cs->getInvoicePaid($bulan = null, $tahun = null)->num_rows();
+            $data['invoice_pending'] =  $this->cs->getInvoicePending($bulan = null, $tahun = null)->num_rows();
+            $data['invoice_proforma'] =  $this->cs->getInvoiceProforma($bulan = null, $tahun = null)->num_rows();
+            $this->backend->display('finance/v_profitloss', $data);
+        } else {
+            $data['title'] = 'Report AP';
+            $breadcrumb_items = [];
+            $data['tahun'] = $tahun;
+            $data['bulan'] = $bulan;
+            $data['subtitle'] = 'Report AP';
+            $bulan1 = bulan($bulan);
+            $this->breadcrumb->add_item($breadcrumb_items);
+            $data['breadcrumb_bootstrap_style'] = $this->breadcrumb->generate();
+            $data['heading'] = "Repert Delivery  $bulan1 $tahun";
+            $data['total_shipments'] = $this->cs->getInvoiceReport($bulan, $tahun)->num_rows();
+            $data['invoice_created'] =  $this->cs->getTotalInvoice($bulan, $tahun)->num_rows();
+            $data['invoice_paid'] =  $this->cs->getInvoicePaid($bulan, $tahun)->num_rows();
+            $data['invoice_pending'] =  $this->cs->getInvoicePending($bulan, $tahun)->num_rows();
+            $data['invoice_proforma'] =  $this->cs->getInvoiceProforma($bulan, $tahun)->num_rows();
+            $this->backend->display('finance/v_profitloss_filter', $data);
+        }
+    }
+
+    public function detailProfitLoss()
+    {
+        $bulan = $this->input->post('bulan');
+        $tahun = $this->input->post('tahun');
+        if ($bulan == NULL && $tahun == NULL) {
+            $data['title'] = 'Report';
+            $breadcrumb_items = [];
+            $data['subtitle'] = 'Report AP';
+            $this->breadcrumb->add_item($breadcrumb_items);
+            $data['breadcrumb_bootstrap_style'] = $this->breadcrumb->generate();
+            $data['heading'] = 'Profit Loss Report';
+            $data['total_shipments'] = $this->cs->getInvoiceReport($bulan = null, $tahun = null)->num_rows();
+            $data['invoice_created'] =  $this->cs->getTotalInvoice($bulan = null, $tahun = null)->num_rows();
+            $data['invoice_paid'] =  $this->cs->getInvoicePaid($bulan = null, $tahun = null)->num_rows();
+            $data['invoice_pending'] =  $this->cs->getInvoicePending($bulan = null, $tahun = null)->num_rows();
+            $data['invoice_proforma'] =  $this->cs->getInvoiceProforma($bulan = null, $tahun = null)->num_rows();
+            $this->backend->display('finance/v_detail_profitloss', $data);
+        } else {
+            $data['title'] = 'Report AP';
+            $breadcrumb_items = [];
+            $data['tahun'] = $tahun;
+            $data['bulan'] = $bulan;
+            $data['subtitle'] = 'Report AP';
+            $bulan1 = bulan($bulan);
+            $this->breadcrumb->add_item($breadcrumb_items);
+            $data['breadcrumb_bootstrap_style'] = $this->breadcrumb->generate();
+            $data['heading'] = "Repert Delivery  $bulan1 $tahun";
+            $data['total_shipments'] = $this->cs->getInvoiceReport($bulan, $tahun)->num_rows();
+            $data['invoice_created'] =  $this->cs->getTotalInvoice($bulan, $tahun)->num_rows();
+            $data['invoice_paid'] =  $this->cs->getInvoicePaid($bulan, $tahun)->num_rows();
+            $data['invoice_pending'] =  $this->cs->getInvoicePending($bulan, $tahun)->num_rows();
+            $data['invoice_proforma'] =  $this->cs->getInvoiceProforma($bulan, $tahun)->num_rows();
+            $this->backend->display('finance/v_detail_profitloss_filter', $data);
+        }
+    }
+
+
     public function ap2()
     {
         $awal = $this->input->post('awal');

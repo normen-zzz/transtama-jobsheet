@@ -31,6 +31,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+    <!-- chart -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!--end::Layout Themes-->
     <link rel="shortcut icon" href="<?= base_url('uploads/') ?>LogoRaw.png" />
     <style>
@@ -330,6 +332,11 @@
         <script src="<?= base_url('assets/assets/backend/') ?>vendor_components/flexslider/jquery.flexslider.js"></script>
         <script src="<?= base_url('assets/assets/') ?>js/sweetalert2.all.min.js"></script>
         <script src="//cdn.ckeditor.com/4.13.1/basic/ckeditor.js"></script>
+
+
+
+
+
 
 </body>
 <!--end::Body-->
