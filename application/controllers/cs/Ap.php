@@ -28,6 +28,14 @@ class Ap extends CI_Controller
         $this->backend->display('cs/v_ap', $data);
     }
 
+    public function history()
+    {
+
+        $data['title'] = 'History Account Payable';
+        $data['ap'] = $this->ap->getMyApCsHistory()->result_array();
+        $this->backend->display('cs/v_ap_history', $data);
+    }
+
     public function apNeedApprove()
     {
 

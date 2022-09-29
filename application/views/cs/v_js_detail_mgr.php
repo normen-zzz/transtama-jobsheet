@@ -208,6 +208,7 @@
                                                         <th>Insurance</th>
                                                         <th>Disc.</th>
                                                         <th>Cn</th>
+                                                        <th>Special Cn</th>
                                                         <th>Action</th>
 
                                                     </tr>
@@ -259,6 +260,9 @@
                                                         </td>
                                                         <td>
                                                             <?= $msr['cn'] ?> / <?= $msr['cn'] * 100 ?> %
+                                                        </td>
+                                                        <td>
+                                                            <?= $msr['specialcn'] ?>
                                                         </td>
                                                     </tr>
                                                     <tr>
@@ -339,6 +343,7 @@
                                                     <th>Sewa Gudang</th>
                                                     <th>Wrapping</th>
                                                     <th>Refund %</th>
+                                                    <th>Special Refund (Rp.)</th>
                                                     <th>Insurance</th>
                                                     <th>Surcharge</th>
                                                     <th>Hand CGK</th>
@@ -359,6 +364,7 @@
                                                         <td><?= rupiah($m['ra2']) ?></td>
                                                         <td><?= rupiah($m['packing2']) ?></td>
                                                         <td><?= $m['refund2'] ?> %</td>
+                                                        <td><?= 'Rp' . $m['specialrefund2'] ?></td>
                                                         <td><?= rupiah($m['insurance2']) ?></td>
                                                         <td><?= rupiah($m['surcharge2']) ?></td>
                                                         <td><?= rupiah($m['hand_cgk2']) ?></td>
@@ -392,7 +398,7 @@
 
                                                     if ($service == 'Charter Service') {
                                                         $total_cost = $m['flight_msu2'] + ($m['ra2']) + ($m['packing2']) +
-                                                            ($total_sales * $refund) + $m['insurance2'] + $m['surcharge2'] + ($m['hand_cgk2']) +
+                                                            ($total_sales * $refund) + ($m['specialrefund2'] * $msr['berat_js']) + ($m['specialrefund2'] * $msr['berat_msr'])  + $m['insurance2'] + $m['surcharge2'] + ($m['hand_cgk2']) +
                                                             ($m['hand_pickup2']) + ($m['hd_daerah2']) + ($total_sales * $pph) +
                                                             $m['sdm2'] + $m['others2'];
                                                     } else {
@@ -421,7 +427,7 @@
                                                         $hand_pickup = $hand_pickup_biasa + $hand_pickup_special;
 
                                                         $total_cost = $m['flight_msu2'] + $ra + $packing +
-                                                            ($total_sales * $refund) + $m['insurance2'] + $m['surcharge2'] + ($hand_cgk) +
+                                                            ($total_sales * $refund) + ($m['specialrefund2'] * $msr['berat_js']) + ($m['specialrefund2'] * $msr['berat_msr'])  + $m['insurance2'] + $m['surcharge2'] + ($hand_cgk) +
                                                             ($hand_pickup) + ($m['hd_daerah2']) + ($total_sales * $pph) +
                                                             $sdm + $m['others2'];
                                                     }
@@ -461,6 +467,9 @@
                                                         </td>
                                                         <td>
                                                             <?= rupiah($total_sales * $refund) ?>
+                                                        </td>
+                                                        <td>
+                                                            <?= ($m['specialrefund2'] * $msr['berat_js']) + ($m['specialrefund2'] * $msr['berat_msr']) ?>
                                                         </td>
                                                         <td>
                                                             <?= rupiah($m['insurance2']) ?>

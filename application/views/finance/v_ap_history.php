@@ -17,14 +17,13 @@
                     if ($url == "car") {
                     ?>
                         <div class="card-toolbar">
-                            <a href="<?= base_url('finance/ap/addCar') ?>" class="btn font-weight-bolder text-light mb-4" style="background-color: #9c223b;">
+                            <a href="<?= base_url('finance/ap/addCar') ?>" class="btn font-weight-bolder text-light" style="background-color: #9c223b;">
                                 <span class="svg-icon svg-icon-md">
                                     <i class="fa fa-plus text-light"></i>
                                 </span>Add CAR</a>
                         </div>
                     <?php  }
                     ?>
-                    <a href="<?= base_url('finance/ap/history' . $this->uri->segment(3)) ?>" class="btn btn-sm mb-1 text-light" style="background-color: #9c223b;">History</a>
 
                 </div>
                 <div class="card-body" style="overflow: auto;">

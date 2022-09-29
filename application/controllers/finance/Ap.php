@@ -30,6 +30,14 @@ class Ap extends CI_Controller
 
         $this->backend->display('finance/v_ap', $data);
     }
+    public function history()
+    {
+
+        $data['title'] = 'Account Payable - Payment Order';
+        $data['ap'] = $this->ap->getHistoryApByCategory(1)->result_array();
+
+        $this->backend->display('finance/v_ap_history', $data);
+    }
     public function ca()
     {
 
@@ -38,6 +46,15 @@ class Ap extends CI_Controller
 
         $this->backend->display('finance/v_ap', $data);
     }
+    public function historyCa()
+    {
+
+        $data['title'] = 'Account Payable - Cash Advance';
+        $data['ap'] = $this->ap->getHistoryApByCategory(2)->result_array();
+
+        $this->backend->display('finance/v_ap_history', $data);
+    }
+
     public function car()
     {
 
@@ -46,6 +63,14 @@ class Ap extends CI_Controller
 
         $this->backend->display('finance/v_ap', $data);
     }
+    public function historyCar()
+    {
+
+        $data['title'] = 'Account Payable - Cash Advance Report';
+        $data['ap'] = $this->ap->getHistoryApByCategory(3)->result_array();
+
+        $this->backend->display('finance/v_ap_history', $data);
+    }
     public function re()
     {
 
@@ -53,6 +78,14 @@ class Ap extends CI_Controller
         $data['ap'] = $this->ap->getApByCategory(4)->result_array();
 
         $this->backend->display('finance/v_ap', $data);
+    }
+    public function historyRe()
+    {
+
+        $data['title'] = 'Account Payable - Reimbursment';
+        $data['ap'] = $this->ap->getHistoryApByCategory(4)->result_array();
+
+        $this->backend->display('finance/v_ap_history', $data);
     }
     public function list_pengeluaran()
     {

@@ -12,11 +12,10 @@
                         <span class="text-muted font-weight-bold font-size-sm mt-1">Take Easy To Create Ap</span>
                     </div>
                     <div class="card-toolbar">
-                        <a href="<?= base_url('cs/ap/history') ?>" class="btn btn-sm mb-1 text-light" style="background-color: #9c223b;">History</a>
+
                     </div>
                 </div>
                 <div class="card-body" style="overflow: auto;">
-
                     <!--begin: Datatable-->
                     <table class="table table-separate table-head-custom table-checkable" id="myTable">
                         <thead>

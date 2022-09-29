@@ -191,6 +191,7 @@
                                                         <th>Insurance</th>
                                                         <th>Ter Discount</th>
                                                         <th>Cn</th>
+                                                        <th>Special Cn</th>
                                                         <th>Action</th>
 
                                                     </tr>
@@ -252,6 +253,9 @@
                                                         </td>
                                                         <td>
                                                             <?= $msr['cn'] ?> / <?= $msr['cn'] * 100 ?> %
+                                                        </td>
+                                                        <td>
+                                                            Rp. <?= $msr['specialcn'] ?>
                                                         </td>
                                                         <td></td>
                                                     </tr>
@@ -330,6 +334,7 @@
                                                     <th>Sewa Gudang</th>
                                                     <th>Wrapping</th>
                                                     <th>Refund %</th>
+                                                    <th>Special Refund (Rp.)</th>
                                                     <th>Insurance</th>
                                                     <th>Surcharge</th>
                                                     <th>Hand CGK</th>
@@ -350,6 +355,7 @@
                                                         <td><?= rupiah($m['ra2']) ?></td>
                                                         <td><?= rupiah($m['packing2']) ?></td>
                                                         <td><?= $m['refund2'] ?> / <?= $m['refund2'] / 100 ?></td>
+                                                        <td><?= rupiah($m['specialrefund2']) ?></td>
                                                         <td><?= rupiah($m['insurance2']) ?></td>
                                                         <td><?= rupiah($m['surcharge2']) ?></td>
                                                         <td><?= rupiah($m['hand_cgk2']) ?></td>
@@ -375,7 +381,7 @@
 
                                                     if ($service == 'Charter Service') {
                                                         $total_cost = $m['flight_msu2'] + ($m['ra2']) + ($m['packing2']) +
-                                                            ($total_sales * $refund) + $m['insurance2'] + $m['surcharge2'] + ($m['hand_cgk2']) +
+                                                            ($total_sales * $refund) + ($m['specialrefund2'] * $msr['berat_js']) + ($m['specialrefund2'] * $msr['berat_msr'])  + $m['insurance2'] + $m['surcharge2'] + ($m['hand_cgk2']) +
                                                             ($m['hand_pickup2']) + ($m['hd_daerah2']) + ($total_sales * $pph) +
                                                             $m['sdm2'] + $m['others2'];
                                                     } else {
@@ -401,7 +407,7 @@
                                                         $hand_pickup = $hand_pickup_biasa + $hand_pickup_special;
 
                                                         $total_cost = $m['flight_msu2'] + $ra + $packing +
-                                                            ($total_sales * $refund) + $m['insurance2'] + $m['surcharge2'] + $hand_cgk +
+                                                            ($total_sales * $refund) + ($m['specialrefund2'] * $msr['berat_js']) + ($m['specialrefund2'] * $msr['berat_msr']) + $m['insurance2'] + $m['surcharge2'] + $hand_cgk +
                                                             $hand_pickup + $m['hd_daerah2'] + ($total_sales * $pph) +
                                                             $sdm + $m['others2'];
                                                     }
@@ -448,6 +454,9 @@
                                                         </td>
                                                         <td>
                                                             <?= rupiah($total_sales * $refund) ?>
+                                                        </td>
+                                                        <td>
+                                                            <?= rupiah(($m['specialrefund2'] * $msr['berat_js']) + ($m['specialrefund2'] * $msr['berat_msr'])) ?>
                                                         </td>
                                                         <td>
                                                             <?= rupiah($m['insurance2']) ?>
@@ -718,6 +727,12 @@
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
+                                    <label for="exampleInputEmail1">Special Refund (Rp.)</label>
+                                    <input type="text" class="form-control" id="exampleInputEmail1" required name="specialrefund2">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
                                     <label for="exampleInputEmail1">Insurance</label>
                                     <input type="text" class="form-control" id="exampleInputEmail1" required name="insurance2">
                                 </div>
@@ -850,6 +865,12 @@
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Refund (%)</label>
                                         <input type="text" class="form-control" id="exampleInputEmail1" required name="refund2" value="<?= $m['refund2'] ?>">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Special Refund (Rp.)</label>
+                                        <input type="text" class="form-control" id="exampleInputEmail1" required name="specialrefund2" value="<?= $m['specialrefund2'] ?>">
                                     </div>
                                 </div>
                                 <div class="col-md-4">

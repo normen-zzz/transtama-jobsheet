@@ -35,6 +35,7 @@ class ApModel extends CI_Model
             $this->db->join('tb_user c', 'a.id_user=c.id_user');
             $this->db->where('a.status>=', 1);
             $this->db->where('a.is_approve_sm', 1);
+            $this->db->where('a.status!=', 4);
             $this->db->group_by('a.no_pengeluaran');
             $this->db->order_by('a.id_pengeluaran', 'DESC');
             return $this->db->get();
@@ -44,6 +45,32 @@ class ApModel extends CI_Model
             $this->db->join('tbl_kat_ap b', 'a.id_kat_ap=b.id_kategori_ap');
             $this->db->join('tb_user c', 'a.id_user=c.id_user');
             $this->db->where('a.id_user', $id_user);
+            $this->db->where('a.status!=', 4);
+            $this->db->group_by('a.no_pengeluaran');
+            $this->db->order_by('a.id_pengeluaran', 'DESC');
+            return $this->db->get();
+        }
+    }
+    public function getMyApCsHistory($id_user = NULL)
+    {
+        if ($id_user == NULL) {
+            $this->db->select('a.*, b.nama_kategori, c.nama_user');
+            $this->db->from('tbl_pengeluaran a');
+            $this->db->join('tbl_kat_ap b', 'a.id_kat_ap=b.id_kategori_ap');
+            $this->db->join('tb_user c', 'a.id_user=c.id_user');
+            $this->db->where('a.status>=', 1);
+            $this->db->where('a.is_approve_sm', 1);
+            $this->db->where('a.status', 4);
+            $this->db->group_by('a.no_pengeluaran');
+            $this->db->order_by('a.id_pengeluaran', 'DESC');
+            return $this->db->get();
+        } else {
+            $this->db->select('a.*, b.nama_kategori, c.nama_user');
+            $this->db->from('tbl_pengeluaran a');
+            $this->db->join('tbl_kat_ap b', 'a.id_kat_ap=b.id_kategori_ap');
+            $this->db->join('tb_user c', 'a.id_user=c.id_user');
+            $this->db->where('a.id_user', $id_user);
+            $this->db->where('a.status', 4);
             $this->db->group_by('a.no_pengeluaran');
             $this->db->order_by('a.id_pengeluaran', 'DESC');
             return $this->db->get();
@@ -85,6 +112,24 @@ class ApModel extends CI_Model
         $this->db->where('a.id_kat_ap', $id_kategori);
         $this->db->where_not_in('a.status', $ignore);
         // $this->db->where('a.status>=', 2);
+        $this->db->group_by('a.no_pengeluaran');
+        $this->db->order_by('a.id_pengeluaran', 'DESC');
+        return $this->db->get();
+    }
+
+    public function getHistoryApByCategory($id_kategori)
+    {
+
+        $ignore = array(0, 1);
+
+        $this->db->select('a.*, b.nama_kategori, b.keterangan,c.nama_kategori_pengeluaran, d.nama_user');
+        $this->db->from('tbl_pengeluaran a');
+        $this->db->join('tbl_kat_ap b', 'a.id_kat_ap=b.id_kategori_ap');
+        $this->db->join('tbl_list_pengeluaran c', 'a.id_kategori_pengeluaran=c.id_kategori');
+        $this->db->join('tb_user d', 'a.id_user=d.id_user');
+        $this->db->where('a.id_kat_ap', $id_kategori);
+        $this->db->where_not_in('a.status', $ignore);
+        $this->db->where('a.status', 4);
         $this->db->group_by('a.no_pengeluaran');
         $this->db->order_by('a.id_pengeluaran', 'DESC');
         return $this->db->get();
