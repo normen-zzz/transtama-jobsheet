@@ -203,6 +203,29 @@ class CsModel extends M_Datatables
 		return $query;
 	}
 
+	function getAllMsr($bulan, $tahun)
+	{
+		if ($bulan == NULL && $tahun == NULL) {
+			$this->db->select('a.*, b.service_name, c.nama_user');
+			$this->db->from('tbl_shp_order a');
+			$this->db->join('tb_service_type b', 'a.service_type=b.code');
+			$this->db->join('tbl_so d', 'a.id_so=d.id_so');
+			$this->db->join('tb_user c', 'd.id_sales=c.id_user');
+			$query = $this->db->get();
+			return $query;
+		} else {
+			$this->db->select('a.*, b.service_name, c.nama_user');
+			$this->db->from('tbl_shp_order a');
+			$this->db->join('tb_service_type b', 'a.service_type=b.code');
+			$this->db->join('tbl_so d', 'a.id_so=d.id_so');
+			$this->db->join('tb_user c', 'd.id_sales=c.id_user');
+			$this->db->where('MONTH(a.date_new)', $bulan);
+			$this->db->where('YEAR(a.date_new)', $tahun);
+			$query = $this->db->get();
+			return $query;
+		}
+	}
+
 	function getDetailSo($id)
 	{
 		$this->db->select('a.*, b.service_name, c.nama_user');

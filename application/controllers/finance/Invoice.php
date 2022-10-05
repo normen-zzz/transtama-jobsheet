@@ -666,6 +666,7 @@ class Invoice extends CI_Controller
             $this->dompdf->stream("Invoice$no_invoice.pdf", array('Attachment' => 0));
         }
     }
+
     public function printProformaFull($no_invoice)
     {
         $data['invoice'] = $this->cs->getInvoice($no_invoice)->result_array();

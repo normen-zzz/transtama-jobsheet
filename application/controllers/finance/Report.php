@@ -35,6 +35,7 @@ class Report extends CI_Controller
     public function ap()
     {
         $bulan = $this->input->post('bulan');
+
         $tahun = $this->input->post('tahun');
         if ($bulan == NULL && $tahun == NULL) {
             $data['title'] = 'Report AP';
@@ -67,80 +68,6 @@ class Report extends CI_Controller
             $this->backend->display('finance/v_report_ap_filter', $data);
         }
     }
-
-    public function profitLoss()
-    {
-        $bulan = $this->input->post('bulan');
-        $tahun = $this->input->post('tahun');
-        if ($bulan == NULL && $tahun == NULL) {
-            $data['title'] = 'Report';
-            $breadcrumb_items = [];
-            $data['subtitle'] = 'Report AP';
-            $this->breadcrumb->add_item($breadcrumb_items);
-            $data['breadcrumb_bootstrap_style'] = $this->breadcrumb->generate();
-            $data['heading'] = 'Profit Loss Report';
-            $data['total_shipments'] = $this->cs->getInvoiceReport($bulan = null, $tahun = null)->num_rows();
-            $data['invoice_created'] =  $this->cs->getTotalInvoice($bulan = null, $tahun = null)->num_rows();
-            $data['invoice_paid'] =  $this->cs->getInvoicePaid($bulan = null, $tahun = null)->num_rows();
-            $data['invoice_pending'] =  $this->cs->getInvoicePending($bulan = null, $tahun = null)->num_rows();
-            $data['invoice_proforma'] =  $this->cs->getInvoiceProforma($bulan = null, $tahun = null)->num_rows();
-            $this->backend->display('finance/v_profitloss', $data);
-        } else {
-            $data['title'] = 'Report AP';
-            $breadcrumb_items = [];
-            $data['tahun'] = $tahun;
-            $data['bulan'] = $bulan;
-            $data['subtitle'] = 'Report AP';
-            $bulan1 = bulan($bulan);
-            $this->breadcrumb->add_item($breadcrumb_items);
-            $data['breadcrumb_bootstrap_style'] = $this->breadcrumb->generate();
-            $data['heading'] = "Repert Delivery  $bulan1 $tahun";
-            $data['total_shipments'] = $this->cs->getInvoiceReport($bulan, $tahun)->num_rows();
-            $data['invoice_created'] =  $this->cs->getTotalInvoice($bulan, $tahun)->num_rows();
-            $data['invoice_paid'] =  $this->cs->getInvoicePaid($bulan, $tahun)->num_rows();
-            $data['invoice_pending'] =  $this->cs->getInvoicePending($bulan, $tahun)->num_rows();
-            $data['invoice_proforma'] =  $this->cs->getInvoiceProforma($bulan, $tahun)->num_rows();
-            $this->backend->display('finance/v_profitloss_filter', $data);
-        }
-    }
-
-    public function detailProfitLoss()
-    {
-        $bulan = $this->input->post('bulan');
-        $tahun = $this->input->post('tahun');
-        if ($bulan == NULL && $tahun == NULL) {
-            $data['title'] = 'Report';
-            $breadcrumb_items = [];
-            $data['subtitle'] = 'Report AP';
-            $this->breadcrumb->add_item($breadcrumb_items);
-            $data['breadcrumb_bootstrap_style'] = $this->breadcrumb->generate();
-            $data['heading'] = 'Profit Loss Report';
-            $data['total_shipments'] = $this->cs->getInvoiceReport($bulan = null, $tahun = null)->num_rows();
-            $data['invoice_created'] =  $this->cs->getTotalInvoice($bulan = null, $tahun = null)->num_rows();
-            $data['invoice_paid'] =  $this->cs->getInvoicePaid($bulan = null, $tahun = null)->num_rows();
-            $data['invoice_pending'] =  $this->cs->getInvoicePending($bulan = null, $tahun = null)->num_rows();
-            $data['invoice_proforma'] =  $this->cs->getInvoiceProforma($bulan = null, $tahun = null)->num_rows();
-            $this->backend->display('finance/v_detail_profitloss', $data);
-        } else {
-            $data['title'] = 'Report AP';
-            $breadcrumb_items = [];
-            $data['tahun'] = $tahun;
-            $data['bulan'] = $bulan;
-            $data['subtitle'] = 'Report AP';
-            $bulan1 = bulan($bulan);
-            $this->breadcrumb->add_item($breadcrumb_items);
-            $data['breadcrumb_bootstrap_style'] = $this->breadcrumb->generate();
-            $data['heading'] = "Repert Delivery  $bulan1 $tahun";
-            $data['total_shipments'] = $this->cs->getInvoiceReport($bulan, $tahun)->num_rows();
-            $data['invoice_created'] =  $this->cs->getTotalInvoice($bulan, $tahun)->num_rows();
-            $data['invoice_paid'] =  $this->cs->getInvoicePaid($bulan, $tahun)->num_rows();
-            $data['invoice_pending'] =  $this->cs->getInvoicePending($bulan, $tahun)->num_rows();
-            $data['invoice_proforma'] =  $this->cs->getInvoiceProforma($bulan, $tahun)->num_rows();
-            $this->backend->display('finance/v_detail_profitloss_filter', $data);
-        }
-    }
-
-
     public function ap2()
     {
         $awal = $this->input->post('awal');
@@ -167,6 +94,343 @@ class Report extends CI_Controller
             $this->backend->display('finance/v_report_ap_internal_filter', $data);
         }
     }
+
+    public function profitLoss()
+    {
+        $bulan = $this->input->post('bulan');
+        $tahun = $this->input->post('tahun');
+
+        if ($bulan == NULL && $tahun == NULL) {
+            $msr = $this->cs->getAllMsr(NULL, NULL)->result_array();
+            //Perhitungan Total Sales
+            $totalallsales = 0;
+            foreach ($msr as $msr) {
+                $service =  $msr['service_name'];
+                if ($service == 'Charter Service') {
+                    // $total_sales = $msr['special_freight'];
+                    $packing = $msr['packing'];
+                    $total_sales = ((int)$msr['freight_kg'] + $packing +  (int)$msr['special_freight'] +  (int)$msr['others'] + (int)$msr['surcharge'] + (int)$msr['insurance']);
+                } else {
+                    $disc = $msr['disc'];
+                    // kalo gada disc
+                    if ($disc == 0) {
+                        $freight  = (int)$msr['berat_js'] * (int)$msr['freight_kg'];
+                        $special_freight  = (int)$msr['berat_msr'] * (int)$msr['special_freight'];
+                    } else {
+                        $freight_discount = $msr['freight_kg'] * $disc;
+                        $special_freight_discount = $msr['special_freight'] * $disc;
+
+                        $freight = $freight_discount * $msr['berat_js'];
+                        $special_freight  = $special_freight_discount * $msr['berat_msr'];
+                    }
+
+                    // var_dump($freight);
+                    // die;
+
+                    $packing = (int)$msr['packing'];
+                    $total_sales = ($freight + $packing + $special_freight +  (int)$msr['others'] + (int)$msr['surcharge'] + (int)$msr['insurance']);
+                    // $comm = $msr['cn'] * $total_sales;
+                    // $disc = $msr['disc'] * $total_sales;
+
+                    $total_sales = $total_sales;
+                }
+                $totalallsales += $total_sales;
+            }
+            //Cari AP Material
+            $apMaterial = $this->ap->getApByListReport(8, NULL, NULL)->result_array();
+            $totalApMaterial = 0;
+            foreach ($apMaterial as $apMaterial) {
+                $totalApMaterial += $apMaterial['total'];
+            }
+            //Untuk ap diambil dari Paid
+            $allAp = $this->ap->getAllApReport(NULL, NULL);
+            $totalAllAp = 0;
+            foreach ($allAp->result_array() as $allAp) {
+                $totalAllAp += $allAp['total'];
+            }
+
+            //Overhead
+            $OverheadAp = $this->ap->getApByOverhead(NULL, NULL)->result_array();
+            $totalOverhead = 0;
+            foreach ($OverheadAp as $OverheadAp) {
+                $totalOverhead += $OverheadAp['total'];
+            }
+            //General Am EXP
+            $generalAmExpAp = $this->ap->getApByAmExp(NULL, NULL)->result_array();
+            $totalAmExp = 0;
+            foreach ($generalAmExpAp as $generalAmExpAp) {
+                $totalAmExp += $generalAmExpAp['total'];
+            }
+
+            //Cari AP Human Resource
+            $apHumanResource = $this->ap->getApByListReport(29, NULL, NULL)->result_array();
+            $totalApHumanResource = 0;
+            foreach ($apHumanResource as $apHumanResource) {
+                $totalApHumanResource += $apHumanResource['total'];
+            }
+
+            //COST OF FREIGHT DARI AP EXTERNAL
+            $costOfFreight = $this->ap->getApExternal(NULL, NULL)->result_array();
+            $totalCostOfFreight = 0;
+            foreach ($costOfFreight as $costOfFreight) {
+                $totalCostOfFreight += ($costOfFreight['total_ap'] + $costOfFreight['ppn'] + $costOfFreight['pph']);
+            }
+
+            $data['title'] = 'Report Profit Loss';
+            $breadcrumb_items = [];
+            $data['subtitle'] = 'Report AP';
+            $this->breadcrumb->add_item($breadcrumb_items);
+            $data['breadcrumb_bootstrap_style'] = $this->breadcrumb->generate();
+            $data['heading'] = 'Profit Loss Report';
+            $data['totalsales'] = $totalallsales - ($totalallsales * 0.011);
+            $data['apMaterial'] = $totalApMaterial;
+            $data['apOverhead'] = $totalOverhead;
+            $data['apGeneralAmExp'] = $totalAmExp;
+            $data['apHumanResource'] = $totalApHumanResource;
+            $data['apCostOfFreight'] = $totalCostOfFreight;
+            $data['allAp'] = $totalAllAp;
+            $this->backend->display('finance/v_profitloss', $data);
+        } else {
+            $msr = $this->cs->getAllMsr($bulan, $tahun)->result_array();
+            //Perhitungan Total Sales
+            $totalallsales = 0;
+            foreach ($msr as $msr) {
+                $service =  $msr['service_name'];
+                if ($service == 'Charter Service') {
+                    // $total_sales = $msr['special_freight'];
+                    $packing = $msr['packing'];
+                    $total_sales = ((int)$msr['freight_kg'] + $packing +  (int)$msr['special_freight'] +  (int)$msr['others'] + (int)$msr['surcharge'] + (int)$msr['insurance']);
+                } else {
+                    $disc = $msr['disc'];
+                    // kalo gada disc
+                    if ($disc == 0) {
+                        $freight  = (int)$msr['berat_js'] * (int)$msr['freight_kg'];
+                        $special_freight  = (int)$msr['berat_msr'] * (int)$msr['special_freight'];
+                    } else {
+                        $freight_discount = $msr['freight_kg'] * $disc;
+                        $special_freight_discount = $msr['special_freight'] * $disc;
+
+                        $freight = $freight_discount * $msr['berat_js'];
+                        $special_freight  = $special_freight_discount * $msr['berat_msr'];
+                    }
+
+                    // var_dump($freight);
+                    // die;
+
+                    $packing = (int)$msr['packing'];
+                    $total_sales = ($freight + $packing + $special_freight +  (int)$msr['others'] + (int)$msr['surcharge'] + (int)$msr['insurance']);
+                    // $comm = $msr['cn'] * $total_sales;
+                    // $disc = $msr['disc'] * $total_sales;
+
+                    $total_sales = $total_sales;
+                }
+                $totalallsales += $total_sales;
+            }
+            //Cari AP Material
+            $apMaterial = $this->ap->getApByListReport(8, $bulan, $tahun)->result_array();
+            $totalApMaterial = 0;
+            foreach ($apMaterial as $apMaterial) {
+                $totalApMaterial += $apMaterial['total'];
+            }
+            //Untuk ap diambil dari Paid
+            $allAp = $this->ap->getAllApReport($bulan, $tahun);
+            $totalAllAp = 0;
+            foreach ($allAp->result_array() as $allAp) {
+                $totalAllAp += $allAp['total'];
+            }
+
+            //Overhead
+            $OverheadAp = $this->ap->getApByOverhead($bulan, $tahun)->result_array();
+            $totalOverhead = 0;
+            foreach ($OverheadAp as $OverheadAp) {
+                $totalOverhead += $OverheadAp['total'];
+            }
+            //General Am EXP
+            $generalAmExpAp = $this->ap->getApByAmExp($bulan, $tahun)->result_array();
+            $totalAmExp = 0;
+            foreach ($generalAmExpAp as $generalAmExpAp) {
+                $totalAmExp += $generalAmExpAp['total'];
+            }
+
+            //Cari AP Human Resource
+            $apHumanResource = $this->ap->getApByListReport(29, $bulan, $tahun)->result_array();
+            $totalApHumanResource = 0;
+            foreach ($apHumanResource as $apHumanResource) {
+                $totalApHumanResource += $apHumanResource['total'];
+            }
+
+            //COST OF FREIGHT DARI AP EXTERNAL
+            $costOfFreight = $this->ap->getApExternal($bulan, $tahun)->result_array();
+            $totalCostOfFreight = 0;
+            foreach ($costOfFreight as $costOfFreight) {
+                $totalCostOfFreight += ($costOfFreight['total_ap'] + $costOfFreight['ppn'] + $costOfFreight['pph']);
+            }
+
+
+            $data['title'] = 'Report Profit Loss ' . bulan($bulan) . ' ' . $tahun;
+            $breadcrumb_items = [];
+            $data['tahun'] = $tahun;
+            $data['bulan'] = $bulan;
+            $data['subtitle'] = 'Report AP';
+            $bulan1 = bulan($bulan);
+            $this->breadcrumb->add_item($breadcrumb_items);
+            $data['breadcrumb_bootstrap_style'] = $this->breadcrumb->generate();
+            $data['heading'] = "Repert Delivery  $bulan1 $tahun";
+            $data['totalsales'] = $totalallsales - ($totalallsales * 0.011);
+            $data['apMaterial'] = $totalApMaterial;
+            $data['apOverhead'] = $totalOverhead;
+            $data['apGeneralAmExp'] = $totalOverhead;
+            $data['apHumanResource'] = $totalApHumanResource;
+            $data['apCostOfFreight'] = $totalCostOfFreight;
+            $data['allAp'] = $totalAllAp;
+            $this->backend->display('finance/v_profitloss', $data);
+        }
+    }
+
+    public function detailOverhead()
+    {
+        $bulan = $this->input->post('bulan');
+        $tahun = $this->input->post('tahun');
+        if ($bulan == NULL && $tahun == NULL) {
+
+            $data['title'] = 'Report';
+            $breadcrumb_items = [];
+            $data['subtitle'] = 'Overhead Cost';
+            $this->breadcrumb->add_item($breadcrumb_items);
+            $data['breadcrumb_bootstrap_style'] = $this->breadcrumb->generate();
+            $data['heading'] = 'Overhead Cost';
+            $data['ap'] = $this->ap->getApByOverhead(NULL, NULL)->result_array();
+            $this->backend->display('finance/v_detail_profitloss', $data);
+        } else {
+            $data['title'] = 'Report';
+            $breadcrumb_items = [];
+            $data['tahun'] = $tahun;
+            $data['bulan'] = $bulan;
+            $data['subtitle'] = 'Profit Loss';
+            $bulan1 = bulan($bulan);
+            $this->breadcrumb->add_item($breadcrumb_items);
+            $data['breadcrumb_bootstrap_style'] = $this->breadcrumb->generate();
+            $data['heading'] = "Overhead Cost  $bulan1 $tahun";
+            $data['ap'] = $this->ap->getApByOverhead($bulan, $tahun)->result_array();
+            $this->backend->display('finance/v_detail_profitloss', $data);
+        }
+    }
+    public function detailAmExp()
+    {
+        $bulan = $this->input->post('bulan');
+        $tahun = $this->input->post('tahun');
+        if ($bulan == NULL && $tahun == NULL) {
+
+            $data['title'] = 'Report';
+            $breadcrumb_items = [];
+            $data['subtitle'] = 'AM EXP Cost';
+            $this->breadcrumb->add_item($breadcrumb_items);
+            $data['breadcrumb_bootstrap_style'] = $this->breadcrumb->generate();
+            $data['heading'] = 'Profit Loss Report';
+            $data['ap'] = $this->ap->getApByAmExp(NULL, NULL)->result_array();
+            $this->backend->display('finance/v_detail_profitloss', $data);
+        } else {
+            $data['title'] = 'Report AP';
+            $breadcrumb_items = [];
+            $data['tahun'] = $tahun;
+            $data['bulan'] = $bulan;
+            $data['subtitle'] = 'Report AP';
+            $bulan1 = bulan($bulan);
+            $this->breadcrumb->add_item($breadcrumb_items);
+            $data['breadcrumb_bootstrap_style'] = $this->breadcrumb->generate();
+            $data['heading'] = "Am Exp  $bulan1 $tahun";
+            $data['ap'] = $this->ap->getApByAmExp($bulan, $tahun)->result_array();
+            $this->backend->display('finance/v_detail_profitloss', $data);
+        }
+    }
+    public function detailMaterial()
+    {
+        $bulan = $this->input->post('bulan');
+        $tahun = $this->input->post('tahun');
+        if ($bulan == NULL && $tahun == NULL) {
+
+            $data['title'] = 'Report';
+            $breadcrumb_items = [];
+            $data['subtitle'] = 'Material Cost';
+            $this->breadcrumb->add_item($breadcrumb_items);
+            $data['breadcrumb_bootstrap_style'] = $this->breadcrumb->generate();
+            $data['heading'] = 'Material Cost Report';
+            $data['ap'] = $this->ap->getApByListReport(8, NULL, NULL)->result_array();
+            $this->backend->display('finance/v_detail_profitloss', $data);
+        } else {
+            $data['title'] = 'Report';
+            $breadcrumb_items = [];
+            $data['tahun'] = $tahun;
+            $data['bulan'] = $bulan;
+            $data['subtitle'] = 'Report ';
+            $bulan1 = bulan($bulan);
+            $this->breadcrumb->add_item($breadcrumb_items);
+            $data['breadcrumb_bootstrap_style'] = $this->breadcrumb->generate();
+            $data['heading'] = "Material Cost  $bulan1 $tahun";
+            $data['ap'] = $this->ap->getApByListReport(8, $bulan, $tahun)->result_array();
+            $this->backend->display('finance/v_detail_profitloss', $data);
+        }
+    }
+
+    public function detailHumanResource()
+    {
+        $bulan = $this->input->post('bulan');
+        $tahun = $this->input->post('tahun');
+        if ($bulan == NULL && $tahun == NULL) {
+
+            $data['title'] = 'Report';
+            $breadcrumb_items = [];
+            $data['subtitle'] = 'Human Resource Cost';
+            $this->breadcrumb->add_item($breadcrumb_items);
+            $data['breadcrumb_bootstrap_style'] = $this->breadcrumb->generate();
+            $data['heading'] = 'Human Resource Cost Report';
+            $data['ap'] = $this->ap->getApByListReport(29, NULL, NULL)->result_array();
+            $this->backend->display('finance/v_detail_profitloss', $data);
+        } else {
+            $data['title'] = 'Report';
+            $breadcrumb_items = [];
+            $data['tahun'] = $tahun;
+            $data['bulan'] = $bulan;
+            $data['subtitle'] = 'Report ';
+            $bulan1 = bulan($bulan);
+            $this->breadcrumb->add_item($breadcrumb_items);
+            $data['breadcrumb_bootstrap_style'] = $this->breadcrumb->generate();
+            $data['heading'] = "Human Resourcex Cost  $bulan1 $tahun";
+            $data['ap'] = $this->ap->getApByListReport(29, $bulan, $tahun)->result_array();
+            $this->backend->display('finance/v_detail_profitloss', $data);
+        }
+    }
+
+    public function detailCostOfFreight()
+    {
+        $bulan = $this->input->post('bulan');
+        $tahun = $this->input->post('tahun');
+        if ($bulan == NULL && $tahun == NULL) {
+
+            $data['title'] = 'Report';
+            $breadcrumb_items = [];
+            $data['subtitle'] = 'Cost Of Freight';
+            $this->breadcrumb->add_item($breadcrumb_items);
+            $data['breadcrumb_bootstrap_style'] = $this->breadcrumb->generate();
+            $data['heading'] = 'Cost Of Freight';
+            $data['ap'] = $this->ap->getApExternal(NULL, NULL)->result_array();
+            $this->backend->display('finance/v_detail_profitloss', $data);
+        } else {
+            $data['title'] = 'Profit Loss Report';
+            $breadcrumb_items = [];
+            $data['tahun'] = $tahun;
+            $data['bulan'] = $bulan;
+            $data['subtitle'] = 'Profit Loss Report';
+            $bulan1 = bulan($bulan);
+            $this->breadcrumb->add_item($breadcrumb_items);
+            $data['breadcrumb_bootstrap_style'] = $this->breadcrumb->generate();
+            $data['heading'] = "Cost Of Freight  $bulan1 $tahun";
+            $data['ap'] = $this->ap->getApExternal($bulan, $tahun)->result_array();
+            $this->backend->display('finance/v_detail_profitloss', $data);
+        }
+    }
+
+
     public function soa()
     {
         $data['title'] = 'SOA';
@@ -183,9 +447,11 @@ class Report extends CI_Controller
         $shipments = $this->cs->getInvoiceReport($bulan, $tahun)->result_array();
         $shipments_void = $this->cs->getInvoiceVoidReport($bulan, $tahun)->result_array();
 
+        // var_dump($shipments);
+        // die;
+
         $spreadsheet = new Spreadsheet();
-        // $sheet = $spreadsheet->getActiveSheet();
-        $sheet =  $spreadsheet->setActiveSheetIndex(0)->setTitle("SUCCESS SHIPMENT");
+        $sheet = $spreadsheet->getActiveSheet();
         $sheet->setCellValue('A1', 'NO');
         $sheet->setCellValue('B1', 'TGL');
         $sheet->setCellValue('C1', 'NO STP');
@@ -226,6 +492,10 @@ class Report extends CI_Controller
         $sheet->setCellValue('AL1', 'AM/KA');
         $sheet->setCellValue('AM1', 'KETERANGAN');
         $sheet->setCellValue('AN1', 'NO INVOICE');
+        $sheet->setCellValue('AO1', 'TANGGAL BAYAR INVOICE');
+        $sheet->setCellValue('AP1', 'INVOICE CREATED');
+        $sheet->setCellValue('AQ1', 'DUE DATE INVOICE');
+        $sheet->setCellValue('AR1', 'SELISIH WAKTU');
         // $sheet->setCellValue('AO1', 'STATUS INVOICE');
 
         // new sheet VOID
@@ -246,7 +516,7 @@ class Report extends CI_Controller
         $sheet2->setCellValue('L1', 'COLLY');
         $sheet2->setCellValue('M1', 'BERAT JS');
         $sheet2->setCellValue('N1', 'BERAT MSR');
-
+        $sheet2->setCellValue('O1', 'ALASAN DIVOID');
 
         $no = 1;
         $x = 2;
@@ -261,6 +531,7 @@ class Report extends CI_Controller
             $jumlah = $this->db->select('no_do')->get_where('tbl_no_do', ['shipment_id' => $row['shipment_id']])->num_rows();
             $no_invoice = $row['no_invoice'];
             $status_invoice = '';
+            $tgl_bayar_invoice = '';
 
             if ($no_invoice == NULL) {
                 $no_invoice = 'Belum Dibuat Invoice';
@@ -276,6 +547,21 @@ class Report extends CI_Controller
                 } else {
                     $status_invoice = 'Unpaid';
                 }
+            }
+            // kalo dia udah bayar invoice
+
+            if ($row['status_invoice'] == 2) {
+                $tgl_bayar_invoice = bulan_indo($row['payment_date']);
+            }
+            $tgl1 = strtotime($row['payment_date']);
+            $tgl2 = strtotime($row['due_date']);
+
+            $jarak = $tgl1 - $tgl2;
+
+            if ($row['payment_date'] == NULL) {
+                $perbedaan = '';
+            } else {
+                $perbedaan = $jarak / 60 / 60 / 24;
             }
 
             $no_do = '';
@@ -612,33 +898,25 @@ class Report extends CI_Controller
                 ->setAutoSize(true);
             $sheet->setCellValue('AN' . $x, $no_invoice . '/' . $status_invoice)->getColumnDimension('AN')
                 ->setAutoSize(true);
+            $sheet->setCellValue('AO' . $x, $tgl_bayar_invoice)->getColumnDimension('AO')
+                ->setAutoSize(true);
+            $sheet->setCellValue('AP' . $x, bulan_indo($row['date']))->getColumnDimension('AP')
+                ->setAutoSize(true);
+            $sheet->setCellValue('AQ' . $x, bulan_indo($row['due_date']))->getColumnDimension('AQ')
+                ->setAutoSize(true);
+            $sheet->setCellValue('AR' . $x, $perbedaan)->getColumnDimension('AR')
+                ->setAutoSize(true);
+
             // $sheet->setCellValue('A0' . $x, $status_invoice)->getColumnDimension('AO')
             //     ->setAutoSize(true);
             $x++;
             $no++;
         }
-
+        $no2 = 1;
+        $x2 = 2;
         foreach ($shipments_void as $row) {
             $get_do = $this->db->select('no_do,no_so, berat, koli')->get_where('tbl_no_do', ['shipment_id' => $row['shipment_id']])->result_array();
             $jumlah = $this->db->select('no_do')->get_where('tbl_no_do', ['shipment_id' => $row['shipment_id']])->num_rows();
-            $no_invoice = $row['no_invoice'];
-            $status_invoice = '';
-
-            if ($no_invoice == NULL) {
-                $no_invoice = 'Belum Dibuat Invoice';
-                $status_invoice = '-';
-            } else {
-                $no_invoice = $no_invoice;
-                if ($row['status_invoice'] == 0) {
-                    $status_invoice = 'Proforma Invoice';
-                } elseif ($row['status_invoice'] == 1) {
-                    $status_invoice = 'Pending Payment';
-                } elseif ($row['status_invoice'] == 2) {
-                    $status_invoice = 'Paid';
-                } else {
-                    $status_invoice = 'Unpaid';
-                }
-            }
 
             $no_do = '';
             $no_so = '';
@@ -665,37 +943,41 @@ class Report extends CI_Controller
             }
 
 
-            $sheet2->setCellValue('A' . $x, $no)->getColumnDimension('A')
+            $sheet2->setCellValue('A' . $x2, $no2)->getColumnDimension('A')
                 ->setAutoSize(true);
-            $sheet2->setCellValue('B' . $x, $row['tgl_pickup'])->getColumnDimension('B')
+            $sheet2->setCellValue('B' . $x2, $row['tgl_pickup'])->getColumnDimension('B')
                 ->setAutoSize(true);
-            $sheet2->setCellValue('C' . $x, $row['shipment_id'] . '/' . $row['no_stp'])->getColumnDimension('C')
+            $sheet2->setCellValue('C' . $x2, $row['shipment_id'] . '/' . $row['no_stp'])->getColumnDimension('C')
                 ->setAutoSize(true);
-            $sheet2->setCellValue('D' . $x, $row['shipper'])->getColumnDimension('D')
+            $sheet2->setCellValue('D' . $x2, $row['shipper'])->getColumnDimension('D')
                 ->setAutoSize(true);
-            $sheet2->setCellValue('E' . $x, $row['consigne'])->getColumnDimension('E')
+            $sheet2->setCellValue('E' . $x2, $row['consigne'])->getColumnDimension('E')
                 ->setAutoSize(true);
-            $sheet2->setCellValue('F' . $x, $row['tree_consignee'] . '/' . $row['city_consigne'])->getColumnDimension('F')
+            $sheet2->setCellValue('F' . $x2, $row['tree_consignee'] . '/' . $row['city_consigne'])->getColumnDimension('F')
                 ->setAutoSize(true);
-            $sheet2->setCellValue('G' . $x, $row['service_name'])->getColumnDimension('G')
+            $sheet2->setCellValue('G' . $x2, $row['service_name'])->getColumnDimension('G')
                 ->setAutoSize(true);
-            $sheet2->setCellValue('H' . $x, $row['pu_commodity'] . '/' . $no_do . '-' . $no_so)->getColumnDimension('H')
+            $sheet2->setCellValue('H' . $x2, $row['pu_commodity'] . '/' . $no_do . '-' . $no_so)->getColumnDimension('H')
                 ->setAutoSize(true);
-            $sheet2->setCellValue('I' . $x, $row['nama_user'])->getColumnDimension('I')
+            $sheet2->setCellValue('I' . $x2, $row['nama_user'])->getColumnDimension('I')
                 ->setAutoSize(true);
-            $sheet2->setCellValue('J' . $x, $row['no_flight'])->getColumnDimension('J')
+            $sheet2->setCellValue('J' . $x2, $row['no_flight'])->getColumnDimension('J')
                 ->setAutoSize(true);
-            $sheet2->setCellValue('K' . $x, $row['no_smu'])->getColumnDimension('K')
+            $sheet2->setCellValue('K' . $x2, $row['no_smu'])->getColumnDimension('K')
                 ->setAutoSize(true);
-            $sheet2->setCellValue('L' . $x, $row['koli'])->getColumnDimension('L')
+            $sheet2->setCellValue('L' . $x2, $row['koli'])->getColumnDimension('L')
                 ->setAutoSize(true);
-            $sheet2->setCellValue('M' . $x, $row['berat_js']);
-            $sheet2->setCellValue('N' . $x, $row['berat_msr'])->getColumnDimension('N')
+            $sheet2->setCellValue('M' . $x2, $row['berat_js']);
+            $sheet2->setCellValue('N' . $x2, $row['berat_msr'])->getColumnDimension('N')
+                ->setAutoSize(true);
+            $sheet2->setCellValue('O' . $x2, $row['reason_delete'])->getColumnDimension('N')
                 ->setAutoSize(true);
 
-            $x++;
-            $no++;
+            $x2++;
+            $no2++;
         }
+
+
         $filename = "report order";
 
         header('Content-Type: application/vnd.ms-excel');

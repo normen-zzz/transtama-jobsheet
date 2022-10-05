@@ -8,12 +8,12 @@
             <div class="card-body">
                 <div class="content-header">
                     <center>
-                        <h3><?= $heading; ?></h3>
+                        <h3><?= $title; ?></h3>
                     </center>
 
                 </div>
                 <div class="content-header">
-                    <form action="<?= base_url('finance/report/' . $this->uri->segment(3)) ?>" method="POST">
+                    <form action="<?= base_url('finance/report/ap') ?>" method="POST">
                         <h6 class="page-title">Filter By Month</h6>
                         <div class="row">
                             <div class="form-group mr-2">
@@ -49,12 +49,12 @@
                                 <button type="submit" class="btn btn-success ml-3 mt-2">Show</button>
                                 <a href="<?= base_url('finance/report/ap') ?>" class="btn btn-primary ml-2 mt-2">Reset Filter</a>
                             </div>
-                            <!-- <div class="col">
+                            <div class="col">
                                 <div class="text-right">
                                     <h2 style="color: #0FB800;">Total : Rp. 1.250.000</h2>
                                 </div>
 
-                            </div> -->
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -65,7 +65,9 @@
                             <div class="box">
                                 <!-- /.box-header -->
                                 <div class="box-body">
-
+                                    <center>
+                                        <h3>Overhead Cost</h3>
+                                    </center>
 
                                     <!-- <div class="row">
                                         <a href="<?= base_url('finance/report/Exportexcel') ?>" target="blank" class="badge badge-primary ml-2">Excell</a>
@@ -83,35 +85,22 @@
                                                             <thead>
                                                                 <tr>
                                                                     <th>Description</th>
-                                                                    <th>Notes</th>
                                                                     <th>Date</th>
+                                                                    <th>Notes</th>
                                                                     <th>Amount</th>
                                                                     <th>Action</th>
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
-                                                                <?php $total = 0;
-                                                                foreach ($ap as $ap) { ?>
-                                                                    <tr>
-                                                                        <td><?= $ap['purpose'] ?></td>
-                                                                        <td><?= $ap['description'] ?></td>
-                                                                        <td><?= $ap['date'] ?></td>
-                                                                        <td><?php if ($this->uri->segment(3) == 'detailCostOfFreight') {
-                                                                                echo rupiah($ap['total_ap'] + $ap['pph'] + $ap['ppn']);
-                                                                            } else {
-                                                                                echo rupiah($ap['total']);
-                                                                            }
-                                                                            ?></td>
-                                                                        <td><a href="#" class=" btn btn-sm text-light" style="background-color: #9c223b;">Detail</a></td>
+                                                                <tr>
+                                                                    <td>SALES INCLUDED VAT 1%</td>
+                                                                    <td></td>
+                                                                    <td></td>
+                                                                    <td>Rp. 1234567</td>
+                                                                    <td><a href="#" class=" btn btn-sm text-light" style="background-color: #9c223b;">Detail</a></td>
 
-                                                                    </tr>
-                                                                <?php
-                                                                    if ($this->uri->segment(3) == 'detailCostOfFreight') {
-                                                                        $total += ($ap['total_ap'] + $ap['pph'] + $ap['ppn']);
-                                                                    } else {
-                                                                        $total += $ap['total'];
-                                                                    }
-                                                                } ?>
+                                                                </tr>
+
 
 
 
@@ -120,8 +109,8 @@
                                                                 <tr>
                                                                     <td></td>
                                                                     <td></td>
-                                                                    <td><b>Total:</b></td>
-                                                                    <td><b> <?= rupiah($total) ?></b></td>
+                                                                    <td>Total:</td>
+                                                                    <td>Rp. 2.000.000</td>
                                                                     <td></td>
                                                                 </tr>
                                                             </tfoot>
@@ -136,14 +125,14 @@
                                             <!-- /.box -->
                                         </div>
                                     </div>
-                                    <!-- <div class="row mt-4">
+                                    <div class="row mt-4">
                                         <div class="col-12">
                                             <div class="float-right">
                                                 <h2 style="color: #0FB800;">Total: 200000</h2>
                                             </div>
-                                            
+                                            <!-- /.box -->
                                         </div>
-                                    </div> -->
+                                    </div>
 
                                 </div>
                                 <!-- /.box-body -->

@@ -15,7 +15,7 @@
 
                 </div>
                 <div class="content-header">
-                    <form action="<?= base_url('finance/report/ap') ?>" method="POST">
+                    <form action="<?= base_url('finance/report/profitloss') ?>" method="POST">
                         <h6 class="page-title">Filter By Month</h6>
                         <div class="row">
                             <div class="form-group mr-2">
@@ -61,9 +61,7 @@
                             <div class="box">
                                 <!-- /.box-header -->
                                 <div class="box-body">
-                                    <center>
-                                        <h3><?= $heading; ?></h3>
-                                    </center>
+
 
                                     <!-- <div class="row">
                                         <a href="<?= base_url('finance/report/Exportexcel') ?>" target="blank" class="badge badge-primary ml-2">Excell</a>
@@ -73,7 +71,8 @@
                                     <div class="row mt-4">
                                         <div class="col-8">
                                             <div>
-                                                <canvas id="myChart" width="400" height="100"></canvas>
+                                                <!-- line chart -->
+                                                <canvas id="myChart" width="200" height="100"></canvas>
                                                 <script>
                                                     const labels = [
                                                         'Profit',
@@ -86,7 +85,7 @@
 
                                                             backgroundColor: ['rgb(76, 120, 168)', 'rgb(139, 50, 77)'],
                                                             borderColor: ['rgb(76, 120, 168)', 'rgb(139, 50, 77)'],
-                                                            data: [2000, 5000],
+                                                            data: [<?= $totalsales ?>, <?= $allAp ?>],
 
                                                         }]
                                                     };
@@ -122,6 +121,7 @@
                                         </div>
                                         <div class="col-4">
                                             <div>
+                                                <!-- pie chart -->
                                                 <canvas id="myChart2" width="100" height="100"></canvas>
                                                 <script>
                                                     const labels2 = [
@@ -130,16 +130,27 @@
                                                     ];
                                                     const data2 = {
                                                         labels: [
-                                                            'Profit',
-                                                            'Loss',
+                                                            'Cost Of Freight',
+                                                            'Handling Charges',
+                                                            'Human Resource',
+                                                            'Material',
+                                                            'Overhead',
+                                                            'AM EXP'
+
+
+
 
                                                         ],
                                                         datasets: [{
                                                             label: 'My First Dataset',
-                                                            data: [300, 100],
+                                                            data: [<?= $apCostOfFreight ?>, <?= 0 ?>, <?= $apHumanResource ?>, <?= $apMaterial ?>, <?= $apOverhead ?>, <?= $apGeneralAmExp ?>],
                                                             backgroundColor: [
                                                                 'rgb(76, 120, 168)',
+                                                                'rgb(28, 157, 189)',
                                                                 'rgb(139, 50, 77)',
+                                                                'rgb(27, 209, 82)',
+                                                                'rgb(173, 209, 27)',
+                                                                'rgb(173, 28, 189)'
 
 
                                                             ],
@@ -159,7 +170,7 @@
                                                                 },
                                                                 tooltip: {
                                                                     callbacks: {
-                                                                        label: (ttItem2) => (`${ttItem2.label}: Rp. ${ttItem2.parsed}`)
+                                                                        label: (ttItem2) => (`${ttItem2.label}: ${ttItem2.parsed.toLocaleString("id-ID",{style:"currency", currency:"IDR"})}`)
                                                                     }
                                                                 }
                                                             },
@@ -197,45 +208,46 @@
                                                             </thead>
                                                             <tbody>
                                                                 <tr>
-                                                                    <td>SALES INCLUDED VAT 1%</td>
-                                                                    <td>Rp. 1234567</td>
-                                                                    <td><a href="<?= base_url('finance/report/detailProfitLoss') ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">Detail</a></td>
+                                                                    <td>SALES INCLUDED VAT 1,1%</td>
+                                                                    <td><?= rupiah($totalsales) ?></td>
+                                                                    <!-- <td><a href="<?= base_url('finance/report/detailProfitLoss') ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">Detail</a></td> -->
+                                                                    <td></td>
                                                                 </tr>
                                                                 <tr>
                                                                     <td>COST OF FREIGHT</td>
-                                                                    <td>Rp. 1234567</td>
-                                                                    <td><a href="<?= base_url('finance/report/detailProfitLoss') ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">Detail</a></td>
+                                                                    <td><?= rupiah($apCostOfFreight) ?></td>
+                                                                    <td><a href="<?= base_url('finance/report/detailCostOfFreight') ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">Detail</a></td>
                                                                 </tr>
                                                                 <tr>
                                                                     <td> HANDLING CHARGES</td>
-                                                                    <td>Rp. 1234567</td>
+                                                                    <td></td>
                                                                     <td><a href="<?= base_url('finance/report/detailProfitLoss') ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">Detail</a></td>
                                                                 </tr>
                                                                 <tr>
                                                                     <td>OPERATIONAL HUMAN RESOURCES</td>
-                                                                    <td>Rp. 1234567</td>
-                                                                    <td><a href="<?= base_url('finance/report/detailProfitLoss') ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">Detail</a></td>
+                                                                    <td><?= rupiah($apHumanResource) ?></td>
+                                                                    <td><a href="<?= base_url('finance/report/detailHumanResource') ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">Detail</a></td>
                                                                 </tr>
                                                                 <tr>
                                                                     <td>COST OF MATERIAL PACKING</td>
-                                                                    <td>Rp. 1234567</td>
-                                                                    <td><a href="<?= base_url('finance/report/detailProfitLoss') ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">Detail</a></td>
+                                                                    <td><?= rupiah($apMaterial) ?></td>
+                                                                    <td><a href="<?= base_url('finance/report/detailMaterial') ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">Detail</a></td>
                                                                 </tr>
                                                                 <tr>
                                                                     <td>OVERHEAD COSTS</td>
-                                                                    <td>Rp. 1234567</td>
-                                                                    <td><a href="<?= base_url('finance/report/detailProfitLoss') ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">Detail</a></td>
+                                                                    <td><?= rupiah($apOverhead) ?></td>
+                                                                    <td><a href="<?= base_url('finance/report/detailOverhead') ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">Detail</a></td>
                                                                 </tr>
                                                                 <tr>
                                                                     <td> GENERAL AM EXP</td>
-                                                                    <td>Rp. 1234567</td>
-                                                                    <td><a href="<?= base_url('finance/report/detailProfitLoss') ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">Detail</a></td>
+                                                                    <td><?= rupiah($apGeneralAmExp) ?></td>
+                                                                    <td><a href="<?= base_url('finance/report/detailAmExp') ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">Detail</a></td>
                                                                 </tr>
-                                                                <tr>
+                                                                <!-- <tr>
                                                                     <td>PROFIT LOSS</td>
                                                                     <td>Rp. 1234567</td>
                                                                     <td><a href="<?= base_url('finance/report/detailProfitLoss') ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">Detail</a></td>
-                                                                </tr>
+                                                                </tr> -->
 
 
 

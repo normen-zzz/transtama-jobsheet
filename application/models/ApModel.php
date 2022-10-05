@@ -117,6 +117,158 @@ class ApModel extends CI_Model
         return $this->db->get();
     }
 
+    public function getApByListReport($id_kategori, $bulan, $tahun)
+    {
+
+        $ignore = array(6, 0,);
+        if ($bulan == NULL && $tahun == NULL) {
+            $this->db->select('a.*, b.nama_kategori, b.keterangan,c.nama_kategori_pengeluaran, d.nama_user');
+            $this->db->from('tbl_pengeluaran a');
+            $this->db->join('tbl_kat_ap b', 'a.id_kat_ap=b.id_kategori_ap');
+            $this->db->join('tbl_list_pengeluaran c', 'a.id_kategori_pengeluaran=c.id_kategori');
+            $this->db->join('tb_user d', 'a.id_user=d.id_user');
+            $this->db->where('a.id_kategori_pengeluaran', $id_kategori);
+            // $this->db->where_not_in('a.status', $ignore);
+            $this->db->where('a.status', 4);
+            $this->db->group_by('a.no_pengeluaran');
+            $this->db->order_by('a.id_pengeluaran', 'DESC');
+            return $this->db->get();
+        } else {
+            $this->db->select('a.*, b.nama_kategori, b.keterangan,c.nama_kategori_pengeluaran, d.nama_user');
+            $this->db->from('tbl_pengeluaran a');
+            $this->db->join('tbl_kat_ap b', 'a.id_kat_ap=b.id_kategori_ap');
+            $this->db->join('tbl_list_pengeluaran c', 'a.id_kategori_pengeluaran=c.id_kategori');
+            $this->db->join('tb_user d', 'a.id_user=d.id_user');
+            $this->db->where('a.id_kategori_pengeluaran', $id_kategori);
+            // $this->db->where_not_in('a.status', $ignore);
+            $this->db->where('a.status', 4);
+            $this->db->where('MONTH(a.date)', $bulan);
+            $this->db->where('YEAR(a.date)', $tahun);
+            $this->db->group_by('a.no_pengeluaran');
+            $this->db->order_by('a.id_pengeluaran', 'DESC');
+            return $this->db->get();
+        }
+    }
+
+    public function getApByOverhead($bulan, $tahun)
+    {
+
+        $listOverhead = array(1, 14, 2, 22, 26);
+        if ($bulan == NULL && $tahun == NULL) {
+            $this->db->select('a.*, b.nama_kategori, b.keterangan,c.nama_kategori_pengeluaran, d.nama_user');
+            $this->db->from('tbl_pengeluaran a');
+            $this->db->join('tbl_kat_ap b', 'a.id_kat_ap=b.id_kategori_ap');
+            $this->db->join('tbl_list_pengeluaran c', 'a.id_kategori_pengeluaran=c.id_kategori');
+            $this->db->join('tb_user d', 'a.id_user=d.id_user');
+            $this->db->where_in('a.id_kategori_pengeluaran', $listOverhead);
+            // $this->db->where_not_in('a.status', $ignore);
+            $this->db->where('a.status', 4);
+            $this->db->group_by('a.no_pengeluaran');
+            $this->db->order_by('a.id_pengeluaran', 'DESC');
+            return $this->db->get();
+        } else {
+            $this->db->select('a.*, b.nama_kategori, b.keterangan,c.nama_kategori_pengeluaran, d.nama_user');
+            $this->db->from('tbl_pengeluaran a');
+            $this->db->join('tbl_kat_ap b', 'a.id_kat_ap=b.id_kategori_ap');
+            $this->db->join('tbl_list_pengeluaran c', 'a.id_kategori_pengeluaran=c.id_kategori');
+            $this->db->join('tb_user d', 'a.id_user=d.id_user');
+            $this->db->where_in('a.id_kategori_pengeluaran', $listOverhead);
+            // $this->db->where_not_in('a.status', $ignore);
+            $this->db->where('a.status', 4);
+            $this->db->where('MONTH(a.date)', $bulan);
+            $this->db->where('YEAR(a.date)', $tahun);
+            $this->db->group_by('a.no_pengeluaran');
+            $this->db->order_by('a.id_pengeluaran', 'DESC');
+            return $this->db->get();
+        }
+    }
+
+    public function getApByAmExp($bulan, $tahun)
+    {
+
+        $listNotIn = array(22, 26, 14, 1, 2);
+        if ($bulan == NULL && $tahun == NULL) {
+            $this->db->select('a.*, b.nama_kategori, b.keterangan,c.nama_kategori_pengeluaran, d.nama_user');
+            $this->db->from('tbl_pengeluaran a');
+            $this->db->join('tbl_kat_ap b', 'a.id_kat_ap=b.id_kategori_ap');
+            $this->db->join('tbl_list_pengeluaran c', 'a.id_kategori_pengeluaran=c.id_kategori');
+            $this->db->join('tb_user d', 'a.id_user=d.id_user');
+            $this->db->where_not_in('a.id_kategori_pengeluaran', $listNotIn);
+            // $this->db->where_not_in('a.status', $ignore);
+            $this->db->where('a.status', 4);
+            $this->db->group_by('a.no_pengeluaran');
+            $this->db->order_by('a.id_pengeluaran', 'DESC');
+            return $this->db->get();
+        } else {
+            $this->db->select('a.*, b.nama_kategori, b.keterangan,c.nama_kategori_pengeluaran, d.nama_user');
+            $this->db->from('tbl_pengeluaran a');
+            $this->db->join('tbl_kat_ap b', 'a.id_kat_ap=b.id_kategori_ap');
+            $this->db->join('tbl_list_pengeluaran c', 'a.id_kategori_pengeluaran=c.id_kategori');
+            $this->db->join('tb_user d', 'a.id_user=d.id_user');
+            $this->db->where_not_in('a.id_kategori_pengeluaran', $listNotIn);
+            // $this->db->where_not_in('a.status', $ignore);
+            $this->db->where('a.status', 4);
+            $this->db->where('MONTH(a.date)', $bulan);
+            $this->db->where('YEAR(a.date)', $tahun);
+            $this->db->group_by('a.no_pengeluaran');
+            $this->db->order_by('a.id_pengeluaran', 'DESC');
+            return $this->db->get();
+        }
+    }
+    public function getAllApReport($bulan, $tahun)
+    {
+
+        $ignore = array(6, 0,);
+        if ($bulan == NULL && $tahun == NULL) {
+            $this->db->select('a.*, b.nama_kategori, b.keterangan,c.nama_kategori_pengeluaran, d.nama_user');
+            $this->db->from('tbl_pengeluaran a');
+            $this->db->join('tbl_kat_ap b', 'a.id_kat_ap=b.id_kategori_ap');
+            $this->db->join('tbl_list_pengeluaran c', 'a.id_kategori_pengeluaran=c.id_kategori');
+            $this->db->join('tb_user d', 'a.id_user=d.id_user');
+            // $this->db->where('a.id_kategori_pengeluaran', $id_kategori);
+            // $this->db->where_not_in('a.status', $ignore);
+            $this->db->where('a.status', 4);
+            $this->db->group_by('a.no_pengeluaran');
+            $this->db->order_by('a.id_pengeluaran', 'DESC');
+            return $this->db->get();
+        } else {
+            $this->db->select('a.*, b.nama_kategori, b.keterangan,c.nama_kategori_pengeluaran, d.nama_user');
+            $this->db->from('tbl_pengeluaran a');
+            $this->db->join('tbl_kat_ap b', 'a.id_kat_ap=b.id_kategori_ap');
+            $this->db->join('tbl_list_pengeluaran c', 'a.id_kategori_pengeluaran=c.id_kategori');
+            $this->db->join('tb_user d', 'a.id_user=d.id_user');
+            // $this->db->where('a.id_kategori_pengeluaran', $id_kategori);
+            // $this->db->where_not_in('a.status', $ignore);
+            $this->db->where('a.status', 4);
+            $this->db->where('MONTH(a.date)', $bulan);
+            $this->db->where('YEAR(a.date)', $tahun);
+            $this->db->group_by('a.no_pengeluaran');
+            $this->db->order_by('a.id_pengeluaran', 'DESC');
+            return $this->db->get();
+        }
+    }
+    //AP External Report Profit Loss
+    public function getApExternal($bulan, $tahun)
+    {
+
+        if ($bulan == NULL && $tahun == NULL) {
+            $this->db->select('*');
+            $this->db->from('tbl_invoice_ap_final');
+            $this->db->where('status', 4);
+            $this->db->group_by('no_invoice');
+            $this->db->order_by('created_at', 'DESC');
+            return $this->db->get();
+        } else {
+            $this->db->select('*');
+            $this->db->from('tbl_invoice_ap_final');
+            $this->db->where('status', 4);
+            $this->db->where('MONTH(date)', $bulan);
+            $this->db->where('YEAR(date)', $tahun);
+            $this->db->group_by('no_invoice');
+            $this->db->order_by('created_at', 'DESC');
+            return $this->db->get();
+        }
+    }
     public function getHistoryApByCategory($id_kategori)
     {
 
