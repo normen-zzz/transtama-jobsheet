@@ -94,7 +94,12 @@
                                                                 foreach ($ap as $ap) { ?>
                                                                     <tr>
                                                                         <td><?= $ap['purpose'] ?></td>
-                                                                        <td><?= $ap['description'] ?></td>
+                                                                        <td><?php if ($this->uri->segment(3) == 'detailCostOfFreight') {
+                                                                                echo $ap['vendor'];
+                                                                            } else {
+                                                                                echo   $ap['description'];
+                                                                            }
+                                                                            ?></td>
                                                                         <td><?= $ap['date'] ?></td>
                                                                         <td><?php if ($this->uri->segment(3) == 'detailCostOfFreight') {
                                                                                 echo rupiah($ap['total_ap'] + $ap['pph'] + $ap['ppn']);

@@ -203,6 +203,58 @@ class Invoice extends CI_Controller
             redirect('finance/invoice/final');
         }
     }
+
+    public function editPaid()
+    {
+        $data = array(
+            'payment_date' => $this->input->post('payment_date'),
+            'payment_time' => $this->input->post('payment_time'),
+            'status' => 2
+        );
+        // var_dump($data);
+        // $config['upload_path'] = './uploads/berkas/';
+        // $config['allowed_types'] = 'jpg|png|jpeg';
+        // $config['encrypt_name'] = TRUE;
+        // $this->upload->initialize($config);
+
+        // $folderUpload = "./uploads/bukti_bayar/";
+        // $files = $_FILES;
+        // $files = $_FILES;
+        // $jumlahFile = count($files['ktp']['name']);
+        // // var_dump($jumlahFile);
+        // // die;
+
+        // if (!empty($_FILES['ktp']['name'][0])) {
+        //     $listNamaBaru = array();
+        //     for ($i = 0; $i < $jumlahFile; $i++) {
+        //         $namaFile = $files['ktp']['name'][$i];
+        //         $lokasiTmp = $files['ktp']['tmp_name'][$i];
+
+        //         # kita tambahkan uniqid() agar nama gambar bersifat unik
+        //         $namaBaru = uniqid() . '-' . $namaFile;
+
+        //         array_push($listNamaBaru, $namaBaru);
+        //         $lokasiBaru = "{$folderUpload}/{$namaBaru}";
+        //         $prosesUpload = move_uploaded_file($lokasiTmp, $lokasiBaru);
+        //     }
+        //     $namaBaru = implode("+", $listNamaBaru);
+        //     $ktp = array('bukti_bayar' => $namaBaru);
+        //     $data = array_merge($data, $ktp);
+        // } else {
+        //     $this->session->set_flashdata('messageAlert', $this->messageAlert('error', 'Please Upload Proof of Paymant'));
+        //     redirect('finance/invoice/final');
+        // }
+        // // var_dump($data);
+        // // die;
+        $update = $this->db->update('tbl_invoice', $data, ['no_invoice' => $this->input->post('no_invoice')]);
+        if ($update) {
+            $this->session->set_flashdata('messageAlert', $this->messageAlert('success', 'Success Paid'));
+            redirect('finance/invoice/final');
+        } else {
+            $this->session->set_flashdata('messageAlert', $this->messageAlert('error', 'Failed'));
+            redirect('finance/invoice/invoicePaid');
+        }
+    }
     // public function paid()
     // {
     //     $data = array(

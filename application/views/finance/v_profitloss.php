@@ -252,6 +252,16 @@
 
 
                                                             </tbody>
+                                                            <tfoot>
+                                                                <tr>
+                                                                    <?php if ($totalsales > ($apCostOfFreight + $apHumanResource + $apMaterial + $apOverhead + $apGeneralAmExp)) { ?>
+                                                                        <td style="text-align: right">PROFIT :</td>
+                                                                    <?php } else { ?>
+                                                                        <td style="text-align: right">LOSS :</td>
+                                                                    <?php } ?>
+                                                                    <td><?= rupiah($totalsales - ($apCostOfFreight + $apHumanResource + $apMaterial + $apOverhead + $apGeneralAmExp)) ?></td>
+                                                                </tr>
+                                                            </tfoot>
 
                                                         </table>
 

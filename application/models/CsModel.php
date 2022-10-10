@@ -387,6 +387,7 @@ class CsModel extends M_Datatables
 			$this->db->join('tbl_shp_order b', 'a.shipment_id=b.id');
 			$this->db->where('a.status', 2);
 			$this->db->where('b.deleted', 0);
+			$this->db->group_by('a.no_invoice');
 			$query = $this->db->get();
 			return $query;
 		} else {
@@ -397,6 +398,7 @@ class CsModel extends M_Datatables
 			$this->db->where('b.deleted', 0);
 			$this->db->where('MONTH(b.tgl_pickup)', $bulan);
 			$this->db->where('YEAR(b.tgl_pickup)', $tahun);
+			$this->db->group_by('a.no_invoice');
 			$query = $this->db->get();
 			return $query;
 		}

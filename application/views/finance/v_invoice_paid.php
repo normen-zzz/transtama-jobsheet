@@ -103,11 +103,13 @@
                                                                 echo '<span class="label label-danger label-inline font-weight-lighter">Pending</span>';
                                                             } elseif ($j['status'] == 2) {
                                                                 echo '<span class="label label-success label-inline font-weight-lighter">Paid</span>';
+                                                                echo '<br>' . bulan_indo($j['payment_date']);
                                                             } elseif ($j['status'] == 3) {
                                                                 echo '<span class="label label-purple label-inline font-weight-lighter">Unpaid</span>';
                                                             }  ?>
                                                         </td>
                                                         <td>
+                                                            <button data-toggle="modal" data-target="#modal-paid<?= $j['no_invoice'] ?>" class=" btn btn-sm text-light mt-1" style="background-color: #9c223b;">Edit</button>
                                                             <a target="blank" href="<?= base_url('finance/invoice/printProformaFull/' . $j['no_invoice']) ?>" class="btn btn-sm mt-1 text-light" style="background-color: #9c223b;"><i class="fa fa-print text-light"></i>PDF </a>
                                                             <a target="blank" href="<?= base_url('finance/invoice/printProformaExcell/' . $j['no_invoice']) ?>" class="btn btn-sm mt-1 text-light" style="background-color: #9c223b;"><i class="fa fa-print text-light"></i> Excell </a>
                                                         </td>
@@ -147,7 +149,7 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form action="<?= base_url('finance/invoice/paid') ?>" method="POST" enctype="multipart/form-data">
+                <form action="<?= base_url('finance/invoice/editPaid') ?>" method="POST" enctype="multipart/form-data">
                     <div class="modal-body">
                         <div class="form-group">
                             <label for="due_date" class="font-weight-bold">Payment Date</label>

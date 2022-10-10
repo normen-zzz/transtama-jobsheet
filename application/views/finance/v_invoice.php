@@ -92,7 +92,7 @@
                                                     if ($perbedaan <= 7) {
                                                         $total_mepet = $total_mepet + 1;
                                                     }
-                                                    // echo $perbedaan;
+                                                    // echo $total_mepet;
                                                 ?>
                                                     <tr>
 
