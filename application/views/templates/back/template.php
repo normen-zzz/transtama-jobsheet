@@ -27,12 +27,12 @@
     <link href="<?= base_url('assets/back/') ?>plugins/select2/css/select2.min.css" rel="stylesheet" type="text/css" />
     <link href="<?= base_url('assets/') ?>back/metronic2/plugins/custom/datatables/datatables.bundle.css" rel="stylesheet" type="text/css" />
 
+    <!-- chart -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
-    <!-- chart -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!--end::Layout Themes-->
     <link rel="shortcut icon" href="<?= base_url('uploads/') ?>LogoRaw.png" />
     <style>
@@ -333,22 +333,17 @@
         <script src="<?= base_url('assets/assets/') ?>js/sweetalert2.all.min.js"></script>
         <script src="//cdn.ckeditor.com/4.13.1/basic/ckeditor.js"></script>
 
-
-
-
-
-
 </body>
 <!--end::Body-->
 
 </html>
+<script>
+    <?= $this->session->flashdata('messageAlert'); ?>
+</script>
 <script type="text/javascript">
     $('select').select2({
         allowClear: true,
     });
-</script>
-<script>
-    <?= $this->session->flashdata('messageAlert'); ?>
 </script>
 
 <script type="text/javascript">
@@ -462,7 +457,10 @@ $dataflash = json_encode($this->session->flashdata('message'));
 <script>
     $('#table').DataTable({
         "pageLength": 100,
-        "ordering": false
+        "ordering": false,
+        dom: "<'row'<'col-sm-3'l><'col-sm-3'f><'col-sm-6'p>>" +
+            "<'row'<'col-sm-12'tr>>" +
+            "<'row'<'col-sm-5'i><'col-sm-7'p>>",
     });
 </script>
 
@@ -540,6 +538,56 @@ $dataflash = json_encode($this->session->flashdata('message'));
 </script>
 
 
+<script type="text/javascript">
+    $(document).ready(function() {
+        const inputEl = document.getElementById("mode");
+        const car = document.getElementById("car");
+        $('#kat').change(function() {
+
+            var id = $(this).val();
+            if (id == 1) {
+                document.getElementById("mode").style.display = "block";
+            } else if (id == 3) {
+                document.getElementById("car").style.display = "block";
+            } else {
+                inputEl.style.display = "none";
+                car.style.display = "none";
+            }
+
+        });
+
+    });
+
+    $(document).ready(function() {
+        $('#modee').change(function() {
+
+            var id = $(this).val();
+            console.log(id);
+
+            if (id == 1) {
+                document.getElementById("via").style.display = "block";
+            } else {
+                inputEl.style.display = "none";
+            }
+
+        });
+
+
+    });
+</script>
+
+<script>
+    function Cash() {
+        if (document.getElementById('tf').checked) {
+            document.getElementById('via').style.display = "block";
+        } else {
+            document.getElementById('via').style.display = "none";
+        }
+    }
+</script>
+
+
+
 <script>
     $(document).ready(function() {
         var i = 2;
@@ -614,53 +662,4 @@ $dataflash = json_encode($this->session->flashdata('message'));
         document.getElementById("nama_kategori" + indek + "").value = $(this).attr('data-nama');
         $("#selectCategory").modal('hide');
     });
-</script>
-
-
-<script type="text/javascript">
-    $(document).ready(function() {
-        const inputEl = document.getElementById("mode");
-        const car = document.getElementById("car");
-        $('#kat').change(function() {
-
-            var id = $(this).val();
-            if (id == 1) {
-                document.getElementById("mode").style.display = "block";
-            } else if (id == 3) {
-                document.getElementById("car").style.display = "block";
-            } else {
-                inputEl.style.display = "none";
-                car.style.display = "none";
-            }
-
-        });
-
-    });
-
-    $(document).ready(function() {
-        $('#modee').change(function() {
-
-            var id = $(this).val();
-            console.log(id);
-
-            if (id == 1) {
-                document.getElementById("via").style.display = "block";
-            } else {
-                inputEl.style.display = "none";
-            }
-
-        });
-
-
-    });
-</script>
-
-<script>
-    function Cash() {
-        if (document.getElementById('tf').checked) {
-            document.getElementById('via').style.display = "block";
-        } else {
-            document.getElementById('via').style.display = "none";
-        }
-    }
 </script>

@@ -496,6 +496,7 @@ class Report extends CI_Controller
         $sheet->setCellValue('AP1', 'INVOICE CREATED');
         $sheet->setCellValue('AQ1', 'DUE DATE INVOICE');
         $sheet->setCellValue('AR1', 'SELISIH WAKTU');
+        $sheet->setCellValue('AS1', 'PU POIN');
         // $sheet->setCellValue('AO1', 'STATUS INVOICE');
 
         // new sheet VOID
@@ -526,7 +527,7 @@ class Report extends CI_Controller
         $packing = 0;
         foreach ($shipments as $row) {
             $sales = $this->cs->getSales($row['id_so'])->row_array();
-
+            $puPoin = $this->cs->getPuPoin($row['id_so'])->row_array();
             $get_do = $this->db->select('no_do,no_so, berat, koli')->get_where('tbl_no_do', ['shipment_id' => $row['shipment_id']])->result_array();
             $jumlah = $this->db->select('no_do')->get_where('tbl_no_do', ['shipment_id' => $row['shipment_id']])->num_rows();
             $no_invoice = $row['no_invoice'];
@@ -905,6 +906,8 @@ class Report extends CI_Controller
             $sheet->setCellValue('AQ' . $x, bulan_indo($row['due_date']))->getColumnDimension('AQ')
                 ->setAutoSize(true);
             $sheet->setCellValue('AR' . $x, $perbedaan)->getColumnDimension('AR')
+                ->setAutoSize(true);
+            $sheet->setCellValue('AS' . $x, $puPoin['pu_poin'])->getColumnDimension('AS')
                 ->setAutoSize(true);
 
             // $sheet->setCellValue('A0' . $x, $status_invoice)->getColumnDimension('AO')

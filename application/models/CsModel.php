@@ -23,10 +23,20 @@ class CsModel extends M_Datatables
 		$this->db->join('tbl_shp_order b', 'a.id_so=b.id_so');
 		$this->db->join('tb_user c', 'a.id_sales=c.id_user');
 		$this->db->where('b.status_so', 1);
+		$this->db->where('b.deleted', 0);
 		$this->db->order_by('b.id', 'DESC');
 		$query = $this->db->get();
 		return $query;
 	}
+	public function getPuPoin($id_so)
+	{
+		$this->db->select('pu_poin');
+		$this->db->from('tbl_so');
+		$this->db->where('id_so', $id_so);
+		$query = $this->db->get();
+		return $query;
+	}
+
 	function getProformaInvoice()
 	{
 		$this->db->select('a.*, b.shipper');
@@ -202,7 +212,6 @@ class CsModel extends M_Datatables
 		$query = $this->db->get();
 		return $query;
 	}
-
 	function getAllMsr($bulan, $tahun)
 	{
 		if ($bulan == NULL && $tahun == NULL) {
@@ -457,7 +466,6 @@ class CsModel extends M_Datatables
 		$where = array('YEAR(a.tgl_pickup)' => $tahun, 'MONTH(a.tgl_pickup)' => $bulan, 'a.deleted' => 0);
 		if ($bulan == NULL && $tahun == NULL) {
 			$this->db->select('b.*,c.*,a.*,e.nama_user, b.status as status_invoice, d.service_name');
-
 			$this->db->from('tbl_shp_order a');
 			$this->db->join('tbl_invoice b', 'b.shipment_id=a.id', 'LEFT');
 			$this->db->join('tbl_modal c', 'c.shipment_id=a.id');
@@ -480,12 +488,13 @@ class CsModel extends M_Datatables
 			// $this->db->where('a.deleted', 0);
 			// $this->db->where('MONTH(a.tgl_pickup)', $bulan);
 			// $this->db->where('YEAR(a.tgl_pickup)', $tahun);
-			$this->db->order_by('a.tgl_pickup');
 			$this->db->group_by('a.shipment_id');
+			$this->db->order_by('a.tgl_pickup');
 			$query = $this->db->get();
 			return $query;
 		}
 	}
+
 	function getInvoiceVoidReport($bulan, $tahun)
 	{
 		// 0=proforma
@@ -494,10 +503,8 @@ class CsModel extends M_Datatables
 		// 3 = unpaid
 		$where = array('YEAR(a.tgl_pickup)' => $tahun, 'MONTH(a.tgl_pickup)' => $bulan, 'a.deleted' => 1);
 		if ($bulan == NULL && $tahun == NULL) {
-			$this->db->select('b.*,c.*,a.*,e.nama_user, b.status as status_invoice, d.service_name');
+			$this->db->select('a.*,e.nama_user, d.service_name');
 			$this->db->from('tbl_shp_order a');
-			$this->db->join('tbl_invoice b', 'b.shipment_id=a.id', 'LEFT');
-			$this->db->join('tbl_modal c', 'c.shipment_id=a.id');
 			$this->db->join('tb_service_type d', 'a.service_type=d.code');
 			$this->db->join('tb_user e', 'a.id_user=e.id_user');
 			$this->db->where('a.status_so >=', 1);
@@ -506,10 +513,8 @@ class CsModel extends M_Datatables
 			$query = $this->db->get();
 			return $query;
 		} else {
-			$this->db->select('b.*,c.*,a.*,e.nama_user, b.status as status_invoice, d.service_name');
+			$this->db->select('a.*,e.nama_user, d.service_name');
 			$this->db->from('tbl_shp_order a');
-			$this->db->join('tbl_invoice b', 'b.shipment_id=a.id', 'LEFT');
-			$this->db->join('tbl_modal c', 'c.shipment_id=a.id', 'LEFT');
 			$this->db->join('tb_service_type d', 'a.service_type=d.code');
 			$this->db->join('tb_user e', 'a.id_user=e.id_user');
 			$this->db->where('a.status_so >=', 1);
