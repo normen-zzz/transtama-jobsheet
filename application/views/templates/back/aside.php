@@ -229,14 +229,14 @@
                                         <span class="menu-text">AP</span>
                                     </a>
                                 </li>
-                                <li class="menu-item" aria-haspopup="true">
+                                <!-- <li class="menu-item" aria-haspopup="true">
                                     <a href="<?= base_url('finance/report/profitLoss') ?>" class="menu-link">
                                         <i class="menu-bullet menu-bullet-dot">
                                             <span></span>
                                         </i>
                                         <span class="menu-text">Profit</span>
                                     </a>
-                                </li>
+                                </li> -->
 
 
                             </ul>
@@ -262,6 +262,32 @@
                                             <span></span>
                                         </i>
                                         <span class="menu-text">List Pengeluaran</span>
+                                    </a>
+                                </li>
+
+                            </ul>
+                        </div>
+                    </li>
+
+                    <li class="menu-section">
+                        <h4 class="menu-text">Profit/Loss</h4>
+                        <i class="menu-icon ki ki-bold-more-hor icon-md"></i>
+                    </li>
+                    <li class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
+                        <a href="javascript:;" class="menu-link menu-toggle">
+                            <i class="fas fa-chart-bar mt-2 fa-1x mr-2 text-danger"></i>
+                            <span class="menu-text">PROFIT/LOSS</span>
+                            <i class="menu-arrow"></i>
+                        </a>
+                        <div class="menu-submenu">
+                            <i class="menu-arrow"></i>
+                            <ul class="menu-subnav">
+                                <li class="menu-item" aria-haspopup="true">
+                                    <a href="<?= base_url('finance/report/profitLoss') ?>" class="menu-link">
+                                        <i class="menu-bullet menu-bullet-dot">
+                                            <span></span>
+                                        </i>
+                                        <span class="menu-text">List Profit/Loss</span>
                                     </a>
                                 </li>
 
