@@ -8,6 +8,43 @@
             <div class="card-body">
                 <div class="content-header">
 
+                    <!-- ADJUST -->
+                    <!-- COST OF FREIGHT -->
+                    <?php $totalAdjustCostOfFreight = 0;
+                    foreach ($adjustCostOfFreight as $adjustCostOfFreight) {
+                        if ($adjustCostOfFreight['operation'] == 'penambahan') {
+                            $totalAdjustCostOfFreight += $adjustCostOfFreight['amount'];
+                        } else {
+                            $totalAdjustCostOfFreight -= $adjustCostOfFreight['amount'];
+                        }
+                    } ?>
+                    <!-- HANDLING CHARGES -->
+                    <?php $totalAdjustHandlingCharges = 0;
+                    foreach ($adjustHandlingCharges as $adjustHandlingCharges) {
+                        if ($adjustHandlingCharges['operation'] == 'penambahan') {
+                            $totalAdjustHandlingCharges += $adjustHandlingCharges['amount'];
+                        } else {
+                            $totalAdjustHandlingCharges -= $adjustHandlingCharges['amount'];
+                        }
+                    } ?>
+                    <!-- HUMAN RESOURCES -->
+                    <?php $totalAdjustHumanResource = 0;
+                    foreach ($adjustHumanResource as $adjustHumanResource) {
+                        if ($adjustHumanResource['operation'] == 'penambahan') {
+                            $totalAdjustHumanResource += $adjustHumanResource['amount'];
+                        } else {
+                            $totalAdjustHumanResource -= $adjustHumanResource['amount'];
+                        }
+                    } ?>
+                    <!-- MATERIAL -->
+                    <?php $totalAdjustMaterial = 0;
+                    foreach ($adjustMaterial as $adjustMaterial) {
+                        if ($adjustMaterial['operation'] == 'penambahan') {
+                            $totalAdjustMaterial += $adjustMaterial['amount'];
+                        } else {
+                            $totalAdjustMaterial -= $adjustMaterial['amount'];
+                        }
+                    } ?>
 
                     <center>
                         <h3><?= $title; ?></h3>
@@ -22,18 +59,42 @@
                                 <label>Month</label><br>
                                 <select name="bulan" class="form-control" style="width: 200px; height:100px" required>
                                     <option value="">Pilih</option>
-                                    <option value="01">Januari</option>
-                                    <option value="02">Februari</option>
-                                    <option value="03">Maret</option>
-                                    <option value="04">April</option>
-                                    <option value="05">Mei</option>
-                                    <option value="06">Juni</option>
-                                    <option value="07">Juli</option>
-                                    <option value="08">Agustus</option>
-                                    <option value="09">September</option>
-                                    <option value="10">Oktober</option>
-                                    <option value="11">November</option>
-                                    <option value="12">Desember</option>
+                                    <option <?php if ($bulan == "01") {
+                                                echo "selected";
+                                            } ?> value="01">Januari</option>
+                                    <option <?php if ($bulan == "02") {
+                                                echo "selected";
+                                            } ?> value="02">Februari</option>
+                                    <option <?php if ($bulan == "03") {
+                                                echo "selected";
+                                            } ?> value="03">Maret</option>
+                                    <option <?php if ($bulan == "04") {
+                                                echo "selected";
+                                            } ?> value="04">April</option>
+                                    <option <?php if ($bulan == "05") {
+                                                echo "selected";
+                                            } ?> value="05">Mei</option>
+                                    <option <?php if ($bulan == "06") {
+                                                echo "selected";
+                                            } ?> value="06">Juni</option>
+                                    <option <?php if ($bulan == "07") {
+                                                echo "selected";
+                                            } ?> value="07">Juli</option>
+                                    <option <?php if ($bulan == "08") {
+                                                echo "selected";
+                                            } ?> value="08">Agustus</option>
+                                    <option <?php if ($bulan == "09") {
+                                                echo "selected";
+                                            } ?> value="09">September</option>
+                                    <option <?php if ($bulan == "10") {
+                                                echo "selected";
+                                            } ?> value="10">Oktober</option>
+                                    <option <?php if ($bulan == "11") {
+                                                echo "selected";
+                                            } ?> value="11">November</option>
+                                    <option <?php if ($bulan == "12") {
+                                                echo "selected";
+                                            } ?> value="12">Desember</option>
                                 </select>
                             </div>
                             <div class="form-group">
@@ -42,14 +103,18 @@
                                     <option selected="selected">Pilih</option>
                                     <?php
                                     for ($i = date('Y'); $i >= date('Y') - 2; $i -= 1) {
-                                        echo "<option value='$i'> $i </option>";
+                                        if ($i == date('Y')) {
+                                            echo "<option value='$i' selected> $i </option>";
+                                        } else {
+                                            echo "<option value='$i'> $i </option>";
+                                        }
                                     }
                                     ?>
                                 </select>
                             </div>
                             <div class="form-group"> <br>
                                 <button type="submit" class="btn btn-success ml-3 mt-2">Show</button>
-                                <a href="<?= base_url('finance/report/ap') ?>" class="btn btn-primary ml-2 mt-2">Reset Filter</a>
+                                <!-- <a href="<?= base_url('finance/report/ap') ?>" class="btn btn-primary ml-2 mt-2">Reset Filter</a> -->
                             </div>
                         </div>
                     </form>
@@ -85,7 +150,7 @@
 
                                                             backgroundColor: ['rgb(76, 120, 168)', 'rgb(139, 50, 77)'],
                                                             borderColor: ['rgb(76, 120, 168)', 'rgb(139, 50, 77)'],
-                                                            data: [<?= $totalsales ?>, <?= $allAp ?>],
+                                                            data: [<?= $totalsales ?>, <?= ($apCostOfFreight + $totalAdjustCostOfFreight) + ($apHandlingCharges + $totalAdjustHandlingCharges) + ($apHumanResource + $totalAdjustHumanResource) + ($apMaterial + $totalAdjustMaterial) + $apOverhead + $apGeneralAmExp ?>],
 
                                                         }]
                                                     };
@@ -143,7 +208,7 @@
                                                         ],
                                                         datasets: [{
                                                             label: 'My First Dataset',
-                                                            data: [<?= $apCostOfFreight ?>, <?= 0 ?>, <?= $apHumanResource ?>, <?= $apMaterial ?>, <?= $apOverhead ?>, <?= $apGeneralAmExp ?>],
+                                                            data: [<?= $apCostOfFreight + $totalAdjustCostOfFreight ?>, <?= $apHandlingCharges + $totalAdjustHandlingCharges ?>, <?= $apHumanResource + $totalAdjustHumanResource ?>, <?= $apMaterial + $totalAdjustMaterial ?>, <?= $apOverhead ?>, <?= $apGeneralAmExp ?>],
                                                             backgroundColor: [
                                                                 'rgb(76, 120, 168)',
                                                                 'rgb(28, 157, 189)',
@@ -210,38 +275,61 @@
                                                                 <tr>
                                                                     <td>SALES INCLUDED VAT 1,1%</td>
                                                                     <td><?= rupiah($totalsales) ?></td>
-                                                                    <!-- <td><a href="<?= base_url('finance/report/detailProfitLoss') ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">Detail</a></td> -->
+                                                                    <!-- <td><a href="<?= base_url('finance/report/detailProfitLoss/' . $bulan . '/' . $tahun) ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">Detail</a></td> -->
                                                                     <td></td>
                                                                 </tr>
                                                                 <tr>
                                                                     <td>COST OF FREIGHT</td>
-                                                                    <td><?= rupiah($apCostOfFreight) ?></td>
-                                                                    <td><a href="<?= base_url('finance/report/detailCostOfFreight') ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">Detail</a></td>
+                                                                    <td><?= rupiah($apCostOfFreight + $totalAdjustCostOfFreight) ?></td>
+                                                                    <td><a href="<?= base_url('finance/report/detailCostOfFreight/' . $bulan . '/' . $tahun) ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">Detail</a></td>
                                                                 </tr>
                                                                 <tr>
                                                                     <td> HANDLING CHARGES</td>
-                                                                    <td></td>
-                                                                    <td><a href="<?= base_url('finance/report/detailProfitLoss') ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">Detail</a></td>
+                                                                    <td><?= rupiah($apHandlingCharges + $totalAdjustHandlingCharges) ?></td>
+                                                                    <td><a href="<?= base_url('finance/report/detailHandlingCharges/' . $bulan . '/' . $tahun) ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">Detail</a></td>
                                                                 </tr>
                                                                 <tr>
                                                                     <td>OPERATIONAL HUMAN RESOURCES</td>
-                                                                    <td><?= rupiah($apHumanResource) ?></td>
-                                                                    <td><a href="<?= base_url('finance/report/detailHumanResource') ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">Detail</a></td>
+
+                                                                    <td><?= rupiah($apHumanResource + $totalAdjustHumanResource) ?></td>
+                                                                    <td><a href="<?= base_url('finance/report/detailHumanResource/' . $bulan . '/' . $tahun) ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">Detail</a></td>
                                                                 </tr>
                                                                 <tr>
                                                                     <td>COST OF MATERIAL PACKING</td>
-                                                                    <td><?= rupiah($apMaterial) ?></td>
-                                                                    <td><a href="<?= base_url('finance/report/detailMaterial') ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">Detail</a></td>
+                                                                    <td><?= rupiah($apMaterial + $totalAdjustMaterial) ?></td>
+                                                                    <td><a href="<?= base_url('finance/report/detailMaterial/' . $bulan . '/' . $tahun) ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">Detail</a></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td style="text-align: right;"><b> TOTAL COGS</b></td>
+                                                                    <td><b><?= rupiah(($apMaterial + $totalAdjustMaterial) + ($apHandlingCharges + $totalAdjustHandlingCharges) + ($apHumanResource + $totalAdjustHumanResource) + ($apCostOfFreight + $totalAdjustCostOfFreight)) ?></b></td>
+                                                                    <td></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td style="text-align: right;"><b> GROSS PROFIT</b></td>
+                                                                    <?php $grossProfit = $totalsales - (($apMaterial + $totalAdjustMaterial) + ($apHandlingCharges + $totalAdjustHandlingCharges) + ($apHumanResource + $totalAdjustHumanResource) + ($apCostOfFreight + $totalAdjustCostOfFreight));  ?>
+                                                                    <td><b><?= rupiah($grossProfit) ?></b></td>
+                                                                    <td></td>
                                                                 </tr>
                                                                 <tr>
                                                                     <td>OVERHEAD COSTS</td>
                                                                     <td><?= rupiah($apOverhead) ?></td>
-                                                                    <td><a href="<?= base_url('finance/report/detailOverhead') ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">Detail</a></td>
+                                                                    <td><a href="<?= base_url('finance/report/detailOverhead/' . $bulan . '/' . $tahun) ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">Detail</a></td>
                                                                 </tr>
                                                                 <tr>
                                                                     <td> GENERAL AM EXP</td>
                                                                     <td><?= rupiah($apGeneralAmExp) ?></td>
-                                                                    <td><a href="<?= base_url('finance/report/detailAmExp') ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">Detail</a></td>
+                                                                    <td><a href="<?= base_url('finance/report/detailAmExp/' . $bulan . '/' . $tahun) ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">Detail</a></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td style="text-align: right;"><b> TOTAL INDIRECT COST</b></td>
+                                                                    <?php $indirectCost = $apOverhead + $apGeneralAmExp ?>
+                                                                    <td><b><?= rupiah($indirectCost) ?></b></td>
+                                                                    <td></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td style="text-align: right;"><b>PROFIT</b></td>
+                                                                    <td><b><?= rupiah($grossProfit - $indirectCost) ?></b></td>
+                                                                    <td></td>
                                                                 </tr>
                                                                 <!-- <tr>
                                                                     <td>PROFIT LOSS</td>

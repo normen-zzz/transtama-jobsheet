@@ -99,6 +99,54 @@ class ApModel extends CI_Model
         return $this->db->get();
     }
 
+    public function getModalJoinShp($bulan, $tahun)
+    {
+        if ($bulan == NULL && $tahun == NULL) {
+            $this->db->select('a.*, b.*,b.shipment_id AS kode,e.*');
+            $this->db->from('tbl_modal a');
+            $this->db->join('tbl_shp_order b', 'a.shipment_id=b.id');
+            $this->db->join('tbl_so d', 'b.id_so=d.id_so');
+            $this->db->join('tb_user c', 'd.id_sales=c.id_user');
+            $this->db->join('tb_service_type e', 'b.service_type=e.code');
+            $this->db->where('b.deleted', 0);
+            $this->db->group_by('a.shipment_id');
+            $this->db->order_by('a.shipment_id', 'ASC');
+            return $this->db->get();
+        } else {
+            $this->db->select('a.*, b.*,b.shipment_id AS kode,e.*');
+            $this->db->from('tbl_modal a');
+            $this->db->join('tbl_shp_order b', 'a.shipment_id=b.id');
+            $this->db->join('tbl_so d', 'b.id_so=d.id_so');
+            $this->db->join('tb_user c', 'd.id_sales=c.id_user');
+            $this->db->join('tb_service_type e', 'b.service_type=e.code');
+            $this->db->where('b.deleted', 0);
+            $this->db->where('MONTH(b.tgl_pickup)', $bulan);
+            $this->db->where('YEAR(b.tgl_pickup)', $tahun);
+            $this->db->group_by('a.shipment_id');
+            $this->db->order_by('a.shipment_id', 'ASC');
+            return $this->db->get();
+        }
+    }
+
+    public function getAdjust($bagian, $bulan, $tahun)
+    {
+        if ($bulan == NULL && $tahun == NULL) {
+            $this->db->select('*');
+            $this->db->from('tbl_real');
+            $this->db->where('bagian', $bagian);
+            $this->db->order_by('id_real', 'ASC');
+            return $this->db->get();
+        } else {
+            $this->db->select('*');
+            $this->db->from('tbl_real');
+            $this->db->where('MONTH(date)', $bulan);
+            $this->db->where('YEAR(date)', $tahun);
+            $this->db->where('bagian', $bagian);
+            $this->db->order_by('id_real', 'ASC');
+            return $this->db->get();
+        }
+    }
+
     public function getApByCategory($id_kategori)
     {
 

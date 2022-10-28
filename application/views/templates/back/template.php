@@ -337,6 +337,63 @@
 <!--end::Body-->
 
 </html>
+<!-- untuk edit ap -->
+<script type="text/javascript">
+    $(document).ready(function() {
+
+
+        // On text click
+        $('.edit').click(function() {
+            // Hide input element
+            $('.txtedit').hide();
+
+            // Show next input element
+            $(this).next('.txtedit').show().focus();
+
+            // Hide clicked element
+            $(this).hide();
+        });
+
+
+        // Focus out from a textbox
+        $('.txtedit').focusout(function() {
+            // Get edit id, field name and value
+            var edit_id = $(this).data('id');
+            var fieldname = $(this).data('field');
+            var url = $(this).data('url');
+            var value = $(this).val();
+
+            // assign instance to element variable
+            var element = this;
+
+            // Send AJAX request
+            $.ajax({
+                url: url,
+                type: 'post',
+                data: {
+                    field: fieldname,
+                    value: value,
+                    id: edit_id
+                },
+                success: function(response) {
+                    // console.log(response);
+
+                    // Hide Input element
+                    $(element).hide();
+
+                    // Update viewing value and display it
+                    $(element).prev('.edit').show();
+                    if (fieldname == 'amount_approved') {
+                        $(element).prev('.edit').text('Rp. ' + value);
+                    } else {
+                        $(element).prev('.edit').text(value);
+                    }
+
+                }
+            });
+        });
+    });
+</script>
 <script>
     <?= $this->session->flashdata('messageAlert'); ?>
 </script>
@@ -352,6 +409,65 @@
             // allowClear: true,
         });
     });
+</script>
+<!-- ========= FORMAT RUPIAH ============ -->
+<script type="text/javascript">
+    const collection = document.getElementsByClassName("amount_proposed");
+    for (let i = 0; i < collection.length; i++) {
+        collection[i].addEventListener('keyup', function(e) {
+            collection[i].value = formatRupiah(this.value, 'Rp. ');
+        });
+    }
+
+    /* Tanpa Rupiah */
+    var tanpa_rupiah = document.getElementById('tanpa-rupiah');
+    tanpa_rupiah.addEventListener('keyup', function(e) {
+        tanpa_rupiah.value = formatRupiah(this.value);
+    });
+
+    /* Dengan Rupiah */
+    var dengan_rupiah = document.getElementById('dengan-rupiah');
+    dengan_rupiah.addEventListener('keyup', function(e) {
+        dengan_rupiah.value = formatRupiah(this.value, 'Rp. ');
+    });
+
+    /* Fungsi */
+    function formatRupiah(angka, prefix) {
+        var number_string = angka.replace(/[^,\d]/g, '').toString(),
+            split = number_string.split(','),
+            sisa = split[0].length % 3,
+            rupiah = split[0].substr(0, sisa),
+            ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+        if (ribuan) {
+            separator = sisa ? '.' : '';
+            rupiah += separator + ribuan.join('.');
+        }
+
+        rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+        return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
+    }
+
+
+
+    /* Fungsi formatRupiah */
+    function formatRupiah(angka, prefix) {
+        // console.log(typeof(angka))
+        var number_string = angka.replace(/[^,\d]/g, '').toString(),
+            split = number_string.split(','),
+            sisa = split[0].length % 3,
+            rupiah = split[0].substr(0, sisa),
+            ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+        // tambahkan titik jika yang di input sudah menjadi angka ribuan
+
+        if (ribuan) {
+            separator = sisa ? '.' : '';
+            rupiah += separator + ribuan.join('.');
+        }
+
+        rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+        return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
+    }
 </script>
 
 <?php
