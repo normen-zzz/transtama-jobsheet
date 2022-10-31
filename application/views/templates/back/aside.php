@@ -283,11 +283,19 @@
                             <i class="menu-arrow"></i>
                             <ul class="menu-subnav">
                                 <li class="menu-item" aria-haspopup="true">
+                                    <a href="<?= base_url('finance/report/profitLossHpp') ?>" class="menu-link">
+                                        <i class="menu-bullet menu-bullet-dot">
+                                            <span></span>
+                                        </i>
+                                        <span class="menu-text">HPP</span>
+                                    </a>
+                                </li>
+                                <li class="menu-item" aria-haspopup="true">
                                     <a href="<?= base_url('finance/report/profitLoss') ?>" class="menu-link">
                                         <i class="menu-bullet menu-bullet-dot">
                                             <span></span>
                                         </i>
-                                        <span class="menu-text">List Profit/Loss</span>
+                                        <span class="menu-text">REAL</span>
                                     </a>
                                 </li>
 

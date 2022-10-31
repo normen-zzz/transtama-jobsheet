@@ -237,6 +237,294 @@ class Report extends CI_Controller
         }
     }
 
+    public function profitLossHpp($bln = NULL, $thn = NULL)
+    {
+        $bulan = $this->input->post('bulan');
+        $tahun = $this->input->post('tahun');
+
+        if ($bulan == NULL && $tahun == NULL) {
+            if ($bln == NULL && $thn == NULL) {
+                $msr = $this->cs->getAllMsr(date('m'), date('Y'))->result_array();
+                //Perhitungan Total Sales
+                $totalallsales = 0;
+                foreach ($msr as $msr) {
+                    $service =  $msr['service_name'];
+                    if ($service == 'Charter Service') {
+                        // $total_sales = $msr['special_freight'];
+                        $packing = $msr['packing'];
+                        $total_sales = ((int)$msr['freight_kg'] + $packing +  (int)$msr['special_freight'] +  (int)$msr['others'] + (int)$msr['surcharge'] + (int)$msr['insurance']);
+                    } else {
+                        $disc = $msr['disc'];
+                        // kalo gada disc
+                        if ($disc == 0) {
+                            $freight  = (int)$msr['berat_js'] * (int)$msr['freight_kg'];
+                            $special_freight  = (int)$msr['berat_msr'] * (int)$msr['special_freight'];
+                        } else {
+                            $freight_discount = $msr['freight_kg'] * $disc;
+                            $special_freight_discount = $msr['special_freight'] * $disc;
+
+                            $freight = $freight_discount * $msr['berat_js'];
+                            $special_freight  = $special_freight_discount * $msr['berat_msr'];
+                        }
+
+                        // var_dump($freight);
+                        // die;
+
+                        $packing = (int)$msr['packing'];
+                        $total_sales = ($freight + $packing + $special_freight +  (int)$msr['others'] + (int)$msr['surcharge'] + (int)$msr['insurance']);
+                        // $comm = $msr['cn'] * $total_sales;
+                        // $disc = $msr['disc'] * $total_sales;
+
+                        $total_sales = $total_sales;
+                    }
+                    $totalallsales += $total_sales;
+                }
+                //Cari  Material
+                //Ambil dari list Material di modal
+                $apMaterial = $this->ap->getModalJoinShp(date('m'), date('Y'))->result_array();
+                $totalApMaterial = 0;
+                foreach ($apMaterial as $apMaterial) {
+                    $totalApMaterial += $apMaterial['packing2'];
+                }
+
+                //Cari  handling charges
+                //Ambil dari list Material dimodal
+                $apHandlingCharges = $this->ap->getModalJoinShp(date('m'), date('Y'))->result_array();
+                $totalApHandlingCharges = 0;
+                foreach ($apHandlingCharges as $apHandlingCharges) {
+                    $totalApHandlingCharges += ($apHandlingCharges['hand_cgk2'] + $apHandlingCharges['hand_pickup2'] + $apHandlingCharges['hd_daerah2'] + $apHandlingCharges['ra2']);
+                }
+
+                //COST OF FREIGHT DARI AP EXTERNAL
+                $costOfFreight = $this->ap->getModalJoinShp(date('m'), date('Y'))->result_array();
+                $totalCostOfFreight = 0;
+                foreach ($costOfFreight as $costOfFreight) {
+                    $service =  $costOfFreight['service_name'];
+                    if ($service == 'Charter Service') {
+                        $packing = $costOfFreight['packing'];
+                        $total_sales = ($costOfFreight['freight_kg'] + $packing +  $costOfFreight['special_freight'] +  $costOfFreight['others'] + $costOfFreight['surcharge'] + $costOfFreight['insurance']);
+                    } else {
+                        $disc = $costOfFreight['disc'];
+                        // kalo gada disc
+                        if ($disc == 0) {
+                            $freight  = $costOfFreight['berat_js'] * $costOfFreight['freight_kg'];
+                            $special_freight  = $costOfFreight['berat_msr'] * $costOfFreight['special_freight'];
+                        } else {
+                            $freight_discount = $costOfFreight['freight_kg'] * $disc;
+                            $special_freight_discount = $costOfFreight['special_freight'] * $disc;
+
+                            $freight = $freight_discount * $costOfFreight['berat_js'];
+                            $special_freight  = $special_freight_discount * $costOfFreight['berat_msr'];
+                        }
+
+                        $packing = $costOfFreight['packing'];
+                        $total_sales = ($freight + $packing + $special_freight +  $costOfFreight['others'] + $costOfFreight['surcharge'] + $costOfFreight['insurance']);
+                        $total_sales = $total_sales;
+                    }
+
+                    if ($costOfFreight['refund2'] == 0) {
+                        $refund = $costOfFreight['specialrefund2'];
+                    } elseif ($costOfFreight['specialrefund2'] == 0) {
+                        $refund = $total_sales * ($costOfFreight['refund2'] / 100);
+                    }
+                    $totalCostOfFreight += ((int)$costOfFreight['flight_msu2'] + (int)$costOfFreight['insurance2'] + $refund);
+                }
+
+                //Untuk ap diambil dari Paid
+                $allAp = $this->ap->getAllApReport(date('m'), date('Y'));
+                $totalAllAp = 0;
+                foreach ($allAp->result_array() as $allAp) {
+                    $totalAllAp += $allAp['total'];
+                }
+
+                //Overhead
+                // Dari transport,entertain,pengembanganpegawai,sallary,overtime
+                $OverheadAp = $this->ap->getApByOverhead(date('m'), date('Y'))->result_array();
+                $totalOverhead = 0;
+                foreach ($OverheadAp as $OverheadAp) {
+                    $totalOverhead += $OverheadAp['total'];
+                }
+                //General Am EXP
+                $generalAmExpAp = $this->ap->getApByAmExp(date('m'), date('Y'))->result_array();
+                $totalAmExp = 0;
+                foreach ($generalAmExpAp as $generalAmExpAp) {
+                    $totalAmExp += $generalAmExpAp['total'];
+                }
+
+                //Cari AP Human Resource
+                $apHumanResource = $this->ap->getModalJoinShp(date('m'), date('Y'))->result_array();
+                $totalApHumanResource = 0;
+                foreach ($apHumanResource as $apHumanResource) {
+                    $totalApHumanResource += $apHumanResource['sdm2'];
+                }
+
+
+
+                $data['title'] = 'Report Profit Loss ' . bulan(date('m')) . ' ' . date('Y');
+                $breadcrumb_items = [];
+                $data['subtitle'] = 'Report AP';
+                $this->breadcrumb->add_item($breadcrumb_items);
+                $data['breadcrumb_bootstrap_style'] = $this->breadcrumb->generate();
+                $data['tahun'] = date('Y');
+                $data['bulan'] = date('m');
+                $data['heading'] = 'Profit Loss Report';
+                $data['totalsales'] = $totalallsales - ($totalallsales * 0.011);
+                $data['apMaterial'] = $totalApMaterial;
+                $data['apHandlingCharges'] = $totalApHandlingCharges;
+                $data['apOverhead'] = $totalOverhead;
+                $data['apGeneralAmExp'] = $totalAmExp;
+                $data['apHumanResource'] = $totalApHumanResource;
+                $data['apCostOfFreight'] = $totalCostOfFreight;
+                $data['adjustCostOfFreight'] = $this->ap->getAdjust('Cost Of Freight', date('m'), date('Y'))->result_array();
+                $data['adjustHandlingCharges'] = $this->ap->getAdjust('Handling Charges', date('m'), date('Y'))->result_array();
+                $data['adjustHumanResource'] = $this->ap->getAdjust('Human Resource', date('m'), date('Y'))->result_array();
+                $data['adjustMaterial'] = $this->ap->getAdjust('Material', date('m'), date('Y'))->result_array();
+                $data['allAp'] = $totalAllAp;
+                $this->backend->display('finance/v_profitloss_hpp', $data);
+            } else {
+                $msr = $this->cs->getAllMsr($bln, $thn)->result_array();
+                //Perhitungan Total Sales
+                $totalallsales = 0;
+                foreach ($msr as $msr) {
+                    $service =  $msr['service_name'];
+                    if ($service == 'Charter Service') {
+                        // $total_sales = $msr['special_freight'];
+                        $packing = $msr['packing'];
+                        $total_sales = ((int)$msr['freight_kg'] + $packing +  (int)$msr['special_freight'] +  (int)$msr['others'] + (int)$msr['surcharge'] + (int)$msr['insurance']);
+                    } else {
+                        $disc = $msr['disc'];
+                        // kalo gada disc
+                        if ($disc == 0) {
+                            $freight  = (int)$msr['berat_js'] * (int)$msr['freight_kg'];
+                            $special_freight  = (int)$msr['berat_msr'] * (int)$msr['special_freight'];
+                        } else {
+                            $freight_discount = $msr['freight_kg'] * $disc;
+                            $special_freight_discount = $msr['special_freight'] * $disc;
+
+                            $freight = $freight_discount * $msr['berat_js'];
+                            $special_freight  = $special_freight_discount * $msr['berat_msr'];
+                        }
+
+                        // var_dump($freight);
+                        // die;
+
+                        $packing = (int)$msr['packing'];
+                        $total_sales = ($freight + $packing + $special_freight +  (int)$msr['others'] + (int)$msr['surcharge'] + (int)$msr['insurance']);
+                        // $comm = $msr['cn'] * $total_sales;
+                        // $disc = $msr['disc'] * $total_sales;
+
+                        $total_sales = $total_sales;
+                    }
+                    $totalallsales += $total_sales;
+                }
+                //Cari  Material
+                //Ambil dari list Material di modal
+                $apMaterial = $this->ap->getModalJoinShp($bln, $thn)->result_array();
+                $totalApMaterial = 0;
+                foreach ($apMaterial as $apMaterial) {
+                    $totalApMaterial += $apMaterial['packing2'];
+                }
+
+                //Cari  handling charges
+                //Ambil dari list Material dimodal
+                $apHandlingCharges = $this->ap->getModalJoinShp($bln, $thn)->result_array();
+                $totalApHandlingCharges = 0;
+                foreach ($apHandlingCharges as $apHandlingCharges) {
+                    $totalApHandlingCharges += ((int)$apHandlingCharges['hand_cgk2'] + (int)$apHandlingCharges['hand_pickup2'] + (int)$apHandlingCharges['hd_daerah2'] + (int)$apHandlingCharges['ra2']);
+                }
+
+                //COST OF FREIGHT DARI AP EXTERNAL
+                $costOfFreight = $this->ap->getModalJoinShp($bln, $thn)->result_array();
+                $totalCostOfFreight = 0;
+                foreach ($costOfFreight as $costOfFreight) {
+                    $service =  $costOfFreight['service_name'];
+                    if ($service == 'Charter Service') {
+                        $packing = $costOfFreight['packing'];
+                        $total_sales = ((int)$costOfFreight['freight_kg'] + $packing +  (int)$costOfFreight['special_freight'] +  (int)$costOfFreight['others'] + (int)$costOfFreight['surcharge'] + (int)$costOfFreight['insurance']);
+                    } else {
+                        $disc = $costOfFreight['disc'];
+                        // kalo gada disc
+                        if ($disc == 0) {
+                            $freight  = (int)$costOfFreight['berat_js'] * (int)$costOfFreight['freight_kg'];
+                            $special_freight  = (int)$costOfFreight['berat_msr'] * (int)$costOfFreight['special_freight'];
+                        } else {
+                            $freight_discount = $costOfFreight['freight_kg'] * $disc;
+                            $special_freight_discount = $costOfFreight['special_freight'] * $disc;
+
+                            $freight = $freight_discount * $costOfFreight['berat_js'];
+                            $special_freight  = $special_freight_discount * $costOfFreight['berat_msr'];
+                        }
+
+                        $packing = (int)$costOfFreight['packing'];
+                        $total_sales = ($freight + $packing + $special_freight +  (int)$costOfFreight['others'] + (int)$costOfFreight['surcharge'] + (int)$costOfFreight['insurance']);
+                        $total_sales = $total_sales;
+                    }
+
+                    if ($costOfFreight['refund2'] == 0) {
+                        $refund = $costOfFreight['specialrefund2'];
+                    } elseif ($costOfFreight['specialrefund2'] == 0) {
+                        $refund = $total_sales * ($costOfFreight['refund2'] / 100);
+                    }
+                    $totalCostOfFreight += ((int)$costOfFreight['flight_msu2'] + (int)$costOfFreight['insurance2'] + $refund);
+                }
+
+                //Untuk ap diambil dari Paid
+                $allAp = $this->ap->getAllApReport($bln, $thn);
+                $totalAllAp = 0;
+                foreach ($allAp->result_array() as $allAp) {
+                    $totalAllAp += $allAp['total'];
+                }
+
+                //Overhead
+                // Dari transport,entertain,pengembanganpegawai,sallary,overtime
+                $OverheadAp = $this->ap->getApByOverhead($bln, $thn)->result_array();
+                $totalOverhead = 0;
+                foreach ($OverheadAp as $OverheadAp) {
+                    $totalOverhead += $OverheadAp['total'];
+                }
+                //General Am EXP
+                $generalAmExpAp = $this->ap->getApByAmExp($bln, $thn)->result_array();
+                $totalAmExp = 0;
+                foreach ($generalAmExpAp as $generalAmExpAp) {
+                    $totalAmExp += $generalAmExpAp['total'];
+                }
+
+                //Cari AP Human Resource
+                $apHumanResource = $this->ap->getModalJoinShp($bln, $thn)->result_array();
+                $totalApHumanResource = 0;
+                foreach ($apHumanResource as $apHumanResource) {
+                    $totalApHumanResource += $apHumanResource['sdm2'];
+                }
+
+
+                $data['title'] = 'Report Profit Loss ' . bulan($bln) . ' ' . $thn;
+                $breadcrumb_items = [];
+                $data['subtitle'] = 'Report AP';
+                $this->breadcrumb->add_item($breadcrumb_items);
+                $data['breadcrumb_bootstrap_style'] = $this->breadcrumb->generate();
+                $data['heading'] = 'Profit Loss Report';
+                $data['tahun'] = $thn;
+                $data['bulan'] = $bln;
+                $data['totalsales'] = $totalallsales - ($totalallsales * 0.011);
+                $data['apMaterial'] = $totalApMaterial;
+                $data['adjustMaterial'] = $this->ap->getAdjust('Material', $bln, $thn)->result_array();
+                $data['apHandlingCharges'] = $totalApHandlingCharges;
+                $data['apOverhead'] = $totalOverhead;
+                $data['apGeneralAmExp'] = $totalAmExp;
+                $data['apHumanResource'] = $totalApHumanResource;
+                $data['apCostOfFreight'] = $totalCostOfFreight;
+                $data['adjustCostOfFreight'] = $this->ap->getAdjust('Cost Of Freight', $bln, $thn)->result_array();
+                $data['adjustHandlingCharges'] = $this->ap->getAdjust('Handling Charges', $bln, $thn)->result_array();
+                $data['adjustHumanResource'] = $this->ap->getAdjust('Human Resource', $bln, $thn)->result_array();
+                $data['adjustMaterial'] = $this->ap->getAdjust('Material', $bln, $thn)->result_array();
+                $data['allAp'] = $totalAllAp;
+                $this->backend->display('finance/v_profitloss_hpp', $data);
+            }
+        } else {
+            redirect('finance/Report/profitLossHpp/' . $bulan . '/' . $tahun);
+        }
+    }
+
     public function profitLoss($bln = NULL, $thn = NULL)
     {
         $bulan = $this->input->post('bulan');

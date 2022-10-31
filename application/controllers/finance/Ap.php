@@ -27,6 +27,7 @@ class Ap extends CI_Controller
 
         $data['title'] = 'Account Payable - Payment Order';
         $data['ap'] = $this->ap->getApByCategory(1)->result_array();
+        $data['ap2'] = $this->ap->getApByCategory(1)->result_array();
 
         $this->backend->display('finance/v_ap', $data);
     }
@@ -43,6 +44,7 @@ class Ap extends CI_Controller
 
         $data['title'] = 'Account Payable - Cash Advance';
         $data['ap'] = $this->ap->getApByCategory(2)->result_array();
+        $data['ap2'] = $this->ap->getApByCategory(2)->result_array();
 
         $this->backend->display('finance/v_ap', $data);
     }
@@ -60,6 +62,7 @@ class Ap extends CI_Controller
 
         $data['title'] = 'Account Payable - Cash Advance Report';
         $data['ap'] = $this->ap->getApByCategory(3)->result_array();
+        $data['ap2'] = $this->ap->getApByCategory(3)->result_array();
 
         $this->backend->display('finance/v_ap', $data);
     }
@@ -76,6 +79,7 @@ class Ap extends CI_Controller
 
         $data['title'] = 'Account Payable - Reimbursment';
         $data['ap'] = $this->ap->getApByCategory(4)->result_array();
+        $data['ap2'] = $this->ap->getApByCategory(4)->result_array();
 
         $this->backend->display('finance/v_ap', $data);
     }
@@ -424,6 +428,54 @@ class Ap extends CI_Controller
             $url = "finance/ap/";
         } else {
             $url = "finance/ap/$url";
+        }
+
+        $data = array(
+            'payment_date' => $this->input->post('payment_date'),
+            'status' => 4
+        );
+
+        $folderUpload = "./uploads/ap_proof/";
+        $files = $_FILES;
+        $namaFile = $files['ktp']['name'];
+        $lokasiTmp = $files['ktp']['tmp_name'];
+
+        # kita tambahkan uniqid() agar nama gambar bersifat unik
+        $namaBaru = uniqid() . '-' . $namaFile;
+
+        array_push($listNamaBaru, $namaBaru);
+        $lokasiBaru = "{$folderUpload}/{$namaBaru}";
+        move_uploaded_file($lokasiTmp, $lokasiBaru);
+
+        $ktp = array('payment_proof' => $namaBaru);
+        $data = array_merge($data, $ktp);
+
+        $update = $this->db->update('tbl_pengeluaran', $data, ['no_pengeluaran' => $this->input->post('no_invoice')]);
+        if ($update) {
+            $this->session->set_flashdata('messageAlert', $this->messageAlert('success', 'Success Paid'));
+            redirect($url);
+        } else {
+            $this->session->set_flashdata('messageAlert', $this->messageAlert('error', 'Failed'));
+            redirect($url);
+        }
+    }
+    public function paidLangsung()
+    {
+        $url = $this->input->post('url');
+        if ($url == NULL) {
+            $url = "finance/ap/";
+        } else {
+            $url = "finance/ap/$url";
+        }
+        $id_pengeluaran = $this->input->post('id_pengeluaran');
+        $amount_approved = $this->input->post('amount_approved');
+        $total = array_sum($amount_approved);
+        for ($i = 0; $i < sizeof($id_pengeluaran); $i++) {
+            $dataApprove = array(
+                'amount_approved' => $amount_approved[$i],
+                'total_approved' => $total,
+            );
+            $this->db->update('tbl_pengeluaran', $dataApprove, ['id_pengeluaran' => $id_pengeluaran[$i]]);
         }
         $data = array(
             'payment_date' => $this->input->post('payment_date'),

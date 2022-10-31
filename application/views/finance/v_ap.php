@@ -24,12 +24,12 @@
                         </div>
                     <?php  }
                     ?>
-                    <a href="<?= base_url('finance/ap/history' . $this->uri->segment(3)) ?>" class="btn btn-sm mb-1 text-light" style="background-color: #9c223b;">History</a>
+                    <!-- <a href="<?= base_url('finance/ap/history' . $this->uri->segment(3)) ?>" class="btn btn-sm mb-1 text-light" style="background-color: #9c223b;">History</a> -->
 
                 </div>
                 <div class="card-body" style="overflow: auto;">
                     <!--begin: Datatable-->
-                    <table class="table table-separate table-head-custom table-checkable" id="myTable">
+                    <table class="table table-separate table-head-custom table-checkable" id="myTableAp">
                         <thead>
                             <tr>
                                 <th>No AP</th>
@@ -56,8 +56,7 @@
                                     <td><?= rupiah($c['total']) ?></td>
                                     <td><?= ($c['status'] == 2 ? 'Wait Received' : rupiah($c['total_approved'])) ?></td>
                                     <td><?= statusAp($c['status'], $c['is_approve_sm']) ?>
-                                        <!-- <td><?= ($c['no_ca'] == NULL ? '<span class="label label-danger label-inline font-weight-lighter" style="height:30px">Not Created</span>' : $c['no_ca']) ?>
-                                    <td><?= ($c['no_ca'] == NULL ? '<span class="label label-danger label-inline font-weight-lighter" style="height:30px">Not Created</span>' : $c['no_ca']) ?> -->
+
 
                                     </td>
                                     <td>
@@ -80,12 +79,19 @@
 
                                             <?php  } else {
                                             if ($c['status'] == 3 || $c['status'] == 5 || $c['status'] == 7) {
-                                            ?>
-                                                <a href="#" data-toggle="modal" data-target="#modal-paid<?= $c['no_pengeluaran'] ?>" class="btn btn-sm mb-1 text-light" style="background-color: #9c223b;">Pay</a>
+                                                if ($c['status'] == 7) { ?>
+                                                    <a href="#" data-toggle="modal" data-target="#modal-paid<?= $c['no_pengeluaran'] ?>" class="btn btn-sm mb-1 text-light" style="background-color: #9c223b;">Pay</a>
+                                                <?php } ?>
+                                                <?php if ($c['id_kategori_pengeluaran'] == 1) { ?>
+                                                    <a href="#" data-toggle="modal" data-target="#modal-paidLangsung<?= $c['no_pengeluaran'] ?>" class="btn btn-sm mb-1 text-light" style="background-color: #9c223b;">Pay</a>
+                                                <?php } ?>
                                                 <a href="<?= base_url('finance/ap/detail/' . $c['no_pengeluaran']) ?>" class="btn btn-sm mb-1 text-light" style="background-color: #9c223b;">Detail</a>
                                                 <a target="blank" href="<?= base_url('finance/ap/print/' . $c['no_pengeluaran']) ?>" class="btn btn-sm mb-1 text-light" style="background-color: #9c223b;"> <i class="fa fa-print text-light"></i> Print</a>
                                             <?php  } else {
                                             ?>
+                                                <?php if ($c['id_kategori_pengeluaran'] == 1 && $c['status'] != 4) { ?>
+                                                    <a href="#" data-toggle="modal" data-target="#modal-paidLangsung<?= $c['no_pengeluaran'] ?>" class="btn btn-sm mb-1 text-light" style="background-color: #9c223b;">Pay</a>
+                                                <?php } ?>
                                                 <a href="<?= base_url('finance/ap/detail/' . $c['no_pengeluaran']) ?>" class="btn btn-sm mb-1 text-light" style="background-color: #9c223b;">Detail</a>
                                                 <a target="blank" href="<?= base_url('finance/ap/print/' . $c['no_pengeluaran']) ?>" class="btn btn-sm mb-1 text-light" style="background-color: #9c223b;"> <i class="fa fa-print text-light"></i> Print</a>
 
@@ -135,6 +141,68 @@
                             <label for="due_date" class="font-weight-bold">Payment Date</label>
                             <input type="date" class="form-control" name="payment_date" required>
                             <input type="text" hidden class="form-control" name="no_invoice" value="<?= $c['no_pengeluaran'] ?>" required>
+                            <input type="text" hidden class="form-control" name="url" value="<?= $url ?>">
+
+                        </div>
+                        <div class="modal-footer justify-content-between">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+
+<?php } ?>
+
+<?php foreach ($ap2 as $d) {
+    $url = $this->uri->segment(3);
+    $CI = &get_instance();
+    $CI->load->model('ApModel');
+    $detail = $CI->ApModel->getApByNo($d['no_pengeluaran'])->result_array();
+?>
+    <div class="modal fade" id="modal-paidLangsung<?= $d['no_pengeluaran'] ?>">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Pay with no <b><?= $d['no_pengeluaran'] ?></b> </h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="<?= base_url('finance/ap/paidLangsung') ?>" method="POST" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label for="due_date" class="font-weight-bold">Proof Payment</label>
+                            <input type="file" class="form-control" name="ktp" required>
+                        </div>
+
+                        <div class="form-group">
+                            <?php foreach ($detail as $detail) { ?>
+
+                                <div class="row">
+                                    <div class="col">
+                                        <input type="text" name="id_pengeluaran[]" value="<?= $detail['id_pengeluaran'] ?>" hidden>
+                                        <label for="">Amount Proposed</label>
+                                        <input type="text" name="amount_proposed" class="form-control" id="amount_proposed" value="<?= $detail['amount_proposed'] ?>" disabled>
+                                    </div>
+                                    <div class="col">
+                                        <label for="">Amount Approved</label>
+                                        <input type="number" name="amount_approved[]" class="form-control" id="amount_approved">
+                                    </div>
+                                </div>
+
+
+                            <?php } ?>
+                        </div>
+                        <div class="form-group">
+                            <label for="due_date" class="font-weight-bold">Payment Date</label>
+                            <input type="date" class="form-control" name="payment_date" required>
+                            <input type="text" hidden class="form-control" name="no_invoice" value="<?= $d['no_pengeluaran'] ?>" required>
                             <input type="text" hidden class="form-control" name="url" value="<?= $url ?>">
 
                         </div>

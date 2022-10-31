@@ -26,6 +26,7 @@
     <link href="<?= base_url('assets/') ?>back/metronic2/css/themes/layout/aside/light.css" rel="stylesheet" type="text/css" />
     <link href="<?= base_url('assets/back/') ?>plugins/select2/css/select2.min.css" rel="stylesheet" type="text/css" />
     <link href="<?= base_url('assets/') ?>back/metronic2/plugins/custom/datatables/datatables.bundle.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/searchpanes/2.0.2/css/searchPanes.dataTables.min.css">
 
     <!-- chart -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -323,6 +324,7 @@
         <!--begin::Page Scripts(used by this page)-->
         <script src="<?= base_url('assets/') ?>back/metronic2/js/pages/widgets.js"></script>
         <script src="<?= base_url('assets/') ?>back/metronic2/plugins/custom/datatables/datatables.bundle.js"></script>
+        <script src="https://cdn.datatables.net/searchpanes/2.0.2/js/dataTables.searchPanes.min.js"></script>
         <!--end::Page Scripts-->
         <!-- Select2 -->
         <script src="<?= base_url('assets/back/') ?>plugins/select2/js/select2.min.js"></script>
@@ -541,6 +543,24 @@ $dataflash = json_encode($this->session->flashdata('message'));
         var myTable = $('#myTable').DataTable({
             "pageLength": 100
         });
+    });
+</script>
+
+
+<script>
+    $(document).ready(function() {
+
+        var myTable = $('#myTableAp').DataTable({
+            "pageLength": 100,
+            "order": [],
+            searchPanes: {
+                columns: [5],
+                layout: 'columns-4'
+            },
+
+            dom: 'Pfrtip',
+        });
+        $('#myTableAp').DataTable().searchPanes.rebuildPane();
     });
 </script>
 

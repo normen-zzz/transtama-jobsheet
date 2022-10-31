@@ -150,7 +150,7 @@ class ApModel extends CI_Model
     public function getApByCategory($id_kategori)
     {
 
-        $ignore = array(4, 0, 1);
+        $ignore = array(0, 1);
 
         $this->db->select('a.*, b.nama_kategori, b.keterangan,c.nama_kategori_pengeluaran, d.nama_user');
         $this->db->from('tbl_pengeluaran a');

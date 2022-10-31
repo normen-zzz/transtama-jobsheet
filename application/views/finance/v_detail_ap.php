@@ -160,15 +160,23 @@
 												</div>
 											</div>
 											<div class="d-flex justify-content-between border-top mt-5 pt-10">
-												<?php if ($info['status'] == 2) {
-												?>
-													<div>
-														<button type="submit" class="btn btn-sm text-light" onclick="return confirm('Are You Sure ?')" style="background-color: #9c223b;">Approve</button>
-														<a href="#" data-toggle="modal" data-target="#modal-decline" class="btn btn-sm text-light" style="background-color: #9c223b;">Void</a>
-													</div>
 
-												<?php	} elseif ($info['status'] == 3) {
+												<?php if ($info['status'] == 2) {
+													if ($info['is_approve_sm'] == 1) {
 												?>
+														<div>
+															<button type="submit" class="btn btn-sm text-light" onclick="return confirm('Are You Sure ?')" style="background-color: #9c223b;">Approve</button>
+															<a href="#" data-toggle="modal" data-target="#modal-decline" class="btn btn-sm text-light" style="background-color: #9c223b;">Void</a>
+														</div>
+
+													<?php	} else { ?>
+														<span>
+															<span class="fa fa-check-circle text-success"></span>
+															This <?= $info['no_pengeluaran'] ?> has been Approve By Manager, Please Wait SM To Check
+														</span>
+													<?php }
+												} elseif ($info['status'] == 3) {
+													?>
 
 													<?php $is_atasan = $this->session->userdata('id_jabatan');
 													if ($is_atasan == 2) {

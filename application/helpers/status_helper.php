@@ -35,7 +35,6 @@ function statusAp($status, $is_approve)
     } elseif ($status == 7) {
         return '<span class="label label-primary label-inline font-weight-lighter" style="height:40px">Approve Manager Finance</span>';
     } else {
-        return '<span class="label label-success label-inline font-weight-lighter">Paid</span> <br>
-        ';
+        return '<span class="label label-success label-inline font-weight-lighter">Paid</span>';
     }
 }
