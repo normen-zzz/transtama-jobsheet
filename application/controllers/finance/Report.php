@@ -1151,6 +1151,21 @@ class Report extends CI_Controller
         $this->backend->display('finance/v_soa', $data);
     }
 
+    public function soaFilter()
+    {
+        $month = $this->input->post('month');
+        $year  = $this->input->post('year');
+        $data['title'] = 'SOA';
+        $data['month'] = $this->input->post('month');
+        $data['year'] = $this->input->post('year');
+        $breadcrumb_items = [];
+        $data['subtitle'] = 'SOA';
+        $this->breadcrumb->add_item($breadcrumb_items);
+        $data['breadcrumb_bootstrap_style'] = $this->breadcrumb->generate();
+        $data['proforma'] = $this->cs->getSoaFilter($month, $year)->result_array();
+        $this->backend->display('finance/v_soa_filter', $data);
+    }
+
     public function Exportexcel($bulan = NULL, $tahun = NULL)
     {
         $shipments = $this->cs->getInvoiceReport($bulan, $tahun)->result_array();
@@ -1712,6 +1727,15 @@ class Report extends CI_Controller
         header("Content-Disposition: attachment;Filename=export-soa.xls");
         $data['title'] = "SOA";
         $data['proforma'] = $this->cs->getSoa()->result_array();
+        $this->load->view('finance/export_soa', $data);
+    }
+
+    public function ExportSoaFilter($month, $year)
+    {
+        header("Content-type: application/octet-stream");
+        header("Content-Disposition: attachment;Filename=export-soa-" . $month . "-" . $year . ".xls");
+        $data['title'] = "SOA";
+        $data['proforma'] = $this->cs->getSoaFilter($month, $year)->result_array();
         $this->load->view('finance/export_soa', $data);
     }
 

@@ -50,11 +50,11 @@
             </tr>
 
         <?php
-            $total_invoice += $j['total_invoice'];
-            $invoice += $j['invoice'];
-            $ppn += $j['ppn'];
-            $pph += $j['pph'];
-            $total_setelah_pph += $total;
+            $total_invoice += (int)$j['total_invoice'];
+            $invoice += (int)$j['invoice'];
+            $ppn += (int)$j['ppn'];
+            $pph += (int)$j['pph'];
+            $total_setelah_pph += (int)$total;
         } ?>
         <tr>
             <td colspan="4" style="text-align:center">Total</td>

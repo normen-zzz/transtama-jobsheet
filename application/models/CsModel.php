@@ -81,10 +81,24 @@ class CsModel extends M_Datatables
 
 	function getSoa()
 	{
-		$this->db->select('b.*, a.shipment_id as id_shipment,a.customer,a.ppn,a.invoice,a.pph,a.total_invoice, a.no_invoice,a.due_date, MONTH(a.date) as shipment,a.status,a.id_invoice');
+		$this->db->select('b.*, a.shipment_id as id_shipment,a.customer,a.ppn,a.invoice,a.pph,a.total_invoice, a.no_invoice,a.due_date, MONTH(b.tgl_pickup) as shipment,a.status,a.id_invoice');
 		$this->db->from('tbl_invoice a');
 		$this->db->join('tbl_shp_order b', 'a.shipment_id=b.id');
 		$this->db->where('a.status >=', 1);
+		$this->db->group_by('a.no_invoice');
+		$this->db->order_by('a.no_invoice', 'DESC');
+		$query = $this->db->get();
+		return $query;
+	}
+
+	function getSoaFilter($month, $year)
+	{
+		$this->db->select('b.*, a.shipment_id as id_shipment,a.customer,a.ppn,a.invoice,a.pph,a.total_invoice, a.no_invoice,a.due_date, MONTH(b.tgl_pickup) as shipment,a.status,a.id_invoice');
+		$this->db->from('tbl_invoice a');
+		$this->db->join('tbl_shp_order b', 'a.shipment_id=b.id');
+		$this->db->where('a.status >=', 1);
+		$this->db->where('MONTH(b.tgl_pickup)', $month);
+		$this->db->where('YEAR(b.tgl_pickup)', $year);
 		$this->db->group_by('a.no_invoice');
 		$this->db->order_by('a.no_invoice', 'DESC');
 		$query = $this->db->get();
