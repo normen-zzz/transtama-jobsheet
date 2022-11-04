@@ -9,7 +9,7 @@
                 <div class="content-header">
                     <div class="d-flex align-items-center">
                         <div class="mr-auto">
-                            <h3 class="page-title"><?= $title; ?></h3>
+                            <h3 class="page-title"><?= $title . ' ' . bulan($month) . ' ' . $year; ?></h3>
 
                         </div>
                     </div>
