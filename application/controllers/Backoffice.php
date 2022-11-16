@@ -41,7 +41,7 @@ class Backoffice extends CI_Controller
                         'id_jabatan' => $user['id_jabatan'],
                     ];
                     $this->session->set_userdata($data);
-                    $this->db->update('tb_user', ['status_login' => 1], ['id_user' => $user['id_user']]);
+                    // $this->db->update('tb_user', ['status_login' => 1], ['id_user' => $user['id_user']]);
                     activity_log($user['username'], $user['nama_user']);
                     if ($user['id_role'] == 1) {
                         redirect('superadmin/dashboard');
@@ -70,7 +70,7 @@ class Backoffice extends CI_Controller
     public function logout()
     {
         $id_user = $this->session->userdata('id_user');
-        $this->db->update('tb_user', ['status_login' => 0], ['id_user' => $id_user]);
+        // $this->db->update('tb_user', ['status_login' => 0], ['id_user' => $id_user]);
         $this->session->unset_userdata('email');
         $this->session->unset_userdata('id_role');
         $this->session->unset_userdata('id_fakultas');

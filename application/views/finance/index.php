@@ -8,7 +8,7 @@
 			<div class="col-xl-6">
 				<!--begin::Stats Widget 30-->
 				<a href="<?= base_url('finance/jobsheet') ?>">
-					<div class="card" style="background-image: url(<?= base_url('assets/layout/br_cs1.png') ?>); background-size:cover;">
+					<div class="card" style="background-image: url(<?= base_url('assets/layout/js1.png') ?>); background-size:cover;">
 						<!--begin::Body-->
 						<div class="card-body" style="height: 300px; width:300" style="background-size: cover;">
 							<span class="card-title font-weight-bolder text-white font-size-h2 mb-0 m-10 d-block"><?= $so; ?></span>
@@ -36,6 +36,7 @@
 			</div>
 
 		</div>
+
 
 		<div class="row mt-4">
 			<div class="col-xl-4">
@@ -85,9 +86,8 @@
 			</div>
 
 		</div>
-
-
-		<div class="row mt-4">
+		
+			<div class="row mt-4">
 			<div class="col-xl-3">
 				<!--begin::Stats Widget 16-->
 				<a href="<?= base_url('finance/ap') ?>" class="card card-custom card-stretch gutter-b">
@@ -165,7 +165,6 @@
 			</div>
 
 		</div>
-
 
 
 	</div>

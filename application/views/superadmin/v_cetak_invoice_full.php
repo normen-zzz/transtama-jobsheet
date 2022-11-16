@@ -61,8 +61,8 @@
         <div class="header">
             <table style="width: 100%;" style="font-size: 10px; margin-left:200px">
                 <tr>
-                    <td rowspan="3" style="width:150px">
-                        <img src="<?= base_url('uploads/LogoRaw.png') ?>" width="150" height="55" style="margin-top:-40px">
+                    <td rowspan="3" style="width:150px; background-color:white">
+                        <img src="<?= base_url('uploads/logo_transtama.jpg') ?>" width="170" height="60" style="margin-top:-40px;">
                     </td>
                     <td style="text-align: center;">Customer</td>
                     <td><b><?= $info['customer'] ?></b> </td>
@@ -224,8 +224,8 @@
                                 $total_sales = ($freight + $packing + $special_freight +  $inv['others'] + $inv['surcharge'] + $insurance);
                             }
                             if ($total_do == 0) {
-                                if ($inv['no_so'] != NULL && $inv['no_stp'] != NULL) {
-                                    $no_do = $inv['note_cs'] . '<br>/' . $inv['no_so'] . '/' . $inv['no_stp'];
+								 if ($inv['no_so'] != NULL && $inv['no_stp'] != NULL) {
+                                     $no_do = $inv['note_cs'] . '<br>/' . $inv['no_so'] . '/' . $inv['no_stp'];
                                 } else {
                                     $no_do = $inv['note_cs'];
                                 }
@@ -313,11 +313,9 @@
                                                                         echo  rupiah($inv['freight_kg']);
                                                                         ?></td>
 
-                                        <td style="text-align: left;"><?php if ($service == 'Charter Service') {
-                                                                            echo rupiah($total_sales);
-                                                                        } else {
-                                                                            echo  rupiah($inv['freight_kg'] * $d['berat']);
-                                                                        } ?></td>
+                                        <td style="text-align: left;"><?php
+                                                                        echo rupiah($d['berat'] * $inv['freight_kg']);
+                                                                        ?></td>
 
                                     </tr>
 
@@ -441,6 +439,7 @@
                                 </td>
 
                             <?php } ?>
+							
 
                             <?php if ($info['is_ppn'] == 1) {
                             ?>
@@ -601,7 +600,7 @@
 
 
                             if ($total_do == 0) {
-                                if ($inv['no_so'] != NULL && $inv['no_stp'] != NULL) {
+								if ($inv['no_so'] != NULL && $inv['no_stp'] != NULL) {
                                     $no_do = $inv['note_cs'] . '<br>/' . $inv['no_so'] . '/' . $inv['no_stp'];
                                 } else {
                                     $no_do = $inv['note_cs'];
@@ -684,11 +683,9 @@
                                                                             echo  rupiah($inv['freight_kg']);
                                                                         } ?></td>
 
-                                        <td style="text-align: left;"><?php if ($service == 'Charter Service') {
-                                                                            echo rupiah($total_sales);
-                                                                        } else {
-                                                                            echo  rupiah($inv['freight_kg'] * $d['berat']);
-                                                                        } ?></td>
+                                        <td style="text-align: left;"><?php
+                                                                        echo rupiah($total_sales);
+                                                                        ?></td>
 
                                     </tr>
                                 <?php $total_koli = $total_koli + $d['koli'];
@@ -788,7 +785,7 @@
 
                             <?php  } elseif ($info['is_others'] == 1) {
                             ?>
-                                <td colspan="7" style="border-left:none">
+                                <td colspan="8" style="border-left:none">
                                 </td>
 
                             <?php  } else {
@@ -891,6 +888,7 @@
             <?php  }
 
             ?>
+			
             <div class="said">
                 <p style="font-weight: bold;">
                     <?php

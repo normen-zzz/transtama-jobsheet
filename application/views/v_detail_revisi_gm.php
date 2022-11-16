@@ -143,8 +143,7 @@
 													<table class="table table-bordered" style="width:100%">
 														<thead>
 															<tr>
-																<!-- <th>No. Flight</th>
-																<th>No. SMU</th> -->
+																
 																<th>WEIGHT JS/MSR</th>
 																<th>WEIGHT SPECIAL HD</th>
 															</tr>
@@ -152,10 +151,7 @@
 														<tbody>
 															<tr>
 
-																<!-- <td> <input type="text" class="form-control" placeholder="isi no flight" name="no_flight" value="<?= $msr['no_flight'] ?>"> </td>
-																<td> <input type="text" class="form-control" placeholder="isi no smu" name="no_smu" value="<?= $msr['no_smu'] ?>">
-																	<input type="text" class="form-control" hidden name="id" value="<?= $msr['id'] ?>">
-																</td> -->
+																
 																<td><?= $msr['berat_msr'] ?></td>
 																<td><?= $msr['berat_js'] ?></td>
 															</tr>
@@ -556,7 +552,7 @@
 					</div>
 				</div>
 
-
+				
 				<div class="row">
 					<div class="col-md-6">
 						<div class="card card-custom gutter-b example example-compact">

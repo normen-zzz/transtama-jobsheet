@@ -62,7 +62,7 @@
                                                     $jarak = $tgl2 - $tgl1;
 
                                                     $perbedaan = $jarak / 60 / 60 / 24;
-                                                    $no_do = $this->db->get_where('tbl_no_do', array('shipment_id' => $j['shipment_id']))->result_array();
+													$no_do = $this->db->get_where('tbl_no_do', array('shipment_id' => $j['shipment_id']))->result_array();
                                                 ?>
                                                     <tr>
                                                         <td><?= bulan_indo($j['tgl_pickup']) ?></td>

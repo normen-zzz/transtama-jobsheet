@@ -508,7 +508,7 @@ class CsModel extends M_Datatables
 			return $query;
 		}
 	}
-
+	
 	function getInvoiceVoidReport($bulan, $tahun)
 	{
 		// 0=proforma

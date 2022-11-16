@@ -2,6 +2,7 @@
     <thead>
         <tr>
             <th>PICKUP DATE</th>
+			 <th>SHIPPER/CUSTOMER</th>
             <th>SHIPMENT ID</th>
             <th>DEST</th>
             <th>SERVICE</th>
@@ -11,6 +12,8 @@
             <th>PACKING</th>
             <th>OTHER</th>
             <th>TOTAL RATE</th>
+			<th>NOTE</th>
+			<th>STATUS</th>
         </tr>
     </thead>
     <tbody>
@@ -37,12 +40,15 @@
 
             $packing = $msr['packing'];
             $total_sales = ($freight + $packing + $special_freight +  $msr['others'] + $msr['surcharge'] + $msr['insurance']);
+            // $comm = $msr['cn'] * $total_sales;
+            // $disc = $msr['disc'] * $total_sales;
 
             $total_sales = $total_sales;
         }
         ?>
         <tr>
             <td><?= bulan_indo($msr['tgl_pickup']) ?></td>
+			 <td><?= $msr['shipper'] ?></td>
             <td><?= $msr['shipment_id'] ?></td>
             <td><?= $msr['tree_consignee'] ?></td>
             <td><?= $service ?></td>
@@ -57,6 +63,17 @@
             <td><?= rupiah($msr['packing']) ?></td>
             <td><?= rupiah($msr['others']) ?></td>
             <td><?= rupiah($total_sales) ?></td>
+			<td><?= $msr['so_note'] ?></td>
+			<td><?php
+                    if ($msr['status_so'] == 2) {
+                        echo 'Approve PIC JS';
+                    } elseif ($msr['status_so'] == 3) {
+                        echo 'Approve Manager CS';
+                    } elseif ($msr['status_so'] == 4) {
+                        echo 'Approve Finance';
+                    }
+                    ?></td>
+
 
         </tr>
 

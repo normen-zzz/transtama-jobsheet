@@ -38,55 +38,7 @@
 		</div>
 
 
-		<div class="row mt-4">
-			<div class="col-xl-4">
-				<!--begin::Stats Widget 16-->
-				<a href="<?= base_url('finance/invoice') ?>" class="card card-custom card-stretch gutter-b">
-					<!--begin::Body-->
-					<div class="card-body">
-						<span class="svg-icon svg-icon-info svg-icon-3x ml-n1">
-							<i class="fa fa-arrow-right text-danger"></i>
-						</span>
-						<div class="text-inverse-white font-weight-bolder font-size-h5 mb-2 mt-5"><?= $proforma ?></div>
-						<div class="font-weight-bold text-inverse-white font-size-sm">Proforma Invoice</div>
-					</div>
-					<!--end::Body-->
-				</a>
-				<!--end::Stats Widget 16-->
-			</div>
-			<div class="col-xl-4">
-				<!--begin::Stats Widget 17-->
-				<a href="<?= base_url('finance/invoice/final') ?>" class="card card-custom card-stretch gutter-b">
-					<!--begin::Body-->
-					<div class="card-body">
-						<span class="svg-icon svg-icon-info svg-icon-3x ml-n1">
-							<i class="fa fa-dollar-sign text-danger"></i>
-						</span>
-						<div class="text-inverse-white font-weight-bolder font-size-h5 mb-2 mt-5"><?= $invoice ?></div>
-						<div class="font-weight-bold text-inverse-white font-size-sm">Invoice</div>
-					</div>
-					<!--end::Body-->
-				</a>
-				<!--end::Stats Widget 17-->
-			</div>
-			<div class="col-xl-4">
-				<!--begin::Stats Widget 18-->
-				<a href="<?= base_url('finance/invoice/final') ?>" class="card card-custom card-stretch gutter-b">
-					<!--begin::Body-->
-					<div class="card-body">
-						<span class="svg-icon svg-icon-info svg-icon-3x ml-n1">
-							<i class="fa fa-check text-danger"></i>
-						</span>
-						<div class="text-inverse-white font-weight-bolder font-size-h5 mb-2 mt-5"><?= $invoice_paid ?></div>
-						<div class="font-weight-bold text-inverse-white font-size-sm">Paid Invoice</div>
-					</div>
-					<!--end::Body-->
-				</a>
-				<!--end::Stats Widget 18-->
-			</div>
-
-		</div>
-
+		
 
 	</div>
 	<!--end::Container-->

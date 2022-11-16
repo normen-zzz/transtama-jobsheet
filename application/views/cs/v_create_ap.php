@@ -198,7 +198,7 @@
                             ?>
                             <input type="text" class="form-control" name="terbilang" hidden value="<?= $terbilang ?>">
 
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="exampleInputEmail1">Purpose <span class="text-danger">*</span></label>
                                     <textarea class="form-control" required name="purpose"></textarea>
@@ -208,10 +208,6 @@
                             <div class="col-md-4">
                                 <label for="pic" class="font-weight-bold">No. Invoice <span class="text-danger">*</span></label>
                                 <input type="text" name="no_invoice" class="form-control" required>
-                            </div>
-                            <div class="col-md-4">
-                                <label for="pic" class="font-weight-bold">Due Date <span class="text-danger">*</span></label>
-                                <input type="date" name="due_date" class="form-control" required>
                             </div>
 
                             <div class="col-md-4">

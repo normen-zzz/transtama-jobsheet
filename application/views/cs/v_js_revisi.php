@@ -42,13 +42,13 @@
                                             </thead>
                                             <tbody>
                                                 <?php foreach ($js as $j) {
-                                                    $no_do = $this->db->get_where('tbl_no_do', array('shipment_id' => $j['shipment_id']))->result_array();
+													$no_do = $this->db->get_where('tbl_no_do', array('shipment_id' => $j['shipment_id']))->result_array();
                                                 ?>
                                                     <tr>
                                                         <td><?= bulan_indo($j['tgl_pickup']) ?></td>
                                                         <td><?= $j['shipment_id'] ?></td>
                                                         <td><?php foreach ($no_do as $do) {
-                                                                echo $do['no_do'];
+                                                                echo $do['no_do'] . ',';
                                                             } ?></td>
                                                         <td><?= $j['so_id'] ?></td>
                                                         <td><?= $j['jobsheet_id'] ?></td>
@@ -71,9 +71,8 @@
 
                                                             <?php  } else {
                                                             ?>
-                                                                <a href="<?= base_url('cs/salesOrder/approve/' . $j['id_request']) ?>" onclick="return confirm('Are you sure ?')" class="btn btn-sm text-light" style="background-color: #9c223b;">Approve</a>
-                                                                <a href="<?= base_url('cs/salesOrder/decline/' . $j['id_request']) ?>" onclick="return confirm('Are you sure ?')" class="btn btn-sm mt-2 text-light" style="background-color: #9c223b;">Decline</a>
-                                                                <!-- <a href="<?= base_url('cs/jobsheet/edit/' . $j['id']) ?>" class=" btn btn-success text-light mt-1">Edit</a> -->
+                                                                <a href="<?= base_url('cs/salesOrder/approve/' . $j['id_request']) ?>" onclick="return confirm('Are you sure ?')" class="btn btn-sm text-light" style="background-color: #9c223b;">Activate</a>
+                                                                <!--  <a href="<?= base_url('cs/salesOrder/decline/' . $j['id_request']) ?>" onclick="return confirm('Are you sure ?')" class="btn btn-sm mt-2 text-light" style="background-color: #9c223b;">Decline</a>-->
 
                                                             <?php  } ?>
                                                         </td>

@@ -160,7 +160,6 @@
 												</div>
 											</div>
 											<div class="d-flex justify-content-between border-top mt-5 pt-10">
-
 												<?php $id_jabatan = $this->session->userdata('id_jabatan');
 												// Jika Usernya gm 
 												if ($id_jabatan == 11) {
@@ -337,7 +336,6 @@
 														</span>
 												<?php }
 												} ?>
-
 											</div>
 
 											<!--end: Wizard Step 1-->
@@ -381,16 +379,16 @@
 						</button>
 					</div>
 					<div class="modal-body">
-						<!-- <form action="<?= base_url('superadmin/role/addRole') ?>" method="POST"> -->
-						<div class="col-md-12">
-							<img src="https://tesla-smartwork.transtama.com/uploads/ap/<?= $c['attachment'] ?>" alt="attachment" width="100%">
+						<form action="<?= base_url('superadmin/role/addRole') ?>" method="POST">
+							<div class="col-md-12">
+								<img src="https://tesla-smartwork.transtama.com/uploads/ap/<?= $c['attachment'] ?>" alt="attachment" width="100%">
 
-						</div>
+							</div>
 					</div>
 					<div class="modal-footer justify-content-between">
 						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 					</div>
-					<!-- </form> -->
+					</form>
 				</div>
 				<!-- /.modal-content -->
 			</div>

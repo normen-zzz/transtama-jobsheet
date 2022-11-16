@@ -890,7 +890,7 @@
 
                 <?php  } else {
                 $id_atasan = $this->session->userdata('id_atasan');
-                // kalo dia atasan cs
+                // kalo dia atasan sales
                 if ($id_atasan == 0 || $id_atasan == NULL) {
                     $cek_approve_cs = $this->db->select('id_user_mgr')->get_where('tbl_approve_revisi_so', ['shipment_id' => $request['shipment_id']])->row_array();
                     $tgl_approve_revisi = $this->db->get_where('tbl_approve_revisi_so', ['shipment_id' => $request['shipment_id']])->row_array();

@@ -32,8 +32,7 @@
                                                     <th>Date Created</th>
                                                     <th>Due Date</th>
                                                     <!-- <th>Time Line</th> -->
-                                                    <th>Customer Invoice</th>
-                                                    <th>Customer Pickup</th>
+                                                    <th>Customer</th>
                                                     <th>Status</th>
                                                     <th>Action</th>
                                                 </tr>
@@ -51,8 +50,7 @@
                                                         <td><?= bulan_indo($j['date']) ?></td>
                                                         <td><?= bulan_indo($j['due_date']) ?></td>
                                                         <!-- <td> <span class="text-danger"><?= $perbedaan ?> Days Again</span></td> -->
-                                                        <td><?= $j['customer'] ?></td>
-                                                        <td><?= $j['customer_pickup'] ?></td>
+                                                        <td><?= $j['shipper'] ?></td>
                                                         <td><?php if ($j['status'] == 0) {
                                                                 echo '<span class="label label-danger label-inline font-weight-lighter" style="width: 150px;">Proforma Invoice</span>';
                                                             } elseif ($j['status'] == 1) {
@@ -60,7 +58,7 @@
                                                             }  ?></td>
 
                                                         <td>
-                                                            <!-- <a href="<?= base_url('finance/invoice/detail/' . $j['id_invoice'] . '/' . $j['no_invoice']) ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">Detail</a> -->
+                                                                                               <a target="blank" href="<?= base_url('finance/invoice/printProformaExcell/' . $j['no_invoice']) ?>" class="btn btn-sm mt-1 text-light" style="background-color: #9c223b;"><i class="fa fa-print text-light"></i> Excell </a>
                                                             <a href="<?= base_url('finance/invoice/edit/' . $j['id_invoice'] . '/' . $j['no_invoice']) ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">Detail</a>
                                                         </td>
 

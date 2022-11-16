@@ -1,11 +1,9 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
-
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Reader\Csv;
 use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
 use PhpOffice\PhpSpreadsheet\IOFactory;
-
 class Invoice extends CI_Controller
 {
     public function __construct()
@@ -43,7 +41,7 @@ class Invoice extends CI_Controller
             $data['proforma'] = $this->cs->getProformaInvoiceFinal()->result_array();
             $this->backend->display('finance/v_invoice', $data);
         } else {
-            $cek_data = $this->cs->cekShipment($shipment_id)->row_array();
+             $cek_data = $this->cs->cekShipment($shipment_id)->row_array();
             if ($cek_data) {
                 $data['invoice'] = $this->db->get_where('tbl_invoice', ['shipment_id' => $cek_data['id']])->row_array();
                 $data['title'] = 'Invoice';
@@ -60,51 +58,12 @@ class Invoice extends CI_Controller
             }
         }
     }
-    public function invoicePaid()
-    {
-        $shipment_id = $this->input->post('shipment_id');
-        if ($shipment_id == NULL) {
-            $data['title'] = 'Invoice';
-            $breadcrumb_items = [];
-            $data['subtitle'] = 'Invoice';
-            $this->breadcrumb->add_item($breadcrumb_items);
-            $data['breadcrumb_bootstrap_style'] = $this->breadcrumb->generate();
-            $data['proforma'] = $this->cs->getInvoicePaid(null, null)->result_array();
-            $this->backend->display('finance/v_invoice_paid', $data);
-        } else {
-            $cek_data = $this->cs->cekShipment($shipment_id)->row_array();
-            if ($cek_data) {
-                $data['invoice'] = $this->db->get_where('tbl_invoice', ['shipment_id' => $cek_data['id']])->row_array();
-                $data['title'] = 'Invoice';
-                $data['shipment_id'] = $shipment_id;
-                $breadcrumb_items = [];
-                $data['subtitle'] = 'Invoice';
-                $this->breadcrumb->add_item($breadcrumb_items);
-                $data['breadcrumb_bootstrap_style'] = $this->breadcrumb->generate();
-                $data['proforma'] = $this->cs->getInvoicePaid(null, null)->result_array();
-                $this->backend->display('finance/v_invoice_paid', $data);
-            } else {
-                $this->session->set_flashdata('messageAlert', $this->messageAlert('error', 'Shipment ID Not Found'));
-                redirect('finance/invoice/invoicePaid');
-            }
-        }
-    }
-    public function soa()
-    {
-        $data['title'] = 'SOA';
-        $breadcrumb_items = [];
-        $data['subtitle'] = 'SOA';
-        $this->breadcrumb->add_item($breadcrumb_items);
-        $data['breadcrumb_bootstrap_style'] = $this->breadcrumb->generate();
-        $data['proforma'] = $this->cs->getSoa()->result_array();
-        $this->backend->display('finance/v_soa', $data);
-    }
     public function edit($id_invoice, $no_invoice)
     {
 
-        $data['title'] = 'Edit Invoice';
+        $data['title'] = 'Create Invoice';
         $breadcrumb_items = [];
-        $data['subtitle'] = 'Edit Invoice';
+        $data['subtitle'] = 'Create Invoice';
         // $data['sub_header_page'] = 'exist';
         $this->breadcrumb->add_item($breadcrumb_items);
         $data['breadcrumb_bootstrap_style'] = $this->breadcrumb->generate();
@@ -112,12 +71,11 @@ class Invoice extends CI_Controller
         $data['shipper'] = $this->db->get_where('tbl_shp_order', ['id' => $id_invoice])->row_array();
         $data['invoice'] = $this->cs->getInvoice($no_invoice)->result_array();
         $data['total_invoice'] = $this->cs->getInvoice($no_invoice)->num_rows();
-        $data['moda'] = $this->db->get('tbl_moda')->result_array();
         $data['js'] = $this->cs->getJsApproveFinance()->result_array();
 
         $this->backend->display('finance/v_edit_invoice', $data);
     }
-    public function editInvoice($id_invoice, $no_invoice)
+	public function editInvoice($id_invoice, $no_invoice)
     {
 
         $data['title'] = 'Edit Invoice';
@@ -154,57 +112,21 @@ class Invoice extends CI_Controller
     }
     public function paid()
     {
-        $data = array(
+       $data = array(
             'payment_date' => $this->input->post('payment_date'),
             'payment_time' => $this->input->post('payment_time'),
             'status' => 2
         );
-        // var_dump($data);
-        // $config['upload_path'] = './uploads/berkas/';
-        // $config['allowed_types'] = 'jpg|png|jpeg';
-        // $config['encrypt_name'] = TRUE;
-        // $this->upload->initialize($config);
-
-        // $folderUpload = "./uploads/bukti_bayar/";
-        // $files = $_FILES;
-        // $files = $_FILES;
-        // $jumlahFile = count($files['ktp']['name']);
-        // // var_dump($jumlahFile);
-        // // die;
-
-        // if (!empty($_FILES['ktp']['name'][0])) {
-        //     $listNamaBaru = array();
-        //     for ($i = 0; $i < $jumlahFile; $i++) {
-        //         $namaFile = $files['ktp']['name'][$i];
-        //         $lokasiTmp = $files['ktp']['tmp_name'][$i];
-
-        //         # kita tambahkan uniqid() agar nama gambar bersifat unik
-        //         $namaBaru = uniqid() . '-' . $namaFile;
-
-        //         array_push($listNamaBaru, $namaBaru);
-        //         $lokasiBaru = "{$folderUpload}/{$namaBaru}";
-        //         $prosesUpload = move_uploaded_file($lokasiTmp, $lokasiBaru);
-        //     }
-        //     $namaBaru = implode("+", $listNamaBaru);
-        //     $ktp = array('bukti_bayar' => $namaBaru);
-        //     $data = array_merge($data, $ktp);
-        // } else {
-        //     $this->session->set_flashdata('messageAlert', $this->messageAlert('error', 'Please Upload Proof of Paymant'));
-        //     redirect('finance/invoice/final');
-        // }
-        // // var_dump($data);
-        // // die;
         $update = $this->db->update('tbl_invoice', $data, ['no_invoice' => $this->input->post('no_invoice')]);
         if ($update) {
             $this->session->set_flashdata('messageAlert', $this->messageAlert('success', 'Success Paid'));
             redirect('finance/invoice/final');
         } else {
-            $this->session->set_flashdata('messageAlert', $this->messageAlert('error', 'Failed'));
+            $this->session->set_flashdata('messageAlert', $this->messageAlert('error', 'Please Upload Proof of Payent'));
             redirect('finance/invoice/final');
         }
     }
-
-    public function editPaid()
+	public function editPaid()
     {
         $data = array(
             'payment_date' => $this->input->post('payment_date'),
@@ -249,63 +171,30 @@ class Invoice extends CI_Controller
         $update = $this->db->update('tbl_invoice', $data, ['no_invoice' => $this->input->post('no_invoice')]);
         if ($update) {
             $this->session->set_flashdata('messageAlert', $this->messageAlert('success', 'Success Paid'));
-            redirect('finance/invoice/final');
+            redirect('finance/invoice/invoicePaid');
         } else {
             $this->session->set_flashdata('messageAlert', $this->messageAlert('error', 'Failed'));
             redirect('finance/invoice/invoicePaid');
         }
     }
-    // public function paid()
-    // {
-    //     $data = array(
-    //         'payment_date' => $this->input->post('payment_date'),
-    //         'payment_time' => $this->input->post('payment_time'),
-    //         'status' => 2
-    //     );
-    //     // var_dump($data);
-    //     $config['upload_path'] = './uploads/berkas/';
-    //     $config['allowed_types'] = 'jpg|png|jpeg';
-    //     $config['encrypt_name'] = TRUE;
-    //     $this->upload->initialize($config);
-
-    //     $folderUpload = "./uploads/bukti_bayar/";
-    //     $files = $_FILES;
-    //     $files = $_FILES;
-    //     $jumlahFile = count($files['ktp']['name']);
-    //     // var_dump($jumlahFile);
-    //     // die;
-
-    //     if (!empty($_FILES['ktp']['name'][0])) {
-    //         $listNamaBaru = array();
-    //         for ($i = 0; $i < $jumlahFile; $i++) {
-    //             $namaFile = $files['ktp']['name'][$i];
-    //             $lokasiTmp = $files['ktp']['tmp_name'][$i];
-
-    //             # kita tambahkan uniqid() agar nama gambar bersifat unik
-    //             $namaBaru = uniqid() . '-' . $namaFile;
-
-    //             array_push($listNamaBaru, $namaBaru);
-    //             $lokasiBaru = "{$folderUpload}/{$namaBaru}";
-    //             $prosesUpload = move_uploaded_file($lokasiTmp, $lokasiBaru);
-    //         }
-    //         $namaBaru = implode("+", $listNamaBaru);
-    //         $ktp = array('bukti_bayar' => $namaBaru);
-    //         $data = array_merge($data, $ktp);
-    //     } else {
-    //         $this->session->set_flashdata('messageAlert', $this->messageAlert('error', 'Please Upload Proof of Paymant'));
-    //         redirect('finance/invoice/final');
-    //     }
-    //     // var_dump($data);
-    //     // die;
-    //     $update = $this->db->update('tbl_invoice', $data, ['no_invoice' => $this->input->post('no_invoice')]);
-    //     if ($update) {
-    //         $this->session->set_flashdata('messageAlert', $this->messageAlert('success', 'Success Paid'));
-    //         redirect('finance/invoice/final');
-    //     } else {
-    //         $this->session->set_flashdata('messageAlert', $this->messageAlert('error', 'Please Upload Proof of Payent'));
-    //         redirect('finance/invoice/final');
-    //     }
-    // }
+	public function soa()
+    {
+        $data['title'] = 'SOA';
+        $breadcrumb_items = [];
+        $data['subtitle'] = 'SOA';
+        $this->breadcrumb->add_item($breadcrumb_items);
+        $data['breadcrumb_bootstrap_style'] = $this->breadcrumb->generate();
+        $data['proforma'] = $this->cs->getSoa()->result_array();
+        $this->backend->display('finance/v_soa', $data);
+    }
+	public function ExportSoa()
+    {
+        header("Content-type: application/octet-stream");
+        header("Content-Disposition: attachment;Filename=export-soa.xls");
+        $data['title'] = "SOA";
+        $data['proforma'] = $this->cs->getSoa()->result_array();
+        $this->load->view('finance/export_soa', $data);
+    }
 
     public function detail($id)
     {
@@ -319,8 +208,7 @@ class Invoice extends CI_Controller
         $this->backend->display('finance/v_js_detail_mgr', $data);
     }
 
-
-    public function deleteInvoice($id_invoice, $no_invoice, $shipment_id)
+     public function deleteInvoice($id_invoice, $no_invoice, $shipment_id)
     {
         $delete = $this->db->delete('tbl_invoice',  ['id_invoice' => $id_invoice]);
         if ($delete) {
@@ -336,7 +224,7 @@ class Invoice extends CI_Controller
             redirect('finance/invoice/edit/' . $id_invoice . '/' . $no_invoice);
         }
     }
-    public function deleteInvoiceFinal($id_invoice, $no_invoice, $shipment_id)
+	 public function deleteInvoiceFinal($id_invoice, $no_invoice, $shipment_id)
     {
         $delete = $this->db->delete('tbl_invoice',  ['id_invoice' => $id_invoice]);
         if ($delete) {
@@ -352,7 +240,7 @@ class Invoice extends CI_Controller
             redirect('finance/invoice/editInvoice/' . $id_invoice . '/' . $no_invoice);
         }
     }
-    public function approve($no_invoice, $id_invoice, $total_amount)
+     public function approve($no_invoice, $id_invoice, $total_amount)
     {
         $update = $this->db->update('tbl_invoice',  ['status' => 1, 'total_invoice' => decrypt_url($total_amount)], ['no_invoice' => $no_invoice]);
         if ($update) {
@@ -368,30 +256,20 @@ class Invoice extends CI_Controller
             redirect('finance/invoice/final');
         }
     }
-    public function cekShipmentId()
-    {
-        $shipment_id = $this->input->post('shipment_id');
-        $cek_data = $this->db->get_where('tbl_shp_order',  ['shipment_id' => $shipment_id])->row_array();
-        if ($cek_data) {
-            $data['invoice'] = $this->db->get_where('tbl_invoice', ['shipment_id' => $cek_data['id']])->row_array();
-            $this->backend->display('finance/v_invoice', $data);
-        } else {
-            $this->session->set_flashdata('messageAlert', $this->messageAlert('error', 'Shipment ID Not Found'));
-            redirect('finance/invoice/final');
-        }
-    }
 
     public function proceseditInvoice()
     {
         $no_invoice = $this->input->post('no_invoice');
         $terbilang = $this->input->post('terbilang');
         // $pu_muda = $this->input->post('pu_muda');
-        $is_reimbursment = $this->input->post('is_reimbursment');
-        $is_special = $this->input->post('is_special');
-        $is_packing = $this->input->post('is_packing');
-        $is_insurance = $this->input->post('is_insurance');
+		$is_reimbursment = $this->input->post('is_reimbursment');
+		$is_special = $this->input->post('is_special');
+		$is_packing = $this->input->post('is_packing');
+		$is_insurance = $this->input->post('is_insurance');
+		$is_others = $this->input->post('is_others');
+		 $is_remarks = $this->input->post('is_remarks');
         $id_invoice = $this->input->post('id_invoice');
-        $date = $this->input->post('date');
+		$date = $this->input->post('date');
         $due_date = $this->input->post('due_date');
         $total_invoice = $this->input->post('total_invoice');
         $invoice = $this->input->post('invoice');
@@ -399,18 +277,16 @@ class Invoice extends CI_Controller
         $pph = $this->input->post('pph');
         $is_ppn = $this->input->post('is_ppn');
         $is_pph = $this->input->post('is_pph');
-        $is_others = $this->input->post('is_others');
-        $is_remarks = $this->input->post('is_remarks');
         $no_telp = $this->input->post('no_telp');
         $print_do = $this->input->post('print_do');
         $pic = $this->input->post('pic');
         $address = $this->input->post('address');
         $shipper = $this->input->post('shipper');
         $shipment_id =  $this->input->post('shipment_id');
-        $id_berat = $this->input->post('id_berat');
         $note_cs = $this->input->post('note_cs');
-        $no_do = $this->input->post('no_do');
-        $so_note = $this->input->post('so_note');
+		 $so_note = $this->input->post('so_note');
+		 $no_do = $this->input->post('no_do');
+		 $id_berat = $this->input->post('id_berat');
         // KALO DIA ADA PPN DAN PPH
         if ($is_ppn != 1) {
             $ppn = 0;
@@ -422,25 +298,23 @@ class Invoice extends CI_Controller
         } else {
             $pph = 0.02 * $invoice;
         }
-
         for ($i = 0; $i < sizeof($shipment_id); $i++) {
             $data = array(
                 'note_cs' => $note_cs[$i],
-                'so_note' => $so_note[$i],
+				'so_note' => $so_note[$i],
                 // 'pu_moda' => $pu_muda[$i],
             );
             $this->db->update('tbl_shp_order', $data, ['id' => $shipment_id[$i]]);
         }
-        for ($k = 0; $k < sizeof($id_berat); $k++) {
+		for ($k = 0; $k < sizeof($id_berat); $k++) {
             $data_do = array(
                 'no_do' => $no_do[$k],
 
             );
             $this->db->update('tbl_no_do', $data_do, ['id_berat' => $id_berat[$k]]);
         }
-
         $data = array(
-            'date' => $date,
+			'date' => $date,
             'due_date' => $due_date,
             'pic' => $pic,
             'terbilang' => $terbilang,
@@ -448,18 +322,18 @@ class Invoice extends CI_Controller
             'address' => $address,
             'print_do' => $print_do,
             'customer' => $shipper,
-            'is_reimbursment' => $is_reimbursment,
-            'is_special' => $is_special,
-            'is_packing' => $is_packing,
-            'is_others' => $is_others,
-            'is_insurance' => $is_insurance,
+			'is_reimbursment' => $is_reimbursment,
+			'is_special' => $is_special,
+			'is_packing' => $is_packing,
+			'is_insurance' => $is_insurance,
+			'is_others' => $is_others,
             'total_invoice' => $total_invoice,
             'invoice' => $invoice,
             'ppn' => $ppn,
             'pph' => $pph,
             'is_ppn' => $is_ppn,
             'is_pph' => $is_pph,
-            'is_remarks' => $is_remarks,
+			'is_remarks' => $is_remarks,
         );
         $update = $this->db->update('tbl_invoice', $data, ['no_invoice' => $no_invoice]);
         if ($update) {
@@ -470,7 +344,7 @@ class Invoice extends CI_Controller
             redirect('finance/invoice/edit/' . $id_invoice . '/' . $no_invoice);
         }
     }
-    public function proceseditInvoiceFinal()
+	 public function proceseditInvoiceFinal()
     {
         $no_invoice = $this->input->post('no_invoice');
         $terbilang = $this->input->post('terbilang');
@@ -479,10 +353,10 @@ class Invoice extends CI_Controller
         $is_special = $this->input->post('is_special');
         $is_packing = $this->input->post('is_packing');
         $is_insurance = $this->input->post('is_insurance');
-        $is_revisi = $this->input->post('is_revisi');
+		 $is_revisi = $this->input->post('is_revisi');
+		 $is_others = $this->input->post('is_others');
         $id_invoice = $this->input->post('id_invoice');
-        $is_others = $this->input->post('is_others');
-        $date = $this->input->post('date');
+		$date = $this->input->post('date');
         $due_date = $this->input->post('due_date');
         $total_invoice = $this->input->post('total_invoice');
         $invoice = $this->input->post('invoice');
@@ -490,7 +364,7 @@ class Invoice extends CI_Controller
         $pph = $this->input->post('pph');
         $is_ppn = $this->input->post('is_ppn');
         $is_pph = $this->input->post('is_pph');
-        $is_remarks = $this->input->post('is_remarks');
+		$is_remarks = $this->input->post('is_remarks');
         $no_telp = $this->input->post('no_telp');
         $print_do = $this->input->post('print_do');
         $pic = $this->input->post('pic');
@@ -498,7 +372,7 @@ class Invoice extends CI_Controller
         $shipper = $this->input->post('shipper');
         $shipment_id =  $this->input->post('shipment_id');
         $note_cs = $this->input->post('note_cs');
-        $so_note = $this->input->post('so_note');
+		  $so_note = $this->input->post('so_note');
         // KALO DIA ADA PPN DAN PPH
         if ($is_ppn != 1) {
             $ppn = 0;
@@ -513,13 +387,13 @@ class Invoice extends CI_Controller
         for ($i = 0; $i < sizeof($shipment_id); $i++) {
             $data = array(
                 'note_cs' => $note_cs[$i],
-                'so_note' => $so_note[$i],
+				 'so_note' => $so_note[$i],
                 // 'pu_moda' => $pu_muda[$i],
             );
             $this->db->update('tbl_shp_order', $data, ['id' => $shipment_id[$i]]);
         }
         $data = array(
-            'date' => $date,
+			'date' => $date,
             'due_date' => $due_date,
             'pic' => $pic,
             'terbilang' => $terbilang,
@@ -530,16 +404,16 @@ class Invoice extends CI_Controller
             'is_reimbursment' => $is_reimbursment,
             'is_special' => $is_special,
             'is_packing' => $is_packing,
-            'is_others' => $is_others,
             'is_insurance' => $is_insurance,
-            'is_revisi' => $is_revisi,
+			'is_others' => $is_others,
+			  'is_revisi' => $is_revisi,
             'total_invoice' => $total_invoice,
             'invoice' => $invoice,
             'ppn' => $ppn,
             'pph' => $pph,
             'is_ppn' => $is_ppn,
             'is_pph' => $is_pph,
-            'is_remarks' => $is_remarks,
+			 'is_remarks' => $is_remarks,
         );
         $update = $this->db->update('tbl_invoice', $data, ['no_invoice' => $no_invoice]);
         if ($update) {
@@ -569,7 +443,7 @@ class Invoice extends CI_Controller
         $data['shipment_id'] = $shipment_id;
         $this->backend->display('finance/v_create_invoice', $data);
     }
-    public function addShipment()
+	 public function addShipment()
     {
         $shipment_id =  $this->input->post('shipment_id');
         $due_date = $this->input->post('due_date');
@@ -672,6 +546,7 @@ class Invoice extends CI_Controller
             redirect('finance/invoice/editInvoice/' . $id_invoice . '/' . $no_invoice);
         }
     }
+    
     public function Exportexcel($id)
     {
         $detail = $this->db->get_where('tbl_shp_order', ['id' => $id])->row_array();
@@ -682,23 +557,19 @@ class Invoice extends CI_Controller
 
         $this->load->view('finance/export_invoice', $data);
     }
-    public function ExportSoa()
-    {
-        header("Content-type: application/octet-stream");
-        header("Content-Disposition: attachment;Filename=export-soa.xls");
-        $data['title'] = "SOA";
-        $data['proforma'] = $this->cs->getSoa()->result_array();
-        $this->load->view('finance/export_soa', $data);
-    }
     public function printProforma($no_invoice)
     {
         $data['invoice'] = $this->cs->getInvoice($no_invoice)->result_array();
         $data['info'] = $this->cs->getInvoice($no_invoice)->row_array();
-
+        $get_alamat_customer = $this->db->get_where('tb_customer', ['nama_pt' => $data['info']['shipper']])->row_array();
+      
         $data['total_invoice'] = $this->cs->getInvoice($no_invoice)->num_rows();
+		
+		//var_dump($data); die;
+		
         // kalo dia ada reimbursment
         if ($data['info']['is_reimbursment'] == 1) {
-            $data['reimbursment'] = $this->cs->getInvoiceReimbursment($no_invoice)->row_array();
+			$data['reimbursment'] = $this->cs->getInvoiceReimbursment($no_invoice)->row_array();
             $this->load->view('superadmin/v_cetak_invoice_reimbursment', $data);
             $html = $this->output->get_output();
             $this->load->library('dompdf_gen');
@@ -718,13 +589,16 @@ class Invoice extends CI_Controller
             $this->dompdf->stream("Invoice$no_invoice.pdf", array('Attachment' => 0));
         }
     }
-
-    public function printProformaFull($no_invoice)
+	public function printProformaFull($no_invoice)
     {
         $data['invoice'] = $this->cs->getInvoice($no_invoice)->result_array();
         $data['info'] = $this->cs->getInvoice($no_invoice)->row_array();
         $get_alamat_customer = $this->db->get_where('tb_customer', ['nama_pt' => $data['info']['shipper']])->row_array();
+        // var_dump($get_alamat_customer);
+        // die;
 
+        // var_dump($data['info']);
+        // die;
         $data['total_invoice'] = $this->cs->getInvoice($no_invoice)->num_rows();
         $this->load->view('superadmin/v_cetak_invoice_full', $data);
         $html = $this->output->get_output();
@@ -736,7 +610,8 @@ class Invoice extends CI_Controller
         $this->dompdf->stream("Invoice$no_invoice.pdf", array('Attachment' => 0));
     }
 
-    public function printProformaExcell($no_invoice)
+	
+	 public function printProformaExcell($no_invoice)
     {
         $spreadsheet = new Spreadsheet();
         $invoice = $this->cs->getInvoice($no_invoice)->result_array();
@@ -802,6 +677,8 @@ class Invoice extends CI_Controller
         $sheet->setCellValue('H12', 'RATE')->getStyle('H12')->getAlignment()->setHorizontal('center');
         $sheet->setCellValue('I12', 'OTHERS')->getStyle('I12')->getAlignment()->setHorizontal('center');
         $sheet->setCellValue('J12', 'TOTAL AMOUNT')->getColumnDimension('J')->setAutoSize(true);
+		
+		
 
         $no = 1;
         $x = 13;
@@ -880,7 +757,7 @@ class Invoice extends CI_Controller
                     $sheet->setCellValue('H' . $x, $rate)->getColumnDimension('H')
                         ->setAutoSize(true);
                 }
-                $sheet->setCellValue('I' . $x, rupiah($inv['others']))->getColumnDimension('I')
+                 $sheet->setCellValue('I' . $x, rupiah($inv['others']))->getColumnDimension('I')
                     ->setAutoSize(true);
                 if ($total_sales != 0) {
                     $sheet->getStyle("J" . $x)->getNumberFormat()->setFormatCode("(\"Rp.\"* #,##0);(\"Rp.\"* \(#,##0\);(\"$\"* \"-\"??);(@_)");
@@ -922,15 +799,15 @@ class Invoice extends CI_Controller
                             ->setAutoSize(true);
                     }
                     $sheet->setCellValue('I' . $x, rupiah($inv['others']))->getColumnDimension('I')
+                    ->setAutoSize(true);
+                if ($total_sales != 0) {
+                    $sheet->getStyle("J" . $x)->getNumberFormat()->setFormatCode("(\"Rp.\"* #,##0);(\"Rp.\"* \(#,##0\);(\"$\"* \"-\"??);(@_)");
+                    $sheet->setCellValue('J' . $x, $total_sales)->getColumnDimension('J')
                         ->setAutoSize(true);
-                    if ($total_sales != 0) {
-                        $sheet->getStyle("J" . $x)->getNumberFormat()->setFormatCode("(\"Rp.\"* #,##0);(\"Rp.\"* \(#,##0\);(\"$\"* \"-\"??);(@_)");
-                        $sheet->setCellValue('J' . $x, $total_sales)->getColumnDimension('J')
-                            ->setAutoSize(true);
-                    } else {
-                        $sheet->setCellValue('J' . $x, $rate)->getColumnDimension('J')
-                            ->setAutoSize(true);
-                    }
+                } else {
+                    $sheet->setCellValue('J' . $x, $rate)->getColumnDimension('J')
+                        ->setAutoSize(true);
+                }
                     $total_koli = $total_koli + $d['koli'];
                 }
             }
@@ -1048,7 +925,35 @@ class Invoice extends CI_Controller
     //         $this->load->view('finance/v_cetak_invoice_excell', $data);
     //     }
     // }
-
+	 public function invoicePaid()
+    {
+        $shipment_id = $this->input->post('shipment_id');
+        if ($shipment_id == NULL) {
+            $data['title'] = 'Invoice';
+            $breadcrumb_items = [];
+            $data['subtitle'] = 'Invoice';
+            $this->breadcrumb->add_item($breadcrumb_items);
+            $data['breadcrumb_bootstrap_style'] = $this->breadcrumb->generate();
+            $data['proforma'] = $this->cs->getInvoicePaid(null, null)->result_array();
+            $this->backend->display('finance/v_invoice_paid', $data);
+        } else {
+            $cek_data = $this->cs->cekShipment($shipment_id)->row_array();
+            if ($cek_data) {
+                $data['invoice'] = $this->db->get_where('tbl_invoice', ['shipment_id' => $cek_data['id']])->row_array();
+                $data['title'] = 'Invoice';
+                $data['shipment_id'] = $shipment_id;
+                $breadcrumb_items = [];
+                $data['subtitle'] = 'Invoice';
+                $this->breadcrumb->add_item($breadcrumb_items);
+                $data['breadcrumb_bootstrap_style'] = $this->breadcrumb->generate();
+                $data['proforma'] = $this->cs->getInvoicePaid(null, null)->result_array();
+                $this->backend->display('finance/v_invoice_paid', $data);
+            } else {
+                $this->session->set_flashdata('messageAlert', $this->messageAlert('error', 'Shipment ID Not Found'));
+                redirect('finance/invoice/invoicePaid');
+            }
+        }
+    }
 
     public function messageAlert($type, $title)
     {

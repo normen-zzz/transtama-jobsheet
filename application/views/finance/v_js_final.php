@@ -37,7 +37,8 @@
                                                         <th>Js Id</th>
                                                         <th>Customer</th>
                                                         <th>Destination</th>
-                                                        <th>PIC Invoice</th>
+														 <th>PIC Invoice</th>
+                                                        <!-- <th>Colly</th> -->
                                                         <th>Sales</th>
                                                         <th>Status</th>
                                                         <th>Action</th>
@@ -47,7 +48,7 @@
                                                     <?php foreach ($js as $j) {
                                                         $get_revisi_so = $this->db->get_where('tbl_revisi_so', ['shipment_id' => $j['id']])->row_array();
                                                         $get_invoice = $this->db->get_where('tbl_invoice', ['shipment_id' => $j['id']])->row_array();
-                                                        $no_do = $this->db->get_where('tbl_no_do', array('shipment_id' => $j['shipment_id']))->result_array();
+														 $no_do = $this->db->get_where('tbl_no_do', array('shipment_id' => $j['shipment_id']))->result_array();
                                                     ?>
                                                         <tr>
                                                             <td>
@@ -58,11 +59,11 @@
                                                                     <input type="checkbox" class="form-control" name="shipment_id[]" value="<?= $j['id'] ?>">
                                                                 <?php    } ?>
                                                             </td>
-                                                            <td><?= bulan_indo($j['tgl_pickup']) ?></td>
+                                                             <td><?= bulan_indo($j['tgl_pickup']) ?></td>
                                                             <!-- No shipment -->
                                                             <td><?= $j['shipment_id'] ?></td>
                                                             <!-- No DO -->
-                                                            <td><?php foreach ($no_do as $do) {
+                                                            <td style="max-width:100px;"><?php foreach ($no_do as $do) {
                                                                     echo $do['no_do'] + ',';
                                                                 } ?></td>
                                                             <!-- Nomor SO -->
@@ -80,7 +81,7 @@
                                                                 }  ?></td>
                                                             <td><?= $j['shipper'] ?></td>
                                                             <td><?= $j['tree_consignee'] ?></td>
-                                                            <td><?= $j['pic_invoice'] ?></td>
+															  <td><?= $j['pic_invoice'] ?></td>
                                                             <td><?= $j['nama_user'] ?></td>
                                                             <td><?php if ($j['status_so'] == 2) {
                                                                     echo '<span class="label label-danger label-inline font-weight-lighter" style="width: 150px;">Approve PIC JS</span>';
@@ -130,12 +131,12 @@
                                                                 // kalo dia atasan sales
                                                                 if ($id_atasan == 0 || $id_atasan == NULL) {
                                                                 ?>
-                                                                    <a href="<?= base_url('finance/jobsheet/detail/' . $j['id'] . '/' . $j['id_so']) ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">Detail</a>
-                                                                    <!-- <a href="<?= base_url('cs/jobsheet/edit/' . $j['id']) ?>" class=" btn btn-success text-light mt-1">Edit</a> -->
+                                                                     <a href="<?= base_url('finance/jobsheet/detail/' . $j['id'] . '/' . $j['id_so']) ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">Detail</a>
+                                                                  
                                                             </td>
                                                         <?php   } else {
                                                         ?>
-                                                            <a href="<?= base_url('finance/jobsheet/detail/' . $j['id'] . '/' . $j['id_so']) ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">Detail</a>
+                                                            <a href="<?= base_url('finance/jobsheet/detail/' . $j['id']. '/' . $j['id_so']) ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">Detail</a>
                                                             <a href="<?= base_url('finance/jobsheet/Exportexcel/' . $j['id']) ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;"><span class="fa fa-download"></span></a>
                                                         <?php  }
 

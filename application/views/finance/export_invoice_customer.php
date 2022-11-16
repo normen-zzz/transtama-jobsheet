@@ -3,7 +3,7 @@
         <tr>
             <th>PICKUP DATE</th>
             <th>SHIPPER</th>
-            <th>CONSIGNEE</th>
+			<th>CONSIGNEE</th>
             <th>SHIPMENT ID</th>
             <th>DEST</th>
             <th>SERVICE</th>
@@ -13,7 +13,7 @@
             <th>PACKING</th>
             <th>OTHER</th>
             <th>TOTAL RATE</th>
-            <th>NOTE SO</th>
+			<th>NOTE SO</th>
             <th>STATUS</th>
         </tr>
     </thead>
@@ -49,7 +49,7 @@
             <tr>
                 <td><?= bulan_indo($msr['tgl_pickup']) ?></td>
                 <td><?= $msr['shipper'] ?></td>
-                <td><?= $msr['consigne'] ?></td>
+				<td><?= $msr['consigne'] ?></td>
                 <td><?= $msr['shipment_id'] ?></td>
                 <td><?= $msr['tree_consignee'] ?></td>
                 <td><?= $service ?></td>
@@ -64,7 +64,7 @@
                 <td><?= rupiah($msr['packing']) ?></td>
                 <td><?= rupiah($msr['others']) ?></td>
                 <td><?= rupiah($total_sales) ?></td>
-                <td><?= $msr['so_note'] ?></td>
+				 <td><?= $msr['so_note'] ?></td>
                 <td><?php
                     if ($msr['status_so'] == 2) {
                         echo 'Approve PIC JS';

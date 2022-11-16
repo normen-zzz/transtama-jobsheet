@@ -290,7 +290,7 @@
                                 <input type="no_invoice" name="no_invoice" hidden value="<?= $inv['no_invoice'] ?>" class="form-control">
                                 <input type="text" name="id_invoice" hidden value="<?= $inv['id_invoice'] ?>" class="form-control">
                             </div>
-                            <div class="col-md-3">
+							<div class="col-md-3">
                                 <label for="date" class="font-weight-bold">Date</label>
                                 <input type="date" class="form-control" name="date" value="<?= $inv['date'] ?>" required>
 
@@ -396,7 +396,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-1">
+							<div class="col-md-1">
                                 <div class="form-group">
                                     <label for="exampleInputEmail1" class="font-weight-bold">Insurance</label>
                                     <div class="form-check">

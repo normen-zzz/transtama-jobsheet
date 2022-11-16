@@ -8,10 +8,9 @@ class Approval extends CI_Controller
         parent::__construct();
         $this->load->model('Sendwa', 'wa');
         $this->load->model('ApModel', 'ap');
-        $this->load->model('CsModel', 'cs');
+		$this->load->model('M_Datatables');
+		$this->load->model('CsModel', 'cs');
     }
-
-    // ini untuk approval ap
 
     public function detail($no_ap)
     {
@@ -46,15 +45,19 @@ class Approval extends CI_Controller
     public function ap($no_pengeluaran)
     {
         $where = array('no_pengeluaran' => $no_pengeluaran);
+		
         $cek_data = $this->db->get_where('tbl_pengeluaran', $where)->row_array();
+		
         if ($cek_data) {
             $data = array(
                 'no_pengeluaran' => $no_pengeluaran,
-                'approve_by_sm' => $this->session->userdata('id_user'),
+                'approve_by_sm' => 32,
                 'created_sm' => date('Y-m-d H:i:s'),
             );
+			//var_dump($data); die;
             $update = $this->db->update('tbl_approve_pengeluaran', $data, $where);
             if ($update) {
+				$this->db->update('tbl_pengeluaran', ['status' => 2], $where);
                 $get_ap = $this->db->get_where('tbl_pengeluaran', $where)->row_array();
                 $no_ap = $get_ap['no_pengeluaran'];
                 $purpose = $get_ap['purpose'];
@@ -85,7 +88,7 @@ class Approval extends CI_Controller
                 'status' => 7,
             );
             $data_approve = array(
-                'approve_mgr_finance' => $this->session->userdata('id_user'),
+                'approve_mgr_finance' => 37,
                 'created_mgr_finance' =>  date('Y-m-d H:i:s')
             );
 
@@ -118,7 +121,7 @@ class Approval extends CI_Controller
         $cek_data = $this->db->get_where('tbl_pengeluaran', $where)->row_array();
         if ($cek_data) {
             $data = array(
-                'approve_by_gm' => $this->session->userdata('id_user'),
+                'approve_by_gm' => 14,
                 'created_gm' => date('Y-m-d H:i:s'),
             );
             $update = $this->db->update('tbl_approve_pengeluaran', $data, $where);
@@ -146,8 +149,7 @@ class Approval extends CI_Controller
             echo "<script>window.close();</script>";
         }
     }
-
-
+	
     // ini untuk approval revisi so
     public function detailRevisiGm($id)
     {

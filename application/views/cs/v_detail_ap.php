@@ -7,12 +7,21 @@
 					<div class="card">
 						<div class="card-header">
 							<h2 class="card-title"><?= $title ?></h2>
+							<p class="text-black">Nomor Ap : <?= $this->uri->segment(4) ?></p>
+							<?php if ($info['no_ca'] != NULL || $info['no_ca'] != '') { ?>
+								<p class="text-black">Nomor CA : <a target="_blank" href="<?= base_url('cs/Ap/detail/' . $info['no_ca']) ?>"><?= $info['no_ca'] ?></a></p>
+							<?php } ?>
+
 							<div class="card-toolbar">
 								<a href="<?= base_url('cs/ap') ?>" class="btn mr-2 text-light" style="background-color: #9c223b;">
 									<i class="fas fa-chevron-circle-left text-light"> </i>
 									Back
 								</a>
-								<a href="<?= base_url('cs/ap/approve/' . $this->uri->segment(4)) ?>" onclick="return confirm('Are You Sure ?')" class="btn btn-sm mb-1 text-light" style="background-color: #9c223b;">Approve</a>
+								<?php $approvesm = $this->db->get_where('tbl_approve_pengeluaran', array('no_pengeluaran' => $this->uri->segment(4)))->row_array(); ?>
+								<?php if ($approvesm['approve_by_sm'] == NULL && $info['is_approve_sm'] == 1) { ?>
+									<a href="<?= base_url('cs/ap/approve/' . $this->uri->segment(4)) ?>" onclick="return confirm('Are You Sure ?')" class="btn btn-sm mb-1 text-light" style="background-color: #9c223b;">Approve</a>
+								<?php } ?>
+
 							</div>
 						</div>
 						<!-- /.card-header -->
@@ -117,6 +126,9 @@
 																	<?php	} else {
 																	?>
 																		<a data-toggle="modal" data-target="#modal-bukti<?= $c['id_pengeluaran'] ?>" class=" btn btn-sm text-light mt-1" style="background-color: #9c223b;">Attacment</a>
+																		<?php if ($this->session->userdata('id_jabatan') == 10) { ?>
+																			<a data-toggle="modal" data-target="#modal-edit<?= $c['id_pengeluaran'] ?>" class=" btn btn-sm text-light mt-1" style="background-color: #9c223b;"> <i class="fa fa-edit text-light"></i> Edit</a>
+																		<?php } ?>
 
 																	<?php $total += $c['amount_proposed'];
 																	} ?>
@@ -126,16 +138,9 @@
 														<?php } ?>
 
 													</table>
-
-													<div class="col-md-3" id="car3">
-														<label for="note_cs">Total</label>
-														<input class="form-control" type="text" name="total_expanses" disabled value="<?= rupiah($total); ?>">
-
-													</div>
 												</div>
 
 											</div>
-
 
 											<!--end: Wizard Step 1-->
 
@@ -143,6 +148,29 @@
 
 											<!--end: Wizard Actions-->
 										</form>
+										<div class="row">
+											<div class="col-md-3" id="car3">
+												<label for="note_cs">Total Proposed</label>
+												<input class="form-control" type="text" name="total_expanses" disabled value="<?= rupiah($total); ?>">
+
+											</div>
+
+											<?php if (strtok($info['no_pengeluaran'], '-') == 'CAR') { ?>
+												<div class="col-md-3" id="car3">
+													<label for="note_cs">Total Approved CA</label>
+													<?php $ca = $this->db->get_where('tbl_pengeluaran', array('no_pengeluaran' => $info['no_ca']))->row_array() ?>
+													<input class="form-control" type="text" name="total_expanses" disabled value="<?= rupiah($ca['total_approved']); ?>">
+
+												</div>
+												<div class="col-md-3" id="car3">
+													<label for="note_cs">Over/Less</label>
+
+													<input class="form-control" type="text" name="total_expanses" disabled value="<?= rupiah($total - $ca['total_approved']); ?>">
+
+												</div>
+											<?php 	} ?>
+
+										</div>
 										<!--end: Wizard Form-->
 									</div>
 								</div>
@@ -230,7 +258,7 @@
 							</div>
 
 							<div class="col-md-6">
-								<img src="<?= base_url('uploads/ap/' . $c['attachment']) ?>" alt="attachment" width="100%">
+								<img src="https://tesla-smartwork.transtama.com/uploads/ap/<?= $c['attachment'] ?>" alt="attachment" width="100%">
 
 							</div>
 					</div>

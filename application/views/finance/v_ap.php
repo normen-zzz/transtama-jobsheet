@@ -34,7 +34,7 @@
                             <tr>
                                 <th>No AP</th>
                                 <th>Created By</th>
-                                <th>Purpose</th>
+								<th>Purpose</th>
                                 <th>Date</th>
                                 <!-- <th>Address</th> -->
                                 <th>Amount Proposed</th>
@@ -51,19 +51,18 @@
                                         echo ($c['id_kat_ap'] == 3)  ? '<b>' . $c['no_ca'] . '</b>' : ''
                                         ?> </td>
                                     <td><?= $c['nama_user'] ?></td>
-                                    <td><?= $c['purpose'] ?></td>
+									<td><?= $c['purpose'] ?></td>
                                     <td><?= bulan_indo($c['date']) ?></td>
                                     <td><?= rupiah($c['total']) ?></td>
                                     <td><?= ($c['status'] == 2 ? 'Wait Received' : rupiah($c['total_approved'])) ?></td>
                                     <td><?= statusAp($c['status'], $c['is_approve_sm']) ?>
-
-
+                                       
                                     </td>
                                     <td>
                                         <?php
                                         $id_jabatan = $this->session->userdata('id_jabatan');
-                                        $userAp = $this->db->get_where('tb_user', array('id_user' => $c['id_user']))->row_array();
-                                        // kalo dia jabatannya GM
+										$userAp = $this->db->get_where('tb_user', array('id_user' => $c['id_user']))->row_array();
+                                         // kalo dia jabatannya GM
                                         if ($id_jabatan == 11) {
                                             $url = $this->uri->segment(3);
                                             // echo $url;

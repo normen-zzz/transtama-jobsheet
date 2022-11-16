@@ -30,9 +30,7 @@
                                             <thead>
                                                 <tr>
                                                     <th>Nama Vendor</th>
-                                                    <th>PIC</th>
-                                                    <th>Alamat</th>
-                                                    <th>No. Rekening</th>
+                                                   
                                                     <th>Type</th>
                                                     <th>Action</th>
                                                 </tr>
@@ -43,9 +41,7 @@
                                                 ?>
                                                     <tr>
                                                         <td><?= $j['nama_vendor'] ?></td>
-                                                        <td><?= $j['pic'] ?></td>
-                                                        <td><?= $j['alamat'] ?></td>
-                                                        <td><?= $j['no_rekening'] ?></td>
+                                                       
                                                         <td><?php if ($j['type'] == 0) {
                                                                 echo '<span class="label label-success label-inline font-weight-lighter">Vendor</span>';
                                                             } else {

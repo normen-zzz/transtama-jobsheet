@@ -547,7 +547,7 @@
                                                         <td><?= rupiah($m['flight_msu2']) ?></td>
                                                         <td><?= rupiah($m['ra2']) ?></td>
                                                         <td><?= rupiah($m['packing2']) ?></td>
-                                                        <td><?= $m['refund2'] ?> / <?= $m['refund2'] * 100 ?>%</td>
+                                                        <td><?= $m['refund2'] ?>  %</td>
                                                         <td><?= rupiah($m['insurance2']) ?></td>
                                                         <td><?= rupiah($m['surcharge2']) ?></td>
                                                         <td><?= rupiah($m['hand_cgk2']) ?></td>
@@ -1030,29 +1030,6 @@
 
 
             <?php  } ?>
-        </div>
-        <div class="row">
-            <div class="col-md-6">
-                <?php if ($tgl_approve_revisi['id_sm'] == NULL) {
-                ?>
-                    <div class="card card-custom gutter-b example example-compact" style="height:100px;">
-                        <h3 class="text-title text-center mt-2"><i class="fa fa-calendar text-warning"></i> Wait Senior Manager To Check Request</h3> <br>
-                        <!-- <h4 class="text-title text-center"><?= $tgl_approve_revisi['tgl_approve_gm'] ?></h4> -->
-                    </div>
-                <?php  } else {
-                ?> <div class="card card-custom gutter-b example example-compact" style="height:100px;">
-                        <?php if ($tgl_approve_revisi['status_approve_sm'] == 0) {
-                        ?>
-                            <h3 class="text-title text-center mt-2"><i class="fa fa-window-close text-danger"></i> Request Decline By SM</h3> <br>
-                        <?php  } else {
-                        ?>
-                            <h3 class="text-title text-center mt-2"><i class="fa fa-check text-success"></i> Request Approve By SM</h3> <br>
-                        <?php  } ?>
-                        <h4 class="text-title text-center"><?= $tgl_approve_revisi['tgl_approve_sm'] ?></h4>
-                    </div>
-
-                <?php  } ?>
-            </div>
         </div>
 
 

@@ -27,11 +27,19 @@
                                                     <th>SO Number</th>
                                                     <th>Customer</th>
                                                     <th>Consignee</th>
+                                                    <!-- <th>Destination</th> -->
                                                     <th>Service</th>
                                                     <th>Comm</th>
+                                                    <!-- <th>Shipper</th> -->
+                                                    <!-- <th>No. Flight</th>
+                                                    <th>No. SMU</th> -->
                                                     <th>Colly</th>
                                                     <th>Destination</th>
+                                                    <!-- <th>WEIGHT JS(Kg)</th> -->
+                                                    <!-- <th>Freight</th> -->
                                                     <th>Sales</th>
+                                                    <!-- <th>Status</th> -->
+                                                    <!-- <th>Note</th> -->
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -41,23 +49,52 @@
                                                     <td><?= $msr['so_id'] ?></td>
                                                     <td><?= $msr['shipper'] ?></td>
                                                     <td><?= $msr['consigne'] ?></td>
-                                                    <td><?= $msr['service_name'] ?></td>
+                                                    <!-- <td><?= $msr['destination'] ?></td> -->
+                                                    <td><?php if ($msr['service_name'] == 'Charter Service') {
+                                                            echo $msr['service_name'] . '-' . $msr['pu_moda'];
+                                                        } else {
+                                                            echo  $msr['service_name'];;
+                                                        } ?></td>
                                                     <td><?= $msr['pu_commodity'] ?></td>
+                                                    <!-- <td><?= $msr['id_user'] ?></td> -->
+                                                    <!-- <td> <input type="text" class="form-control" value="<?= $msr['no_flight'] ?>"> </td>
+                                                    <td> <input type="text" class="form-control" value="<?= $msr['no_smu'] ?>"> </td> -->
+                                                    <!-- <td></td> -->
                                                     <td><?= $msr['koli'] ?></td>
                                                     <td><?= $msr['destination'] ?></td>
+                                                    <!-- <td><?= $msr['berat_msr'] ?></td> -->
+                                                    <!-- <td><?= $msr['berat_js'] ?></td> -->
+                                                    <!-- <td><?= rupiah($msr['freight_kg']) ?></td> -->
+
                                                     <td><?= $msr['nama_user'] ?></td>
+                                                    <!-- <td><?= $msr['pu_note'] ?></td> -->
                                                 </tr>
 
                                             </tbody>
 
                                         </table>
                                     </div>
-                                    <br><br>
+									
+									<div class="table-responive">
+                                        <table class="table table-bordered" style="width:100%">
+                                            <tr>
+                                                <td style="width: 10%;">
+                                                    NOTE DRIVER
+                                                </td>
+                                                <td>
+                                                    <?= $msr['note_driver'] ?>
+
+                                                </td>
+                                            </tr>
+                                        </table>
+
+                                    </div>
+									  <br><br>
 
                                     <div class="table-responsive">
-                                        <h4 class="text-center">Detail Package</h4>
+										 <h4 class="text-center">Detail Package</h4>
                                         <form action="<?= base_url('cs/jobsheet/updateso') ?>" method="POST">
-                                            <table class="table table-bordered" style="width:100%">
+											 <table class="table table-bordered" style="width:100%">
                                                 <thead>
                                                     <tr>
                                                         <th>NO DO</th>
@@ -181,8 +218,14 @@
                                                         $freight = $freight_discount * $msr['berat_js'];
                                                         $special_freight  = $special_freight_discount * $msr['berat_msr'];
                                                     }
+
+                                                    // var_dump($freight);
+                                                    // die;
+
                                                     $packing = $msr['packing'];
                                                     $total_sales = ($freight + $packing + $special_freight +  $msr['others'] + $msr['surcharge'] + $msr['insurance']);
+                                                    // $comm = $msr['cn'] * $total_sales;
+                                                    // $disc = $msr['disc'] * $total_sales;
 
                                                     $total_sales = $total_sales;
                                                 }
@@ -228,20 +271,20 @@
                                             </tbody>
 
                                         </table>
-                                        <div class="table-responive">
-                                            <table class="table table-bordered" style="width:100%">
-                                                <tr>
-                                                    <td style="width: 10%;">
-                                                        NOTE SO
-                                                    </td>
-                                                    <td>
-                                                        <?= $msr['so_note'] ?>
+										<div class="table-responive">
+                                        <table class="table table-bordered" style="width:100%">
+                                            <tr>
+                                                <td style="width: 10%;">
+                                                    NOTE SO
+                                                </td>
+                                                <td>
+                                                    <?= $msr['so_note'] ?>
 
-                                                    </td>
-                                                </tr>
-                                            </table>
+                                                </td>
+                                            </tr>
+                                        </table>
 
-                                        </div>
+                                    </div>
                                     </div>
 
                                 </div>
@@ -534,8 +577,7 @@
                 </section>
             </div>
         </div>
-
-
+		
         <div class="row">
             <!-- APPROVE SALES MANAGER -->
             <?php
@@ -612,7 +654,6 @@
 
 
 
-
         <div class="card card-custom gutter-b example example-compact">
             <div class="card-body">
 
@@ -660,3 +701,205 @@
         </div>
     </div>
 </div>
+
+
+
+
+<div class="modal fade" id="modal-acc">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Add Capital Cost</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="<?= base_url('cs/salesOrder/addCapitalCost') ?>" method="POST">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="exampleInputEmail1">Flight MSU</label>
+                                    <input type="text" class="form-control" id="exampleInputEmail1" required name="flight_smu2">
+                                    <input type="text" class="form-control" id="exampleInputEmail1" required hidden value="<?= $msr['id'] ?>" name="shipment_id">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="exampleInputEmail1">RA</label>
+                                    <input type="text" class="form-control" id="exampleInputEmail1" required name="ra2">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="exampleInputEmail1">Packing</label>
+                                    <input type="text" class="form-control" id="exampleInputEmail1" required name="packing2">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="exampleInputEmail1">Refund (%)</label>
+                                    <input type="text" class="form-control" id="exampleInputEmail1" required name="refund2">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="exampleInputEmail1">Insurance</label>
+                                    <input type="text" class="form-control" id="exampleInputEmail1" required name="insurance2">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="exampleInputEmail1">Surcharge</label>
+                                    <input type="text" class="form-control" id="exampleInputEmail1" required name="surcharge2">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="exampleInputEmail1">Hand CGK</label>
+                                    <input type="text" class="form-control" id="exampleInputEmail1" required name="hand_cgk2">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="exampleInputEmail1">Hand Pickup</label>
+                                    <input type="text" class="form-control" id="exampleInputEmail1" required name="hand_pickup2">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="exampleInputEmail1">HD Daerah</label>
+                                    <input type="text" class="form-control" id="exampleInputEmail1" required name="hd_daerah2">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="exampleInputEmail1">PPH (5)</label>
+                                    <input type="text" class="form-control" placeholder="ex: 0.2, it's mean 2 %" id="exampleInputEmail1" required name="pph2">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="exampleInputEmail1">SDM</label>
+                                    <input type="text" class="form-control" id="exampleInputEmail1" required name="sdm2">
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <!-- /.card-body -->
+                    <div class="modal-footer justify-content-between">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn text-light" style="background-color: #9c223b;">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+
+<?php foreach ($modal as $m) {
+?>
+    <div class="modal fade" id="modal-acc-edit">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Edit Capital Cost</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="<?= base_url('cs/salesOrder/editCapitalCost') ?>" method="POST">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Flight MSU</label>
+                                        <input type="text" class="form-control" id="exampleInputEmail1" required name="flight_smu2" value="<?= $m['flight_msu2'] ?>">
+                                        <input type="text" class="form-control" id="exampleInputEmail1" hidden required value="<?= $m['id_modal'] ?>" name="id_modal">
+                                        <input type="text" class="form-control" id="exampleInputEmail1" hidden required value="<?= $msr['id'] ?>" name="shipment_id">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">RA</label>
+                                        <input type="text" class="form-control" id="exampleInputEmail1" required name="ra2" value="<?= $m['ra2'] ?>">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Packing</label>
+                                        <input type="text" class="form-control" id="exampleInputEmail1" required name="packing2" value="<?= $m['packing2'] ?>">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Refund (%)</label>
+                                        <input type="text" class="form-control" id="exampleInputEmail1" required name="refund2" value="<?= $m['refund2'] ?>">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Insurance</label>
+                                        <input type="text" class="form-control" id="exampleInputEmail1" required name="insurance2" value="<?= $m['insurance2'] ?>">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Surcharge</label>
+                                        <input type="text" class="form-control" id="exampleInputEmail1" required name="surcharge2" value="<?= $m['surcharge2'] ?>">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Hand CGK</label>
+                                        <input type="text" class="form-control" id="exampleInputEmail1" required name="hand_cgk2" value="<?= $m['hand_cgk2'] ?>">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Hand Pickup</label>
+                                        <input type="text" class="form-control" id="exampleInputEmail1" required name="hand_pickup2" value="<?= $m['hand_pickup2'] ?>">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">HD Daerah</label>
+                                        <input type="text" class="form-control" id="exampleInputEmail1" required name="hd_daerah2" value="<?= $m['hd_daerah2'] ?>">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">PPH (%)</label>
+                                        <input type="text" class="form-control" id="exampleInputEmail1" required name="pph2" value="<?= $m['pph2'] ?>">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">SDM</label>
+                                        <input type="text" class="form-control" id="exampleInputEmail1" required name="sdm2" value="<?= $m['sdm2'] ?>">
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <!-- /.card-body -->
+                        <div class="modal-footer justify-content-between">
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn text-light" style="background-color: #9c223b;">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+
+<?php } ?>

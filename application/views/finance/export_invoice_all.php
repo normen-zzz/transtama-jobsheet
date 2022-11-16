@@ -12,7 +12,7 @@
             <th>PACKING</th>
             <th>OTHER</th>
             <th>TOTAL RATE</th>
-            <th>STATUS</th>
+			 <th>STATUS</th>
         </tr>
     </thead>
     <tbody>
@@ -67,7 +67,7 @@
                 <td><?= rupiah($msr['packing']) ?></td>
                 <td><?= rupiah($msr['others']) ?></td>
                 <td><?= rupiah($total_sales) ?></td>
-                <td><?php
+				<td><?php
                     if ($msr['status_so'] == 2) {
                         echo 'Approve PIC JS';
                     } elseif ($msr['status_so'] == 3) {

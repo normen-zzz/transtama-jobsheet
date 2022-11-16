@@ -142,7 +142,6 @@
                                                             ?>
                                                                 <tr>
                                                                     <input hidden type="text" name="shipment_id[]" value="<?= $inv['id'] ?>">
-
                                                                     <td><?= bulan_indo($inv['tgl_pickup']) ?></td>
                                                                     <td><?= $inv['tree_consignee'] ?></td>
                                                                     <td><input type="text" name="no_do[]" value="<?= $d['no_do'] ?>"><input hidden type="text" name="id_berat[]" value="<?= $d['id_berat'] ?>"></td>
@@ -290,7 +289,7 @@
                                 <input type="no_invoice" name="no_invoice" hidden value="<?= $inv['no_invoice'] ?>" class="form-control">
                                 <input type="text" name="id_invoice" hidden value="<?= $inv['id_invoice'] ?>" class="form-control">
                             </div>
-                            <div class="col-md-3">
+							<div class="col-md-3">
                                 <label for="date" class="font-weight-bold">Date</label>
                                 <input type="date" class="form-control" name="date" value="<?= $inv['date'] ?>" required>
 
@@ -300,7 +299,6 @@
                                 <input type="date" class="form-control" name="due_date" value="<?= $inv['due_date'] ?>" required>
 
                             </div>
-
 
                         </div>
                         <br><br>

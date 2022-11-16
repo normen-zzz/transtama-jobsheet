@@ -77,9 +77,14 @@
 							<div class="card-header">
 								<h2 class="card-title"><?= $title ?></h2>
 								<div class="card-toolbar">
-									<a onclick="return confirm('Are You Sure ?')" href="<?= base_url('approval/ap/' . $info['no_pengeluaran']) ?>" class="btn mr-2 text-light" style="background-color: #9c223b;">
-										Approve
-									</a>
+										<?php if ($info['status'] == 1) {
+									?>
+										<a onclick="return confirm('Are You Sure ?')" href="<?= base_url('approval/ap/' . $info['no_pengeluaran']) ?>" class="btn mr-2 text-light" style="background-color: #9c223b;">
+											Approve
+										</a>
+									<?php	} else {
+										echo '<h2 class="card-title">Approved</h2>';
+									} ?>
 								</div>
 							</div>
 							<!-- /.card-header -->
@@ -178,11 +183,10 @@
 																	<td>
 																		<?php if ($info['status'] <= 0) {
 																		?>
-																			<a href="https://tesla-smartwork.transtama.com/uploads/ap/<?= $c['attachment'] ?>" class=" btn btn-sm text-light mt-1" style="background-color: #9c223b;">Attacment</a>
-
+																			<a target="blank" href="https://tesla-smartwork.transtama.com/uploads/ap/<?= $c['attachment'] ?>" class=" btn btn-sm text-light mt-1" style="background-color: #9c223b;">Attacment</a>
 																		<?php	} else {
 																		?>
-																			<a href="https://tesla-smartwork.transtama.com/uploads/ap/<?= $c['attachment'] ?>" class=" btn btn-sm text-light mt-1" style="background-color: #9c223b;">Attacment</a>
+																		<a target="blank" href="https://tesla-smartwork.transtama.com/uploads/ap/<?= $c['attachment'] ?>" class=" btn btn-sm text-light mt-1" style="background-color: #9c223b;">Attacment</a>
 
 																		<?php	} ?>
 																	</td>
@@ -446,7 +450,13 @@
 	<?= $this->session->flashdata('messageAlert'); ?>
 </script>
 
-
+<script type="text/javascript">
+	jQuery(document).ready(function() {
+		jQuery("#mahasiswa").select2({
+			// allowClear: true,
+		});
+	});
+</script>
 
 <?php
 $dataflash = json_encode($this->session->flashdata('message'));
@@ -558,7 +568,196 @@ $dataflash = json_encode($this->session->flashdata('message'));
 	});
 </script>
 
+<script>
+	var tabel = null;
+	$(document).ready(function() {
+		tabel = $('#myTableMsr').DataTable({
+			"processing": true,
+			// "responsive": true,
+			"serverSide": true,
+			"ordering": true,
+			"dom": "<'row '<'col-sm-12 col-md-6'><'col-sm-12 col-md-6'f>>" +
+				"<'row'<'col-sm-12'tr>>" +
+				"<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+			"order": [
+				[0, 'desc']
+			],
+			"ajax": {
+				"url": "<?= base_url('cs/jobsheet/getData'); ?>",
+				"type": "POST"
+			},
+			"deferRender": true,
+			"aLengthMenu": [
+				[5, 10, 50],
+				[5, 10, 50]
+			], // Combobox Limit
+			"columns": [{
+					"data": "tgl_pickup",
+				},
+				{
+					"data": "no_stp",
+				},
+				{
+					"data": "customer",
+				},
+				{
+					"data": "consigne",
+				},
+				{
+					"data": "colly",
+				},
+				{
+					"data": "freight_kg",
+				},
+				{
+					"data": "sales",
+				},
+				{
+					"data": "status",
+					"render": function(data, type, row, meta) {
+						if (status == 0) {
+							return '<span class="label label-lg label-light-danger label-inline">Progress</span>';
+						} else {
+							return '<span class="label label-lg label-light-success label-inline">Success</span>';
+						}
+					}
+				},
+				{
+					"data": "id_msr",
+					"render": function(data, type, row, meta) {
+						return '<a href="<?= base_url('cs/jobsheet/detail/') ?>' + data + '" class="btn btn-sm text-light" style="background-color: #9c223b;">Detail</a> <a href="<?= base_url('cs/jobsheet/edit/') ?>' + data + '" class="btn btn-success text-light mt-1">Edit</a> ';
+					}
+				},
+			],
+		});
+	});
+</script>
 
+
+<script>
+	$(document).ready(function() {
+		var i = 2;
+		$(".tambah-ap").on('click', function() {
+
+
+			row = '<div class="rec-element-ap" style="margin-left:20px">' +
+				'<div class="row">' +
+				'<div class="col-md-3">' +
+				'<label for="note_cs">Choose Category ' + i + '</label>' +
+				'<div class="form-group rec-element-ap">' +
+				'<input type="hidden" class="browse-category form-control" id="id_category' + i + '"  name="id_category[]">' +
+				'<input type="text" readonly class="browse-category form-control" id="nama_kategori' + i + '" data-index="' + i + '" name="nama_kategori_pengeluaran[]">' +
+				'</div>' +
+				'</div>' +
+				'<div class="col-md-4" style="margin-left:5px">' +
+				'<label for="note_cs">Description ' + i + '</label>' +
+				'<div class="form-group rec-element-ap">' +
+				'<textarea class="form-control" id="descriptions' + i + '" name="descriptions[]"></textarea>' +
+				'</div>' +
+				'</div>' +
+				'<div class="col-md-3">' +
+				'<label for="note_cs">Amount Proposed ' + i + '</label>' +
+				'<div class="form-group rec-element-ap">' +
+				'<input type="text" class="form-control" id="amount' + i + '" name="amount_proposed[]">' +
+				'</div>' +
+				'</div>' +
+				'<div class="col-md-1">' +
+				'<span class="input-group-btn">' +
+				'<button type="button" class="btn btn-warning del-element_ap mt-4"><i class="fa fa-minus-square"></i></button>' +
+				'</span>' +
+				'</div>' +
+				'<div class="ln_solid_ap"></div>' +
+				'</div>';
+			'</div>';
+
+			$(row).insertBefore("#nextkolom_ap");
+			$('#jumlahkolom_ap').val(i + 1);
+			i++;
+		});
+		$(document).on('click', '.del-element_ap', function(e) {
+			e.preventDefault()
+			i--;
+			//$(this).parents('.rec-element').fadeOut(400);
+			$(this).parents('.rec-element-ap').remove();
+			$('#jumlahkolom_ap').val(i - 1);
+		});
+	});
+</script>
+
+
+<script>
+	$('body').on("click", ".browse-category", function() {
+		var index = $(this).attr('data-index');
+
+
+		jQuery("#selectCategory").attr("data-index", index);
+		jQuery("#selectCategory").modal("toggle");
+	});
+
+
+
+	$('body').on("click", '.btn-choose', function(e) {
+		id_category = $(this).attr("data-id");
+
+		indek = $("#selectCategory").attr("data-index");
+
+
+		document.getElementById("id_category" + indek + "").value = $(this).attr('data-id');
+
+
+		document.getElementById("nama_kategori" + indek + "").value = $(this).attr('data-nama');
+		$("#selectCategory").modal('hide');
+	});
+</script>
+
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		const inputEl = document.getElementById("mode");
+		const car = document.getElementById("car");
+		$('#kat').change(function() {
+
+			var id = $(this).val();
+			if (id == 1) {
+				document.getElementById("mode").style.display = "block";
+			} else if (id == 3) {
+				document.getElementById("car").style.display = "block";
+			} else {
+				inputEl.style.display = "none";
+				car.style.display = "none";
+			}
+
+		});
+
+	});
+
+	$(document).ready(function() {
+		$('#modee').change(function() {
+
+			var id = $(this).val();
+			console.log(id);
+
+			if (id == 1) {
+				document.getElementById("via").style.display = "block";
+			} else {
+				inputEl.style.display = "none";
+			}
+
+		});
+
+
+	});
+</script>
+
+<script>
+	function Cash() {
+		if (document.getElementById('tf').checked) {
+			document.getElementById('via').style.display = "block";
+		} else {
+			document.getElementById('via').style.display = "none";
+		}
+	}
+</script>
 
 
 
@@ -583,6 +782,57 @@ $dataflash = json_encode($this->session->flashdata('message'));
 				</div>
 				<div class="modal-footer justify-content-between">
 					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				</div>
+				</form>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal-dialog -->
+	</div>
+	<!-- /.modal -->
+<?php } ?>
+
+<?php foreach ($ap as $c) {
+?>
+
+	<div class="modal fade" id="modal-edit<?= $c['id_pengeluaran'] ?>">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title">Edit <?= $c['description'] ?> </h4>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<form action="<?= base_url('cs/ap/edit') ?>" method="POST" enctype="multipart/form-data">
+						<div class="col-md-12">
+							<label for="description">Description</label>
+							<input type="text" name="description" class="form-control" value="<?= $c['description'] ?>">
+						</div>
+						<div class="col-md-12">
+							<label for="description">Amount Proposed</label>
+							<input type="text" name="amount_proposed" class="form-control" value="<?= $c['amount_proposed'] ?>">
+						</div>
+
+						<div class="col-md-6">
+							<label for="note_cs">Change Attachment</label>
+							<div class="form-group rec-element-ap">
+								<input type="file" class="form-control" name="attachment">
+								<input type="text" class="form-control" name="attachment_lama" hidden value="<?= $c['attachment'] ?>">
+								<input type="text" class="form-control" name="id_pengeluaran" hidden value="<?= $c['id_pengeluaran'] ?>">
+								<input type="text" class="form-control" name="no_pengeluaran" hidden value="<?= $c['no_pengeluaran'] ?>">
+							</div>
+						</div>
+
+						<div class="col-md-6">
+							<img src="<?= base_url('uploads/ap/' . $c['attachment']) ?>" alt="attachment" width="100%">
+
+						</div>
+				</div>
+				<div class="modal-footer justify-content-between">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					<button type="submit" class="btn btn-primary">Update</button>
 				</div>
 				</form>
 			</div>

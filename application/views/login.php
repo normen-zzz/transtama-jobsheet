@@ -43,22 +43,22 @@
 			<div class="login-aside d-flex flex-row-auto bgi-size-cover bgi-no-repeat" style="margin-left: 100px; margin-top:-50px">
 				<!--begin: Aside Container-->
 				<div class="d-flex flex-row-fluid flex-column justify-content-between">
-					<div class="flex-column-fluid d-flex flex-column justify-content-center">
+					<!--<div class="flex-column-fluid d-flex flex-column justify-content-center">
 						<a href="#" class="flex-column-auto">
 							<img src="<?= base_url('uploads/logoRaw.png') ?>" alt="logo" width="auto" height="150" />
 						</a>
-					</div>
+					</div>-->
 				</div>
 				<!--end: Aside Container-->
 			</div>
 			<!--begin::Aside-->
-			<div class="d-flex flex-column flex-row-fluid position-relative p-7 overflow-hidden">
+			<div class="d-flex flex-column flex-row-fluid position-relative p-7 overflow-hidden" >
 				<div class="d-flex flex-column-fluid flex-center mt-lg-0">
 					<!--begin::Signin-->
-					<div class="login-form login-signin">
+					<div class="login-form login-signin" style="margin-left: 120px;">
 						<div class="mb-2">
-							<h2 class="font-weight-bold text-light">Login</h2>
-							<h2 class="font-weight-bold text-light mb-4">TLX E-Invoice System</h2>
+							<h2 class="font-weight-bold text-light text-center">Sign In</h2>
+							</br>
 						</div>
 						<form class="form" action="<?= base_url('backoffice') ?>" method="POST">
 							<div class="form-group">
@@ -71,7 +71,7 @@
 							</div>
 							<div class="form-group d-flex flex-wrap justify-content-between align-items-center mt-3">
 								<div class="checkbox-inline">
-									<label class="checkbox checkbox-outline m-0 text-light">
+									<label class="checkbox m-0 text-light">
 										<input type="checkbox" name="remember" />
 										<span></span>Remember me</label>
 								</div>
@@ -80,7 +80,7 @@
 
 							<!--begin::Action-->
 							<div class="form-group d-flex align-items-center">
-								<button type="submit" class="btn font-weight-bold px-9 py-4 my-3 text-light" style="background-color: #161414; width:100%">Sign In</button>
+								<button type="submit" class="btn font-weight-bold px-9 py-4 my-3 text-light" style="background-color: #513851; width:100%">Sign In</button>
 							</div>
 							<!--end::Action-->
 						</form>

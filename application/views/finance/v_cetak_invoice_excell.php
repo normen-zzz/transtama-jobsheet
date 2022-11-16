@@ -202,6 +202,9 @@
                             $packing = $inv['packing'];
                             $total_sales = ($freight + $packing + $special_freight +  $inv['others'] + $inv['surcharge'] + $inv['insurance']);
                         }
+
+
+
                     ?>
                         <?php
                         if ($total_do == 0) {
@@ -233,8 +236,7 @@
                                                                 ?></td>
 
                             </tr>
-                        <?php $total_koli = $total_koli + $inv['koli'];
-                        } else {
+                        <?php } else {
 
                         ?>
                             <th rowspan="<?= $total_do + 1 ?>" style="text-align: center; width:2%;height:3%"><?= $inv['shipment_id'] ?></th>

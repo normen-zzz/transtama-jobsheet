@@ -73,7 +73,7 @@
                                     <div class="row mt-4">
                                         <div class="col-xl-4">
                                             <!--begin::Stats Widget 16-->
-                                            <a href="<?= base_url('finance/invoice') ?>" class="card card-custom card-stretch bg-secondary gutter-b">
+                                            <a href="#" class="card card-custom card-stretch bg-secondary gutter-b">
                                                 <!--begin::Body-->
                                                 <div class="card-body">
                                                     <span class="svg-icon svg-icon-info svg-icon-3x ml-n1">
@@ -89,7 +89,7 @@
 
                                         <div class="col-xl-4">
                                             <!--begin::Stats Widget 17-->
-                                            <a href="<?= base_url('finance/invoice/final') ?>" class="card card-custom bg-secondary card-stretch gutter-b">
+                                            <a href="#" class="card card-custom bg-secondary card-stretch gutter-b">
                                                 <!--begin::Body-->
                                                 <div class="card-body">
                                                     <span class="svg-icon svg-icon-info svg-icon-3x ml-n1">
@@ -104,7 +104,7 @@
                                         </div>
                                         <div class="col-xl-4">
                                             <!--begin::Stats Widget 17-->
-                                            <a href="<?= base_url('finance/invoice/final') ?>" class="card card-custom bg-secondary card-stretch gutter-b">
+                                            <a href="#" class="card card-custom bg-secondary card-stretch gutter-b">
                                                 <!--begin::Body-->
                                                 <div class="card-body">
                                                     <span class="svg-icon svg-icon-info svg-icon-3x ml-n1">
@@ -119,7 +119,7 @@
                                         </div>
                                         <div class="col-xl-4">
                                             <!--begin::Stats Widget 17-->
-                                            <a href="<?= base_url('finance/invoice/final') ?>" class="card card-custom bg-secondary card-stretch gutter-b">
+                                            <a href="#" class="card card-custom bg-secondary card-stretch gutter-b">
                                                 <!--begin::Body-->
                                                 <div class="card-body">
                                                     <span class="svg-icon svg-icon-info svg-icon-3x ml-n1">
@@ -134,7 +134,7 @@
                                         </div>
                                         <div class="col-xl-4">
                                             <!--begin::Stats Widget 17-->
-                                            <a href="<?= base_url('finance/invoice/final') ?>" class="card card-custom bg-secondary card-stretch gutter-b">
+                                            <a href="#" class="card card-custom bg-secondary card-stretch gutter-b">
                                                 <!--begin::Body-->
                                                 <div class="card-body">
                                                     <span class="svg-icon svg-icon-info svg-icon-3x ml-n1">
@@ -149,7 +149,7 @@
                                         </div>
                                         <div class="col-xl-4">
                                             <!--begin::Stats Widget 18-->
-                                            <a href="<?= base_url('finance/invoice/final') ?>" class="card card-custom bg-secondary card-stretch gutter-b">
+                                            <a href="#" class="card card-custom bg-secondary card-stretch gutter-b">
                                                 <!--begin::Body-->
                                                 <div class="card-body">
                                                     <span class="svg-icon svg-icon-info svg-icon-3x ml-n1">

@@ -22,13 +22,13 @@
                         <div class="col-12">
                             <div class="box">
                                 <!-- /.box-header -->
-                                <?php $jabatan = $this->session->userdata('id_jabatan'); ?>
                                 <div class="box-body">
                                     <div class="table-responsive">
+									<?php $jabatan = $this->session->userdata('id_jabatan'); ?>
                                         <table id="table" class="table table-bordered" style="width:100%">
                                             <thead>
                                                 <tr>
-                                                    <th>Pickup Date</th>
+                                                     <th>Pickup Date</th>
                                                     <th>Shipment ID</th>
                                                     <th>No. Do</th>
                                                     <th>No. SO</th>
@@ -43,12 +43,12 @@
                                             </thead>
                                             <tbody>
                                                 <?php foreach ($js as $j) {
-                                                    $no_do = $this->db->get_where('tbl_no_do', array('shipment_id' => $j['shipment_id']))->result_array();
+													$no_do = $this->db->get_where('tbl_no_do', array('shipment_id' => $j['shipment_id']))->result_array();
                                                 ?>
                                                     <tr>
                                                         <!-- Kalau jabatan dia sm -->
                                                         <?php if ($jabatan == 10 && $j['status_revisi'] == 3) { ?>
-                                                            <td class="text-danger"><?= bulan_indo($j['tgl_pickup']) ?></td>
+                                                             <td class="text-danger"><?= bulan_indo($j['tgl_pickup']) ?></td>
                                                             <td class="text-danger"><?= $j['shipment_id'] ?></td>
                                                             <td class="text-danger"><?php foreach ($no_do as $do) {
                                                                                         echo $do['no_do'] . ',';
@@ -61,7 +61,7 @@
                                                             <td class="text-danger"><?= $j['nama_user'] ?></td>
                                                             <!-- kalau jabatan dia gm -->
                                                         <?php } elseif ($jabatan == 11 && $j['status_revisi'] == 2) { ?>
-                                                            <td class="text-danger"><?= bulan_indo($j['tgl_pickup']) ?></td>
+                                                             <td class="text-danger"><?= bulan_indo($j['tgl_pickup']) ?></td>
                                                             <td class="text-danger"><?= $j['shipment_id'] ?></td>
                                                             <td class="text-danger"><?php foreach ($no_do as $do) {
                                                                                         echo $do['no_do'] . ',';
@@ -73,19 +73,7 @@
                                                             <td class="text-danger"><?= $j['tgl_so_new'] ?></td>
                                                             <td class="text-danger"><?= $j['nama_user'] ?></td>
                                                         <?php } elseif ($jabatan == 2 && $j['status_revisi'] == 1) {  ?>
-                                                            <td class="text-danger"><?= bulan_indo($j['tgl_pickup']) ?></td>
-                                                            <td class="text-danger"><?= $j['shipment_id'] ?></td>
-                                                            <td class="text-danger"><?php foreach ($no_do as $do) {
-                                                                                        echo $do['no_do'] . ',';
-                                                                                    } ?></td>
-                                                            <td class="text-danger"><?= $j['so_id'] ?></td>
-                                                            <td class="text-danger"><?= $j['jobsheet_id'] ?></td>
-                                                            <td class="text-danger"><?= $j['shipper'] ?></td>
-                                                            <td class="text-danger"><?= $j['tree_consignee'] ?></td>
-                                                            <td class="text-danger"><?= $j['tgl_so_new'] ?></td>
-                                                            <td class="text-danger"><?= $j['nama_user'] ?></td>
-                                                        <?php } elseif ($jabatan == 9 && $j['status_revisi'] == 3) { ?>
-                                                            <td class="text-danger"><?= bulan_indo($j['tgl_pickup']) ?></td>
+                                                             <td class="text-danger"><?= bulan_indo($j['tgl_pickup']) ?></td>
                                                             <td class="text-danger"><?= $j['shipment_id'] ?></td>
                                                             <td class="text-danger"><?php foreach ($no_do as $do) {
                                                                                         echo $do['no_do'] . ',';
@@ -97,11 +85,11 @@
                                                             <td class="text-danger"><?= $j['tgl_so_new'] ?></td>
                                                             <td class="text-danger"><?= $j['nama_user'] ?></td>
                                                         <?php } else { ?>
-                                                            <td><?= bulan_indo($j['tgl_pickup']) ?></td>
+                                                             <td><?= bulan_indo($j['tgl_pickup']) ?></td>
                                                             <td><?= $j['shipment_id'] ?></td>
                                                             <td><?php foreach ($no_do as $do) {
-                                                                    echo $do['no_do'] . ',';
-                                                                } ?></td>
+                                                                                        echo $do['no_do'] . ',';
+                                                                                    } ?></td>
                                                             <td><?= $j['so_id'] ?></td>
                                                             <td><?= $j['jobsheet_id'] ?></td>
                                                             <td><?= $j['shipper'] ?></td>

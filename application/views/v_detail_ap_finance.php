@@ -77,9 +77,14 @@
 							<div class="card-header">
 								<h2 class="card-title"><?= $title ?></h2>
 								<div class="card-toolbar">
-									<a onclick="return confirm('Are You Sure ?')" href="<?= base_url('approval/approveFinance/' . $info['no_pengeluaran']) ?>" class="btn mr-2 text-light" style="background-color: #9c223b;">
-										Approve
-									</a>
+									<?php if ($info['status'] == 3) {
+									?>
+										<a onclick="return confirm('Are You Sure ?')" href="<?= base_url('approval/approveFinance/' . $info['no_pengeluaran']) ?>" class="btn mr-2 text-light" style="background-color: #9c223b;">
+											Approve
+										</a>
+									<?php	} else {
+										echo '<h2 class="card-title">Approved</h2>';
+									} ?>
 								</div>
 							</div>
 							<!-- /.card-header -->

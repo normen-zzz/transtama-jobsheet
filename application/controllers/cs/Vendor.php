@@ -34,10 +34,7 @@ class Vendor extends CI_Controller
             'alamat' => $this->input->post('alamat'),
             'type' => $this->input->post('type'),
             'no_rekening' => $this->input->post('no_rekening'),
-            'created_by' => $this->session->userdata('nama_user'),
-            'username' => generatKode(),
-            'password' => password_hash("Transtama2022", PASSWORD_DEFAULT),
-            'status' => 1
+            'created_by' => $this->session->userdata('nama_user')
         );
         $insert = $this->db->insert('tbl_vendor', $data);
         if ($insert) {

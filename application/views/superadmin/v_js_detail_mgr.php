@@ -86,7 +86,7 @@
                                     </div>
 
                                     <div class="table-responsive">
-                                        <form action="<?= base_url('cs/jobsheet/updateso') ?>" method="POST">
+                                        <form action="<?= base_url('superadmin/jobsheet/updateso') ?>" method="POST">
                                             <table class="table table-bordered" style="width:100%">
                                                 <thead>
                                                     <tr>
@@ -112,9 +112,9 @@
                                                 </tbody>
 
                                             </table>
-
-                                            <button class="btn btn-success">Submit</button>
-
+                                           
+                                                <button class="btn btn-success">Submit</button>
+                                           
                                         </form>
                                     </div>
 

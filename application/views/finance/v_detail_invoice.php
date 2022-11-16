@@ -74,6 +74,8 @@
                                                         $total_sales = ($freight + $packing + $special_freight +  $inv['others'] + $inv['surcharge'] + $inv['insurance']);
                                                     }
 
+
+
                                                 ?>
                                                     <tr>
 

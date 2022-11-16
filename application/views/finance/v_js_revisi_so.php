@@ -22,7 +22,6 @@
                         <div class="col-12">
                             <div class="box">
                                 <!-- /.box-header -->
-                                <?php $jabatan = $this->session->userdata('id_jabatan'); ?>
                                 <div class="box-body">
                                     <div class="table-responsive">
                                         <table id="table" class="table table-bordered" style="width:100%">
@@ -43,10 +42,10 @@
                                             </thead>
                                             <tbody>
                                                 <?php foreach ($js as $j) {
-                                                    $no_do = $this->db->get_where('tbl_no_do', array('shipment_id' => $j['shipment_id']))->result_array();
+													$no_do = $this->db->get_where('tbl_no_do', array('shipment_id' => $j['shipment_id']))->result_array();
                                                 ?>
                                                     <tr>
-                                                        <!-- Kalau jabatan dia sm -->
+                                                         <!-- Kalau jabatan dia sm -->
                                                         <?php if ($jabatan == 10 && $j['status_revisi'] == 3) { ?>
                                                             <td class="text-danger"><?= bulan_indo($j['tgl_pickup']) ?></td>
                                                             <td class="text-danger"><?= $j['shipment_id'] ?></td>
@@ -131,7 +130,7 @@
                                                             ?>
                                                         </td>
                                                         <td>
-                                                            <a href="<?= base_url('cs/jobsheet/detailRevisi/' . $j['id']) ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">View Revision</a> <br>
+                                                            <a href="<?= base_url('finance/jobsheet/detailRevisi/' . $j['id']) ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">View Revision</a> <br>
 
                                                         </td>
 

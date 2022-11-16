@@ -15,6 +15,7 @@ class Backend
 
 	function display($template, $data = null)
 	{
+
 		$data['_content'] = $this->_CI->load->view($template, $data, true);
 		$this->_CI->load->view('templates/back/template', $data);
 	}

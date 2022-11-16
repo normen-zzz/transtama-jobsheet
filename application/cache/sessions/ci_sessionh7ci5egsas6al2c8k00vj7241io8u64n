@@ -1,0 +1,18 @@
+__ci_last_regenerate|i:1668528286;username|s:4:"lina";id_role|s:1:"3";nama_user|s:4:"Lina";email|s:14:"lina@gmail.com";id_user|s:2:"12";akses|s:1:"1";id_atasan|N;id_jabatan|s:1:"2";messageAlert|s:392:"
+			const Toast = Swal.mixin({
+				toast: true,
+				position: 'top-end',
+				showConfirmButton: false,
+				timer: 3000,
+				timerProgressBar: true,
+				didOpen: (toast) => {
+				toast.addEventListener('mouseenter', Swal.stopTimer)
+				toast.addEventListener('mouseleave', Swal.resumeTimer)
+				}
+			})
+			
+			Toast.fire({
+				icon: 'success',
+				title: 'Success'
+			  })
+			";__ci_vars|a:1:{s:12:"messageAlert";s:3:"old";}

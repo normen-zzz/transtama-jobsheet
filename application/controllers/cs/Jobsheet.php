@@ -12,7 +12,7 @@ class Jobsheet extends CI_Controller
         $this->load->library('breadcrumb');
         $this->load->model('M_Datatables');
         $this->load->model('CsModel', 'cs');
-        $this->load->model('Sendwa', 'wa');
+		$this->load->model('Sendwa', 'wa');
         cek_role();
     }
     public function index()
@@ -394,12 +394,12 @@ class Jobsheet extends CI_Controller
             redirect('cs/salesOrder/viewRevisiSo');
         }
     }
-
     public function approveRevisiMgrCs($id)
     {
         $data = array(
             'status_revisi' => 2,
         );
+		
         $update = $this->db->update('tbl_revisi_so', $data, ['shipment_id' => $id]);
         if ($update) {
             $data = array(
@@ -408,13 +408,14 @@ class Jobsheet extends CI_Controller
                 'status_approve_cs' => 1
             );
             $this->db->update('tbl_approve_revisi_so', $data, ['shipment_id' => $id]);
-
-            $link = "https://jobsheet.transtama.com/approval/detailRevisiGm/$id";
+			
+			$link = "https://jobsheet.transtama.com/approval/detailRevisiGm/$id";
             $pesan = "Hallo, Mohon Untuk dicek dan di Approve Pengajuan Revisi SO Melalu Link Berikut : $link";
             // no mba Vema dan Krisna
             // $this->wa->pickup('+628111910711', "$pesan");
             $this->wa->pickup('+6285157906966', "$pesan");
-
+			
+           
             $this->session->set_flashdata('messageAlert', $this->messageAlert('success', 'Success'));
             redirect('cs/salesOrder/viewRevisiSo');
         } else {
@@ -423,7 +424,6 @@ class Jobsheet extends CI_Controller
             redirect('cs/salesOrder/viewRevisiSo');
         }
     }
-
     public function declineRevisiMgrCs()
     {
         $id = $this->input->post('id');
@@ -600,8 +600,8 @@ class Jobsheet extends CI_Controller
         $data['js'] = $this->cs->getRequestAktivasiJs()->result_array();
         $this->backend->display('cs/v_request_js', $data);
     }
-
-    // get revisi JS Need Activate
+	
+	// get revisi JS Need Activate
     public function requestAktivasiNeedActivate()
     {
         $data['title'] = 'Request Aktivasi Jobsheet';

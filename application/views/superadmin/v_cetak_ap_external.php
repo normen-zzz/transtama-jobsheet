@@ -62,7 +62,8 @@
         <table border="0">
             <tr>
                 <td style="width: 30%; margin-bottom: 10px;">
-                    <img src="<?= base_url('uploads/LogoRaw.png') ?>" width="100" height="60" style="margin-bottom:5px;">
+                    
+					 <img src="<?= base_url('uploads/logo_transtama.jpg') ?>" width="100" height="60" style="margin-bottom:5px;">
                 </td>
                 <td style="font-size: 16px; padding-top:25px; font-weight:bold;width: 35%;">
                     <b style="margin-left: 0px; text-align:center"> <?= strtoupper($info['keterangan']) ?> </b>
@@ -73,7 +74,7 @@
                     <p>Jakarta 10210, Indonesia</p>
                     <p>Phone &nbsp;&nbsp;&nbsp;: +62 21 57852609</p>
                     <p>Fax &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: +62 21 57852608</p>
-                    <p>No &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <?= $info['no_po'] ?></p>
+                    <p>No &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <?= $info['no_pengeluaran'] ?></p>
                     <p>Date &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <?= bulan_indo($info['date']) ?></p>
                 </td>
             </tr>
@@ -99,57 +100,60 @@
             </tr>
             <?php $no = 1;
             $total = 0;
-            foreach ($invoice as $inv) {
+            foreach ($ap as $a) {
             ?>
                 <tr>
                     <td style=" font-size: 12px;"><?= $no; ?>
                     </td>
-                    <td style=" font-size: 12px;"><?= $inv['resi'] ?>
+                    <td style=" font-size: 12px;"><?= $a['nama_kategori_pengeluaran'] ?> - <?= $a['description'] ?>
                     </td>
-                    <?php if ($vendor['type'] == 0) {
-                    ?>
-                        <td><?= rupiah($inv['flight_msu2'] + $inv['others2']) ?></td>
-                    <?php  } else {
-                    ?>
-                        <td><?= rupiah($inv['hd_daerah2'] + $inv['others2']) ?></td>
-                    <?php  } ?>
-
-                    <td style=" font-size: 12px;"><?= rupiah($inv['variabel']) ?>
+                    <td style=" font-size: 12px;"><?= rupiah($a['amount_proposed']) ?>
+                    </td>
+                    <td style=" font-size: 12px;"><?= $a['amount_approved'] ?>
                     </td>
                 </tr>
 
             <?php $no++;
-
-                $total_approved = $total_approved + $inv['variabel'];
-
-                $total_koli = $total_koli + $inv['koli'];
-                $total_weight = $total_weight + $inv['berat_js'];
-                $total_special_weight = $total_special_weight + $inv['berat_msr'];
-
-                $total_smu = $total_smu + $inv['flight_msu2'];
-                $total_hd_daerah =  $total_hd_daerah + $inv['hd_daerah2'];
-
-                $sub_total_smu = $sub_total_smu +  $inv['flight_msu2'] + $inv['others2'];
-                $sub_total_hd_daerah = $sub_total_hd_daerah +  $inv['hd_daerah2'] + $inv['others2'];
-
-                $others =  $others + $inv['others2'];
+                $total = $total + $a['amount_proposed'];
             } ?>
 
+            <?php if ($info['keterangan'] == 'CASH ADVANCE REPORT') {
+            ?>
+                <tr>
+                    <td colspan="2" style=" font-size: 12px; width:25%; font-weight:bold; height:20px;text-align:left">Total Cash Advance Approved</td>
+                    <td><?= rupiah($total); ?></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td colspan="2" style=" font-size: 12px; width:25%; font-weight:bold; height:20px;text-align:left">Total Expenses</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td colspan="2" style=" font-size: 12px; width:25%; font-weight:bold; height:20px;text-align:left">Over / Less</td>
+                    <td></td>
+                    <td></td>
+                </tr>
 
-            <tr>
-                <td></td>
-                <td style=" font-size: 12px; width:25%; font-weight:bold; height:20px;text-align:center">TOTAL</td>
-                <?php if ($vendor['type'] == 0) {
-                ?>
-                    <td><?= rupiah($sub_total_smu) ?></td>
-                <?php  } else {
-                ?>
-                    <td><?= rupiah($sub_total_hd_daerah) ?></td>
-                <?php  } ?>
-                <td><?= rupiah($total_approved) ?></td>
-            </tr>
+            <?php  } elseif ($info['keterangan'] == 'PAYMENT ORDER') {
+            ?>
+                <tr>
+                    <td></td>
+                    <td style=" font-size: 12px; width:25%; font-weight:bold; height:20px;text-align:center">TOTAL</td>
+                    <td><?= rupiah($total); ?></td>
+                    <td></td>
+                </tr>
 
+            <?php  } else {
+            ?>
+                <tr>
+                    <td></td>
+                    <td style=" font-size: 12px; width:25%; font-weight:bold; height:20px;text-align:center">TOTAL</td>
+                    <td><?= rupiah($total); ?></td>
+                    <td></td>
+                </tr>
 
+            <?php  } ?>
 
         </table>
 
@@ -176,7 +180,6 @@
         $ttd_atasan = $this->db->get_where('tb_user', ['id_user' => $approval['approve_by_atasan']])->row_array();
         $ttd_sm = $this->db->get_where('tb_user', ['id_user' => $approval['approve_by_sm']])->row_array();
         $ttd_finance = $this->db->get_where('tb_user', ['id_user' => $approval['received_by']])->row_array();
-        $ttd_gm = $this->db->get_where('tb_user', ['id_user' => $approval['approve_by_gm']])->row_array();
         if ($ttd_sm == NULL) {
             $nama_sm = '-';
         } else {
@@ -199,34 +202,33 @@
             <tr>
                 <td style="font-size: 10px; text-align:left"><b>Prepared By</b>
                 </td>
-                <td style="font-size: 12px; font-weight:bold; height:20px;"><span><?= $pemohon['nama_user'] ?></span> <span style="margin-left:120px ;"><?= $ttd_atasan['nama_user'] ?></span>
+                <td style="font-size: 12px; font-weight:bold; height:20px;text-align:center"><?= $pemohon['nama_user'] ?>
                 </td>
                 <td style=" font-size: 12px; text-align:center"><?= $info['created'] ?>
                 </td>
                 <td style=" font-size: 12px; text-align:left"><img src="<?= base_url('uploads/ttd/' . $pemohon['ttd']) ?>" alt="ttd" width="40" height="40">
-                    <img src="<?= base_url('uploads/ttd/' . $ttd_atasan['ttd']) ?>" alt="ttd" width="40" height="40" style="margin-left:100px ;">
                 </td>
 
             </tr>
             <tr>
                 <td style="font-size: 10px; text-align:left"><b>Acknowledge By</b>
                 </td>
-                <td style="font-size: 12px; font-weight:bold; height:20px;text-align:center"><?= $nama_sm ?>
+                <td style="font-size: 12px; font-weight:bold; height:20px;text-align:center"><?= $ttd_atasan['nama_user'] ?>
                 </td>
-                <td style=" font-size: 12px; text-align:center"><?= $approval['created_sm'] ?>
+                <td style=" font-size: 12px; text-align:center"><?= $approval['created_atasan'] ?>
                 </td>
-                <td style=" font-size: 12px; text-align:left"><img src="<?= base_url('uploads/ttd/' . $ttd_sm['ttd']) ?>" alt="ttd" width="40" height="40">
+                <td style=" font-size: 12px; text-align:left"><img src="<?= base_url('uploads/ttd/' . $ttd_atasan['ttd']) ?>" alt="ttd" width="40" height="40">
                 </td>
 
             </tr>
             <tr>
                 <td style="font-size: 10px; text-align:left"><b>Approved By</b>
                 </td>
-                <td style="font-size: 12px;  font-weight:bold; height:20px;text-align:center"><?= $ttd_gm['nama_user'] ?>
+                <td style="font-size: 12px;  font-weight:bold; height:20px;text-align:center"><?= $nama_sm ?>
                 </td>
-                <td style=" font-size: 12px; text-align:left"><?= $approval['created_gm'] ?>
+                <td style=" font-size: 12px; text-align:left"><?= $approval['created_atasan'] ?>
                 </td>
-                <td style=" font-size: 12px; text-align:left"><img src="<?= base_url('uploads/ttd/' . $ttd_gm['ttd']) ?>" alt="ttd" width="40" height="40">
+                <td style=" font-size: 12px; text-align:left"><img src="<?= base_url('uploads/ttd/' . $ttd_sm['ttd']) ?>" alt="ttd" width="40" height="40">
                 </td>
 
             </tr>
@@ -246,36 +248,25 @@
 
 
     </div>
-
-    <?php
-
-
-    if (empty($a['attachment'])) {
-        echo '';
-    } else {
-    ?>
-        <div class="page_break"></div>
-        <div class="content" style="margin-left: -15px; margin-right:0px">
+	<div class="page_break"></div>
+	 <div class="content" style="margin-left: -15px; margin-right:0px">
             <center>
                 <p style="text-align: center; font-size:20px; font-style:bold"> ATTACHMENT</p>
             </center>
             <?php $no = 1;
 
             foreach ($ap as $a) {
-                if (empty($a['attachment'])) {
-                    echo '';
-                } else {
+               
             ?>
                     <span style="font-size:20px; font-style:bold"><?= $no . '. ' . $a['description'] ?> </span>
-                    <p><img src="http://shipperapps.test/uploads/ap/<?= $a['attachment'] ?>" width="auto"> </p>
-            <?php }
+                    <p><img src="https://tesla-smartwork.transtama.com/uploads/ap/<?= $a['attachment'] ?>" width="100%" height="350"> </p>
+            <?php 
                 $no++;
             } ?>
 
         </div>
-    <?php
-    } ?>
 
+    
 
 
 </body>

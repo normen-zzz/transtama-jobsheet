@@ -7,7 +7,7 @@
 		<div class="row">
 			<div class="col-xl-6">
 				<!--begin::Stats Widget 30-->
-				<a href="<?= base_url('cs/jobsheet') ?>">
+				<a href="<?= base_url('cs/salesOrder') ?>">
 					<div class="card" style="background-image: url(<?= base_url('assets/layout/br_cs1.png') ?>); background-size:cover;">
 						<!--begin::Body-->
 						<div class="card-body" style="height: 300px; width:300" style="background-size: cover;">
@@ -22,7 +22,7 @@
 			</div>
 			<div class="col-xl-6">
 				<!--begin::Stats Widget 30-->
-				<a href="<?= base_url('cs/jobsheet/final') ?>">
+				<a href="<?= base_url('cs/jobsheet') ?>">
 					<div class="card" style="background-image: url(<?= base_url('assets/layout/br_cs2.png') ?>); background-size:cover;">
 						<!--begin::Body-->
 						<div class="card-body" style="height: 300px; width:300">

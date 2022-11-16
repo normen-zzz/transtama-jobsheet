@@ -1302,7 +1302,7 @@
 
 
             <div class="said">
-                <p style="font-weight: bold; <?php if ($total_invoice >= 18) { ?> margin-top: 72px; <?php } else { ?> margin-top: 5px; <?php } ?>">
+                <p style="font-weight: bold; <?php if ($total_invoice >= 16) { ?> margin-top: 65px; <?php } else { ?> margin-top: 5px; <?php } ?>">
                     <?php
 
                     echo "#" . $info['terbilang'] . "#";

@@ -247,12 +247,11 @@
                 <td style=" font-size: 10px; width:10%; text-align:center"><b><?= $tgl_approve_mgr_sales['created_at_manager'] ?></b>
                 </td>
                 <td style=" font-size: 10px; width:10%; text-align:center">
-                    <?php if ($manager_sales['ttd']) {
+				<?php if ($manager_sales['ttd']) {
                     ?>
                         <img src="<?= base_url('uploads/ttd/' . $manager_sales['ttd']) ?>" width="80" height="40" style="margin-bottom:5px;">
 
                     <?php } ?>
-
                 </td>
             </tr>
             <tr>

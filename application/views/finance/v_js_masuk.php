@@ -16,7 +16,6 @@
                         </div>
                     </div>
                 </div>
-
                 <!-- Main content -->
                 <section class="content">
                     <div class="row">
@@ -58,7 +57,6 @@
                                                 <?php foreach ($js as $j) {
                                                 ?>
                                                     <tr>
-
                                                         <td><?= bulan_indo($j['tgl_pickup']) ?></td>
                                                         <td><?= $j['so_id'] ?></td>
                                                         <td><?= $j['shipment_id'] ?></td>

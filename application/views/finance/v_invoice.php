@@ -41,7 +41,7 @@
                                             <td style="font-weight: bold;">Shipment ID/DO Number</td>
                                             <td>: <?= $shipment_id ?> </td>
                                         </tr>
-                                        <tr>
+										 <tr>
                                             <td style="font-weight: bold;">Due Date</td>
                                             <td>: <?= $invoice['due_date'] ?> </td>
                                         </tr>
@@ -220,3 +220,4 @@
     <!-- /.modal -->
 
 <?php } ?>
+
