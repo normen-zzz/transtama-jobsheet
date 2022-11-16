@@ -79,10 +79,11 @@ class ApModel extends CI_Model
     public function getApByNo($no_ap)
     {
 
-        $this->db->select('a.*, b.nama_kategori, b.keterangan,c.nama_kategori_pengeluaran');
+        $this->db->select('a.*, b.nama_kategori, b.keterangan,c.nama_kategori_pengeluaran,d.id_role');
         $this->db->from('tbl_pengeluaran a');
         $this->db->join('tbl_kat_ap b', 'a.id_kat_ap=b.id_kategori_ap');
         $this->db->join('tbl_list_pengeluaran c', 'a.id_kategori_pengeluaran=c.id_kategori');
+        $this->db->join('tb_user d', 'a.id_user=d.id_user');
         $this->db->where('a.no_pengeluaran', $no_ap);
         return $this->db->get();
     }
@@ -152,7 +153,7 @@ class ApModel extends CI_Model
 
         $ignore = array(0, 1);
 
-        $this->db->select('a.*, b.nama_kategori, b.keterangan,c.nama_kategori_pengeluaran, d.nama_user');
+        $this->db->select('a.*, b.nama_kategori, b.keterangan,c.nama_kategori_pengeluaran, d.nama_user,d.id_role');
         $this->db->from('tbl_pengeluaran a');
         $this->db->join('tbl_kat_ap b', 'a.id_kat_ap=b.id_kategori_ap');
         $this->db->join('tbl_list_pengeluaran c', 'a.id_kategori_pengeluaran=c.id_kategori');

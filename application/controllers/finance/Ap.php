@@ -299,6 +299,7 @@ class Ap extends CI_Controller
         // kirim WA
 
         $get_ap = $this->db->get_where('tbl_pengeluaran', ['no_pengeluaran' => $no_ap])->row_array();
+        $get_user = $this->db->get_where('tb_user', ['id_user' => $get_ap['id_user']])->row_array();
         $no_ap = $get_ap['no_pengeluaran'];
         $purpose = $get_ap['purpose'];
         $date = $get_ap['date'];
@@ -306,11 +307,13 @@ class Ap extends CI_Controller
         // $link = "http://jobsheet.test/approval/ap/$no_ap";
         // echo "<li><a href='whatsapp://send?text=$actual_link'>Share</a></li>";
         $pesan = "Hallo, ada pengajuan Ap No. *$no_ap* Dengan Tujuan *$purpose* Tanggal *$date* Yang Telah Diapprove Manager Finance. Silahkan approve melalui link berikut : $link . Terima Kasih";
-        // no mba vema
-        $this->wa->pickup('+628111910711', "$pesan");
-
+        if ($get_user['id_role'] == 4 || $get_user['id_role'] == 6) {
+            // no mba vema
+            $this->wa->pickup('+628111910711', "$pesan");
+            // var_dump('ini finance dan sales');
+        }
         $this->session->set_flashdata('message', '<div class="alert
-					alert-success" role="alert">Success</div>');
+        alert-success" role="alert">Success</div>');
         redirect('finance/ap/detail/' . $no_ap);
     }
     public function getKategori()

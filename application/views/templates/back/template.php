@@ -554,7 +554,7 @@ $dataflash = json_encode($this->session->flashdata('message'));
             "pageLength": 100,
             "order": [],
             searchPanes: {
-                columns: [5],
+                columns: [6],
                 layout: 'columns-4'
             },
 

@@ -12,10 +12,10 @@
 							<div class="card-toolbar">
 								<?php $redirect = $this->uri->segment(2);
 								?>
-								<button onclick="history.back()" class="btn mr-2 text-light" style="background-color: #9c223b;">
+								<a onclick="history.back()" class="btn mr-2 text-light" style="background-color: #9c223b;">
 									<i class="fas fa-chevron-circle-left text-light"> </i>
 									Back
-								</button>
+								</a>
 								<a target="blank" href="<?= base_url('finance/ap/print/' . $info['no_pengeluaran']) ?>" class="btn btn-sm mb-1 text-light" style="background-color: #9c223b;"> <i class="fa fa-print text-light"></i> Print</a>
 							</div>
 						</div>
@@ -161,76 +161,183 @@
 											</div>
 											<div class="d-flex justify-content-between border-top mt-5 pt-10">
 
-												<?php if ($info['status'] == 2) {
-													if ($info['is_approve_sm'] == 1) {
-												?>
+												<?php $id_jabatan = $this->session->userdata('id_jabatan');
+												// Jika Usernya gm 
+												if ($id_jabatan == 11) {
+													// jika sudah di approve mgr finance 
+													if ($info['status'] == 7 && $info['id_role'] != 2 && $info['id_role'] != 3) { ?>
 														<div>
-															<button type="submit" class="btn btn-sm text-light" onclick="return confirm('Are You Sure ?')" style="background-color: #9c223b;">Approve</button>
+															<a href="<?= base_url('finance/ap/approveGm/' . $info['no_pengeluaran']) ?>" class="btn btn-sm text-light tombol-konfirmasi" style="background-color: #9c223b;">Approve</a>
 															<a href="#" data-toggle="modal" data-target="#modal-decline" class="btn btn-sm text-light" style="background-color: #9c223b;">Void</a>
 														</div>
+														<?php } elseif ($info['status'] == 2) {
+														// jika sudah diapprove SM (KHUSUS CS dan OPS)
+														if ($info['is_approve_sm'] == 1) { ?>
+															<span>
+																<span class="fa fa-check-circle text-success"></span>
+																This <b><?= $info['no_pengeluaran'] ?></b> has been <b> Approve SM</b>
 
-													<?php	} else { ?>
+															</span>
+															<!-- jika dia diapprove manager masing masing dan dia adalah sales  -->
+														<?php } elseif ($info['is_approve_sm'] == 0 && $info['id_role'] == 4) { ?>
+															<span>
+																<span class="fa fa-check-circle text-success"></span>
+																This <b><?= $info['no_pengeluaran'] ?></b> has been <b> Approve Manager</b>
+
+															</span>
+															<!-- jika dia diapprove manager masing dan dia adalah finance  -->
+														<?php } elseif ($info['is_approve_sm'] == 0 && $info['id_role'] == 6) { ?>
+															<span>
+																<span class="fa fa-check-circle text-success"></span>
+																This <b><?= $info['no_pengeluaran'] ?></b> has been <b> Approve Manager</b>
+
+															</span>
+														<?php }
+														// jika sudah diterima staff/mgr finance
+													} elseif ($info['status'] == 3) { ?>
 														<span>
 															<span class="fa fa-check-circle text-success"></span>
-															This <?= $info['no_pengeluaran'] ?> has been Approve By Manager, Please Wait SM To Check
-														</span>
-													<?php }
-												} elseif ($info['status'] == 3) {
-													?>
+															This <b><?= $info['no_pengeluaran'] ?></b> has been <b> Received Finance</b>
 
-													<?php $is_atasan = $this->session->userdata('id_jabatan');
-													if ($is_atasan == 2) {
-													?>
+														</span>
+														<!-- jika sudah dibayar -->
+													<?php } elseif ($info['status'] == 4) { ?>
+														<span>
+															<span class="fa fa-check-circle text-success"></span>
+															This <b><?= $info['no_pengeluaran'] ?></b> has been Paid At <b><?= bulan_indo($info['payment_date']) ?> <a target="blank" href="<?= base_url('uploads/ap_proof/' . $info['payment_proof']) ?>">View Proof</a> </b>
+
+														</span>
+													<?php	} elseif ($info['status'] == 5) { ?>
+														<span>
+															<span class="fa fa-check-circle text-success"></span>
+															This <b><?= $info['no_pengeluaran'] ?></b> has been <b> Approve GM</b>
+
+														</span>
+													<?php } elseif ($info['status'] == 6) { ?>
+														<span>
+															<span class="fa fa-window-close text-danger"></span>
+															This <b><?= $info['no_pengeluaran'] ?></b> has been Void At <b><?= $info['void_date'] ?></b> Because <b><?= $info['reason_void'] ?></b> <br>
+
+														</span>
+													<?php } else { ?>
+														<span>
+															<span class="fa fa-check-circle text-success"></span>
+															This <b><?= $info['no_pengeluaran'] ?></b> has been <b> Approve Mgr Finance</b> Please Wait Finance To Pay
+
+														</span>
+														<?php }
+
+													// jika usernya mgr finance 
+												} elseif ($id_jabatan == 2) {
+
+													if ($info['status'] == 2) {
+														// jika sudah diapprove SM (KHUSUS CS dan OPS)
+														if ($info['is_approve_sm'] == 1) { ?>
+															<div>
+																<button type="submit" class="btn btn-sm text-light" onclick="return confirm('Are You Sure ?')" style="background-color: #9c223b;">Receive</button>
+																<a href="#" data-toggle="modal" data-target="#modal-decline" class="btn btn-sm text-light" style="background-color: #9c223b;">Void</a>
+															</div>
+															<!-- jika dia diapprove manager masing masing dan dia adalah sales  -->
+														<?php } elseif ($info['is_approve_sm'] == 0 && $info['id_role'] == 4) { ?>
+															<div>
+																<button type="submit" class="btn btn-sm text-light" onclick="return confirm('Are You Sure ?')" style="background-color: #9c223b;">Receive</button>
+																<a href="#" data-toggle="modal" data-target="#modal-decline" class="btn btn-sm text-light" style="background-color: #9c223b;">Void</a>
+															</div><!-- jika dia diapprove manager masing dan dia adalah finance  -->
+														<?php } elseif ($info['is_approve_sm'] == 0 && $info['id_role'] == 6) { ?>
+															<div>
+																<button type="submit" class="btn btn-sm text-light" onclick="return confirm('Are You Sure ?')" style="background-color: #9c223b;">Receive</button>
+																<a href="#" data-toggle="modal" data-target="#modal-decline" class="btn btn-sm text-light" style="background-color: #9c223b;">Void</a>
+															</div>
+														<?php }
+														// jika sudah diterima staff/mgr finance
+													} elseif ($info['status'] == 3) { ?>
 														<div>
 															<a href="<?= base_url('finance/ap/approveFinance/' . $info['no_pengeluaran']) ?>" class="btn btn-sm text-light tombol-konfirmasi" style="background-color: #9c223b;">Approve</a>
 															<a href="#" data-toggle="modal" data-target="#modal-decline" class="btn btn-sm text-light" style="background-color: #9c223b;">Void</a>
 														</div>
-													<?php	} else {
-													?>
+														<!-- jika sudah dibayar -->
+													<?php } elseif ($info['status'] == 4) { ?>
+														<span>
+															<span class="fa fa-check-circle text-success"></span>
+															This <b><?= $info['no_pengeluaran'] ?></b> has been Paid At <b><?= bulan_indo($info['payment_date']) ?> <a target="blank" href="<?= base_url('uploads/ap_proof/' . $info['payment_proof']) ?>">View Proof</a> </b>
 
+														</span>
+													<?php	} elseif ($info['status'] == 5) { ?>
+														<span>
+															<span class="fa fa-check-circle text-success"></span>
+															This <b><?= $info['no_pengeluaran'] ?></b> has been <b> Approve GM</b> Please to pay according to the Approved Amount
+
+														</span>
+													<?php } elseif ($info['status'] == 6) { ?>
+														<span>
+															<span class="fa fa-window-close text-danger"></span>
+															This <b><?= $info['no_pengeluaran'] ?></b> has been Void At <b><?= $info['void_date'] ?></b> Because <b><?= $info['reason_void'] ?></b> <br>
+
+														</span>
+													<?php } elseif ($info['status'] == 7) { ?>
+														<span>
+															<span class="fa fa-check-circle text-success"></span>
+															This <b><?= $info['no_pengeluaran'] ?></b> has been <b> Approve Mgr Finance</b> Please Wait GM To Check
+
+														</span>
+														<?php }
+
+													// jika usernya staff finance
+												} elseif ($id_jabatan == 3) {
+
+													if ($info['status'] == 2) {
+														// jika sudah diapprove SM (KHUSUS CS dan OPS)
+														if ($info['is_approve_sm'] == 1) { ?>
+															<div>
+																<button type="submit" class="btn btn-sm text-light" onclick="return confirm('Are You Sure ?')" style="background-color: #9c223b;">Receive</button>
+																<a href="#" data-toggle="modal" data-target="#modal-decline" class="btn btn-sm text-light" style="background-color: #9c223b;">Void</a>
+															</div>
+															<!-- jika dia diapprove manager masing masing dan dia adalah sales  -->
+														<?php } elseif ($info['is_approve_sm'] == 0 && $info['id_role'] == 4) { ?>
+															<div>
+																<button type="submit" class="btn btn-sm text-light" onclick="return confirm('Are You Sure ?')" style="background-color: #9c223b;">Receive</button>
+																<a href="#" data-toggle="modal" data-target="#modal-decline" class="btn btn-sm text-light" style="background-color: #9c223b;">Void</a>
+															</div><!-- jika dia diapprove manager masing dan dia adalah finance  -->
+														<?php } elseif ($info['is_approve_sm'] == 0 && $info['id_role'] == 6) { ?>
+															<div>
+																<button type="submit" class="btn btn-sm text-light" onclick="return confirm('Are You Sure ?')" style="background-color: #9c223b;">Receive</button>
+																<a href="#" data-toggle="modal" data-target="#modal-decline" class="btn btn-sm text-light" style="background-color: #9c223b;">Void</a>
+															</div>
+														<?php }
+														// jika sudah diterima staff/mgr finance
+													} elseif ($info['status'] == 3) { ?>
 														<span>
 															<span class="fa fa-check-circle text-success"></span>
 															This <?= $info['no_pengeluaran'] ?> has been Received, Please Wait Manager Finance To Check
 														</span>
-													<?php	}
-													?>
+														<!-- jika sudah dibayar -->
+													<?php } elseif ($info['status'] == 4) { ?>
+														<span>
+															<span class="fa fa-check-circle text-success"></span>
+															This <b><?= $info['no_pengeluaran'] ?></b> has been Paid At <b><?= bulan_indo($info['payment_date']) ?> <a target="blank" href="<?= base_url('uploads/ap_proof/' . $info['payment_proof']) ?>">View Proof</a> </b>
 
+														</span>
+													<?php	} elseif ($info['status'] == 5) { ?>
+														<span>
+															<span class="fa fa-check-circle text-success"></span>
+															This <b><?= $info['no_pengeluaran'] ?></b> has been <b> Approve GM</b> Please to pay according to the Approved Amount
 
+														</span>
+													<?php } elseif ($info['status'] == 6) { ?>
+														<span>
+															<span class="fa fa-window-close text-danger"></span>
+															This <b><?= $info['no_pengeluaran'] ?></b> has been Void At <b><?= $info['void_date'] ?></b> Because <b><?= $info['reason_void'] ?></b> <br>
 
-												<?php } elseif ($info['status'] == 6) {
-												?>
+														</span>
+													<?php } elseif ($info['status'] == 7) { ?>
+														<span>
+															<span class="fa fa-check-circle text-success"></span>
+															This <b><?= $info['no_pengeluaran'] ?></b> has been <b> Approve Mgr Finance</b> Please Wait GM To Check
 
-													<span>
-														<span class="fa fa-window-close text-danger"></span>
-														This <b><?= $info['no_pengeluaran'] ?></b> has been Void At <b><?= $info['void_date'] ?></b> Because <b><?= $info['reason_void'] ?></b> <br>
+														</span>
+												<?php }
+												} ?>
 
-													</span>
-
-												<?php } elseif ($info['status'] == 5) {
-												?>
-
-													<span>
-														<span class="fa fa-check-circle text-success"></span>
-														This <b><?= $info['no_pengeluaran'] ?></b> has been <b> Approve GM</b> Please to pay according to the Approved Amount
-
-													</span>
-												<?php } elseif ($info['status'] == 4) {
-												?>
-
-													<span>
-														<span class="fa fa-check-circle text-success"></span>
-														This <b><?= $info['no_pengeluaran'] ?></b> has been Paid At <b><?= bulan_indo($info['payment_date']) ?> <a target="blank" href="<?= base_url('uploads/ap_proof/' . $info['payment_proof']) ?>">View Proof</a> </b>
-
-													</span>
-												<?php } else {
-
-												?>
-													<span>
-														<span class="fa fa-check-circle text-success"></span>
-														This <?= $info['no_pengeluaran'] ?> has been Approve By Manager CS, Please Wait GM To Check
-													</span>
-
-												<?php } ?>
 											</div>
 
 											<!--end: Wizard Step 1-->
