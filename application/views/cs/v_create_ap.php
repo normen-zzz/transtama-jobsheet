@@ -51,14 +51,8 @@
                                                         <th>COLLY</th>
                                                         <th>WEIGHT JS</th>
                                                         <th>WEIGHT MSR</th>
-                                                        <?php if ($vendor['type'] == 0) {
-                                                        ?>
-                                                            <th>FLIGHT SMU</th>
-
-                                                        <?php  } else {
-                                                        ?>
-                                                            <th>HD Daerah</th>
-                                                        <?php  } ?>
+                                                        <!-- <th>FLIGHT SMU</th> -->
+                                                        <th>HD Daerah</th>
                                                         <th>OTHERS</th>
                                                         <th>TOTAL AMOUNT</th>
                                                         <!-- <th>VARIABEL</th> -->
@@ -96,24 +90,11 @@
                                                             <td><?= $query['koli'] ?></td>
                                                             <td><?= $query['berat_js'] ?></td>
                                                             <td><?= $query['berat_msr'] ?></td>
-
-                                                            <?php if ($vendor['type'] == 0) {
-                                                            ?>
-                                                                <td><?= rupiah($query['flight_msu2']) ?></td>
-                                                            <?php  } else {
-                                                            ?>
-                                                                <td><?= rupiah($query['hd_daerah2']) ?></td>
-                                                            <?php  } ?>
-
+                                                            <!-- <td><?= rupiah($query['flight_msu2']) ?></td> -->
+                                                            <td><?= rupiah($query['hd_daerah2']) ?></td>
                                                             <td><?= rupiah($query['others2']) ?></td>
+                                                            <td><?= rupiah($query['hd_daerah2'] + $query['others2']) ?></td>
 
-                                                            <?php if ($vendor['type'] == 0) {
-                                                            ?>
-                                                                <td><?= rupiah($query['flight_msu2'] + $query['others2']) ?></td>
-                                                            <?php  } else {
-                                                            ?>
-                                                                <td><?= rupiah($query['hd_daerah2'] + $query['others2']) ?></td>
-                                                            <?php  } ?>
 
                                                             <!-- <input type="text" name="variabel[]" class="form-control"> -->
                                                             <input hidden type="text" name="shipment_id[]" value="<?= $query['id'] ?>">
@@ -141,22 +122,10 @@
                                                         <td><?= $total_koli ?> </td>
                                                         <td><?= $total_weight ?> </td>
                                                         <td><?= $total_special_weight ?> </td>
-                                                        <?php if ($vendor['type'] == 0) {
-                                                        ?>
-                                                            <td><?= rupiah($total_smu) ?></td>
-                                                        <?php  } else {
-                                                        ?>
-                                                            <td><?= rupiah($total_hd_daerah) ?></td>
-                                                        <?php  } ?>
-                                                        <td><?= rupiah($others) ?> </td>
 
-                                                        <?php if ($vendor['type'] == 0) {
-                                                        ?>
-                                                            <td><?= rupiah($sub_total_smu) ?></td>
-                                                        <?php  } else {
-                                                        ?>
-                                                            <td><?= rupiah($sub_total_hd_daerah) ?></td>
-                                                        <?php  } ?>
+                                                        <td><?= rupiah($total_hd_daerah) ?></td>
+                                                        <td><?= rupiah($others) ?> </td>
+                                                        <td><?= rupiah($sub_total_hd_daerah) ?></td>
 
                                                     </tr>
 
@@ -177,18 +146,14 @@
 
                             <?php
                             $f = new NumberFormatter('en', NumberFormatter::SPELLOUT);
-                            if ($vendor['type'] == 0) {
-                                $terbilang = $f->format($sub_total_smu) . ' Rupiahs';
-                                $terbilang = ucwords($terbilang);
-                                rupiah($sub_total_smu);
-                            } else {
-                                $terbilang = $f->format($sub_total_hd_daerah) . ' Rupiahs';
-                                $terbilang = ucwords($terbilang);
-                            }
+
+                            $terbilang = $f->format($sub_total_hd_daerah) . ' Rupiahs';
+                            $terbilang = ucwords($terbilang);
+
 
                             if ($vendor['type'] == 0) {
                             ?>
-                                <input type="text" class="form-control" name="total_ap" hidden value="<?= $sub_total_smu ?>">
+                                <input type="text" class="form-control" name="total_ap" hidden value="<?= $sub_total_hd_daerah ?>">
                             <?php  } else {
                             ?>
                                 <input type="text" class="form-control" name="total_ap" hidden value="<?= $sub_total_hd_daerah ?>">

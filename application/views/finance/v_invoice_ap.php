@@ -81,80 +81,82 @@
                                                     }
                                                     // echo $perbedaan;
                                                 ?>
-                                                    <tr>
-                                                        <td><?= $j['vendor'] ?> <br>
-                                                            <a href="<?= base_url('finance/apExternal/print/' . $j['no_po'] . '/' . $j['id_vendor'] . '/' . $j['unique_invoice']) ?>"><?= $j['no_invoice'] ?></a>
-                                                        </td>
-                                                        <td><?= bulan_indo($j['date']) ?></td>
-                                                        <td><?php if ($j['status'] == 4) {
-                                                                echo '<span class="label label-success label-inline font-weight-lighter">Paid</span>';
-                                                            } else {
-                                                                if ($j['due_date'] == NULL) {
-                                                                    echo "Due Date Not Setting";
+                                                    <?php if ($j['status'] >= 2) { ?>
+                                                        <tr>
+                                                            <td><?= $j['vendor'] ?> <br>
+                                                                <a href="<?= base_url('finance/apExternal/print/' . $j['no_po'] . '/' . $j['id_vendor'] . '/' . $j['unique_invoice']) ?>"><?= $j['no_invoice'] ?></a>
+                                                            </td>
+                                                            <td><?= bulan_indo($j['date']) ?></td>
+                                                            <td><?php if ($j['status'] == 4) {
+                                                                    echo '<span class="label label-success label-inline font-weight-lighter">Paid</span>';
                                                                 } else {
-                                                                    echo  bulan_indo($j['due_date']);
+                                                                    if ($j['due_date'] == NULL) {
+                                                                        echo "Due Date Not Setting";
+                                                                    } else {
+                                                                        echo  bulan_indo($j['due_date']);
+                                                                    }
                                                                 }
-                                                            }
-                                                            ?>
-
-                                                        </td>
-
-                                                        <td><?= rupiah($j['total_ap']) ?></td>
-                                                        <td><?= rupiah($j['ppn']) ?></td>
-                                                        <td><?= rupiah($j['pph']) ?></td>
-                                                        <td><?= rupiah(($j['total_ap']) + $j['pph'] + $j['ppn']) ?></td>
-
-                                                        <td><?= statusAp($j['status'], 1) ?></td>
-                                                        <td>
-                                                            <?php if ($j['status'] == 4) {
-                                                                echo "<span class='label label-success label-inline font-weight-lighter'>Paid</span> <br>";
-                                                                echo bulan_indo($j['payment_date']);
-                                                            } else {
-                                                                echo "<span class='label label-secondary label-inline font-weight-lighter'>Pending</span>";
-                                                            }
-                                                            ?>
-
-                                                        </td>
-                                                        <td>
-                                                            <?php
-
-                                                            $id_atasan = $this->session->userdata('id_atasan');
-                                                            // kalo dia atasan
-
-                                                            if ($id_atasan == NULL || $id_atasan == 0) {
-                                                                $url = $this->uri->segment(3);
-                                                                // echo $url;
-                                                                if ($j['status'] == 3) {
-                                                            ?>
-                                                                    <a href="<?= base_url('finance/apExternal/detailInvoice/' . $j['unique_invoice'] . '/' . encrypt_url($j['id_vendor'])) ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">Detail</a>
-                                                                    <a href="<?= base_url('finance/apExternal/approveGm/' . $j['unique_invoice']) ?>" class="btn btn-sm mb-1 text-light tombol-konfirmasi mt-2" style="background-color: #9c223b;">Approve</a>
-
-                                                                <?php   } else {
                                                                 ?>
-                                                                    <a href="<?= base_url('finance/apExternal/detailInvoice/' . $j['unique_invoice'] . '/' . encrypt_url($j['id_vendor'])) ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">Detail</a>
 
-                                                                <?php  } ?>
+                                                            </td>
 
-                                                            <?php  } else {
-                                                            ?>
+                                                            <td><?= rupiah($j['total_ap']) ?></td>
+                                                            <td><?= rupiah($j['ppn']) ?></td>
+                                                            <td><?= rupiah($j['pph']) ?></td>
+                                                            <td><?= rupiah(($j['total_ap']) + $j['pph'] + $j['ppn']) ?></td>
+
+                                                            <td><?= statusAp($j['status'], 1) ?></td>
+                                                            <td>
                                                                 <?php if ($j['status'] == 4) {
+                                                                    echo "<span class='label label-success label-inline font-weight-lighter'>Paid</span> <br>";
+                                                                    echo bulan_indo($j['payment_date']);
+                                                                } else {
+                                                                    echo "<span class='label label-secondary label-inline font-weight-lighter'>Pending</span>";
+                                                                }
                                                                 ?>
-                                                                    <a href="<?= base_url('finance/apExternal/detailInvoice/' . $j['unique_invoice'] . '/' . encrypt_url($j['id_vendor'])) ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">Detail</a>
-                                                                <?php  } elseif ($j['status'] == 3 || $j['status'] == 5) {
+
+                                                            </td>
+                                                            <td>
+                                                                <?php
+
+                                                                $id_atasan = $this->session->userdata('id_atasan');
+                                                                // kalo dia atasan
+
+                                                                if ($id_atasan == NULL || $id_atasan == 0) {
+                                                                    $url = $this->uri->segment(3);
+                                                                    // echo $url;
+                                                                    if ($j['status'] == 3) {
                                                                 ?>
-                                                                    <a href="<?= base_url('finance/apExternal/editInvoice/' . $j['unique_invoice'] . '/' . encrypt_url($j['id_vendor'])) ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">Detail</a>
-                                                                    <button data-toggle="modal" data-target="#modal-paid<?= $j['id_invoice'] ?>" class=" btn btn-sm text-light mt-1" style="background-color: #9c223b;">Paid</button>
-                                                                <?php } else {
+                                                                        <a href="<?= base_url('finance/apExternal/detailInvoice/' . $j['unique_invoice'] . '/' . encrypt_url($j['id_vendor'])) ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">Detail</a>
+                                                                        <a href="<?= base_url('finance/apExternal/approveGm/' . $j['unique_invoice']) ?>" class="btn btn-sm mb-1 text-light tombol-konfirmasi mt-2" style="background-color: #9c223b;">Approve</a>
+
+                                                                    <?php   } else {
+                                                                    ?>
+                                                                        <a href="<?= base_url('finance/apExternal/detailInvoice/' . $j['unique_invoice'] . '/' . encrypt_url($j['id_vendor'])) ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">Detail</a>
+
+                                                                    <?php  } ?>
+
+                                                                <?php  } else {
                                                                 ?>
-                                                                    <a href="<?= base_url('finance/apExternal/editInvoice/' . $j['unique_invoice'] . '/' . encrypt_url($j['id_vendor'])) ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">Detail</a>
+                                                                    <?php if ($j['status'] == 4) {
+                                                                    ?>
+                                                                        <a href="<?= base_url('finance/apExternal/detailInvoice/' . $j['unique_invoice'] . '/' . encrypt_url($j['id_vendor'])) ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">Detail</a>
+                                                                    <?php  } elseif ($j['status'] == 3 || $j['status'] == 5) {
+                                                                    ?>
+                                                                        <a href="<?= base_url('finance/apExternal/editInvoice/' . $j['unique_invoice'] . '/' . encrypt_url($j['id_vendor'])) ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">Detail</a>
+                                                                        <button data-toggle="modal" data-target="#modal-paid<?= $j['id_invoice'] ?>" class=" btn btn-sm text-light mt-1" style="background-color: #9c223b;">Paid</button>
+                                                                    <?php } else {
+                                                                    ?>
+                                                                        <a href="<?= base_url('finance/apExternal/editInvoice/' . $j['unique_invoice'] . '/' . encrypt_url($j['id_vendor'])) ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">Detail</a>
 
-                                                            <?php  }
-                                                            } ?>
+                                                                <?php  }
+                                                                } ?>
 
 
-                                                        </td>
+                                                            </td>
 
-                                                    </tr>
+                                                        </tr>
+                                                    <?php } ?>
 
                                                 <?php } ?>
 

@@ -161,6 +161,9 @@ class ApExternal extends CI_Controller
         $total_ap = $this->input->post('total_ap');
         $no_invoice = $this->input->post('no_invoice');
         $terbilang = $this->input->post('terbilang');
+        $total_ap = $this->input->post('total_ap');
+        $ppn = 0.011 * $this->input->post('total_ap');
+        $pph = 0.02 * $this->input->post('total_ap');
         $random_string = $this->generateRandomString();
         $via = $this->input->post('via');
 
@@ -194,6 +197,8 @@ class ApExternal extends CI_Controller
                 'due_date' => $this->input->post('due_date'),
                 'status' => 0,
                 'no_po' => $no_pengeluaran,
+                'ppn' => $ppn,
+                'pph' => $pph,
                 'via_transfer' => $via,
                 'no_invoice' => $no_invoice,
                 'unique_invoice' => $random_string,
