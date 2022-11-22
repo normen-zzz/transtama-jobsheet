@@ -145,6 +145,7 @@ class SalesOrder extends CI_Controller
     public function editCapitalCost()
     {
         $shipment_id = $this->input->post('shipment_id');
+        $vendor = $this->input->post('vendor');
         $data = array(
             'flight_msu2' => $this->input->post('flight_smu2'),
             'ra2' => $this->input->post('ra2'),
@@ -163,6 +164,23 @@ class SalesOrder extends CI_Controller
         );
         $insert = $this->db->update('tbl_modal', $data, ['id_modal' => $this->input->post('id_modal')]);
         if ($insert) {
+            for ($i = 0; $i < sizeof($vendor); $i++) {
+                if ($vendor[$i] == 0) {
+                } else {
+                    $cek_shipment_id = $this->db->get_where('tbl_invoice_ap', ['shipment_id' => $this->input->post('shipment_id'), 'id_vendor' => $vendor[$i]])->row_array();
+                    $data = array(
+                        'id_vendor' => $vendor[$i],
+                        'shipment_id' => $this->input->post('shipment_id'),
+                        'status' => 0,
+                        'id_user' => $this->session->userdata('id_user')
+                    );
+                    if ($cek_shipment_id) {
+                        break;
+                    } else {
+                        $this->db->insert('tbl_invoice_ap', $data);
+                    }
+                }
+            }
             // log_aktifitas('update', 'tb_modal');
             $this->session->set_flashdata('messageAlert', $this->messageAlert('success', 'Success'));
             redirect('cs/salesOrder/detail/' . $shipment_id);

@@ -85,10 +85,12 @@
 												<?php if ($info['no_ca'] != NULL) {
 												?>
 													<div class="col-md-4">
-														<div class="form-group">
+														<!-- <div class="form-group">
 															<label for="exampleInputEmail1">NO. CA</label>
 															<input type="text" name="no_ca" class="form-control" value="<?= $info['no_ca'] ?>">
-														</div>
+														</div> -->
+														<p> NO CA : <a target="_blank" href="<?= base_url('finance/Ap/detail/' . $info['no_ca']) ?>"><?= $info['no_ca'] ?></a></p>
+
 													</div>
 												<?php	} ?>
 
@@ -155,6 +157,44 @@
 															</td>
 															<td></td>
 														</tr>
+														<?php if ($info['no_ca'] != NULL) {
+														?>
+															<?php $ca = $this->db->get_where('tbl_pengeluaran', array('no_pengeluaran' => $info['no_ca']))->row_array(); ?>
+
+															<tr style="font-weight: bold;">
+																<td colspan="2">
+																	TOTAL CA APPROVED
+																</td>
+																<td>
+
+
+																</td>
+																<td>
+																	<?= rupiah($ca['total_approved']) ?>
+
+																</td>
+																<td></td>
+															</tr>
+															<tr style="font-weight: bold;">
+																<td colspan="2">
+																	OVER/LESS
+																</td>
+																<td>
+
+
+																</td>
+																<td>
+																	<?= rupiah($total_approved - $ca['total_approved']) ?>
+																	<?php if ($total_approved - $ca['total_approved'] < 0) {
+																		echo ' (LESS)';
+																	} elseif ($total_approved - $ca['total_approved'] > 0) {
+																		echo ' (OVER)';
+																	} ?>
+
+																</td>
+																<td></td>
+															</tr>
+														<?php } ?>
 
 													</table>
 												</div>
@@ -251,7 +291,7 @@
 														// jika sudah diterima staff/mgr finance
 													} elseif ($info['status'] == 3) { ?>
 														<div>
-															<a href="<?= base_url('finance/ap/approveFinance/' . $info['no_pengeluaran']) ?>" class="btn btn-sm text-light tombol-konfirmasi" style="background-color: #9c223b;">Approve</a>
+															<button type="submit" class="btn btn-sm text-light" onclick="return confirm('Are You Sure ?')" style="background-color: #9c223b;">Approve</button>
 															<a href="#" data-toggle="modal" data-target="#modal-decline" class="btn btn-sm text-light" style="background-color: #9c223b;">Void</a>
 														</div>
 														<!-- jika sudah dibayar -->
@@ -366,7 +406,7 @@
 
 
 
-	<?php foreach ($ap as $c) {
+	<?php foreach ($ap2 as $c) {
 	?>
 
 		<div class="modal fade" id="modal-bukti<?= $c['id_pengeluaran'] ?>">
@@ -378,6 +418,7 @@
 							<span aria-hidden="true">&times;</span>
 						</button>
 					</div>
+					<?= $c['attachment'] ?>
 					<div class="modal-body">
 						<form action="<?= base_url('superadmin/role/addRole') ?>" method="POST">
 							<div class="col-md-12">

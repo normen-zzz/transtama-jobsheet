@@ -283,7 +283,7 @@
                             <i class="menu-arrow"></i>
                             <ul class="menu-subnav">
                                 <li class="menu-item" aria-haspopup="true">
-								 <a href="<?= base_url('finance/report/profitLossHpp') ?>" class="menu-link">
+                                    <a href="<?= base_url('finance/report/profitLossHpp') ?>" class="menu-link">
                                         <i class="menu-bullet menu-bullet-dot">
                                             <span></span>
                                         </i>
@@ -415,6 +415,12 @@
                         <a href="<?= base_url('cs/jobsheet/final') ?>" class="menu-link">
                             <i class="fa fa-book mt-2 fa-1x mr-2 text-danger"></i>
                             <span class="menu-text" style="font-size:11px">Jobsheet Approve Manager</span>
+                        </a>
+                    </li>
+                    <li class="menu-item" aria-haspopup="true">
+                        <a href="<?= base_url('cs/jobsheet/approveMgrFinance') ?>" class="menu-link">
+                            <i class="fa fa-book mt-2 fa-1x mr-2 text-danger"></i>
+                            <span class="menu-text" style="font-size:11px">Jobsheet Approve Mgr Finance</span>
                         </a>
                     </li>
 

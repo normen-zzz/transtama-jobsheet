@@ -34,7 +34,7 @@
                             <tr>
                                 <th>No AP</th>
                                 <th>Created By</th>
-								<th>Purpose</th>
+                                <th>Purpose</th>
                                 <th>Date</th>
                                 <!-- <th>Address</th> -->
                                 <th>Amount Proposed</th>
@@ -51,18 +51,18 @@
                                         echo ($c['id_kat_ap'] == 3)  ? '<b>' . $c['no_ca'] . '</b>' : ''
                                         ?> </td>
                                     <td><?= $c['nama_user'] ?></td>
-									<td><?= $c['purpose'] ?></td>
+                                    <td><?= $c['purpose'] ?></td>
                                     <td><?= bulan_indo($c['date']) ?></td>
                                     <td><?= rupiah($c['total']) ?></td>
                                     <td><?= ($c['status'] == 2 ? 'Wait Received' : rupiah($c['total_approved'])) ?></td>
                                     <td><?= statusAp($c['status'], $c['is_approve_sm']) ?>
-                                       
+
                                     </td>
                                     <td>
                                         <?php
                                         $id_jabatan = $this->session->userdata('id_jabatan');
-										$userAp = $this->db->get_where('tb_user', array('id_user' => $c['id_user']))->row_array();
-                                         // kalo dia jabatannya GM
+                                        $userAp = $this->db->get_where('tb_user', array('id_user' => $c['id_user']))->row_array();
+                                        // kalo dia jabatannya GM
                                         if ($id_jabatan == 11) {
                                             $url = $this->uri->segment(3);
                                             // echo $url;
@@ -88,22 +88,18 @@
                                             <a target="blank" href="<?= base_url('finance/ap/print/' . $c['no_pengeluaran']) ?>" class="btn btn-sm mb-1 text-light" style="background-color: #9c223b;"> <i class="fa fa-print text-light"></i> Print</a>
                                             <!-- jika yang mengajukan rolenya cs / ops -->
                                             <?php if ($c['id_role'] == 2 || $c['id_role'] == 3) {
-                                                // jika diapprove GM
+                                                // jika diapprove manager finance
                                                 if ($c['status'] == 7) { ?>
                                                     <a href="#" data-toggle="modal" data-target="#modal-paid<?= $c['no_pengeluaran'] ?>" class="btn btn-sm mb-1 text-light" style="background-color: #9c223b;">Pay</a>
-                                                    <?php } else {
-                                                    // jika dia untuk bensin atau transport maka bisa langsung di acc setelah approve manager 
-                                                    if ($c['id_kategori_pengeluaran'] == 1 && $c['status'] != 4) { ?>
-                                                        <a href="#" data-toggle="modal" data-target="#modal-paidLangsung<?= $c['no_pengeluaran'] ?>" class="btn btn-sm mb-1 text-light" style="background-color: #9c223b;">Pay</a>
-                                                <?php }
-                                                } ?>
+                                                <?php } ?>
+                                                <!-- jika rolenya ka/sales -->
                                             <?php } elseif ($c['id_role'] == 4 || $c['id_role'] == 6) { ?>
                                                 <?php // jika diapprove GM
                                                 if ($c['status'] == 5) { ?>
                                                     <a href="#" data-toggle="modal" data-target="#modal-paid<?= $c['no_pengeluaran'] ?>" class="btn btn-sm mb-1 text-light" style="background-color: #9c223b;">Pay</a>
                                                     <?php } else {
                                                     // jika dia untuk bensin atau transport maka bisa langsung di acc setelah approve manager 
-                                                    if ($c['id_kategori_pengeluaran'] == 1 && $c['status'] != 4) { ?>
+                                                    if ($userAp['id_jabatan'] == 11 && $c['status'] == 7) { ?>
                                                         <a href="#" data-toggle="modal" data-target="#modal-paidLangsung<?= $c['no_pengeluaran'] ?>" class="btn btn-sm mb-1 text-light" style="background-color: #9c223b;">Pay</a>
                                                 <?php }
                                                 } ?>

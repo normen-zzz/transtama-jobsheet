@@ -119,7 +119,7 @@
                                                                 <input type="text" class="form-control" name="weight[]" value="<?= $do['berat'] ?>">
                                                             </td>
                                                         </tr>
-                                                    <?php $total_berat += $do['berat'];
+                                                    <?php $total_berat += (int)$do['berat'];
                                                     } ?>
 
                                                 </tbody>
@@ -372,17 +372,17 @@
                                                         <td><?= rupiah($m['hd_daerah2']) ?></td>
                                                         <td><?= $m['pph2'] ?></td>
                                                         <td><?= rupiah($m['sdm2']) ?></td>
-                                                        <td><?= rupiah($m['others2']) ?></td>
+                                                        <td><?= rupiah((int)$m['others2']) ?></td>
                                                         <td>
                                                             <?php
                                                             $id_atasan = $this->session->userdata('id_atasan');
                                                             // kalo dia atasan sales
-                                                            if ($id_atasan == 0 || $id_atasan == NULL) {
+                                                            // if ($id_atasan == 0 || $id_atasan == NULL) {
                                                             ?>
-                                                                <button type="button" class="btn btn btn-sm btn-xs align-middle text-light mb-2" data-toggle="modal" data-target="#modal-acc-edit" style="background-color: #9c223b;">
-                                                                    Edit
-                                                                </button>
-                                                            <?php  }
+                                                            <button type="button" class="btn btn btn-sm btn-xs align-middle text-light mb-2" data-toggle="modal" data-target="#modal-acc-edit" style="background-color: #9c223b;">
+                                                                Edit
+                                                            </button>
+                                                            <?php  //}
 
                                                             ?>
                                                         </td>
@@ -429,7 +429,7 @@
                                                         $total_cost = $m['flight_msu2'] + $ra + $packing +
                                                             ($total_sales * $refund) + ($m['specialrefund2'] * $msr['berat_js']) + ($m['specialrefund2'] * $msr['berat_msr'])  + $m['insurance2'] + $m['surcharge2'] + ($hand_cgk) +
                                                             ($hand_pickup) + ($m['hd_daerah2']) + ($total_sales * $pph) +
-                                                            $sdm + $m['others2'];
+                                                            $sdm + (int)$m['others2'];
                                                     }
                                                 } else {
                                                     $total_cost = 0;
@@ -514,7 +514,7 @@
                                                             ?>
                                                         </td>
                                                         <td>
-                                                            <?= rupiah(($m['others2'])) ?>
+                                                            <?= rupiah(((int)$m['others2'])) ?>
                                                         </td>
                                                         <td></td>
                                                     </tr>
@@ -879,6 +879,31 @@
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Others</label>
                                         <input type="text" class="form-control" id="exampleInputEmail1" required name="others2" value="<?= $m['others2'] ?>">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Vendor</label>
+                                        <select name="vendor[]" class="form-control" style="width: 300px;">
+                                            <option value="0">NO VENDOR</option>
+                                            <?php foreach ($vendors as $v) {
+                                            ?>
+                                                <option value="<?= $v['id_vendor'] ?>"><?= $v['nama_vendor'] ?></option>
+                                            <?php  } ?>
+                                        </select>
+
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Agent</label>
+                                        <select name="vendor[]" class="form-control" style="width: 300px;">
+                                            <option value="0">NO AGENT</option>
+                                            <?php foreach ($agents as $v) {
+                                            ?>
+                                                <option value="<?= $v['id_vendor'] ?>"><?= $v['nama_vendor'] ?></option>
+                                            <?php  } ?>
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="col-md-12">
