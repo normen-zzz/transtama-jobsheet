@@ -12,7 +12,7 @@ class Jobsheet extends CI_Controller
         $this->load->library('breadcrumb');
         $this->load->model('M_Datatables');
         $this->load->model('CsModel', 'cs');
-		$this->load->model('Sendwa', 'wa');
+        $this->load->model('Sendwa', 'wa');
         cek_role();
     }
     public function index()
@@ -29,6 +29,72 @@ class Jobsheet extends CI_Controller
         // die;
         $this->backend->display('cs/v_js_approve', $data);
     }
+    public function approveMgrFinance()
+    {
+        $shipment_id = $this->input->post('shipment_id');
+        if ($shipment_id == NULL) {
+            $data['title'] = 'Jobsheet Approve Manager';
+            $breadcrumb_items = [];
+            $data['subtitle'] = 'Jobsheet Approve Manager';
+            $this->breadcrumb->add_item($breadcrumb_items);
+            $data['breadcrumb_bootstrap_style'] = $this->breadcrumb->generate();
+            $data['js'] = $this->cs->getJsApproveMgrFinance()->result_array();
+
+            $this->backend->display('cs/v_js_approve_mgrfinance', $data);
+        } else {
+            $cek_data = $this->cs->cekShipment($shipment_id)->row_array();
+            if ($cek_data) {
+                $data['title'] = 'Jobsheet Approve Manager';
+                $breadcrumb_items = [];
+                $data['shipment_id'] = $shipment_id;
+                $data['invoice'] = $cek_data;
+                $data['subtitle'] = 'Jobsheet Approve Manager';
+
+                $this->breadcrumb->add_item($breadcrumb_items);
+                $data['breadcrumb_bootstrap_style'] = $this->breadcrumb->generate();
+                $data['js'] = $this->cs->getJsApproveMgrFinance()->result_array();
+
+                $this->backend->display('cs/v_js_approve_mgrfinance', $data);
+            } else {
+                $this->session->set_flashdata('messageAlert', $this->messageAlert('error', 'DO Number Not Found'));
+                redirect('cs/jobsheet/final');
+            }
+        }
+    }
+
+    public function approveInvoice()
+    {
+        $shipment_id = $this->input->post('shipment_id');
+        if ($shipment_id == NULL) {
+            $data['title'] = 'Jobsheet Approve Manager';
+            $breadcrumb_items = [];
+            $data['subtitle'] = 'Jobsheet Approve Manager';
+            $this->breadcrumb->add_item($breadcrumb_items);
+            $data['breadcrumb_bootstrap_style'] = $this->breadcrumb->generate();
+            $data['js'] = $this->cs->getJsApproveInvoice()->result_array();
+
+            $this->backend->display('cs/v_js_approve_mgrfinance', $data);
+        } else {
+            $cek_data = $this->cs->cekShipment($shipment_id)->row_array();
+            if ($cek_data) {
+                $data['title'] = 'Jobsheet Approve Manager';
+                $breadcrumb_items = [];
+                $data['shipment_id'] = $shipment_id;
+                $data['invoice'] = $cek_data;
+                $data['subtitle'] = 'Jobsheet Approve Manager';
+
+                $this->breadcrumb->add_item($breadcrumb_items);
+                $data['breadcrumb_bootstrap_style'] = $this->breadcrumb->generate();
+                $data['js'] = $this->cs->getJsApproveInvoice()->result_array();
+
+                $this->backend->display('cs/v_js_approve_mgrfinance', $data);
+            } else {
+                $this->session->set_flashdata('messageAlert', $this->messageAlert('error', 'DO Number Not Found'));
+                redirect('cs/jobsheet/final');
+            }
+        }
+    }
+
     public function final()
     {
         $shipment_id = $this->input->post('shipment_id');
@@ -89,6 +155,8 @@ class Jobsheet extends CI_Controller
         $data['title'] = 'Detail Sales Order';
         $data['msr'] = $this->cs->getDetailSo($id)->row_array();
         $data['modal'] = $this->db->get_where('tbl_modal', ['shipment_id' => $id])->result_array();
+        $data['vendors'] = $this->db->order_by('id_vendor', 'DESC')->get_where('tbl_vendor', ['type' => 0])->result_array();
+        $data['agents'] = $this->db->order_by('id_vendor', 'DESC')->get_where('tbl_vendor', ['type' => 1])->result_array();
         $data['vendor_selected'] = $this->cs->getVendorByShipment($id)->result_array();
         $data['vendor_lengkap'] = $this->db->order_by('id_vendor', 'DESC')->get_where('tbl_vendor')->result_array();
         $this->backend->display('cs/v_js_detail_mgr', $data);
@@ -248,6 +316,7 @@ class Jobsheet extends CI_Controller
     public function editCapitalCost()
     {
         $shipment_id = $this->input->post('shipment_id');
+        $vendor = $this->input->post('vendor');
         $data = array(
             'flight_msu2' => $this->input->post('flight_smu2'),
             'ra2' => $this->input->post('ra2'),
@@ -267,7 +336,23 @@ class Jobsheet extends CI_Controller
         // var_dump($insert);
         // die;
         if ($insert) {
-            // log_aktifitas('update', 'tb_modal');
+            for ($i = 0; $i < sizeof($vendor); $i++) {
+                if ($vendor[$i] == 0) {
+                } else {
+                    $cek_shipment_id = $this->db->get_where('tbl_invoice_ap', ['shipment_id' => $this->input->post('shipment_id'), 'id_vendor' => $vendor[$i]])->row_array();
+                    $data = array(
+                        'id_vendor' => $vendor[$i],
+                        'shipment_id' => $this->input->post('shipment_id'),
+                        'status' => 0,
+                        'id_user' => $this->session->userdata('id_user')
+                    );
+                    if ($cek_shipment_id) {
+                        break;
+                    } else {
+                        $this->db->insert('tbl_invoice_ap', $data);
+                    }
+                }
+            }
             $this->session->set_flashdata('messageAlert', $this->messageAlert('success', 'Success'));
             redirect('cs/jobsheet/detail/' . $shipment_id);
         } else {
@@ -399,7 +484,7 @@ class Jobsheet extends CI_Controller
         $data = array(
             'status_revisi' => 2,
         );
-		
+
         $update = $this->db->update('tbl_revisi_so', $data, ['shipment_id' => $id]);
         if ($update) {
             $data = array(
@@ -408,14 +493,14 @@ class Jobsheet extends CI_Controller
                 'status_approve_cs' => 1
             );
             $this->db->update('tbl_approve_revisi_so', $data, ['shipment_id' => $id]);
-			
-			$link = "https://jobsheet.transtama.com/approval/detailRevisiGm/$id";
+
+            $link = "https://jobsheet.transtama.com/approval/detailRevisiGm/$id";
             $pesan = "Hallo, Mohon Untuk dicek dan di Approve Pengajuan Revisi SO Melalu Link Berikut : $link";
             // no mba Vema dan Krisna
             // $this->wa->pickup('+628111910711', "$pesan");
-            $this->wa->pickup('+6285157906966', "$pesan");
-			
-           
+            // $this->wa->pickup('+6285157906966', "$pesan");
+
+
             $this->session->set_flashdata('messageAlert', $this->messageAlert('success', 'Success'));
             redirect('cs/salesOrder/viewRevisiSo');
         } else {
@@ -600,8 +685,8 @@ class Jobsheet extends CI_Controller
         $data['js'] = $this->cs->getRequestAktivasiJs()->result_array();
         $this->backend->display('cs/v_request_js', $data);
     }
-	
-	// get revisi JS Need Activate
+
+    // get revisi JS Need Activate
     public function requestAktivasiNeedActivate()
     {
         $data['title'] = 'Request Aktivasi Jobsheet';

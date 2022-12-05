@@ -94,8 +94,8 @@ class Report extends CI_Controller
             $this->backend->display('finance/v_report_ap_internal_filter', $data);
         }
     }
-	
-	public function addAp($uri)
+
+    public function addAp($uri)
     {
 
         $data['title'] = 'Add Account Payable';
@@ -658,7 +658,7 @@ class Report extends CI_Controller
             $this->backend->display('finance/v_profitloss_filter', $data);
         }
     }
-	public function profitLossHpp($bln = NULL, $thn = NULL)
+    public function profitLossHpp($bln = NULL, $thn = NULL)
     {
         $bulan = $this->input->post('bulan');
         $tahun = $this->input->post('tahun');
@@ -713,7 +713,7 @@ class Report extends CI_Controller
                 $apHandlingCharges = $this->ap->getModalJoinShp(date('m'), date('Y'))->result_array();
                 $totalApHandlingCharges = 0;
                 foreach ($apHandlingCharges as $apHandlingCharges) {
-                    $totalApHandlingCharges += ($apHandlingCharges['hand_cgk2'] + $apHandlingCharges['hand_pickup2'] + $apHandlingCharges['hd_daerah2'] + $apHandlingCharges['ra2']);
+                    $totalApHandlingCharges += ((int)$apHandlingCharges['hand_cgk2'] + (int)$apHandlingCharges['hand_pickup2'] + (int)$apHandlingCharges['hd_daerah2'] + (int)$apHandlingCharges['ra2']);
                 }
 
                 //COST OF FREIGHT DARI AP EXTERNAL
@@ -728,8 +728,8 @@ class Report extends CI_Controller
                         $disc = $costOfFreight['disc'];
                         // kalo gada disc
                         if ($disc == 0) {
-                            $freight  = $costOfFreight['berat_js'] * $costOfFreight['freight_kg'];
-                            $special_freight  = $costOfFreight['berat_msr'] * $costOfFreight['special_freight'];
+                            $freight  = (int)$costOfFreight['berat_js'] * (int)$costOfFreight['freight_kg'];
+                            $special_freight  = (int)$costOfFreight['berat_msr'] * (int)$costOfFreight['special_freight'];
                         } else {
                             $freight_discount = $costOfFreight['freight_kg'] * $disc;
                             $special_freight_discount = $costOfFreight['special_freight'] * $disc;
@@ -945,7 +945,7 @@ class Report extends CI_Controller
             redirect('finance/Report/profitLossHpp/' . $bulan . '/' . $tahun);
         }
     }
-   public function detailOverhead($bln, $thn)
+    public function detailOverhead($bln, $thn)
     {
         $bulan = $this->input->post('bulan');
         $tahun = $this->input->post('tahun');
@@ -964,8 +964,8 @@ class Report extends CI_Controller
         } else {
             redirect('finance/Report/detailOverhead/' . $bulan . '/' . $tahun);
         }
-    }   
-	public function detailAmExp($bln, $thn)
+    }
+    public function detailAmExp($bln, $thn)
     {
         $bulan = $this->input->post('bulan');
         $tahun = $this->input->post('tahun');
@@ -1078,7 +1078,7 @@ class Report extends CI_Controller
             redirect('finance/Report/detailCostOfFreight/' . $bulan . '/' . $tahun);
         }
     }
-	public function addReal($uri)
+    public function addReal($uri)
     {
 
         $data['title'] = 'Add Adjust';
@@ -1146,7 +1146,7 @@ class Report extends CI_Controller
         $data['proforma'] = $this->cs->getSoa()->result_array();
         $this->backend->display('finance/v_soa', $data);
     }
-	public function soaFilter()
+    public function soaFilter()
     {
         $month = $this->input->post('month');
         $year  = $this->input->post('year');
@@ -1311,6 +1311,18 @@ class Report extends CI_Controller
             // total sales
             $service =  $row['service_name'];
             if ($service == 'Charter Service') {
+                $disc = $row['disc'];
+                // kalo gada disc
+                if ($disc == 0) {
+                    $freight  = $row['freight_kg'];
+                    $special_freight  = $row['special_freight'];
+                } else {
+                    $freight_discount = $row['freight_kg'] - ($row['freight_kg'] * $disc);
+                    $special_freight_discount = $row['special_freight'] - ($row['special_freight'] * $disc);
+
+                    $freight = $freight_discount;
+                    $special_freight  = $special_freight_discount;
+                }
                 $packing = $row['packing'];
                 $total_sales = ($row['freight_kg'] + $packing +  $row['special_freight'] +  $row['others'] + $row['surcharge'] + $row['insurance']);
                 $freight_kg = $row['special_freight'];
@@ -1724,8 +1736,8 @@ class Report extends CI_Controller
         $data['proforma'] = $this->cs->getSoa()->result_array();
         $this->load->view('finance/export_soa', $data);
     }
-	
-	public function ExportSoaFilter($month, $year)
+
+    public function ExportSoaFilter($month, $year)
     {
         header("Content-type: application/octet-stream");
         header("Content-Disposition: attachment;Filename=export-soa-" . $month . "-" . $year . ".xls");

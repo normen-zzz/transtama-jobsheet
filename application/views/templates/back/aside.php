@@ -424,6 +424,13 @@
                         </a>
                     </li>
 
+                    <li class="menu-item" aria-haspopup="true">
+                        <a href="<?= base_url('cs/jobsheet/approveInvoice') ?>" class="menu-link">
+                            <i class="fa fa-book mt-2 fa-1x mr-2 text-danger"></i>
+                            <span class="menu-text" style="font-size:11px">Jobsheet (In Invoice)</span>
+                        </a>
+                    </li>
+
                     <li class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
                         <a href="javascript:;" class="menu-link menu-toggle">
                             <i class="fa fa-chart-bar mt-2 fa-1x mr-2 text-danger"></i>

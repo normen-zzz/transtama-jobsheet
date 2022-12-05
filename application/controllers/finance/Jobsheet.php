@@ -12,7 +12,7 @@ class Jobsheet extends CI_Controller
         $this->load->library('breadcrumb');
         $this->load->model('M_Datatables');
         $this->load->model('CsModel', 'cs');
-		$this->load->model('Sendwa', 'wa');
+        $this->load->model('Sendwa', 'wa');
         cek_role();
     }
     public function index()
@@ -55,7 +55,7 @@ class Jobsheet extends CI_Controller
         // die;
         $this->backend->display('finance/v_js_final', $data);
     }
-	 public function viewRevisiSo()
+    public function viewRevisiSo()
     {
         $data['title'] = 'List Revisi Jobsheet';
         $breadcrumb_items = [];
@@ -72,9 +72,9 @@ class Jobsheet extends CI_Controller
         $data['subtitle'] = 'Detail Sales Order';
         $data['title'] = 'Detail Sales Order';
         $data['msr'] = $this->cs->getDetailSo($id)->row_array();
-       // $data['sales'] = $this->db->get_where('tbl_sales', ['id_msr' => $id])->result_array();
+        // $data['sales'] = $this->db->get_where('tbl_sales', ['id_msr' => $id])->result_array();
         $data['modal'] = $this->db->get_where('tbl_modal', ['shipment_id' => $id])->result_array();
-		 $data['approve_managerial'] = $this->db->get_where('tbl_approve_so_cs', ['shipment_id' => $id])->row_array();
+        $data['approve_managerial'] = $this->db->get_where('tbl_approve_so_cs', ['shipment_id' => $id])->row_array();
         $data['approve_manager_sales'] = $this->db->get_where('tbl_approve_so', ['id_so' => $id_so])->row_array();
         // var_dump($data['modal']);
         // die;
@@ -106,12 +106,16 @@ class Jobsheet extends CI_Controller
                 'status_approve_gm' => 1
             );
             $this->db->update('tbl_approve_revisi_so', $data, ['shipment_id' => $id]);
-			  $link = "https://jobsheet.transtama.com/approval/detailRevisiSm/$id";
+            $link = "https://jobsheet.transtama.com/approval/detailRevisiSm/$id";
             $pesan = "Hallo, Mohon Untuk dicek dan di Approve Pengajuan Revisi SO Melalu Link Berikut : $link";
             // no sam
             // $this->wa->pickup('+628111910711', "$pesan");
-            $this->wa->pickup('+6285157906966', "$pesan");
-			
+            $this->wa->pickup('+6281808008082', "$pesan");
+            // No Norman
+            $this->wa->pickup('+6285697780467', "$pesan");
+
+
+
             $this->session->set_flashdata('messageAlert', $this->messageAlert('success', 'Success'));
             redirect('finance/jobsheet/final');
         } else {
@@ -150,7 +154,7 @@ class Jobsheet extends CI_Controller
         $insert = $this->db->update('tbl_shp_order', $data, ['id' => $id]);
 
         if ($insert) {
-           $data = array(
+            $data = array(
                 'approve_finance' => $this->session->userdata('id_user'),
                 'created_at_finance' => date('Y-m-d H:i:s')
             );
@@ -163,7 +167,7 @@ class Jobsheet extends CI_Controller
             redirect('finance/jobsheet/');
         }
     }
-	public function Exportexcel($id)
+    public function Exportexcel($id)
     {
         $detail = $this->db->get_where('tbl_shp_order', ['id' => $id])->row_array();
         header("Content-type: application/octet-stream");
@@ -173,7 +177,7 @@ class Jobsheet extends CI_Controller
 
         $this->load->view('finance/export_invoice', $data);
     }
-	public function downloadByCustomer($customer=NULL)
+    public function downloadByCustomer($customer = NULL)
     {
         $customer = str_replace('%20', ' ', $customer);
         // var_dump($customer);
@@ -189,7 +193,7 @@ class Jobsheet extends CI_Controller
 
         $this->load->view('finance/export_invoice_customer', $data);
     }
-	public function createInvoice()
+    public function createInvoice()
     {
         $shipment_id =  $this->input->post('shipment_id');
         if ($shipment_id == NULL) {
@@ -208,7 +212,7 @@ class Jobsheet extends CI_Controller
         $data['shipment_id'] = $shipment_id;
         $this->backend->display('finance/v_create_invoice', $data);
     }
-      public function procesCreateInvoice()
+    public function procesCreateInvoice()
     {
         $shipment_id =  $this->input->post('shipment_id');
         $due_date = $this->input->post('due_date');
@@ -217,18 +221,19 @@ class Jobsheet extends CI_Controller
         $total_invoice = $this->input->post('total_invoice');
         $is_ppn = $this->input->post('is_ppn');
         $is_pph = $this->input->post('is_pph');
-		$is_reimbursment = $this->input->post('is_reimbursment');
-		 $is_special = $this->input->post('is_special');
-		$is_insurance = $this->input->post('is_insurance');
-		$is_others = $this->input->post('is_others');
-		 $is_remarks = $this->input->post('is_remarks');
+        $is_reimbursment = $this->input->post('is_reimbursment');
+        $is_special = $this->input->post('is_special');
+        $is_insurance = $this->input->post('is_insurance');
+        $is_others = $this->input->post('is_others');
+        $is_packing = $this->input->post('is_packing');
+        $is_remarks = $this->input->post('is_remarks');
         $invoice = $this->input->post('invoice');
         $ppn = $this->input->post('ppn');
         $pph = $this->input->post('pph');
         $pic = $this->input->post('pic');
         $terbilang = $this->input->post('terbilang');
         $note_cs = $this->input->post('note_cs');
-		 $so_note = $this->input->post('so_note');
+        $so_note = $this->input->post('so_note');
         $cek_no_invoice = $this->db->select_max('no_invoice')->get('tbl_no_invoice')->row_array();
         $date = date('Y-m-d');
         $tahun = date("y");
@@ -264,11 +269,11 @@ class Jobsheet extends CI_Controller
                 'is_ppn' => $is_ppn,
                 'is_pph' => $is_pph,
                 'is_reimbursment' => $is_reimbursment,
-				'is_special' => $is_special,
-				'is_insurance' => $is_insurance,
-				'is_packing' => $is_packing,
-				'is_others' => $is_others,
-				 'is_remarks' => $is_remarks,
+                'is_special' => $is_special,
+                'is_insurance' => $is_insurance,
+                'is_packing' => $is_packing,
+                'is_others' => $is_others,
+                'is_remarks' => $is_remarks,
                 'customer_pickup' => $customer_pickup,
                 'terbilang' => $terbilang,
                 'customer' => $this->input->post('shipper'),
@@ -337,7 +342,7 @@ class Jobsheet extends CI_Controller
 
             $data = array(
                 'note_cs' => $note_cs[$i],
-				 'so_note' => $so_note[$i],
+                'so_note' => $so_note[$i],
                 'status_so' => 5
                 // 'pu_moda' => $pu_muda[$i]
             );
@@ -351,7 +356,7 @@ class Jobsheet extends CI_Controller
             redirect('finance/invoice');
         }
     }
-	public function download()
+    public function download()
     {
         $shipment_id =  $this->input->post('shipment_id');
         if ($shipment_id == NULL) {

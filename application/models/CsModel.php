@@ -204,6 +204,17 @@ class CsModel extends M_Datatables
 		$query = $this->db->get();
 		return $query;
 	}
+	function getJsApproveInvoice()
+	{
+		$this->db->select('a.tgl_pickup, b.*, c.nama_user');
+		$this->db->from('tbl_so a');
+		$this->db->join('tbl_shp_order b', 'a.id_so=b.id_so');
+		$this->db->join('tb_user c', 'a.id_sales=c.id_user');
+		$this->db->where('b.status_so', 5);
+		$this->db->order_by('b.id', 'DESC');
+		$query = $this->db->get();
+		return $query;
+	}
 	function getJsApproveMgrCs()
 	{
 		$this->db->select('a.tgl_pickup, b.*, c.nama_user');

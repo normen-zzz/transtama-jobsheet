@@ -8,8 +8,8 @@ class Approval extends CI_Controller
         parent::__construct();
         $this->load->model('Sendwa', 'wa');
         $this->load->model('ApModel', 'ap');
-		$this->load->model('M_Datatables');
-		$this->load->model('CsModel', 'cs');
+        $this->load->model('M_Datatables');
+        $this->load->model('CsModel', 'cs');
     }
 
     public function detail($no_ap)
@@ -45,19 +45,19 @@ class Approval extends CI_Controller
     public function ap($no_pengeluaran)
     {
         $where = array('no_pengeluaran' => $no_pengeluaran);
-		
+
         $cek_data = $this->db->get_where('tbl_pengeluaran', $where)->row_array();
-		
+
         if ($cek_data) {
             $data = array(
                 'no_pengeluaran' => $no_pengeluaran,
                 'approve_by_sm' => 32,
                 'created_sm' => date('Y-m-d H:i:s'),
             );
-			//var_dump($data); die;
+            //var_dump($data); die;
             $update = $this->db->update('tbl_approve_pengeluaran', $data, $where);
             if ($update) {
-				$this->db->update('tbl_pengeluaran', ['status' => 2], $where);
+                $this->db->update('tbl_pengeluaran', ['status' => 2], $where);
                 $get_ap = $this->db->get_where('tbl_pengeluaran', $where)->row_array();
                 $no_ap = $get_ap['no_pengeluaran'];
                 $purpose = $get_ap['purpose'];
@@ -149,7 +149,7 @@ class Approval extends CI_Controller
             echo "<script>window.close();</script>";
         }
     }
-	
+
     // ini untuk approval revisi so
     public function detailRevisiGm($id)
     {
@@ -164,10 +164,11 @@ class Approval extends CI_Controller
     }
     public function detailRevisiSm($id)
     {
+        $resi = $this->db->get_where('tbl_shp_order', array('shipment_id' => $id))->row_array();
         $data['subtitle'] = 'Detail Sales Order';
         $data['title'] = 'Detail Sales Order';
         $data['msr'] = $this->cs->getDetailSo($id)->row_array();
-        $data['request'] = $this->db->get_where('tbl_revisi_so', ['shipment_id' => $id])->row_array();
+        $data['request'] = $this->db->get_where('tbl_revisi_so', ['shipment_id' => $resi['id']])->row_array();
         $data['request_revisi'] = $this->db->get_where('tbl_request_revisi', ['shipment_id' => $id])->row_array();
         $data['so_lama'] = $this->db->get_where('tbl_revisi_so_lama', ['shipment_id' => $id])->row_array();
         $data['modal'] = $this->db->get_where('tbl_modal', ['shipment_id' => $id])->result_array();
