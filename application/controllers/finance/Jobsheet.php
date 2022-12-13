@@ -212,6 +212,11 @@ class Jobsheet extends CI_Controller
         $data['shipment_id'] = $shipment_id;
         $this->backend->display('finance/v_create_invoice', $data);
     }
+    public function cekInvoice()
+    {
+        $query = $this->db->query('SELECT no_invoice FROM tbl_no_invoice WHERE id_nomor_invoice = (SELECT MAX(id_nomor_invoice) FROM tbl_no_invoice)')->row_array();
+        var_dump($query['no_invoice']);
+    }
     public function procesCreateInvoice()
     {
         $shipment_id =  $this->input->post('shipment_id');
@@ -234,7 +239,7 @@ class Jobsheet extends CI_Controller
         $terbilang = $this->input->post('terbilang');
         $note_cs = $this->input->post('note_cs');
         $so_note = $this->input->post('so_note');
-        $cek_no_invoice = $this->db->select_max('no_invoice')->get('tbl_no_invoice')->row_array();
+        $cek_no_invoice = $this->db->query('SELECT no_invoice FROM tbl_no_invoice WHERE id_nomor_invoice = (SELECT MAX(id_nomor_invoice) FROM tbl_no_invoice)')->row_array();
         $date = date('Y-m-d');
         $tahun = date("y");
         $bulan = date("m");
@@ -246,8 +251,8 @@ class Jobsheet extends CI_Controller
             $no_invoice = '1' . $no_invoice;
         } else {
             $no_invoice = "$bulan$tahun";
-            $potongNolInvoice = ltrim($cek_no_invoice['no_invoice'], '0');
-            $potongDateInvoice = substr($potongNolInvoice, 0, -4);
+            // $potongNolInvoice = ltrim($cek_no_invoice['no_invoice'], '0');
+            $potongDateInvoice = substr($cek_no_invoice['no_invoice'], 0, -4);
             $no = $potongDateInvoice + 1;
             $no_invoice  = "$no$no_invoice";
         }
@@ -293,7 +298,7 @@ class Jobsheet extends CI_Controller
             );
             $this->db->insert('tbl_no_invoice', $data);
             if ($is_reimbursment == 1) {
-                $cek_no_invoice = $this->db->select_max('no_invoice')->get('tbl_no_invoice')->row_array();
+                $cek_no_invoice = $this->db->query('SELECT no_invoice FROM tbl_no_invoice WHERE id_nomor_invoice = (SELECT MAX(id_nomor_invoice) FROM tbl_no_invoice)')->row_array();
                 $date = date('Y-m-d');
                 $tahun = date("y");
                 $bulan = date("m");

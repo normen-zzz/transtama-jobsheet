@@ -86,8 +86,8 @@ class SalesOrder extends CI_Controller
         $data['msr'] = $this->cs->getDetailSo($id)->row_array();
         $data['modal'] = $this->db->get_where('tbl_modal', ['shipment_id' => $id])->result_array();
         $data['vendor_selected'] = $this->cs->getVendorByShipment($id)->result_array();
-        $data['vendors'] = $this->db->order_by('id_vendor', 'DESC')->get_where('tbl_vendor', ['type' => 0])->result_array();
-        $data['agents'] = $this->db->order_by('id_vendor', 'DESC')->get_where('tbl_vendor', ['type' => 1])->result_array();
+        $data['vendors'] = $this->db->order_by('id_vendor', 'DESC')->get('tbl_vendor')->result_array();
+        // $data['agents'] = $this->db->order_by('id_vendor', 'DESC')->get_where('tbl_vendor', ['type' => 1])->result_array();
         $data['vendor_lengkap'] = $this->db->order_by('id_vendor', 'DESC')->get_where('tbl_vendor')->result_array();
         $this->backend->display('cs/v_js_detail', $data);
     }
@@ -113,26 +113,18 @@ class SalesOrder extends CI_Controller
             'sdm2' => $this->input->post('sdm2'),
             'others2' => $this->input->post('others2'),
             'note' => $this->input->post('note'),
+            'id_vendor' => $vendor
         );
         $insert = $this->db->insert('tbl_modal', $data);
         if ($insert) {
-            for ($i = 0; $i < sizeof($vendor); $i++) {
-                if ($vendor[$i] == 0) {
-                } else {
-                    $cek_shipment_id = $this->db->get_where('tbl_invoice_ap', ['shipment_id' => $this->input->post('shipment_id'), 'id_vendor' => $vendor[$i]])->row_array();
-                    $data = array(
-                        'id_vendor' => $vendor[$i],
-                        'shipment_id' => $this->input->post('shipment_id'),
-                        'status' => 0,
-                        'id_user' => $this->session->userdata('id_user')
-                    );
-                    if ($cek_shipment_id) {
-                        break;
-                    } else {
-                        $this->db->insert('tbl_invoice_ap', $data);
-                    }
-                }
-            }
+            $data = array(
+                'id_vendor' => $vendor,
+                'shipment_id' => $this->input->post('shipment_id'),
+                'status' => 0,
+                'id_user' => $this->session->userdata('id_user')
+            );
+
+            $this->db->insert('tbl_invoice_ap', $data);
             $this->session->set_flashdata('messageAlert', $this->messageAlert('success', 'Success'));
             redirect('cs/salesOrder/detail/' . $shipment_id);
         } else {
@@ -146,6 +138,7 @@ class SalesOrder extends CI_Controller
     {
         $shipment_id = $this->input->post('shipment_id');
         $vendor = $this->input->post('vendor');
+        $vendor_awal = $this->input->post('id_vendor_awal');
         $data = array(
             'flight_msu2' => $this->input->post('flight_smu2'),
             'ra2' => $this->input->post('ra2'),
@@ -161,26 +154,19 @@ class SalesOrder extends CI_Controller
             'sdm2' => $this->input->post('sdm2'),
             'others2' => $this->input->post('others2'),
             'note' => $this->input->post('note'),
+            'id_vendor' => $vendor
         );
-        $insert = $this->db->update('tbl_modal', $data, ['id_modal' => $this->input->post('id_modal')]);
-        if ($insert) {
-            for ($i = 0; $i < sizeof($vendor); $i++) {
-                if ($vendor[$i] == 0) {
-                } else {
-                    $cek_shipment_id = $this->db->get_where('tbl_invoice_ap', ['shipment_id' => $this->input->post('shipment_id'), 'id_vendor' => $vendor[$i]])->row_array();
-                    $data = array(
-                        'id_vendor' => $vendor[$i],
-                        'shipment_id' => $this->input->post('shipment_id'),
-                        'status' => 0,
-                        'id_user' => $this->session->userdata('id_user')
-                    );
-                    if ($cek_shipment_id) {
-                        break;
-                    } else {
-                        $this->db->insert('tbl_invoice_ap', $data);
-                    }
-                }
-            }
+        $update = $this->db->update('tbl_modal', $data, ['id_modal' => $this->input->post('id_modal')]);
+        if ($update) {
+            $data = array(
+                'id_vendor' => $vendor,
+                'id_user' => $this->session->userdata('id_user')
+            );
+
+            $this->db->update('tbl_invoice_ap', $data, array('id_vendor' => $vendor_awal, 'shipment_id' => $shipment_id));
+
+
+
             // log_aktifitas('update', 'tb_modal');
             $this->session->set_flashdata('messageAlert', $this->messageAlert('success', 'Success'));
             redirect('cs/salesOrder/detail/' . $shipment_id);

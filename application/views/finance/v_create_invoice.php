@@ -126,12 +126,13 @@
 
                                                         <?php } else {
                                                         ?>
+                                                            <input hidden type="text" name="shipment_id[]" value="<?= $get_shipment['id'] ?>">
                                                             <th rowspan="<?= $total_do + 1 ?>"><?= $get_shipment['shipment_id'] ?></th>
                                                             <?php
                                                             foreach ($data_do as $d) {
                                                             ?>
                                                                 <tr>
-                                                                    <input hidden type="text" name="shipment_id[]" value="<?= $get_shipment['id'] ?>">
+
                                                                     <!-- <td><?= $get_shipment['shipment_id'] ?></td> -->
                                                                     <td><?= bulan_indo($get_shipment['tgl_pickup']) ?></td>
                                                                     <td><?= $get_shipment['tree_consignee'] ?></td>
@@ -157,7 +158,7 @@
                                                                         echo rupiah($total_sales);
                                                                         ?></td>
                                                                 </tr>
-                                                            <?php $total_koli = $total_koli + $d['koli'];
+                                                            <?php $total_koli = $total_koli + (int)$d['koli'];
                                                             } ?>
 
                                                         <?php  } ?>

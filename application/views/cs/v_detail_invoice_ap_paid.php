@@ -43,20 +43,15 @@
                                             <table class="table table-bordered" style="width:100%" id="myTable">
                                                 <thead>
                                                     <tr>
+                                                        <!-- <th>Vendor</th> -->
                                                         <th>AWB</th>
                                                         <th>DATE</th>
                                                         <th>CONSIGNEE</th>
                                                         <th>COLLY</th>
                                                         <th>WEIGHT JS</th>
                                                         <!-- <th>WEIGHT MSR</th> -->
-                                                        <?php if ($vendor['type'] == 0) {
-                                                        ?>
-                                                            <th>FLIGHT SMU</th>
-
-                                                        <?php  } else {
-                                                        ?>
-                                                            <th>HD Daerah</th>
-                                                        <?php  } ?>
+                                                        <th>FLIGHT SMU</th>
+                                                        <th>HD Daerah</th>
                                                         <th>OTHERS</th>
                                                         <th>TOTAL AMOUNT</th>
                                                         <!-- <th>VARIABEL</th>
@@ -80,38 +75,21 @@
 
                                                     ?>
                                                         <tr>
+
                                                             <td><?= $inv['resi'] ?> <br> <small><?= $inv['shipper'] ?></small> </td>
                                                             <td><?= bulan_indo($inv['tgl_pickup']) ?></td>
                                                             <td><?= $inv['consigne'] ?>-<?= $inv['tree_consignee'] ?></td>
                                                             <td><?= $inv['koli'] ?></td>
                                                             <td><?= $inv['berat_js'] ?></td>
-
-                                                            <?php if ($vendor['type'] == 0) {
-                                                            ?>
-                                                                <td><?= rupiah($inv['flight_msu2']) ?></td>
-                                                            <?php  } else {
-                                                            ?>
-                                                                <td><?= rupiah($inv['hd_daerah2']) ?></td>
-                                                            <?php  } ?>
-
-
-                                                            <td><?= rupiah($inv['others2']) ?></td>
-
-                                                            <?php if ($vendor['type'] == 0) {
-                                                            ?>
-                                                                <td><?= rupiah($inv['flight_msu2'] + $inv['others2']) ?></td>
-                                                            <?php  } else {
-                                                            ?>
-                                                                <td><?= rupiah($inv['hd_daerah2'] + $inv['others2']) ?></td>
-                                                            <?php  } ?>
-
-                                                            <input hidden type="text" name="shipment_id[]" value="<?= $inv['id'] ?>">
-                                                            <input hidden type="text" name="id_invoice[]" value="<?= $inv['id_invoice'] ?>">
-                                                            <input hidden type="text" name="id_vendor" value="<?= $vendor['id_vendor'] ?>">
-                                                            <input hidden type="text" name="nama_vendor" value="<?= $vendor['nama_vendor'] ?>">
-
-
+                                                            <td><?= rupiah($inv['flight_msu2']) ?></td>
+                                                            <td><?= rupiah($inv['hd_daerah2']) ?></td>
+                                                            <td><?= rupiah((int)$inv['others2']) ?></td>
+                                                            <td><?= rupiah($inv['flight_msu2'] + $inv['hd_daerah2'] + (int)$inv['others2']) ?></td>
                                                         </tr>
+                                                        <input hidden type="text" name="shipment_id[]" value="<?= $inv['id'] ?>">
+                                                        <input hidden type="text" name="id_invoice[]" value="<?= $inv['id_invoice'] ?>">
+                                                        <input hidden type="text" name="id_vendor" value="<?= $vendor['id_vendor'] ?>">
+                                                        <input hidden type="text" name="nama_vendor" value="<?= $vendor['nama_vendor'] ?>">
 
                                                     <?php
                                                         $total_koli = $total_koli + $inv['koli'];
@@ -121,36 +99,31 @@
                                                         $total_smu = $total_smu + $inv['flight_msu2'];
                                                         $total_hd_daerah =  $total_hd_daerah + $inv['hd_daerah2'];
 
-                                                        $sub_total_smu = $sub_total_smu +  $inv['flight_msu2'] + $inv['others2'];
-                                                        $sub_total_hd_daerah = $sub_total_hd_daerah +  $inv['hd_daerah2'] + $inv['others2'];
+                                                        $sub_total_smu = $sub_total_smu +  $inv['flight_msu2'] + (int)$inv['others2'];
+                                                        $sub_total_hd_daerah = $sub_total_hd_daerah + $inv['flight_msu2'] +  $inv['hd_daerah2'] + (int)$inv['others2'];
 
-                                                        $others =  $others + $inv['others2'];
+                                                        $others =  $others + (int)$inv['others2'];
                                                         $no++;
                                                     } ?>
 
+
+                                                </tbody>
+                                                <tfoot>
                                                     <tr>
                                                         <td colspan="3">TOTAL <?= $no - 1 ?> AWB</td>
                                                         <td><?= $total_koli ?> </td>
                                                         <td><?= $total_weight ?> </td>
-                                                        <?php if ($vendor['type'] == 0) {
-                                                        ?>
-                                                            <td><?= rupiah($total_smu) ?></td>
-                                                        <?php  } else {
-                                                        ?>
-                                                            <td><?= rupiah($total_hd_daerah) ?></td>
-                                                        <?php  } ?>
+                                                        <td><?= rupiah($total_smu) ?></td>
+                                                        <td><?= rupiah($total_hd_daerah) ?></td>
+
                                                         <td><?= rupiah($others) ?> </td>
 
-                                                        <?php if ($vendor['type'] == 0) {
-                                                        ?>
-                                                            <td><?= rupiah($sub_total_smu) ?></td>
-                                                        <?php  } else {
-                                                        ?>
-                                                            <td><?= rupiah($sub_total_hd_daerah) ?></td>
-                                                        <?php  } ?>
+
+                                                        <td><?= rupiah($sub_total_hd_daerah) ?></td>
+
 
                                                     </tr>
-                                                </tbody>
+                                                </tfoot>
 
                                             </table>
                                             <br>
@@ -165,14 +138,10 @@
                                 <div class="row">
                                     <?php
                                     $f = new NumberFormatter('en', NumberFormatter::SPELLOUT);
-                                    if ($vendor['type'] == 0) {
-                                        $terbilang = $f->format($sub_total_smu) . ' Rupiahs';
-                                        $terbilang = ucwords($terbilang);
-                                        rupiah($sub_total_smu);
-                                    } else {
-                                        $terbilang = $f->format($sub_total_hd_daerah) . ' Rupiahs';
-                                        $terbilang = ucwords($terbilang);
-                                    }
+
+                                    $terbilang = $f->format($sub_total_hd_daerah) . ' Rupiahs';
+                                    $terbilang = ucwords($terbilang);
+
 
                                     if ($vendor['type'] == 0) {
                                     ?>
@@ -198,6 +167,21 @@
                                         <label for="pic" class="font-weight-bold">No. Invoice</label>
                                         <input type="text" name="no_invoice" disabled value="<?= $inv['no_invoice'] ?>" class="form-control">
                                     </div>
+
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1">Other (Rp.) <span class="text-danger">*</span></label>
+                                            <input type="number" class="form-control" required name="other" value="<?= $inv['other'] ?>"></input>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1">Due Date <span class="text-danger">*</span></label>
+                                            <input type="date" class="form-control" required name="other" value="<?= $inv['due_date'] ?>"></input>
+                                        </div>
+                                    </div>
+
 
                                     <div class="col-md-4" id="mode">
                                         <label for="note_cs">Payment Mode</label>
@@ -265,13 +249,9 @@
                                                     <span class="text-success font-weight-bold"><?= bulan_indo($inv['payment_date']) ?></span>
                                                 </div>
                                                 <!--end::Text-->
-                                                <span class="label label-xl label-light label-inline my-lg-0 my-2 text-dark-50 font-weight-bolder"><?php if ($vendor['type'] == 0) {
-                                                                                                                                                    ?>
-                                                        <?= rupiah($sub_total_smu) ?>
-                                                    <?php  } else {
-                                                    ?>
-                                                        <?= rupiah($sub_total_hd_daerah) ?>
-                                                    <?php  } ?>
+                                                <span class="label label-xl label-light label-inline my-lg-0 my-2 text-dark-50 font-weight-bolder">
+                                                    <?= rupiah($sub_total_hd_daerah) ?>
+
                                                 </span>
 
                                             </div>
@@ -298,13 +278,9 @@
                                                     <!-- <span class="text-muted font-weight-bold"><?= $perbedaan ?> Days Again</span> -->
                                                 </div>
                                                 <!--end::Text-->
-                                                <span class="label label-xl label-light label-inline my-lg-0 my-2 text-dark-50 font-weight-bolder"><?php if ($vendor['type'] == 0) {
-                                                                                                                                                    ?>
-                                                        <?= rupiah($sub_total_smu) ?>
-                                                    <?php  } else {
-                                                    ?>
-                                                        <?= rupiah($sub_total_hd_daerah) ?>
-                                                    <?php  } ?> </span>
+                                                <span class="label label-xl label-light label-inline my-lg-0 my-2 text-dark-50 font-weight-bolder">
+                                                    <?= rupiah($sub_total_hd_daerah + $inv['other']) ?>
+                                                </span>
                                             </div>
                                         <?php  } ?>
                                     </div>

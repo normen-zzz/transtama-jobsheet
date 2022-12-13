@@ -114,6 +114,9 @@ class Report extends CI_Controller
         $sheet->setCellValue('AK1', '%');
         $sheet->setCellValue('AL1', 'AM/KA');
         $sheet->setCellValue('AM1', 'KETERANGAN');
+        $sheet->setCellValue('AN1', 'TGL DITERIMA');
+        $sheet->setCellValue('AO1', 'DITERIMA OLEH');
+
         // $sheet->setCellValue('AN1', 'NO INVOICE');
         // $sheet->setCellValue('AO1', 'STATUS INVOICE');
 
@@ -127,6 +130,10 @@ class Report extends CI_Controller
             $sales = $this->cs->getSales($row['id_so'])->row_array();
             $get_do = $this->db->select('no_do,no_so, berat, koli')->get_where('tbl_no_do', ['shipment_id' => $row['shipment_id']])->result_array();
             $jumlah = $this->db->select('no_do')->get_where('tbl_no_do', ['shipment_id' => $row['shipment_id']])->num_rows();
+
+            $tracking = $this->cs->getLastTracking($row['shipment_id'])->row_array();
+
+
 
             $no_do = '';
             $no_so = '';
@@ -460,6 +467,19 @@ class Report extends CI_Controller
                 ->setAutoSize(true);
             $sheet->setCellValue('AM' . $x, $row['note_pic_js'])->getColumnDimension('AM')
                 ->setAutoSize(true);
+            $sheet->setCellValue('AN' . $x, $row['tgl_diterima'])->getColumnDimension('AN')
+                ->setAutoSize(true);
+            // if ($row['tgl_diterima'] != '' || $row['tgl_diterima'] != NULL) {
+            $sheet->setCellValue('AO' . $x, $tracking['status'])->getColumnDimension('AO')
+                ->setAutoSize(true);
+            // } else {
+            //     $sheet->setCellValue('AO' . $x, '')->getColumnDimension('AO')
+            //         ->setAutoSize(true);
+            // }
+
+
+
+
 
             $x++;
             $no++;

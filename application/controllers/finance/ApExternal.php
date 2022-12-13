@@ -111,8 +111,8 @@ class ApExternal extends CI_Controller
         $this->breadcrumb->add_item($breadcrumb_items);
         $data['breadcrumb_bootstrap_style'] = $this->breadcrumb->generate();
         $data['vendor'] = $this->db->get_where('tbl_vendor', ['id_vendor' => $id_vendor])->row_array();
-        $data['invoice'] = $this->cs->getApByNoInvoice($unique_invoice)->result_array();
-        $data['total_invoice'] = $this->cs->getApByNoInvoice($unique_invoice)->num_rows();
+        $data['invoice'] = $this->cs->getApByNoInvoice2($unique_invoice, $id_vendor)->result_array();
+        $data['total_invoice'] = $this->cs->getApByNoInvoice2($unique_invoice, $id_vendor)->num_rows();
         $this->backend->display('finance/v_detail_invoice_ap', $data);
     }
     public function detailInvoice($unique_invoice, $id_vendor)
@@ -124,8 +124,8 @@ class ApExternal extends CI_Controller
         $this->breadcrumb->add_item($breadcrumb_items);
         $data['breadcrumb_bootstrap_style'] = $this->breadcrumb->generate();
         $data['vendor'] = $this->db->get_where('tbl_vendor', ['id_vendor' => $id_vendor])->row_array();
-        $data['invoice'] = $this->cs->getApByNoInvoice($unique_invoice)->result_array();
-        $data['total_invoice'] = $this->cs->getApByNoInvoice($unique_invoice)->num_rows();
+        $data['invoice'] = $this->cs->getApByNoInvoice2($unique_invoice, $id_vendor)->result_array();
+        $data['total_invoice'] = $this->cs->getApByNoInvoice2($unique_invoice, $id_vendor)->num_rows();
         $this->backend->display('finance/v_detail_invoice_ap_paid', $data);
     }
 
@@ -227,41 +227,23 @@ class ApExternal extends CI_Controller
         $id_invoice =  $this->input->post('id_invoice');
         $variabel =  $this->input->post('variabel');
         $unique_invoice =  $this->input->post('unique_invoice');
-
+        $other = $this->input->post('other');
         $due_date = $this->input->post('due_date');
-        $total_ap = $this->input->post('total_ap');
+        $total_ap = $this->input->post('total_ap') + $other;
         $no_invoice = $this->input->post('no_invoice');
-        $ppn = $this->input->post('ppn');
-        $pph = $this->input->post('pph');
+        $ppn = ($total_ap) * ($this->input->post('ppn') / 100);
+        $pph = ($total_ap) * ($this->input->post('pph') / 100);
         $terbilang = $this->input->post('terbilang');
         $id_vendor = $this->input->post('id_vendor');
-
-
-        // KALO DIA TIDAK ADA PPN DAN PPH
-        if ($ppn != 1) {
-            $is_ppn = 0;
-            $ppn = 0;
-        } else {
-            $is_ppn = 1;
-            $ppn =  $total_ap * 0.011;
-        }
-        if ($pph != 1) {
-            $is_pph = 0;
-            $pph =  0;
-        } else {
-            $is_pph = 1;
-            $pph =  $total_ap * 0.02;
-        }
 
         for ($i = 0; $i < sizeof($id_invoice); $i++) {
             $data = array(
                 'variabel' => $variabel[$i],
-                'is_ppn' => $is_ppn,
-                'is_pph' => $is_pph,
                 // 'no_invoice' => $no_invoice,
                 // 'due_date' => $due_date,
                 'terbilang' => $terbilang,
                 'total_ap' => $total_ap,
+                'other' => $other,
                 'ppn' => $ppn,
                 'pph' => $pph,
                 'update_by' => $this->session->userdata('id_user'),
@@ -386,14 +368,32 @@ class ApExternal extends CI_Controller
     public function approveGm($no_pengeluaran)
     {
 
-        $where = array('no_pengeluaran' => $no_pengeluaran);
-        $data = array(
-            'approve_by_gm' => $this->session->userdata('id_user'),
-            'created_gm' => date('Y-m-d H:i:s'),
-        );
-        $update = $this->db->update('tbl_approve_pengeluaran_external', $data, $where);
+        // $where = array('no_pengeluaran' => $no_pengeluaran);
+        // $data = array(
+        //     'approve_by_gm' => $this->session->userdata('id_user'),
+        //     'created_gm' => date('Y-m-d H:i:s'),
+        // );
+        // $update = $this->db->update('tbl_approve_pengeluaran_external', $data, $where);
+        if ($this->db->update('tbl_invoice_ap_final', ['status' => 5], ['unique_invoice' => $no_pengeluaran])) {
+            $this->session->set_flashdata('message', 'Success Approve');
+            redirect("finance/apExternal/created");
+        } else {
+            $this->session->set_flashdata('message', 'Failed Approve');
+            redirect("finance/apExternal/created");
+        }
+    }
+
+    public function approveMgrFinance($no_pengeluaran)
+    {
+
+        // $where = array('no_pengeluaran' => $no_pengeluaran);
+        // $data = array(
+        //     'approve_by_gm' => $this->session->userdata('id_user'),
+        //     'created_gm' => date('Y-m-d H:i:s'),
+        // );
+        // $update = $this->db->update('tbl_approve_pengeluaran_external', $data, $where);
+        $update = $this->db->update('tbl_invoice_ap_final', ['status' => 7], ['unique_invoice' => $no_pengeluaran]);
         if ($update) {
-            $this->db->update('tbl_invoice_ap_final', ['status' => 5], ['unique_invoice' => $no_pengeluaran]);
             $this->session->set_flashdata('message', 'Success Approve');
             redirect("finance/apExternal/created");
         } else {

@@ -51,14 +51,12 @@
                                                         <th>COLLY</th>
                                                         <th>WEIGHT JS</th>
                                                         <th>WEIGHT MSR</th>
-                                                        <?php if ($vendor['type'] == 0) {
-                                                        ?>
-                                                            <th>FLIGHT SMU</th>
 
-                                                        <?php  } else {
-                                                        ?>
-                                                            <th>HD Daerah</th>
-                                                        <?php  } ?>
+                                                        <th>FLIGHT SMU</th>
+
+
+                                                        <th>HD Daerah</th>
+
                                                         <th>OTHERS</th>
                                                         <th>TOTAL AMOUNT</th>
                                                         <th>VARIABEL</th>

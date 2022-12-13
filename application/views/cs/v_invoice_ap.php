@@ -35,8 +35,8 @@
                                                     <!-- <th>Due Date</th> -->
                                                     <!-- <th>Time Line</th> -->
                                                     <th>Invoice</th>
-                                                    <th>PPN</th>
-                                                    <th>PPH</th>
+                                                    <!-- <th>PPN</th>
+                                                    <th>PPH</th> -->
                                                     <th>Total Invoice</th>
                                                     <th>Payment Status</th>
                                                     <th>Action</th>
@@ -66,9 +66,9 @@
                                                         <td><?= bulan_indo($j['date']) ?></td>
 
                                                         <td><?= rupiah($j['total_ap']) ?></td>
-                                                        <td><?= rupiah($j['ppn']) ?></td>
-                                                        <td><?= rupiah($j['pph']) ?></td>
-                                                        <td><?= rupiah(($j['total_ap']) - $j['pph'] - $j['ppn']) ?></td>
+                                                        <!-- <td><?= rupiah($j['ppn']) ?></td>
+                                                        <td><?= rupiah($j['pph']) ?></td> -->
+                                                        <td><?= rupiah(($j['total_ap'])) ?></td>
 
                                                         <td>
                                                             <?= statusAp($j['status'], 1) ?>

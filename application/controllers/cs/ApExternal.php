@@ -113,7 +113,7 @@ class ApExternal extends CI_Controller
         $this->breadcrumb->add_item($breadcrumb_items);
         $data['breadcrumb_bootstrap_style'] = $this->breadcrumb->generate();
         $data['vendor'] = $this->db->get_where('tbl_vendor', ['id_vendor' => $id_vendor])->row_array();
-        $data['invoice'] = $this->cs->getApByNoInvoice($unique_invoice)->result_array();
+        $data['invoice'] = $this->cs->getApByNoInvoice2($unique_invoice, $id_vendor)->result_array();
         // var_dump($data['invoice']);
         // die;
         $data['total_invoice'] = $this->cs->getApByNoInvoice($unique_invoice)->num_rows();
@@ -128,8 +128,8 @@ class ApExternal extends CI_Controller
         $this->breadcrumb->add_item($breadcrumb_items);
         $data['breadcrumb_bootstrap_style'] = $this->breadcrumb->generate();
         $data['vendor'] = $this->db->get_where('tbl_vendor', ['id_vendor' => $id_vendor])->row_array();
-        $data['invoice'] = $this->cs->getApByNoInvoice($unique_invoice)->result_array();
-        $data['total_invoice'] = $this->cs->getApByNoInvoice($unique_invoice)->num_rows();
+        $data['invoice'] = $this->cs->getApByNoInvoice2($unique_invoice, $id_vendor)->result_array();
+        $data['total_invoice'] = $this->cs->getApByNoInvoice2($unique_invoice, $id_vendor)->num_rows();
         $this->backend->display('cs/v_detail_invoice_ap_paid', $data);
     }
 
@@ -162,8 +162,8 @@ class ApExternal extends CI_Controller
         $no_invoice = $this->input->post('no_invoice');
         $terbilang = $this->input->post('terbilang');
         $total_ap = $this->input->post('total_ap');
-        $ppn = 0.011 * $this->input->post('total_ap');
-        $pph = 0.02 * $this->input->post('total_ap');
+        $ppn = 0.011 * ($this->input->post('total_ap') + $this->input->post('other'));
+        $pph = 0.02 * ($this->input->post('total_ap') + $this->input->post('other'));
         $random_string = $this->generateRandomString();
         $via = $this->input->post('via');
 
@@ -206,7 +206,8 @@ class ApExternal extends CI_Controller
                 'due_date' => $due_date,
                 'terbilang' => $terbilang,
                 'status' => 0,
-                'total_ap' => $total_ap,
+                'other' => $this->input->post('other'),
+                'total_ap' => $total_ap + $this->input->post('other'),
 
             );
             // var_dump($data);
@@ -243,8 +244,8 @@ class ApExternal extends CI_Controller
         $due_date = $this->input->post('due_date');
         $total_ap = $this->input->post('total_ap');
         $no_invoice = $this->input->post('no_invoice');
-        // $ppn = $this->input->post('ppn');
-        // $pph = $this->input->post('pph');
+        $ppn = 0.011 * ($total_ap + $this->input->post('other'));
+        $pph = 0.02 * ($total_ap + $this->input->post('other'));
         $terbilang = $this->input->post('terbilang');
         $id_vendor = $this->input->post('id_vendor');
         $via = $this->input->post('via');
@@ -262,9 +263,10 @@ class ApExternal extends CI_Controller
                 'via_transfer' => $via,
                 'terbilang' => $terbilang,
                 'status' => 0,
-                'total_ap' => $total_ap,
-                // 'ppn' => $ppn,
-                // 'pph' => $pph,
+                'other' => $this->input->post('other'),
+                'total_ap' => $total_ap + $this->input->post('other'),
+                'ppn' => $ppn,
+                'pph' => $pph,
                 'update_by' => $this->session->userdata('id_user'),
                 'update_at' => date('Y-m-d H:i:s')
             );

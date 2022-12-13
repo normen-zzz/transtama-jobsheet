@@ -87,7 +87,7 @@
 															<td><?= rupiah($inv['hd_daerah2']) ?></td>
 															<!-- <td><?= rupiah($inv['pph2']) ?></td> -->
 															<!-- <td><?= rupiah($inv['sdm2']) ?></td> -->
-															<td><?= rupiah($inv['others2']) ?></td>
+															<td><?= rupiah((int)$inv['others2']) ?></td>
 
 															<!-- <td> <a href="<?= base_url('finance/invoice/deleteInvoice/' . $inv['id_invoice'] . '/' . $inv['id_vendor']) ?>" class=" btn btn-sm text-light tombol-hapus" data-flashdata="<?= $inv['shipment_id'] ?>" style="background-color: #9c223b;">Delete</a></td> -->
 

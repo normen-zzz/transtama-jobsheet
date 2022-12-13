@@ -50,7 +50,7 @@
                                                     <td><?= $msr['shipper'] ?></td>
                                                     <td><?= $msr['consigne'] ?></td>
                                                     <!-- <td><?= $msr['destination'] ?></td> -->
-                                                    <td><?php if ($msr['service_name'] == 'Charter Service') {
+                                                    <td><?php if ($msr['service_name'] == 'Charter Service' || $msr['service_name'] == 'Same Day Service') {
                                                             echo $msr['service_name'] . '-' . $msr['pu_moda'];
                                                         } else {
                                                             echo  $msr['service_name'];;
@@ -218,7 +218,7 @@
                                                     <!--berat_msr= special_freight-->
                                                     <?php
                                                     $service =  $msr['service_name'];
-                                                    if ($service == 'Charter Service') {
+                                                    if ($service == 'Charter Service' || $service == 'Same Day Service') {
                                                         $packing = $msr['packing'];
                                                         $total_sales = ($msr['freight_kg'] + $packing +  $msr['special_freight'] +  $msr['others'] + $msr['surcharge'] + $msr['insurance']);
                                                     } else {
@@ -396,7 +396,7 @@
                                                     $pph = $m['pph2'] / 100;
                                                     $service =  $msr['service_name'];
 
-                                                    if ($service == 'Charter Service') {
+                                                    if ($service == 'Charter Service' || $service == 'Same Day Service') {
                                                         $total_cost = $m['flight_msu2'] + ($m['ra2']) + ($m['packing2']) +
                                                             ($total_sales * $refund) + ($m['specialrefund2'] * $msr['berat_js']) + ($m['specialrefund2'] * $msr['berat_msr'])  + $m['insurance2'] + $m['surcharge2'] + ($m['hand_cgk2']) +
                                                             ($m['hand_pickup2']) + ($m['hd_daerah2']) + ($total_sales * $pph) +
@@ -449,7 +449,7 @@
                                                         </td>
                                                         <td>
                                                             <?php
-                                                            if ($service == 'Charter Service') {
+                                                            if ($service == 'Charter Service' || $service == 'Same Day Service') {
                                                                 echo  rupiah($m['ra2']);
                                                             } else {
                                                                 echo rupiah($m['ra2'] * $msr['berat_js']);
@@ -458,7 +458,7 @@
                                                         </td>
                                                         <td>
                                                             <?php
-                                                            if ($service == 'Charter Service') {
+                                                            if ($service == 'Charter Service' || $service == 'Same Day Service') {
                                                                 echo  rupiah($m['packing2']);
                                                             } else {
                                                                 echo rupiah($m['packing2'] * $msr['berat_js']);
@@ -479,7 +479,7 @@
                                                         </td>
                                                         <td>
                                                             <?php
-                                                            if ($service == 'Charter Service') {
+                                                            if ($service == 'Charter Service' || $service == 'Same Day Service') {
                                                                 echo  rupiah($m['hand_cgk2']);
                                                             } else {
                                                                 echo rupiah($m['hand_cgk2'] * $msr['berat_js']);
@@ -488,7 +488,7 @@
                                                         </td>
                                                         <td>
                                                             <?php
-                                                            if ($service == 'Charter Service') {
+                                                            if ($service == 'Charter Service' || $service == 'Same Day Service') {
                                                                 echo  rupiah($m['hand_pickup2']);
                                                             } else {
                                                                 echo rupiah($m['hand_pickup2'] * $msr['berat_js']);
@@ -503,7 +503,7 @@
                                                         </td>
                                                         <td>
                                                             <?php
-                                                            if ($service == 'Charter Service') {
+                                                            if ($service == 'Charter Service' || $service == 'Same Day Service') {
                                                                 echo  rupiah($m['sdm2']);
                                                             } else {
                                                                 $sdm_biasa  = $msr['berat_js'] * $m['sdm2'];

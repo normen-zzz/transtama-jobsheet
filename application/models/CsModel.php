@@ -43,6 +43,7 @@ class CsModel extends M_Datatables
 		$this->db->from('tbl_invoice a');
 		$this->db->join('tbl_shp_order b', 'a.shipment_id=b.id');
 		$this->db->where('a.status', 0);
+		$this->db->order_by('a.date', 'ASC');
 		$this->db->group_by('a.no_invoice');
 		$query = $this->db->get();
 		return $query;
@@ -375,6 +376,7 @@ class CsModel extends M_Datatables
 		$this->db->join('tbl_modal b', 'a.id=b.shipment_id');
 		$this->db->join('tbl_invoice_ap c', 'a.id=c.shipment_id');
 		$this->db->where('c.id_vendor', $id_vendor);
+		$this->db->where('b.id_vendor', $id_vendor);
 		$this->db->where('c.status', 0);
 		$query = $this->db->get();
 		return $query;
@@ -712,6 +714,17 @@ class CsModel extends M_Datatables
 		return $query;
 	}
 
+	public function getLastTracking($shipmnent_id)
+	{
+		$this->db->select('*');
+		$this->db->from('tbl_tracking_real a');
+		$this->db->where('a.shipment_id', $shipmnent_id);
+		$this->db->order_by('a.id_tracking', 'DESC');
+		$this->db->limit(1);
+		$query = $this->db->get();
+		return $query;
+	}
+
 	// ap
 	function getApVendor($no_po = NULL)
 	{
@@ -768,7 +781,7 @@ class CsModel extends M_Datatables
 		return $query;
 	}
 
-	function getApByNoInvoice($no_invoice)
+	function getApByNoInvoice($no_invoice, $id_vendor = NULL)
 	{
 
 		$this->db->select('a.shipment_id as resi, a.koli,a.consigne, a.berat_js,c.id_vendor, a.berat_msr, a.id,a.shipper, a.destination, a.tree_consignee,a.tgl_pickup,a.so_id, a.jobsheet_id, b.*,c.*');
@@ -776,6 +789,20 @@ class CsModel extends M_Datatables
 		$this->db->join('tbl_modal b', 'a.id=b.shipment_id');
 		$this->db->join('tbl_invoice_ap_final c', 'a.id=c.shipment_id');
 		$this->db->where('c.unique_invoice', $no_invoice);
+		// $this->db->where('b.id_vendor', $id_vendor);
+		$query = $this->db->get();
+		return $query;
+	}
+
+	function getApByNoInvoice2($no_invoice, $id_vendor = NULL)
+	{
+
+		$this->db->select('a.shipment_id as resi, a.koli,a.consigne, a.berat_js,c.id_vendor, a.berat_msr, a.id,a.shipper, a.destination, a.tree_consignee,a.tgl_pickup,a.so_id, a.jobsheet_id, b.*,c.*');
+		$this->db->from('tbl_shp_order a');
+		$this->db->join('tbl_modal b', 'a.id=b.shipment_id');
+		$this->db->join('tbl_invoice_ap_final c', 'a.id=c.shipment_id');
+		$this->db->where('c.unique_invoice', $no_invoice);
+		$this->db->where('b.id_vendor', $id_vendor);
 		$query = $this->db->get();
 		return $query;
 	}

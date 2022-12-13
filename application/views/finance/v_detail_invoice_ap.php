@@ -48,7 +48,7 @@
                                                         <th>CONSIGNEE</th>
                                                         <th>COLLY</th>
                                                         <th>WEIGHT JS</th>
-
+                                                        <th>Flight SMU</th>
                                                         <th>HD Daerah</th>
 
                                                         <th>OTHERS</th>
@@ -80,12 +80,12 @@
                                                             <td><?= $inv['koli'] ?></td>
                                                             <td><?= $inv['berat_js'] ?></td>
 
-
+                                                            <td><?= rupiah($inv['flight_msu2']) ?></td>
                                                             <td><?= rupiah($inv['hd_daerah2']) ?></td>
-                                                            <td><?= rupiah($inv['others2']) ?></td>
+                                                            <td><?= rupiah((int)$inv['others2']) ?></td>
 
 
-                                                            <td><?= rupiah($inv['hd_daerah2'] + $inv['others2']) ?></td>
+                                                            <td><?= rupiah($inv['flight_msu2'] + $inv['hd_daerah2'] + (int)$inv['others2']) ?></td>
 
 
                                                             <td>
@@ -97,7 +97,7 @@
                                                             </td>
 
 
-                                                            <td><?= rupiah((int)$inv['variabel'] - ($inv['hd_daerah2'] + $inv['others2'])) ?></td>
+                                                            <td><?= rupiah((int)$inv['variabel'] - ($inv['flight_msu2'] + $inv['hd_daerah2'] + (int)$inv['others2'])) ?></td>
 
                                                         </tr>
 
@@ -109,18 +109,21 @@
                                                         $total_smu = $total_smu + $inv['flight_msu2'];
                                                         $total_hd_daerah =  $total_hd_daerah + $inv['hd_daerah2'];
 
-                                                        $sub_total_smu = $sub_total_smu +  $inv['flight_msu2'] + $inv['others2'];
-                                                        $sub_total_hd_daerah = $sub_total_hd_daerah +  $inv['hd_daerah2'] + $inv['others2'];
+                                                        $sub_total_smu = $sub_total_smu +  $inv['flight_msu2'] + (int)$inv['others2'];
+                                                        $sub_total_hd_daerah = $sub_total_hd_daerah + $inv['flight_msu2'] +  $inv['hd_daerah2'] + (int)$inv['others2'];
 
-                                                        $others =  $others + $inv['others2'];
+                                                        $others =  $others + (int)$inv['others2'];
                                                         $no++;
                                                     } ?>
 
+
+                                                </tbody>
+                                                <tfoot>
                                                     <tr>
                                                         <td colspan="3">TOTAL <?= $no - 1 ?> AWB</td>
                                                         <td><?= $total_koli ?> </td>
                                                         <td><?= $total_weight ?> </td>
-
+                                                        <td><?= rupiah($total_smu) ?></td>
                                                         <td><?= rupiah($total_hd_daerah) ?></td>
 
                                                         <td><?= rupiah($others) ?> </td>
@@ -131,7 +134,7 @@
                                                         <td></td>
                                                         <td></td>
                                                     </tr>
-                                                </tbody>
+                                                </tfoot>
 
                                             </table>
                                             <br>
@@ -143,10 +146,12 @@
                                     <!-- /.box-body -->
                                 </div>
 
+
+
                                 <div class="row">
                                     <?php
                                     $f = new NumberFormatter('en', NumberFormatter::SPELLOUT);
-                                    $terbilang = $f->format($sub_total_hd_daerah) . ' Rupiahs';
+                                    $terbilang = $f->format($sub_total_hd_daerah + $inv['other']) . ' Rupiahs';
                                     $terbilang = ucwords($terbilang);
                                     ?>
 
@@ -168,35 +173,29 @@
                                     </div>
 
                                     <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1">Other (Rp.) <span class="text-danger">*</span></label>
+                                            <input type="number" class="form-control" required name="other" value="<?= $inv['other'] ?>"></input>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <label for="due_date" class="font-weight-bold">Ppn (%)</label>
+                                        <input type="text" class="form-control" name="ppn" value="<?= ($inv['ppn'] / ($inv['total_ap'])) * 100 ?>">
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <label for="due_date" class="font-weight-bold">Pph (%)</label>
+                                        <input type="text" class="form-control" name="pph" value="<?= ($inv['pph'] / ($inv['total_ap'])) * 100 ?>">
+                                    </div>
+
+                                    <div class="col-md-4">
                                         <label for="due_date" class="font-weight-bold">Due Date</label>
                                         <input type="date" class="form-control" name="due_date" value="<?= $inv['due_date'] ?>" disabled>
                                     </div>
-                                    <div class="col-md-2">
-                                        <div class="form-group">
-                                            <label for="exampleInputEmail1" class="font-weight-bold">PPN</label>
-                                            <div class="form-check">
-                                                <input class="form-check-input" name="ppn" type="checkbox" value="1" id="ppn" <?php if ($inv['is_ppn'] == 1) {
-                                                                                                                                    echo 'checked';
-                                                                                                                                } ?>>
-                                                <label class="form-check-label" for="flexCheckDefault">
-                                                    Ya
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <div class="form-group">
-                                            <label for="exampleInputEmail1" class="font-weight-bold">PPH</label>
-                                            <div class="form-check">
-                                                <input class="form-check-input" name="pph" type="checkbox" value="1" id="pph" <?php if ($inv['is_pph'] == 1) {
-                                                                                                                                    echo 'checked';
-                                                                                                                                } ?>>
-                                                <label class="form-check-label" for="flexCheckDefault">
-                                                    Ya
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </div>
+
+
+
                                 </div>
                                 <div class="row">
                                     <div class="col-md-12">
@@ -212,7 +211,7 @@
                                         ?>
                                             <span>
                                                 <span class="fa fa-check-circle text-success"></span>
-                                                This <?= $inv['no_invoice'] ?> has been Received, Wait Approve GM To Check
+                                                This <?= $inv['no_invoice'] ?> has been Received, Wait Approve Manager Finance To Check
                                             </span>
 
                                         <?php } elseif ($inv['status'] == 5) {

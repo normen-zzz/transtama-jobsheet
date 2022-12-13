@@ -123,33 +123,61 @@
                                                                 // kalo dia atasan
 
                                                                 if ($id_atasan == NULL || $id_atasan == 0) {
-                                                                    $url = $this->uri->segment(3);
-                                                                    // echo $url;
-                                                                    if ($j['status'] == 3) {
-                                                                ?>
-                                                                        <a href="<?= base_url('finance/apExternal/detailInvoice/' . $j['unique_invoice'] . '/' . encrypt_url($j['id_vendor'])) ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">Detail</a>
-                                                                        <a href="<?= base_url('finance/apExternal/approveGm/' . $j['unique_invoice']) ?>" class="btn btn-sm mb-1 text-light tombol-konfirmasi mt-2" style="background-color: #9c223b;">Approve</a>
+                                                                    // jika manager finance
+                                                                    if ($this->session->userdata('id_role') == 6 && $this->session->userdata('id_jabatan') == 2) {
+                                                                        $url = $this->uri->segment(3);
 
-                                                                    <?php   } else {
+                                                                        // jika statusnya received finance
+                                                                        if ($j['status'] == 3) { ?>
+                                                                            <a href="<?= base_url('finance/apExternal/detailInvoice/' . $j['unique_invoice'] . '/' . encrypt_url($j['id_vendor'])) ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">Detail</a>
+                                                                            <a href="<?= base_url('finance/apExternal/approveMgrFinance/' . $j['unique_invoice']) ?>" class="btn btn-sm mb-1 text-light tombol-konfirmasi mt-2" style="background-color: #9c223b;">Approve</a>
+
+                                                                        <?php   } else {
+                                                                        ?>
+                                                                            <a href="<?= base_url('finance/apExternal/detailInvoice/' . $j['unique_invoice'] . '/' . encrypt_url($j['id_vendor'])) ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">Detail</a>
+
+                                                                        <?php  }
+                                                                        // jika GM
+                                                                    } elseif ($this->session->userdata('id_role') == 6 && $this->session->userdata('id_jabatan') == 11) {
+                                                                        // jika statusnya received finance
+                                                                        if ($j['status'] == 3) { ?>
+                                                                            <a href="<?= base_url('finance/apExternal/detailInvoice/' . $j['unique_invoice'] . '/' . encrypt_url($j['id_vendor'])) ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">Detail</a>
+
+                                                                            <!-- jika sudah di approve mgr finance -->
+                                                                        <?php   } elseif ($j['status'] == 7) {
+                                                                        ?>
+                                                                            <a href="<?= base_url('finance/apExternal/detailInvoice/' . $j['unique_invoice'] . '/' . encrypt_url($j['id_vendor'])) ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">Detail</a>
+                                                                            <a href="<?= base_url('finance/apExternal/approveGM/' . $j['unique_invoice']) ?>" class="btn btn-sm mb-1 text-light tombol-konfirmasi mt-2" style="background-color: #9c223b;">Approve</a>
+
+                                                                        <?php  } else { ?>
+                                                                            <a href="<?= base_url('finance/apExternal/detailInvoice/' . $j['unique_invoice'] . '/' . encrypt_url($j['id_vendor'])) ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">Detail</a>
+                                                                    <?php }
+                                                                    }
                                                                     ?>
-                                                                        <a href="<?= base_url('finance/apExternal/detailInvoice/' . $j['unique_invoice'] . '/' . encrypt_url($j['id_vendor'])) ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">Detail</a>
 
-                                                                    <?php  } ?>
 
+                                                                    <!-- jika staff finance -->
                                                                 <?php  } else {
                                                                 ?>
-                                                                    <?php if ($j['status'] == 4) {
+                                                                    <!-- jika recevied finance -->
+                                                                    <?php if ($j['status'] == 3) {
                                                                     ?>
                                                                         <a href="<?= base_url('finance/apExternal/detailInvoice/' . $j['unique_invoice'] . '/' . encrypt_url($j['id_vendor'])) ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">Detail</a>
-                                                                    <?php  } elseif ($j['status'] == 3 || $j['status'] == 5) {
+                                                                    <?php  } elseif ($j['status'] == 4) {
+                                                                    ?>
+                                                                        <a href="<?= base_url('finance/apExternal/editInvoice/' . $j['unique_invoice'] . '/' . encrypt_url($j['id_vendor'])) ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">Detail</a>
+                                                                        <!-- <button data-toggle="modal" data-target="#modal-paid<?= $j['id_invoice'] ?>" class=" btn btn-sm text-light mt-1" style="background-color: #9c223b;">Paid</button> -->
+                                                                    <?php } elseif ($j['status'] == 5) {
                                                                     ?>
                                                                         <a href="<?= base_url('finance/apExternal/editInvoice/' . $j['unique_invoice'] . '/' . encrypt_url($j['id_vendor'])) ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">Detail</a>
                                                                         <button data-toggle="modal" data-target="#modal-paid<?= $j['id_invoice'] ?>" class=" btn btn-sm text-light mt-1" style="background-color: #9c223b;">Paid</button>
-                                                                    <?php } else {
-                                                                    ?>
+
+                                                                    <?php  } elseif ($j['status'] == 7) { ?>
                                                                         <a href="<?= base_url('finance/apExternal/editInvoice/' . $j['unique_invoice'] . '/' . encrypt_url($j['id_vendor'])) ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">Detail</a>
 
-                                                                <?php  }
+                                                                    <?php } else { ?>
+                                                                        <a href="<?= base_url('finance/apExternal/editInvoice/' . $j['unique_invoice'] . '/' . encrypt_url($j['id_vendor'])) ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">Detail</a>
+                                                                <?php }
                                                                 } ?>
 
 
