@@ -145,7 +145,7 @@
 													<table class="table table-bordered" style="width:100%">
 														<thead>
 															<tr>
-																
+
 																<th>WEIGHT JS/MSR</th>
 																<th>WEIGHT SPECIAL HD</th>
 															</tr>
@@ -153,9 +153,10 @@
 														<tbody>
 															<tr>
 
-																
-																<td><?= $msr['berat_msr'] ?></td>
+
+
 																<td><?= $msr['berat_js'] ?></td>
+																<td><?= $msr['berat_msr'] ?></td>
 															</tr>
 
 														</tbody>
@@ -553,7 +554,7 @@
 				</div>
 
 
-				
+
 				<div class="row">
 					<div class="col-md-6">
 						<div class="card card-custom gutter-b example example-compact">

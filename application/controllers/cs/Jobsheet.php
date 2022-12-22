@@ -527,6 +527,7 @@ class Jobsheet extends CI_Controller
                 // 0 = decline
             );
             $this->db->update('tbl_approve_revisi_so', $data, ['shipment_id' => $id]);
+            $this->db->update('tbl_request_revisi', array('status' => 4), ['shipment_id' => $id]);
             $this->session->set_flashdata('messageAlert', $this->messageAlert('success', 'Success'));
             redirect('cs/jobsheet/');
         } else {
@@ -547,6 +548,7 @@ class Jobsheet extends CI_Controller
                 'id_user_cs' => $this->session->userdata('id_user')
             );
             $this->db->insert('tbl_approve_revisi_so', $data);
+            $this->db->update('tbl_request_revisi', array('status' => 4), ['shipment_id' => $id]);
             $this->session->set_flashdata('messageAlert', $this->messageAlert('success', 'Success'));
             redirect('cs/jobsheet/');
         } else {
@@ -606,6 +608,8 @@ class Jobsheet extends CI_Controller
             'status_revisi' => 8,
         );
         $update = $this->db->update('tbl_revisi_so', $data, ['shipment_id' => $id]);
+
+
         if ($update) {
             $data = array(
                 'id_sm' => $this->session->userdata('id_user'),
@@ -613,6 +617,7 @@ class Jobsheet extends CI_Controller
                 'status_approve_sm' => 0
             );
             $this->db->update('tbl_approve_revisi_so', $data, ['shipment_id' => $id]);
+            $this->db->update('tbl_request_revisi', array('status' => 4), ['shipment_id' => $id]);
             $this->session->set_flashdata('messageAlert', $this->messageAlert('success', 'Success'));
             redirect('cs/jobsheet/detailRevisi/' . $id);
         } else {
