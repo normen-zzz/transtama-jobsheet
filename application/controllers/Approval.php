@@ -67,6 +67,8 @@ class Approval extends CI_Controller
                 // $this->wa->pickup('+6285157906966', "$pesan");
                 $this->wa->pickup('+6289629096425', "$pesan");
                 $this->wa->pickup('+6287771116286', "$pesan");
+                //Norman
+                $this->wa->pickup('+6285697780467', "$pesan");
                 echo "<script>alert('Success Approve')</script>";
                 echo "<script>window.close();</script>";
             } else {
@@ -106,6 +108,8 @@ class Approval extends CI_Controller
             $pesan = "Hallo, ada pengajuan Ap No. *$no_ap* Dengan Tujuan *$purpose* Tanggal *$date* Yang Telah Diapprove Manager Finance. Silahkan approve melalui link berikut : $link . Terima Kasih";
             // no mba vema
             $this->wa->pickup('+628111910711', "$pesan");
+            //Norman
+            $this->wa->pickup('+6285697780467', "$pesan");
 
             echo "<script>alert('Success Approve')</script>";
             echo "<script>window.close();</script>";
@@ -137,6 +141,8 @@ class Approval extends CI_Controller
                 // $this->wa->pickup('+6285157906966', "$pesan");
                 $this->wa->pickup('+6289629096425', "$pesan");
                 $this->wa->pickup('+6287771116286', "$pesan");
+                //Norman
+                $this->wa->pickup('+6285697780467', "$pesan");
 
                 echo "<script>alert('Success Approve')</script>";
                 echo "<script>window.close();</script>";
@@ -168,7 +174,7 @@ class Approval extends CI_Controller
         $data['subtitle'] = 'Detail Sales Order';
         $data['title'] = 'Detail Sales Order';
         $data['msr'] = $this->cs->getDetailSo($id)->row_array();
-        $data['request'] = $this->db->get_where('tbl_revisi_so', ['shipment_id' => $resi['id']])->row_array();
+        $data['request'] = $this->db->get_where('tbl_revisi_so', ['shipment_id' => $id])->row_array();
         $data['request_revisi'] = $this->db->get_where('tbl_request_revisi', ['shipment_id' => $id])->row_array();
         $data['so_lama'] = $this->db->get_where('tbl_revisi_so_lama', ['shipment_id' => $id])->row_array();
         $data['modal'] = $this->db->get_where('tbl_modal', ['shipment_id' => $id])->result_array();
@@ -196,6 +202,8 @@ class Approval extends CI_Controller
             // no sam
             // $this->wa->pickup('+628111910711', "$pesan");
             $this->wa->pickup('+6285157906966', "$pesan");
+            //Norman
+            $this->wa->pickup('+6285697780467', "$pesan");
 
             echo "<script>alert('Success Approve')</script>";
             echo "<script>window.close();</script>";

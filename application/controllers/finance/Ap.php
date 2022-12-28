@@ -271,6 +271,8 @@ class Ap extends CI_Controller
             if ($get_user['id_role'] == 4 || $get_user['id_role'] == 6) {
                 // no mba vema
                 $this->wa->pickup('+628111910711', "$pesan");
+                //Norman
+                $this->wa->pickup('+6285697780467', "$pesan");
                 // var_dump('ini finance dan sales');
             }
         } else {
@@ -281,6 +283,8 @@ class Ap extends CI_Controller
             $pesan = "Hallo, ada pengajuan Ap No. *$no_ap* Dengan Tujuan *$purpose* Tanggal *$date*. Silahkan approve melalui link berikut : $link . Terima Kasih";
             // no mba dwi
             $this->wa->pickup('+6281212311908', "$pesan");
+            //Norman
+            $this->wa->pickup('+6285697780467', "$pesan");
         }
 
         $data_approve = array(
@@ -328,6 +332,8 @@ class Ap extends CI_Controller
         if ($get_user['id_role'] == 4 || $get_user['id_role'] == 6) {
             // no mba vema
             $this->wa->pickup('+628111910711', "$pesan");
+            //Norman
+            $this->wa->pickup('+6285697780467', "$pesan");
             // var_dump('ini finance dan sales');
         }
 
@@ -384,6 +390,8 @@ class Ap extends CI_Controller
             // $this->wa->pickup('+6285157906966', "$pesan");
             $this->wa->pickup('+6289629096425', "$pesan");
             $this->wa->pickup('+6287771116286', "$pesan");
+            //Norman
+            $this->wa->pickup('+6285697780467', "$pesan");
 
             $this->session->set_flashdata('message', 'Success Approve');
             redirect($url);

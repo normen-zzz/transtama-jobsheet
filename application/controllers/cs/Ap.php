@@ -16,7 +16,7 @@ class Ap extends CI_Controller
         }
         $this->db->query("SET sql_mode=(SELECT REPLACE(@@sql_mode, 'ONLY_FULL_GROUP_BY', ''));");
         $this->load->model('ApModel', 'ap');
-		$this->load->model('Sendwa', 'wa');
+        $this->load->model('Sendwa', 'wa');
         cek_role();
         $this->load->library('form_validation');
     }
@@ -269,7 +269,8 @@ class Ap extends CI_Controller
             // $this->wa->pickup('+6285157906966', "$pesan");
             $this->wa->pickup('+6289629096425', "$pesan");
             $this->wa->pickup('+6287771116286', "$pesan");
-			$this->wa->pickup('+6285697780467', "$pesan");
+            //Norman
+            $this->wa->pickup('+6285697780467', "$pesan");
             $this->session->set_flashdata('message', 'Success Approve');
             redirect('cs/ap');
         } else {
