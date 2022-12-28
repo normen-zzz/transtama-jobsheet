@@ -251,6 +251,7 @@ class Ap extends CI_Controller
 
         for ($i = 0; $i < sizeof($id_pengeluaran); $i++) {
             $data = array(
+                'id_kategori_pengeluaran' => $this->input->post('kategori')[$i],
                 'amount_approved' => $amount_approved[$i],
                 'total_approved' => $total,
             );

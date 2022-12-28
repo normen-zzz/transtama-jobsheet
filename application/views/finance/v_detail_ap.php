@@ -81,6 +81,13 @@
 														</div>
 													</div>
 												<?php	} ?>
+												<div class="col-md-4">
+													<div class="form-group">
+														<label for="exampleInputEmail1">User</label>
+														<?php $orang = $this->db->get_where('tb_user', array('id_user' => $info['id_user']))->row_array() ?>
+														<input type="text" class="form-control" disabled value="<?= $orang['nama_user'] ?>">
+													</div>
+												</div>
 
 												<?php if ($info['no_ca'] != NULL) {
 												?>
@@ -107,6 +114,7 @@
 												<div class="row">
 													<table class="table table-separate table-head-custom table-checkable" id="myTable3">
 														<tr>
+															<th>Type</th>
 															<th>Category</th>
 															<th>Description</th>
 															<th>Amount Proposed</th>
@@ -117,9 +125,19 @@
 														$total = 0;
 														$total_approved = 0;
 														foreach ($ap as $c) {
+
+															$list_ap = $this->db->get('tbl_list_pengeluaran');
+															$kat_ap = $this->db->get_where('tbl_list_pengeluaran', array('kode_kategori' => $c['id_kategori_pengeluaran']));
 														?>
 															<tr>
 																<td><?= $c['nama_kategori'] ?></td>
+																<td><select class="form-select" name="kategori[]" id="kategori">
+																		<?php foreach ($list_ap->result_array() as $list_ap) { ?>
+																			<option <?php if ($c['id_kategori_pengeluaran'] == $list_ap['kode_kategori']) {
+																						echo 'selected';
+																					} ?> value="<?= $list_ap['kode_kategori'] ?>"><?= $list_ap['nama_kategori_pengeluaran'] ?></option>
+																		<?php } ?>
+																	</select></td>
 																<td><?= $c['description'] ?></td>
 																<td><?= rupiah($c['amount_proposed']) ?></td>
 																<td>
@@ -144,7 +162,7 @@
 															$total_approved = $total_approved + $c['amount_approved'];
 														} ?>
 														<tr style="border-top:2px solid black">
-															<td colspan="2">
+															<td colspan="3">
 																TOTAL
 															</td>
 															<td>
