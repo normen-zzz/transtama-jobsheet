@@ -54,7 +54,7 @@
 														<!-- <th>PPH %</th> -->
 														<!-- <th>SDM</th> -->
 														<th>Others</th>
-														<!-- <th>Action</th> -->
+														<th>Action</th>
 													</tr>
 												</thead>
 												<tbody>
@@ -89,7 +89,7 @@
 															<!-- <td><?= rupiah($inv['sdm2']) ?></td> -->
 															<td><?= rupiah((int)$inv['others2']) ?></td>
 
-															<!-- <td> <a href="<?= base_url('finance/invoice/deleteInvoice/' . $inv['id_invoice'] . '/' . $inv['id_vendor']) ?>" class=" btn btn-sm text-light tombol-hapus" data-flashdata="<?= $inv['shipment_id'] ?>" style="background-color: #9c223b;">Delete</a></td> -->
+															<td> <a href="<?= base_url('cs/ApExternal/editCapitalCost/' . $inv['id'] . '/' . $this->uri->segment(4)) ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">Edit Capital Cost</a></td>
 
 														</tr>
 

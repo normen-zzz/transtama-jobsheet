@@ -87,6 +87,104 @@ class ApExternal extends CI_Controller
         }
     }
 
+    public function addCapitalCost()
+    {
+        $shipment_id = $this->input->post('shipment_id');
+        $vendor = $this->input->post('vendor');
+
+        $data = array(
+            'shipment_id' => $this->input->post('shipment_id'),
+            'flight_msu2' => $this->input->post('flight_smu2'),
+            'ra2' => $this->input->post('ra2'),
+            'packing2' => $this->input->post('packing2'),
+            'refund2' => $this->input->post('refund2'),
+            'specialrefund2' => $this->input->post('specialrefund2'),
+            'insurance2' => $this->input->post('insurance2'),
+            'surcharge2' => $this->input->post('surcharge2'),
+            'hand_cgk2' => $this->input->post('hand_cgk2'),
+            'hand_pickup2' => $this->input->post('hand_pickup2'),
+            'hd_daerah2' => $this->input->post('hd_daerah2'),
+            'pph2' => $this->input->post('pph2'),
+            'sdm2' => $this->input->post('sdm2'),
+            'others2' => $this->input->post('others2'),
+            'note' => $this->input->post('note'),
+            'id_vendor' => $vendor
+        );
+        $insert = $this->db->insert('tbl_modal', $data);
+        if ($insert) {
+            $data = array(
+                'id_vendor' => $vendor,
+                'shipment_id' => $this->input->post('shipment_id'),
+                'status' => 0,
+                'id_user' => $this->session->userdata('id_user')
+            );
+
+            $this->db->insert('tbl_invoice_ap', $data);
+            $this->session->set_flashdata('messageAlert', $this->messageAlert('success', 'Success'));
+            redirect($_SERVER['HTTP_REFERER']);
+        } else {
+
+            $this->session->set_flashdata('messageAlert', $this->messageAlert('error', 'Failed'));
+            redirect($_SERVER['HTTP_REFERER']);
+        }
+    }
+
+    public function editCapitalCost($id, $encrypt)
+    {
+        $data['subtitle'] = 'Detail Sales Order';
+        $data['title'] = 'Detail Sales Order';
+        $data['msr'] = $this->cs->getDetailSo($id)->row_array();
+        $data['modal'] = $this->db->get_where('tbl_modal', ['shipment_id' => $id])->result_array();
+        $data['vendors'] = $this->db->order_by('id_vendor', 'DESC')->get_where('tbl_vendor', ['type' => 0])->result_array();
+        $data['agents'] = $this->db->order_by('id_vendor', 'DESC')->get_where('tbl_vendor', ['type' => 1])->result_array();
+        $data['vendor_selected'] = $this->cs->getVendorByShipment($id)->result_array();
+        $data['vendor_lengkap'] = $this->db->order_by('id_vendor', 'DESC')->get_where('tbl_vendor')->result_array();
+        $this->backend->display('cs/v_edit_capital_cost', $data);
+    }
+    public function editCapitalCostAct()
+    {
+        $shipment_id = $this->input->post('shipment_id');
+        $vendor = $this->input->post('vendor');
+        $vendor_awal = $this->input->post('id_vendor_awal');
+        $data = array(
+            'flight_msu2' => $this->input->post('flight_smu2'),
+            'ra2' => $this->input->post('ra2'),
+            'packing2' => $this->input->post('packing2'),
+            'refund2' => $this->input->post('refund2'),
+            'specialrefund2' => $this->input->post('specialrefund2'),
+            'insurance2' => $this->input->post('insurance2'),
+            'surcharge2' => $this->input->post('surcharge2'),
+            'hand_cgk2' => $this->input->post('hand_cgk2'),
+            'hand_pickup2' => $this->input->post('hand_pickup2'),
+            'hd_daerah2' => $this->input->post('hd_daerah2'),
+            'pph2' => $this->input->post('pph2'),
+            'sdm2' => $this->input->post('sdm2'),
+            'others2' => $this->input->post('others2'),
+            'note' => $this->input->post('note'),
+            'id_vendor' => $vendor
+        );
+        $update = $this->db->update('tbl_modal', $data, ['id_modal' => $this->input->post('id_modal')]);
+        if ($update) {
+            $data = array(
+                'id_vendor' => $vendor,
+                'id_user' => $this->session->userdata('id_user')
+            );
+
+            $this->db->update('tbl_invoice_ap', $data, array('id_vendor' => $vendor_awal, 'shipment_id' => $shipment_id));
+
+
+
+            // log_aktifitas('update', 'tb_modal');
+            $this->session->set_flashdata('messageAlert', $this->messageAlert('success', 'Success'));
+            redirect($_SERVER['HTTP_REFERER']);
+        } else {
+
+            $this->session->set_flashdata('messageAlert', $this->messageAlert('error', 'Failed'));
+            redirect($_SERVER['HTTP_REFERER']);
+        }
+    }
+
+
     public function detailAp($id_vendor)
     {
         $id_vendor = decrypt_url($id_vendor);
@@ -214,23 +312,26 @@ class ApExternal extends CI_Controller
             // die;
 
             $insert = $this->db->insert('tbl_invoice_ap_final', $data);
-            $data = array(
-                'status_ap' => 1
-            );
-            $this->db->update('tbl_shp_order', $data, ['id' => $shipment_id[$i]]);
+            if ($insert) {
+                $datastatusap = array(
+                    'status_ap' => 1
+                );
+                $this->db->update('tbl_shp_order', $datastatusap, ['id' => $shipment_id[$i]]);
 
-            $data = array(
-                'status' => 1
-            );
-            $this->db->update('tbl_invoice_ap', $data, ['shipment_id' => $shipment_id[$i], 'id_vendor' => $this->input->post('id_vendor')]);
+                $datastatusap2 = array(
+                    'status' => 1
+                );
+                $this->db->update('tbl_invoice_ap', $datastatusap2, ['shipment_id' => $shipment_id[$i], 'id_vendor' => $this->input->post('id_vendor')]);
+            } else {
+            }
         }
-        if ($insert) {
-            $this->session->set_flashdata('messageAlert', $this->messageAlert('success', 'Success Create AP'));
-            redirect('cs/apExternal/created');
-        } else {
-            $this->session->set_flashdata('messageAlert', $this->messageAlert('error', 'Failed'));
-            redirect('cs/apExternal/created');
-        }
+
+        $this->session->set_flashdata('messageAlert', $this->messageAlert('success', 'Success Create AP'));
+        redirect('cs/apExternal/created');
+        // } else {
+        //     $this->session->set_flashdata('messageAlert', $this->messageAlert('error', 'Failed'));
+        //     redirect('cs/apExternal/created');
+        // }
     }
 
 
