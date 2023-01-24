@@ -402,6 +402,17 @@
                     </li>
 
                     <li class="menu-section">
+                        <h4 class="menu-text">Track</h4>
+                        <i class="menu-icon ki ki-bold-more-hor icon-md"></i>
+                    </li>
+                    <li class="menu-item" aria-haspopup="true">
+                        <a href="<?= base_url('cs/jobsheet') ?>" class="menu-link">
+                            <i class="fa fa-glass mt-2 fa-1x mr-2 text-danger"></i>
+                            <span class="menu-text" style="font-size:11px">Jobsheet Approve PIC</span>
+                        </a>
+                    </li>
+
+                    <li class="menu-section">
                         <h4 class="menu-text">JOBSHEET</h4>
                         <i class="menu-icon ki ki-bold-more-hor icon-md"></i>
                     </li>
@@ -428,6 +439,13 @@
                         <a href="<?= base_url('cs/jobsheet/approveInvoice') ?>" class="menu-link">
                             <i class="fa fa-book mt-2 fa-1x mr-2 text-danger"></i>
                             <span class="menu-text" style="font-size:11px">Jobsheet (In Invoice)</span>
+                        </a>
+                    </li>
+
+                    <li class="menu-item" aria-haspopup="true">
+                        <a href="<?= base_url('cs/jobsheet/cekResi') ?>" class="menu-link">
+                            <i class="fa fa-book mt-2 fa-1x mr-2 text-danger"></i>
+                            <span class="menu-text" style="font-size:11px">Cek Resi</span>
                         </a>
                     </li>
 

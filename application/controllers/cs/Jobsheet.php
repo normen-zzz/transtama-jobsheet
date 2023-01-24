@@ -161,6 +161,20 @@ class Jobsheet extends CI_Controller
         $data['vendor_lengkap'] = $this->db->order_by('id_vendor', 'DESC')->get_where('tbl_vendor')->result_array();
         $this->backend->display('cs/v_js_detail_mgr', $data);
     }
+    public function cekResi()
+    {
+        if ($this->input->post('shipment_id') == NULL) {
+            $data['title'] = 'CEK RESI';
+            $data['resi'] = NULL;
+            $data['shipment'] = NULL;
+            $this->backend->display('cs/v_cek_resi', $data);
+        } else {
+            $data['title'] = 'CEK RESI';
+            $data['resi'] = $this->input->post('shipment_id');
+            $data['shipment'] = $this->db->get_where('tbl_shp_order', array('shipment_id' => $this->input->post('shipment_id')))->row_array();
+            $this->backend->display('cs/v_cek_resi', $data);
+        }
+    }
     public function detailRevisi($id)
     {
         $data['subtitle'] = 'Detail Sales Order';
