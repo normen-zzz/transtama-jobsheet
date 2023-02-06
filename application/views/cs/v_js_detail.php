@@ -764,80 +764,80 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="exampleInputEmail1">Flight SMU</label>
-                                    <input type="text" class="form-control" id="exampleInputEmail1" required name="flight_smu2">
+                                    <input type="text" class="form-control" id="exampleInputEmail1" value="0" required name="flight_smu2">
                                     <input type="text" class="form-control" id="exampleInputEmail1" required hidden value="<?= $msr['id'] ?>" name="shipment_id">
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="exampleInputEmail1">Sewa Gudang</label>
-                                    <input type="text" class="form-control" id="exampleInputEmail1" required name="ra2">
+                                    <input type="text" class="form-control" value="0" id="exampleInputEmail1" required name="ra2">
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="exampleInputEmail1">Wrapping</label>
-                                    <input type="text" class="form-control" id="exampleInputEmail1" required name="packing2">
+                                    <input type="text" class="form-control" value="0" id="exampleInputEmail1" required name="packing2">
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="exampleInputEmail1">Refund (%)</label>
-                                    <input type="text" class="form-control" id="exampleInputEmail1" required name="refund2">
+                                    <input type="text" class="form-control" value="0" id="exampleInputEmail1" required name="refund2">
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="exampleInputEmail1">Special Refund (Rp.)</label>
-                                    <input type="text" class="form-control" id="exampleInputEmail1" required name="specialrefund2">
+                                    <input type="text" class="form-control" value="0" id="exampleInputEmail1" required name="specialrefund2">
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="exampleInputEmail1">Insurance</label>
-                                    <input type="text" class="form-control" id="exampleInputEmail1" required name="insurance2">
+                                    <input type="text" class="form-control" value="0" id="exampleInputEmail1" required name="insurance2">
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="exampleInputEmail1">Surcharge</label>
-                                    <input type="text" class="form-control" id="exampleInputEmail1" required name="surcharge2">
+                                    <input type="text" class="form-control" value="0" id="exampleInputEmail1" required name="surcharge2">
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="exampleInputEmail1">Hand CGK</label>
-                                    <input type="text" class="form-control" id="exampleInputEmail1" required name="hand_cgk2">
+                                    <input type="text" class="form-control" value="0" id="exampleInputEmail1" required name="hand_cgk2">
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="exampleInputEmail1">Hand Pickup/Delivery</label>
-                                    <input type="text" class="form-control" id="exampleInputEmail1" required name="hand_pickup2">
+                                    <input type="text" class="form-control" value="0" id="exampleInputEmail1" required name="hand_pickup2">
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="exampleInputEmail1">HD Daerah</label>
-                                    <input type="text" class="form-control" id="exampleInputEmail1" required name="hd_daerah2">
+                                    <input type="text" class="form-control" value="0" id="exampleInputEmail1" required name="hd_daerah2">
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="exampleInputEmail1">PPH (%)</label>
-                                    <input type="text" class="form-control" placeholder="ex: 2, artinya 2 %" id="exampleInputEmail1" required name="pph2">
+                                    <input type="text" class="form-control" value="0" placeholder="ex: 2, artinya 2 %" id="exampleInputEmail1" required name="pph2">
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="exampleInputEmail1">SDM</label>
-                                    <input type="text" class="form-control" id="exampleInputEmail1" required name="sdm2">
+                                    <input type="text" class="form-control" value="0" id="exampleInputEmail1" required name="sdm2">
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="exampleInputEmail1">Others</label>
-                                    <input type="text" class="form-control" id="exampleInputEmail1" required name="others2">
+                                    <input type="text" class="form-control" value="0" id="exampleInputEmail1" required name="others2">
                                 </div>
                             </div>
 
