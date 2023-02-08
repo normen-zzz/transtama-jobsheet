@@ -130,12 +130,11 @@
                                         <span class="menu-text">Invoice Paid</span>
                                     </a>
                                 </li>
-
-
-
                             </ul>
                         </div>
                     </li>
+
+
 
                     <li class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
                         <a href="javascript:;" class="menu-link menu-toggle">
@@ -241,6 +240,13 @@
 
                             </ul>
                         </div>
+                    </li>
+
+                    <li class="menu-item" aria-haspopup="true">
+                        <a href="<?= base_url('finance/jobsheet/cekResi') ?>" class="menu-link">
+                            <i class="fa fa-book mt-2 fa-1x mr-2 text-danger"></i>
+                            <span class="menu-text" style="font-size:11px">Cek Resi</span>
+                        </a>
                     </li>
 
                     <li class="menu-section">
