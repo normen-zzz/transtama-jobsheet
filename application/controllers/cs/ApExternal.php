@@ -268,6 +268,7 @@ class ApExternal extends CI_Controller
         $no_pengeluaran = '';
         $pre = '';
         $cek_no_invoice = $this->db->select_max('no_pengeluaran')->get_where('tbl_pengeluaran', ['id_kat_ap' => 1])->row_array();
+        $cek_no_external = $this->db->select_max('no_po')->get('tbl_invoice_ap_final')->row_array();
 
         $pre = 'PO-';
 
@@ -275,8 +276,14 @@ class ApExternal extends CI_Controller
             $no_pengeluaran = $pre . '000001';
         } else {
 
+
+            $potongExternal = substr($cek_no_external['no_po'], 3, 6);
             $potong = substr($cek_no_invoice['no_pengeluaran'], 3, 6);
-            $no = $potong + 1;
+            if ($potongExternal > $potong) {
+                $no = $potongExternal + 1;
+            } else {
+                $no = $potong + 1;
+            }
             $kode =  sprintf("%06s", $no);
 
             $no_pengeluaran  = "$pre$kode";
