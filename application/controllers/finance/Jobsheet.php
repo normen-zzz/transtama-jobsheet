@@ -193,6 +193,20 @@ class Jobsheet extends CI_Controller
 
         $this->load->view('finance/export_invoice_customer', $data);
     }
+    public function cekResi()
+    {
+        if ($this->input->post('shipment_id') == NULL) {
+            $data['title'] = 'CEK RESI';
+            $data['resi'] = NULL;
+            $data['shipment'] = NULL;
+            $this->backend->display('finance/v_cek_resi', $data);
+        } else {
+            $data['title'] = 'CEK RESI';
+            $data['resi'] = $this->input->post('shipment_id');
+            $data['shipment'] = $this->db->get_where('tbl_shp_order', array('shipment_id' => $this->input->post('shipment_id')))->row_array();
+            $this->backend->display('finance/v_cek_resi', $data);
+        }
+    }
     public function createInvoice()
     {
         $shipment_id =  $this->input->post('shipment_id');

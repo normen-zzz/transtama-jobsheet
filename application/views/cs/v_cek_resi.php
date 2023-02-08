@@ -108,7 +108,16 @@ setlocale(LC_TIME, "id_ID.UTF8");
                                                                 echo 'Sudah di Approve Oleh Manager Finance';
                                                                 break;
                                                             case '5':
-                                                                echo 'Sudah jadi proforma/invoice';
+                                                                $invoice = $this->db->get_where('tbl_invoice', array('shipment_id' => $shipment['id']))->row_array();
+                                                                if ($invoice['status'] == 0) {
+                                                                    echo 'On Proforma';
+                                                                } elseif ($invoice['status'] == 1) {
+                                                                    echo 'On Invoice (Pending)';
+                                                                } elseif ($invoice['status'] == 2) {
+                                                                    echo 'On Invoice (Paid)';
+                                                                } elseif ($invoice['status'] == 3) {
+                                                                    echo 'On Invoice (UnPaid)';
+                                                                }
                                                                 break;
 
                                                             default:
