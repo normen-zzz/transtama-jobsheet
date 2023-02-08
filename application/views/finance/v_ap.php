@@ -87,7 +87,7 @@
                                             <a href="<?= base_url('finance/ap/detail/' . $c['no_pengeluaran']) ?>" class="btn btn-sm mb-1 text-light" style="background-color: #9c223b;">Detail</a>
                                             <a target="blank" href="<?= base_url('finance/ap/print/' . $c['no_pengeluaran']) ?>" class="btn btn-sm mb-1 text-light" style="background-color: #9c223b;"> <i class="fa fa-print text-light"></i> Print</a>
                                             <!-- jika yang mengajukan rolenya cs / ops -->
-                                            <?php if ($c['id_role'] == 2 || $c['id_role'] == 3) {
+                                            <?php if ($c['id_role'] == 2 || $c['id_role'] == 3 || $c['id_role'] == 5) {
                                                 // jika diapprove manager finance
                                                 if ($c['status'] == 7) { ?>
                                                     <a href="#" data-toggle="modal" data-target="#modal-paid<?= $c['no_pengeluaran'] ?>" class="btn btn-sm mb-1 text-light" style="background-color: #9c223b;">Pay</a>

@@ -491,6 +491,8 @@
         </div>
 
 
+
+
         <div class="card card-custom gutter-b example example-compact">
             <div class="card-body">
                 <!-- Main content -->
@@ -500,23 +502,19 @@
                             <div class="box">
                                 <div class="box-header with-border text-danger text-center">
                                     <h4 class="box-title with-border">
-                                        <i class="fas fa-dollar-sign text-danger"></i> Capital Cost
+                                        <i class="fas fa-dollar-sign text-danger"></i> Capital Cost OLD
                                     </h4>
 
                                 </div>
                                 <!-- /.box-header -->
                                 <div class="box-body">
-                                    <?php
-                                    if ($modal) {
-                                    } else {
-                                    ?>
-                                        <button type="button" class="btn btn btn-sm btn-xs align-middle text-light mb-2" data-toggle="modal" data-target="#modal-acc" style="background-color: #9c223b;">
-                                            <i class="fas fa-plus"></i>
-                                            Add Capital Cost
-                                        </button>
 
-                                    <?php  }
-                                    ?>
+                                    <button type="button" class="btn btn btn-sm btn-xs align-middle text-light mb-2" data-toggle="modal" data-target="#modal-acc" style="background-color: #9c223b;">
+                                        <i class="fas fa-plus"></i>
+                                        Add Capital Cost
+                                    </button>
+
+
 
                                     <div class="table-responsive">
                                         <table class="table table-bordered" style="width:100%">
@@ -524,93 +522,129 @@
                                                 <tr>
                                                     <th><b>Description</b> </th>
                                                     <th>Flight SMU</th>
-                                                    <th>RA</th>
-                                                    <th>Packing</th>
+                                                    <th>Sewa Gudang</th>
+                                                    <th>Wrapping</th>
                                                     <th>Refund %</th>
+                                                    <th>Special Refund (Rp.)</th>
                                                     <th>Insurance</th>
                                                     <th>Surcharge</th>
                                                     <th>Hand CGK</th>
-                                                    <th>Hand Pickup</th>
+                                                    <th>Hand Pickup/Delivery</th>
                                                     <th>HD Daerah</th>
                                                     <th>PPH %</th>
                                                     <th>SDM</th>
                                                     <th>Others</th>
+                                                    <th>Vendor/Agent</th>
                                                     <th>Action</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <?php foreach ($modal as $m) {
-                                                ?>
-                                                    <tr>
-                                                        <td> <i><b>Variabel</b></i> </td>
-                                                        <td><?= rupiah($m['flight_msu2']) ?></td>
-                                                        <td><?= rupiah($m['ra2']) ?></td>
-                                                        <td><?= rupiah($m['packing2']) ?></td>
-                                                        <td><?= $m['refund2'] ?> / <?= $m['refund2'] * 100 ?>%</td>
-                                                        <td><?= rupiah($m['insurance2']) ?></td>
-                                                        <td><?= rupiah($m['surcharge2']) ?></td>
-                                                        <td><?= rupiah($m['hand_cgk2']) ?></td>
-                                                        <td><?= rupiah($m['hand_pickup2']) ?></td>
-                                                        <td><?= rupiah($m['hd_daerah2']) ?></td>
-                                                        <td><?= $m['pph2'] ?></td>
-                                                        <td><?= rupiah($m['sdm2']) ?></td>
-                                                        <td><?= rupiah($m['others2']) ?></td>
-                                                        <td>
-                                                            <!-- <button type="button" class="btn btn btn-sm btn-xs align-middle text-light mb-2" data-toggle="modal" data-target="#modal-acc-edit" style="background-color: #9c223b;">
-                                                                Edit
-                                                            </button> -->
-                                                        </td>
-                                                    </tr>
-                                                <?php } ?>
-
-
                                                 <?php
+                                                $flight_smu = 0;
+                                                $ra2 = 0;
+                                                $packing2 = 0;
+                                                $refund2 = 0;
+                                                $special_refund2 = 0;
+                                                $insurance2 = 0;
+                                                $surcharge2 = 0;
+                                                $handcgk2 = 0;
+                                                $handpickup2 = 0;
+                                                $pph2 = 0;
+                                                $sdm2 = 0;
+                                                $others2 = 0;
+
+                                                $total_cost_old = 0;
+                                                $hd_daerah2 = 0;
                                                 if ($modal) {
-                                                    $refund = $m['refund2'] / 100;
-                                                    $pph = $m['pph2'] / 100;
-                                                    $service =  $msr['service_name'];
-
-                                                    if ($service == 'Charter Service') {
-                                                        $total_cost_old = $m['flight_msu2'] + ($m['ra2']) + ($m['packing2']) +
-                                                            ($total_sales * $refund) + $m['insurance2'] + $m['surcharge2'] + ($m['hand_cgk2']) +
-                                                            ($m['hand_pickup2']) + ($m['hd_daerah2']) + ($total_sales * $pph) +
-                                                            $m['sdm2'] + $m['others2'];
-                                                    } else {
-                                                        // sdm
-                                                        $sdm_biasa  = $msr['berat_js'] * $m['sdm2'];
-                                                        $sdm_special  = $msr['berat_msr'] * $m['sdm2'];
-                                                        $sdm = $sdm_biasa + $sdm_special;
-
-                                                        // ra
-                                                        $ra_biasa  = $msr['berat_js'] * $m['ra2'];
-                                                        $ra_special  = $msr['berat_msr'] * $m['ra2'];
-                                                        $ra = $ra_biasa + $ra_special;
-                                                        // packing
-                                                        $packing_biasa  = $msr['berat_js'] * $m['packing2'];
-                                                        $packing_special  = $msr['berat_msr'] * $m['packing2'];
-                                                        $packing = $packing_biasa + $packing_special;
-
-                                                        // hand cgk
-                                                        $hand_cgk_biasa  = $msr['berat_js'] * $m['hand_cgk2'];
-                                                        $hand_cgk_special  = $msr['berat_msr'] * $m['hand_cgk2'];
-                                                        $hand_cgk = $hand_cgk_biasa + $hand_cgk_special;
-
-                                                        // hand pickup
-                                                        $hand_pickup_biasa  = $msr['berat_js'] * $m['hand_pickup2'];
-                                                        $hand_pickup_special  = $msr['berat_msr'] * $m['hand_pickup2'];
-                                                        $hand_pickup = $hand_pickup_biasa + $hand_pickup_special;
-
-                                                        $total_cost_old = $m['flight_msu2'] + $ra + $packing +
-                                                            ($total_sales * $refund) + $m['insurance2'] + $m['surcharge2'] + ($hand_cgk) +
-                                                            ($hand_pickup) + ($m['hd_daerah2']) + ($total_sales * $pph) +
-                                                            $sdm + $m['others2'];
-                                                    }
-                                                } else {
-                                                    $total_cost_old = 0;
-                                                }
-
-
+                                                    foreach ($modal as $m) {
+                                                        $vendoragent = $this->db->get_where('tbl_vendor', array('id_vendor' => $m['id_vendor']))->row_array();
                                                 ?>
+                                                        <tr>
+                                                            <td> <i><b>Variabel</b></i> </td>
+                                                            <td><?= rupiah($m['flight_msu2']) ?></td>
+                                                            <td><?= rupiah($m['ra2']) ?></td>
+                                                            <td><?= rupiah($m['packing2']) ?></td>
+                                                            <td><?= $m['refund2'] ?> / <?= $m['refund2'] / 100 ?></td>
+                                                            <td><?= rupiah($m['specialrefund2']) ?></td>
+                                                            <td><?= rupiah($m['insurance2']) ?></td>
+                                                            <td><?= rupiah($m['surcharge2']) ?></td>
+                                                            <td><?= rupiah($m['hand_cgk2']) ?></td>
+                                                            <td><?= rupiah($m['hand_pickup2']) ?></td>
+                                                            <td><?= rupiah($m['hd_daerah2']) ?></td>
+                                                            <td><?= $m['pph2'] ?></td>
+                                                            <td><?= rupiah($m['sdm2']) ?></td>
+                                                            <td><?= rupiah($m['others2']) ?></td>
+                                                            <td><?php if ($vendoragent != NULL) {
+                                                                    echo $vendoragent['nama_vendor'];
+                                                                }  ?></td>
+
+                                                            <td>
+
+                                                            </td>
+                                                        </tr>
+                                                        <?php
+                                                        if ($modal) {
+                                                            $refund = $m['refund2'] / 100;
+                                                            $pph = $m['pph2'] / 100;
+                                                            $service =  $msr['service_name'];
+
+                                                            $hd_daerah2 += $m['hd_daerah2'];
+                                                            $flight_smu += $m['flight_msu2'];
+                                                            $ra2 += $m['ra2'];
+                                                            $packing2 += $m['packing2'];
+                                                            $refund2 += $m['refund2'] / 100;
+                                                            $special_refund2 += $m['specialrefund2'];
+                                                            $insurance2 += $m['insurance2'];
+                                                            $surcharge2 += $m['surcharge2'];
+                                                            $handcgk2 += $m['hand_cgk2'];
+                                                            $handpickup2 += $m['hand_pickup2'];
+                                                            $pph2  += $m['pph2'];
+                                                            $sdm2 += $m['sdm2'];
+                                                            $others2 += $m['others2'];
+
+                                                            if ($service == 'Charter Service') {
+                                                                $total_cost_old += $m['flight_msu2'] + ($m['ra2']) + ($m['packing2']) +
+                                                                    ($total_sales * $refund) + ($m['specialrefund2'] * $msr['berat_js']) + ($m['specialrefund2'] * $msr['berat_msr'])  + $m['insurance2'] + $m['surcharge2'] + ($m['hand_cgk2']) +
+                                                                    ($m['hand_pickup2']) + ($m['hd_daerah2']) + ($total_sales * $pph) +
+                                                                    $m['sdm2'] + $m['others2'];
+                                                            } else {
+
+                                                                // sdm
+                                                                $sdm_biasa  = $msr['berat_js'] * $m['sdm2'];
+                                                                $sdm_special  = $msr['berat_msr'] * $m['sdm2'];
+                                                                $sdm = $sdm_biasa + $sdm_special;
+                                                                // ra
+                                                                $ra_biasa  = $msr['berat_js'] * $m['ra2'];
+                                                                $ra_special  = $msr['berat_msr'] * $m['ra2'];
+                                                                $ra = $ra_biasa + $ra_special;
+                                                                // packing
+                                                                $packing_biasa  = $msr['berat_js'] * $m['packing2'];
+                                                                $packing_special  = $msr['berat_msr'] * $m['packing2'];
+                                                                $packing = $packing_biasa + $packing_special;
+                                                                // hand cgk
+                                                                $hand_cgk_biasa  = $msr['berat_js'] * $m['hand_cgk2'];
+                                                                $hand_cgk_special  = $msr['berat_msr'] * $m['hand_cgk2'];
+                                                                $hand_cgk = $hand_cgk_biasa + $hand_cgk_special;
+                                                                // hand pickup
+                                                                $hand_pickup_biasa  = $msr['berat_js'] * $m['hand_pickup2'];
+                                                                $hand_pickup_special  = $msr['berat_msr'] * $m['hand_pickup2'];
+                                                                $hand_pickup = $hand_pickup_biasa + $hand_pickup_special;
+
+                                                                $total_cost_old += $m['flight_msu2'] + $ra + $packing +
+                                                                    ($total_sales * $refund) + ($m['specialrefund2'] * $msr['berat_js']) + ($m['specialrefund2'] * $msr['berat_msr']) + $m['insurance2'] + $m['surcharge2'] + $hand_cgk +
+                                                                    $hand_pickup + $m['hd_daerah2'] + ($total_sales * $pph) +
+                                                                    $sdm + $m['others2'];
+                                                            }
+                                                        } else {
+                                                            $total_cost_old = 0;
+                                                        }
+
+                                                        ?>
+                                                <?php }
+                                                } ?>
+
+
+
 
                                                 <?php if ($modal) {
                                                 ?>
@@ -620,77 +654,92 @@
                                                             <i><b> Accumulation</b></i>
                                                         </td>
                                                         <td>
-                                                            <?= rupiah($m['flight_msu2']) ?>
+                                                            <?= rupiah($flight_smu) ?>
                                                         </td>
                                                         <td>
                                                             <?php
                                                             if ($service == 'Charter Service') {
-                                                                echo  rupiah($m['ra2']);
+                                                                echo  rupiah($ra2);
                                                             } else {
-                                                                echo rupiah($m['ra2'] * $msr['berat_js']);
+                                                                // ra
+                                                                $ra_biasa  = $msr['berat_js'] * $ra2;
+                                                                $ra_special  = $msr['berat_msr'] * $ra2;
+                                                                $ra = $ra_biasa + $ra_special;
+                                                                echo rupiah($ra);
                                                             }
                                                             ?>
                                                         </td>
                                                         <td>
                                                             <?php
                                                             if ($service == 'Charter Service') {
-                                                                echo  rupiah($m['packing2']);
+                                                                echo  rupiah($packing2);
                                                             } else {
-                                                                echo rupiah($m['packing2'] * $msr['berat_js']);
+                                                                $packing_biasa  = $msr['berat_js'] * $packing2;
+                                                                $packing_special  = $msr['berat_msr'] * $packing2;
+                                                                $packing = $packing_biasa + $packing_special;
+                                                                echo rupiah($packing);
                                                             }
                                                             ?>
                                                         </td>
                                                         <td>
-                                                            <?= rupiah($total_sales * $refund) ?>
+                                                            <?= rupiah($total_sales * $refund2) ?>
                                                         </td>
                                                         <td>
-                                                            <?= rupiah($m['insurance2']) ?>
+                                                            <?= rupiah(($special_refund2 * $msr['berat_js']) + ($special_refund2 * $msr['berat_msr'])) ?>
                                                         </td>
                                                         <td>
-                                                            <?= rupiah($m['surcharge2']) ?>
+                                                            <?= rupiah($insurance2) ?>
+                                                        </td>
+                                                        <td>
+                                                            <?= rupiah($surcharge2) ?>
                                                         </td>
                                                         <td>
                                                             <?php
                                                             if ($service == 'Charter Service') {
-                                                                echo  rupiah($m['hand_cgk2']);
+                                                                echo  rupiah($handcgk2);
                                                             } else {
-                                                                echo rupiah($m['hand_cgk2'] * $msr['berat_js']);
+                                                                $hand_cgk_biasa  = $msr['berat_js'] * $handcgk2;
+                                                                $hand_cgk_special  = $msr['berat_msr'] * $handcgk2;
+                                                                $hand_cgk = $hand_cgk_biasa + $hand_cgk_special;
+                                                                echo rupiah($hand_cgk);
                                                             }
                                                             ?>
                                                         </td>
                                                         <td>
                                                             <?php
                                                             if ($service == 'Charter Service') {
-                                                                echo  rupiah($m['hand_pickup2']);
+                                                                echo  rupiah($handpickup2);
                                                             } else {
-                                                                echo rupiah($m['hand_pickup2'] * $msr['berat_js']);
+                                                                $hand_pickup_biasa  = $msr['berat_js'] * $handpickup2;
+                                                                $hand_pickup_special  = $msr['berat_msr'] * $handpickup2;
+                                                                $hand_pickup = $hand_pickup_biasa + $hand_pickup_special;
+                                                                echo rupiah($hand_pickup);
                                                             }
                                                             ?>
                                                         </td>
                                                         <td>
-                                                            <?= rupiah(($m['hd_daerah2'])) ?>
+                                                            <?= rupiah(($hd_daerah2)) ?>
                                                         </td>
                                                         <td>
-                                                            <?= rupiah($total_sales * ($m['pph2'] / 100)) ?>
+                                                            <?= rupiah($total_sales * ($pph2 / 100)) ?>
                                                         </td>
                                                         <td>
                                                             <?php
                                                             if ($service == 'Charter Service') {
-                                                                echo  rupiah($m['sdm2']);
+                                                                echo  rupiah($sdm2);
                                                             } else {
-                                                                $sdm_biasa  = $msr['berat_js'] * $m['sdm2'];
-                                                                $sdm_special  = $msr['berat_msr'] * $m['sdm2'];
+                                                                $sdm_biasa  = $msr['berat_js'] * $sdm2;
+                                                                $sdm_special  = $msr['berat_msr'] * $sdm2;
                                                                 $sdm = $sdm_biasa + $sdm_special;
                                                                 echo rupiah($sdm);
                                                             }
                                                             ?>
                                                         </td>
                                                         <td>
-                                                            <?= rupiah(($m['others2'])) ?>
+                                                            <?= rupiah(($others2)) ?>
                                                         </td>
                                                         <td></td>
                                                     </tr>
-
                                                 <?php   } else {
                                                 ?>
 
@@ -731,22 +780,68 @@
                                                         <td>
                                                             <?= rupiah(0) ?>
                                                         </td>
+                                                        <td>
+                                                            <?= rupiah(0) ?>
+                                                        </td>
                                                         <td></td>
                                                     </tr>
                                                 <?php  } ?>
 
-                                                <tr>
-                                                    <td>
-                                                        <i><b> Total Cost</b></i>
-                                                    </td>
-                                                    <td colspan="12"> <?= rupiah($total_cost_old) ?> </td>
+                                                <?php if ($modal) {
+                                                ?>
+                                                    <tr>
+                                                        <td>
+                                                            <i><b> Total Cost</b></i>
+                                                        </td>
+                                                        <td colspan="14"> <?= rupiah($total_cost_old) ?> </td>
 
-                                                </tr>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <i><b> Note PIC Jobsheet</b></i>
+                                                        </td>
+                                                        <td colspan="14"> <?= $m['note'] ?> </td>
+
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <i><b> Note Manager CS</b></i>
+                                                        </td>
+                                                        <td colspan="14"> <?= $m['note_mgr_cs'] ?> </td>
+
+                                                    </tr>
+                                                <?php } else { ?>
+                                                    <tr>
+                                                        <td>
+                                                            <i><b> Total Cost</b></i>
+                                                        </td>
+                                                        <td colspan="14"> </td>
+
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <i><b> Note PIC Jobsheet</b></i>
+                                                        </td>
+                                                        <td colspan="14"> </td>
+
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <i><b> Note Manager CS</b></i>
+                                                        </td>
+                                                        <td colspan="14"> </td>
+
+                                                    </tr>
+                                                <?php } ?>
 
                                             </tbody>
 
                                         </table>
+
                                     </div>
+
+
+
 
                                 </div>
                                 <!-- /.box-body -->
@@ -756,6 +851,365 @@
                     </div>
                 </section>
             </div>
+
+
+        </div>
+
+        <div class="card card-custom gutter-b example example-compact">
+            <div class="card-body">
+                <!-- Main content -->
+                <section class="content">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="box">
+                                <div class="box-header with-border text-danger text-center">
+                                    <h4 class="box-title with-border">
+                                        <i class="fas fa-dollar-sign text-danger"></i> Capital Cost New
+                                    </h4>
+
+                                </div>
+                                <!-- /.box-header -->
+                                <div class="box-body">
+
+
+
+
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered" style="width:100%">
+                                            <thead>
+                                                <tr>
+                                                    <th><b>Description</b> </th>
+                                                    <th>Flight SMU</th>
+                                                    <th>Sewa Gudang</th>
+                                                    <th>Wrapping</th>
+                                                    <th>Refund %</th>
+                                                    <th>Special Refund (Rp.)</th>
+                                                    <th>Insurance</th>
+                                                    <th>Surcharge</th>
+                                                    <th>Hand CGK</th>
+                                                    <th>Hand Pickup/Delivery</th>
+                                                    <th>HD Daerah</th>
+                                                    <th>PPH %</th>
+                                                    <th>SDM</th>
+                                                    <th>Others</th>
+                                                    <th>Vendor/Agent</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php
+                                                $flight_smu = 0;
+                                                $ra2 = 0;
+                                                $packing2 = 0;
+                                                $refund2 = 0;
+                                                $special_refund2 = 0;
+                                                $insurance2 = 0;
+                                                $surcharge2 = 0;
+                                                $handcgk2 = 0;
+                                                $handpickup2 = 0;
+                                                $pph2 = 0;
+                                                $sdm2 = 0;
+                                                $others2 = 0;
+
+                                                $total_cost = 0;
+                                                $hd_daerah2 = 0;
+                                                if ($modal) {
+                                                    foreach ($modal as $m) {
+                                                        $vendoragent = $this->db->get_where('tbl_vendor', array('id_vendor' => $m['id_vendor']))->row_array();
+                                                ?>
+                                                        <tr>
+                                                            <td> <i><b>Variabel</b></i> </td>
+                                                            <td><?= rupiah($m['flight_msu2']) ?></td>
+                                                            <td><?= rupiah($m['ra2']) ?></td>
+                                                            <td><?= rupiah($m['packing2']) ?></td>
+                                                            <td><?= $m['refund2'] ?> / <?= $m['refund2'] / 100 ?></td>
+                                                            <td><?= rupiah($m['specialrefund2']) ?></td>
+                                                            <td><?= rupiah($m['insurance2']) ?></td>
+                                                            <td><?= rupiah($m['surcharge2']) ?></td>
+                                                            <td><?= rupiah($m['hand_cgk2']) ?></td>
+                                                            <td><?= rupiah($m['hand_pickup2']) ?></td>
+                                                            <td><?= rupiah($m['hd_daerah2']) ?></td>
+                                                            <td><?= $m['pph2'] ?></td>
+                                                            <td><?= rupiah($m['sdm2']) ?></td>
+                                                            <td><?= rupiah($m['others2']) ?></td>
+                                                            <td><?php if ($vendoragent != NULL) {
+                                                                    echo $vendoragent['nama_vendor'];
+                                                                }  ?></td>
+
+                                                            <td>
+
+                                                            </td>
+                                                        </tr>
+                                                        <?php
+                                                        if ($modal) {
+                                                            $refund = $m['refund2'] / 100;
+                                                            $pph = $m['pph2'] / 100;
+                                                            $service =  $msr['service_name'];
+
+                                                            $hd_daerah2 += $m['hd_daerah2'];
+                                                            $flight_smu += $m['flight_msu2'];
+                                                            $ra2 += $m['ra2'];
+                                                            $packing2 += $m['packing2'];
+                                                            $refund2 += $m['refund2'] / 100;
+                                                            $special_refund2 += $m['specialrefund2'];
+                                                            $insurance2 += $m['insurance2'];
+                                                            $surcharge2 += $m['surcharge2'];
+                                                            $handcgk2 += $m['hand_cgk2'];
+                                                            $handpickup2 += $m['hand_pickup2'];
+                                                            $pph2  += $m['pph2'];
+                                                            $sdm2 += $m['sdm2'];
+                                                            $others2 += $m['others2'];
+
+                                                            if ($service == 'Charter Service') {
+                                                                $total_cost += $m['flight_msu2'] + ($m['ra2']) + ($m['packing2']) +
+                                                                    ($total_sales * $refund) + ($m['specialrefund2'] * $msr['berat_js']) + ($m['specialrefund2'] * $msr['berat_msr'])  + $m['insurance2'] + $m['surcharge2'] + ($m['hand_cgk2']) +
+                                                                    ($m['hand_pickup2']) + ($m['hd_daerah2']) + ($total_sales_new * $pph) +
+                                                                    $m['sdm2'] + $m['others2'];
+                                                            } else {
+
+                                                                // sdm
+                                                                $sdm_biasa  = $msr['berat_js'] * $m['sdm2'];
+                                                                $sdm_special  = $msr['berat_msr'] * $m['sdm2'];
+                                                                $sdm = $sdm_biasa + $sdm_special;
+                                                                // ra
+                                                                $ra_biasa  = $msr['berat_js'] * $m['ra2'];
+                                                                $ra_special  = $msr['berat_msr'] * $m['ra2'];
+                                                                $ra = $ra_biasa + $ra_special;
+                                                                // packing
+                                                                $packing_biasa  = $msr['berat_js'] * $m['packing2'];
+                                                                $packing_special  = $msr['berat_msr'] * $m['packing2'];
+                                                                $packing = $packing_biasa + $packing_special;
+                                                                // hand cgk
+                                                                $hand_cgk_biasa  = $msr['berat_js'] * $m['hand_cgk2'];
+                                                                $hand_cgk_special  = $msr['berat_msr'] * $m['hand_cgk2'];
+                                                                $hand_cgk = $hand_cgk_biasa + $hand_cgk_special;
+                                                                // hand pickup
+                                                                $hand_pickup_biasa  = $msr['berat_js'] * $m['hand_pickup2'];
+                                                                $hand_pickup_special  = $msr['berat_msr'] * $m['hand_pickup2'];
+                                                                $hand_pickup = $hand_pickup_biasa + $hand_pickup_special;
+
+                                                                $total_cost += $m['flight_msu2'] + $ra + $packing +
+                                                                    ($total_sales_new * $refund) + ($m['specialrefund2'] * $msr['berat_js']) + ($m['specialrefund2'] * $msr['berat_msr']) + $m['insurance2'] + $m['surcharge2'] + $hand_cgk +
+                                                                    $hand_pickup + $m['hd_daerah2'] + ($total_sales_new * $pph) +
+                                                                    $sdm + $m['others2'];
+                                                            }
+                                                        } else {
+                                                            $total_cost = 0;
+                                                        }
+
+                                                        ?>
+                                                <?php }
+                                                } ?>
+
+
+
+
+                                                <?php if ($modal) {
+                                                ?>
+
+                                                    <tr>
+                                                        <td>
+                                                            <i><b> Accumulation</b></i>
+                                                        </td>
+                                                        <td>
+                                                            <?= rupiah($flight_smu) ?>
+                                                        </td>
+                                                        <td>
+                                                            <?php
+                                                            if ($service == 'Charter Service') {
+                                                                echo  rupiah($ra2);
+                                                            } else {
+                                                                // ra
+                                                                $ra_biasa  = $msr['berat_js'] * $ra2;
+                                                                $ra_special  = $msr['berat_msr'] * $ra2;
+                                                                $ra = $ra_biasa + $ra_special;
+                                                                echo rupiah($ra);
+                                                            }
+                                                            ?>
+                                                        </td>
+                                                        <td>
+                                                            <?php
+                                                            if ($service == 'Charter Service') {
+                                                                echo  rupiah($packing2);
+                                                            } else {
+                                                                $packing_biasa  = $msr['berat_js'] * $packing2;
+                                                                $packing_special  = $msr['berat_msr'] * $packing2;
+                                                                $packing = $packing_biasa + $packing_special;
+                                                                echo rupiah($packing);
+                                                            }
+                                                            ?>
+                                                        </td>
+                                                        <td>
+                                                            <?= rupiah($total_sales_new * $refund2) ?>
+                                                        </td>
+                                                        <td>
+                                                            <?= rupiah(($special_refund2 * $msr['berat_js']) + ($special_refund2 * $msr['berat_msr'])) ?>
+                                                        </td>
+                                                        <td>
+                                                            <?= rupiah($insurance2) ?>
+                                                        </td>
+                                                        <td>
+                                                            <?= rupiah($surcharge2) ?>
+                                                        </td>
+                                                        <td>
+                                                            <?php
+                                                            if ($service == 'Charter Service') {
+                                                                echo  rupiah($handcgk2);
+                                                            } else {
+                                                                $hand_cgk_biasa  = $msr['berat_js'] * $handcgk2;
+                                                                $hand_cgk_special  = $msr['berat_msr'] * $handcgk2;
+                                                                $hand_cgk = $hand_cgk_biasa + $hand_cgk_special;
+                                                                echo rupiah($hand_cgk);
+                                                            }
+                                                            ?>
+                                                        </td>
+                                                        <td>
+                                                            <?php
+                                                            if ($service == 'Charter Service') {
+                                                                echo  rupiah($handpickup2);
+                                                            } else {
+                                                                $hand_pickup_biasa  = $msr['berat_js'] * $handpickup2;
+                                                                $hand_pickup_special  = $msr['berat_msr'] * $handpickup2;
+                                                                $hand_pickup = $hand_pickup_biasa + $hand_pickup_special;
+                                                                echo rupiah($hand_pickup);
+                                                            }
+                                                            ?>
+                                                        </td>
+                                                        <td>
+                                                            <?= rupiah(($hd_daerah2)) ?>
+                                                        </td>
+                                                        <td>
+                                                            <?= rupiah($total_sales_new * ($pph2 / 100)) ?>
+                                                        </td>
+                                                        <td>
+                                                            <?php
+                                                            if ($service == 'Charter Service') {
+                                                                echo  rupiah($sdm2);
+                                                            } else {
+                                                                $sdm_biasa  = $msr['berat_js'] * $sdm2;
+                                                                $sdm_special  = $msr['berat_msr'] * $sdm2;
+                                                                $sdm = $sdm_biasa + $sdm_special;
+                                                                echo rupiah($sdm);
+                                                            }
+                                                            ?>
+                                                        </td>
+                                                        <td>
+                                                            <?= rupiah(($others2)) ?>
+                                                        </td>
+                                                        <td></td>
+                                                    </tr>
+                                                <?php   } else {
+                                                ?>
+
+                                                    <tr>
+                                                        <td>
+                                                            <i><b> Accumulation</b></i>
+                                                        </td>
+                                                        <td>
+                                                            <?= rupiah(0) ?>
+                                                        </td>
+                                                        <td>
+                                                            <?= rupiah(0) ?>
+                                                        </td>
+                                                        <td>
+                                                            <?= rupiah(0) ?>
+                                                        </td>
+                                                        <td>
+                                                            <?= rupiah(0) ?>
+                                                        </td>
+                                                        <td>
+                                                            <?= rupiah(0) ?>
+                                                        </td>
+                                                        <td>
+                                                            <?= rupiah(0) ?>
+                                                        </td>
+                                                        <td>
+                                                            <?= rupiah(0) ?>
+                                                        </td>
+                                                        <td>
+                                                            <?= rupiah(0) ?>
+                                                        </td>
+                                                        <td>
+                                                            <?= rupiah(0) ?>
+                                                        </td>
+                                                        <td>
+                                                            <?= rupiah(0) ?>
+                                                        </td>
+                                                        <td>
+                                                            <?= rupiah(0) ?>
+                                                        </td>
+                                                        <td>
+                                                            <?= rupiah(0) ?>
+                                                        </td>
+                                                        <td></td>
+                                                    </tr>
+                                                <?php  } ?>
+
+                                                <?php if ($modal) {
+                                                ?>
+                                                    <tr>
+                                                        <td>
+                                                            <i><b> Total Cost</b></i>
+                                                        </td>
+                                                        <td colspan="14"> <?= rupiah($total_cost) ?> </td>
+
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <i><b> Note PIC Jobsheet</b></i>
+                                                        </td>
+                                                        <td colspan="14"> <?= $m['note'] ?> </td>
+
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <i><b> Note Manager CS</b></i>
+                                                        </td>
+                                                        <td colspan="14"> <?= $m['note_mgr_cs'] ?> </td>
+
+                                                    </tr>
+                                                <?php } else { ?>
+                                                    <tr>
+                                                        <td>
+                                                            <i><b> Total Cost</b></i>
+                                                        </td>
+                                                        <td colspan="14"> </td>
+
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <i><b> Note PIC Jobsheet</b></i>
+                                                        </td>
+                                                        <td colspan="14"> </td>
+
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <i><b> Note Manager CS</b></i>
+                                                        </td>
+                                                        <td colspan="14"> </td>
+
+                                                    </tr>
+                                                <?php } ?>
+
+                                            </tbody>
+
+                                        </table>
+
+                                    </div>
+
+
+
+                                </div>
+                                <!-- /.box-body -->
+                            </div>
+                            <!-- /.box -->
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+
         </div>
 
         <div class="row">
@@ -793,7 +1247,6 @@
                         </section>
                     </div>
                 </div>
-
             </div>
             <div class="col-md-6">
                 <div class="card card-custom gutter-b example example-compact">
@@ -807,7 +1260,7 @@
                                             <h1 class="title text-danger">New Profit</h1>
                                             <div class="row">
                                                 <div class="col-md-6">
-                                                    <h3><?php $profit_new = $total_sales_new - $total_cost_old;
+                                                    <h3><?php $profit_new = $total_sales_new - $total_cost;
                                                         echo rupiah($profit_new);
                                                         ?></h3>
                                                 </div>

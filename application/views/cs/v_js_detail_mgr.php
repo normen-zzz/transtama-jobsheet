@@ -856,7 +856,7 @@
                                     <label for="exampleInputEmail1">Vendor/Agent</label>
                                     <select name="vendor" class="form-control" style="width: 300px;">
                                         <option value="0">NO VENDOR</option>
-                                        <?php foreach ($vendors as $v) {
+                                        <?php foreach ($vendor_lengkap as $v) {
                                         ?>
                                             <option value="<?= $v['id_vendor'] ?>"><?= $v['nama_vendor'] ?></option>
                                         <?php  } ?>
@@ -987,7 +987,7 @@
                                         <label for="exampleInputEmail1">Vendor/Agent</label>
                                         <select name="vendor" class="form-control" style="width: 300px;">
                                             <option value="0">NO VENDOR</option>
-                                            <?php foreach ($vendors as $v) {
+                                            <?php foreach ($vendor_lengkap as $v) {
                                             ?>
                                                 <option <?php if ($v['id_vendor'] == $m['id_vendor']) {
                                                             echo 'selected';

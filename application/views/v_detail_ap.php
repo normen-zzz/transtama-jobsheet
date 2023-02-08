@@ -56,6 +56,10 @@
 </head>
 <!--end::Head-->
 <!--begin::Body-->
+<?php $id_user = $this->session->userdata('id_user');
+$foto = $this->db->get_where('tb_user', ['id_user' => $id_user])->row_array();
+$user = $this->db->get_where('tb_user', array('id_user' => $info['id_user']))->row_array();
+?>
 
 <body id="kt_body" class="header-fixed header-mobile-fixed subheader-enabled subheader-fixed aside-enabled aside-fixed aside-minimize-hoverable page-loading">
 	<!--begin::Main-->
@@ -77,7 +81,7 @@
 							<div class="card-header">
 								<h2 class="card-title"><?= $title ?></h2>
 								<div class="card-toolbar">
-										<?php if ($info['status'] == 1) {
+									<?php if ($info['status'] == 1) {
 									?>
 										<a onclick="return confirm('Are You Sure ?')" href="<?= base_url('approval/ap/' . $info['no_pengeluaran']) ?>" class="btn mr-2 text-light" style="background-color: #9c223b;">
 											Approve
@@ -86,6 +90,9 @@
 										echo '<h2 class="card-title">Approved</h2>';
 									} ?>
 								</div>
+								<p>No Pengajuan : <?= $info['no_pengeluaran'] ?></p>
+
+								<p>Yang mengajukan : <?= $user['nama_user'] ?></p>
 							</div>
 							<!-- /.card-header -->
 							<div class="card-body" style="overflow: auto;">
@@ -186,7 +193,7 @@
 																			<a target="blank" href="https://tesla-smartwork.transtama.com/uploads/ap/<?= $c['attachment'] ?>" class=" btn btn-sm text-light mt-1" style="background-color: #9c223b;">Attacment</a>
 																		<?php	} else {
 																		?>
-																		<a target="blank" href="https://tesla-smartwork.transtama.com/uploads/ap/<?= $c['attachment'] ?>" class=" btn btn-sm text-light mt-1" style="background-color: #9c223b;">Attacment</a>
+																			<a target="blank" href="https://tesla-smartwork.transtama.com/uploads/ap/<?= $c['attachment'] ?>" class=" btn btn-sm text-light mt-1" style="background-color: #9c223b;">Attacment</a>
 
 																		<?php	} ?>
 																	</td>
@@ -243,9 +250,7 @@
 		</div>
 		<!--end::Header-->
 		<!--begin::Content-->
-		<?php $id_user = $this->session->userdata('id_user');
-		$foto = $this->db->get_where('tb_user', ['id_user' => $id_user])->row_array();
-		?>
+
 		<div class="offcanvas-content pr-5 mr-n5">
 			<!--begin::Header-->
 			<div class="d-flex align-items-center mt-5">

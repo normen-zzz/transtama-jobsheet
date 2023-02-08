@@ -51,6 +51,7 @@
                                             <thead>
                                                 <tr>
                                                     <th>Vendor/Agent</th>
+                                                    <th>No PO</th>
                                                     <!-- <th>No Invoice</th> -->
                                                     <th>Date Created</th>
                                                     <th>Due Date</th>
@@ -86,6 +87,7 @@
                                                             <td><?= $j['vendor'] ?> <br>
                                                                 <a href="<?= base_url('finance/apExternal/print/' . $j['no_po'] . '/' . $j['id_vendor'] . '/' . $j['unique_invoice']) ?>"><?= $j['no_invoice'] ?></a>
                                                             </td>
+                                                            <td><?= $j['no_po'] ?></td>
                                                             <td><?= bulan_indo($j['date']) ?></td>
                                                             <td><?php if ($j['status'] == 4) {
                                                                     echo '<span class="label label-success label-inline font-weight-lighter">Paid</span>';
@@ -103,7 +105,7 @@
                                                             <td><?= rupiah($j['total_ap']) ?></td>
                                                             <td><?= rupiah($j['ppn']) ?></td>
                                                             <td><?= rupiah($j['pph']) ?></td>
-                                                            <td><?= rupiah(($j['total_ap']) + $j['pph'] + $j['ppn']) ?></td>
+                                                            <td><?= rupiah(($j['total_ap']) - $j['pph'] + $j['ppn']) ?></td>
 
                                                             <td><?= statusAp($j['status'], 1) ?></td>
                                                             <td>
