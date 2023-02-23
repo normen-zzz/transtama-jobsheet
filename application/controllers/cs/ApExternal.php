@@ -329,6 +329,23 @@ class ApExternal extends CI_Controller
                     'status' => 1
                 );
                 $this->db->update('tbl_invoice_ap', $datastatusap2, ['shipment_id' => $shipment_id[$i], 'id_vendor' => $this->input->post('id_vendor')]);
+
+                $no_po = $no_pengeluaran;
+                $nama = $this->session->userdata('nama_user');
+                $purpose = $this->input->post('purpose');
+                $date = date('d F Y');
+                $vendor_encrypt = encrypt_url($this->input->post('id_vendor'));
+                $link = "https://jobsheet.transtama.com/Apexternal/cs/$random_string/$vendor_encrypt";
+                $pesan = "Hallo, ada pengajuan Ap External No. *$no_po* Oleh *$nama*  Dengan Tujuan *$purpose* Tanggal *$date*. Silahkan Approve Melalu Link Berikut : $link . Terima Kasih";
+
+                //NO MBA LINA
+                $this->wa->pickup('+6281385687290', "$pesan");
+
+                //NO BU LILI
+                $this->wa->pickup('+6281293753199', "$pesan");
+
+                //NO NORMAN
+                $this->wa->pickup('+6285697780467', "$pesan");
             } else {
             }
         }
@@ -427,6 +444,8 @@ class ApExternal extends CI_Controller
     }
     public function approveAtasan($uniq)
     {
+        $ap = $this->db->get_where('tbl_invoice_ap_final', array('unique_invoice' => $uniq))->row_array();
+        $user = $this->db->get_where('tb_user', array('id_user' => $ap['id_user']))->row_array();
         $where = array('unique_invoice' => $uniq);
         $data = array(
             'no_pengeluaran' => $uniq,
@@ -438,6 +457,19 @@ class ApExternal extends CI_Controller
             $this->db->update('tbl_invoice_ap_final', ['status' => 1], $where);
             $this->session->set_flashdata('messageAlert', $this->messageAlert('success', 'Success Approve'));
             redirect('cs/apExternal/created');
+            $no_po = $ap['no_po'];
+            $nama = $user['nama_user'];
+            $purpose = $ap['purpose'];
+            $date = date('d F Y', strtotime($ap['created_at']));
+            $vendor_encrypt = encrypt_url($ap['id_vendor']);
+            $link = "https://jobsheet.transtama.com/Apexternal/sm/$uniq/$vendor_encrypt";
+            $pesan = "Hallo, ada pengajuan Ap External No. *$no_po* Oleh *$nama*  Dengan Tujuan *$purpose* Tanggal *$date*. Silahkan Approve Melalu Link Berikut : $link . Terima Kasih";
+
+            //NO PAK SAM
+            $this->wa->pickup('+6281808008082', "$pesan");
+
+            //NO Norman
+            $this->wa->pickup('+6285697780467', "$pesan");
         } else {
             $this->session->set_flashdata('messageAlert', $this->messageAlert('error', 'Failed'));
             redirect('cs/apExternal/created');

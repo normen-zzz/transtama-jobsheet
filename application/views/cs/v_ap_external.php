@@ -30,7 +30,7 @@
                                             <thead>
                                                 <tr>
                                                     <th>Nama Vendor</th>
-                                                   <!-- <th>PIC</th> -->
+                                                    <!-- <th>PIC</th> -->
                                                     <!-- <th>Alamat</th> -->
                                                     <!-- <th>No. Rekening</th> -->
                                                     <th>Type</th>
@@ -45,7 +45,7 @@
                                                 ?>
                                                     <tr>
                                                         <td><?= $j['nama_vendor'] ?></td>
-                                                        
+
                                                         <!-- <td><?= $j['alamat'] ?></td> -->
                                                         <!-- <td><?= $j['no_rekening'] ?></td> -->
 
