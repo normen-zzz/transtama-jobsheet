@@ -79,7 +79,7 @@ class ApModel extends CI_Model
     public function getApByNo($no_ap)
     {
 
-		$this->db->select('a.*, b.nama_kategori, b.keterangan,c.nama_kategori_pengeluaran,d.id_role');
+        $this->db->select('a.*, b.nama_kategori, b.keterangan,c.nama_kategori_pengeluaran,d.id_role');
         $this->db->from('tbl_pengeluaran a');
         $this->db->join('tbl_kat_ap b', 'a.id_kat_ap=b.id_kategori_ap');
         $this->db->join('tbl_list_pengeluaran c', 'a.id_kategori_pengeluaran=c.id_kategori');
@@ -99,8 +99,8 @@ class ApModel extends CI_Model
         $this->db->order_by('a.id_pengeluaran', 'DESC');
         return $this->db->get();
     }
-	
-	public function getModalJoinShp($bulan, $tahun)
+
+    public function getModalJoinShp($bulan, $tahun)
     {
         if ($bulan == NULL && $tahun == NULL) {
             $this->db->select('a.*, b.*,b.shipment_id AS kode,e.*');
@@ -374,8 +374,8 @@ class ApModel extends CI_Model
             $this->db->join('tbl_kat_ap b', 'a.id_kat_ap=b.id_kategori_ap');
             $this->db->join('tb_user c', 'a.id_user=c.id_user');
             $this->db->where('a.status', 4);
-            $this->db->where('a.date >=', $awal);
-            $this->db->where('a.date <=',  $akhir);
+            $this->db->where('a.payment_date >=', $awal);
+            $this->db->where('a.payment_date <=',  $akhir);
             $this->db->group_by('a.no_pengeluaran');
             $this->db->order_by('a.id_pengeluaran', 'DESC');
             return $this->db->get();

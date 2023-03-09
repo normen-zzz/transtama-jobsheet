@@ -510,9 +510,9 @@ class Jobsheet extends CI_Controller
 
             $link = "https://jobsheet.transtama.com/approval/detailRevisiGm/$id";
             $pesan = "Hallo, Mohon Untuk dicek dan di Approve Pengajuan Revisi SO Melalu Link Berikut : $link";
-            // no mba Vema dan Krisna
-            // $this->wa->pickup('+628111910711', "$pesan");
-            // $this->wa->pickup('+6285157906966', "$pesan");
+            //no mba Vema dan Norman
+            $this->wa->pickup('+628111910711', "$pesan");
+            $this->wa->pickup('+6285697780467', "$pesan");
 
 
             $this->session->set_flashdata('messageAlert', $this->messageAlert('success', 'Success'));

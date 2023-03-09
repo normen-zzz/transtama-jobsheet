@@ -79,6 +79,7 @@ class Report extends CI_Controller
             $this->breadcrumb->add_item($breadcrumb_items);
             $data['breadcrumb_bootstrap_style'] = $this->breadcrumb->generate();
             $data['ap'] = $this->ap->getApPaid()->result_array();
+            $data['proforma'] = $this->cs->getApVendor()->result_array();
             $this->backend->display('finance/v_report_ap_internal', $data);
         } else {
             $breadcrumb_items = [];
@@ -88,9 +89,10 @@ class Report extends CI_Controller
             $this->breadcrumb->add_item($breadcrumb_items);
             $data['breadcrumb_bootstrap_style'] = $this->breadcrumb->generate();
             $data['ap'] = $this->ap->getApPaid($awal, $akhir)->result_array();
-            $awal = bulan_indo($awal);
-            $akhir = bulan_indo($akhir);
-            $data['title'] = "Repert Ap $awal - $akhir";
+            // $awal = bulan_indo($awal);
+            // $akhir = bulan_indo($akhir);
+            $data['title'] = "Report Ap $awal - $akhir";
+            $data['proforma'] = $this->cs->getApVendorByDate($awal, $akhir)->result_array();
             $this->backend->display('finance/v_report_ap_internal_filter', $data);
         }
     }
@@ -1763,6 +1765,7 @@ class Report extends CI_Controller
     public function ExportApExcell($awal = NULL, $akhir = NULL)
     {
         $ap = $this->ap->getApPaid($awal, $akhir)->result_array();
+        $proforma = $this->cs->getApVendorByDate($awal, $akhir)->result_array();
         // var_dump($ap);
         // die;
         $title = "REPORT AP $awal - $akhir";
@@ -1775,8 +1778,8 @@ class Report extends CI_Controller
         $sheet->setCellValue('C2', 'REQUEST BY');
         $sheet->setCellValue('D2', 'DATE');
         $sheet->setCellValue('E2', 'AMOUNT PROPOSED');
-        $sheet->setCellValue('F2', 'AMOUNT APPROVED');
-        $sheet->setCellValue('G2', 'ATTACHMENT');
+        $sheet->setCellValue('H2', 'AMOUNT APPROVED');
+        $sheet->setCellValue('I2', 'ATTACHMENT');
         $link_style_array = [
             'font'  => [
                 'color' => ['rgb' => '0000FF'],
@@ -1786,6 +1789,10 @@ class Report extends CI_Controller
 
         $no = 1;
         $x = 3;
+        $total_invoice_all = 0;
+        $total_ppn = 0;
+        $total_pph = 0;
+        $total_ap = 0;
         $total_amount = 0;
         foreach ($ap as $row) {
             $url = "<a href='https://jobsheet.transtama.com/uploads/ap_proof/$row[payment_proof]'>View Proof Of Payment</a>";
@@ -1800,34 +1807,95 @@ class Report extends CI_Controller
                 ->setAutoSize(true);
             if ($row['amount_proposed'] != 0) {
                 $sheet->getStyle("E" . $x)->getNumberFormat()->setFormatCode("(\"Rp.\"* #,##0);(\"Rp.\"* \(#,##0\);(\"$\"* \"-\"??);(@_)");
-                $sheet->setCellValue('E' . $x, $row['amount_proposed'])->getColumnDimension('E')
+                $sheet->setCellValue('E' . $x, $row['total'])->getColumnDimension('E')
                     ->setAutoSize(true);
             } else {
-                $sheet->setCellValue('E' . $x, $row['amount_proposed'])->getColumnDimension('E')
+                $sheet->setCellValue('E' . $x, $row['total'])->getColumnDimension('E')
                     ->setAutoSize(true);
             }
             if ($row['amount_approved'] != 0) {
-                $sheet->getStyle("F" . $x)->getNumberFormat()->setFormatCode("(\"Rp.\"* #,##0);(\"Rp.\"* \(#,##0\);(\"$\"* \"-\"??);(@_)");
-                $sheet->setCellValue('F' . $x, $row['amount_approved'])->getColumnDimension('F')
+                $sheet->getStyle("H" . $x)->getNumberFormat()->setFormatCode("(\"Rp.\"* #,##0);(\"Rp.\"* \(#,##0\);(\"$\"* \"-\"??);(@_)");
+                $sheet->setCellValue('H' . $x, $row['total_approved'])->getColumnDimension('F')
                     ->setAutoSize(true);
             } else {
-                $sheet->setCellValue('F' . $x, $row['amount_approved'])->getColumnDimension('F')
+                $sheet->setCellValue('H' . $x, $row['total_approved'])->getColumnDimension('F')
                     ->setAutoSize(true);
             }
-            $sheet->setCellValue('G' . $x,  '=HYPERLINK("https://jobsheet.transtama.com/uploads/ap_proof/' . $row['payment_proof'] . '","' . 'View Proof Payment' . '")')->getColumnDimension('G')
+            $sheet->setCellValue('I' . $x,  '=HYPERLINK("https://jobsheet.transtama.com/uploads/ap_proof/' . $row['payment_proof'] . '","' . 'View Proof Payment' . '")')->getColumnDimension('G')
                 ->setAutoSize(true);
-            $sheet->getStyle('G' . $x)->applyFromArray($link_style_array);
+            $sheet->getStyle('I' . $x)->applyFromArray($link_style_array);
             $x++;
             $no++;
-            $total_amount = $total_amount + $row['amount_approved'];
+            $total_amount = $total_amount + $row['total_approved'];
         }
-        // ppn
-        $total = $x + 1;
 
-        $rowspan = 'A' . $total . ':E' . $total;
+        $sheet->setCellValue('A' . ($x + 2), $title)->mergeCells('A1:F1')->getStyle('A1')->getAlignment()->setHorizontal('center');
+        $sheet->setCellValue('A' . ($x + 2), 'NO');
+        $sheet->setCellValue('B' . ($x + 2), 'VENDOR/AGENT');
+        $sheet->setCellValue('C' . ($x + 2), 'NO. INVOICE');
+        $sheet->setCellValue('D' . ($x + 2), 'DATE');
+        $sheet->setCellValue('E' . ($x + 2), 'INVOICE');
+        $sheet->setCellValue('F' . ($x + 2), 'PPN');
+        $sheet->setCellValue('G' . ($x + 2), 'PPH');
+        $sheet->setCellValue('H' . ($x + 2), 'TOTAL INVOICE');
+
+        foreach ($proforma as $row) {
+            $total_invoice = ($row['total_ap']) + $row['pph'] + $row['ppn'];
+            $sheet->setCellValue('A' . ($x + 2 + 1), $no)->getColumnDimension('A')
+                ->setAutoSize(true);
+            $sheet->setCellValue('B' . ($x + 2 + 1), $row['vendor'])->getColumnDimension('B')
+                ->setAutoSize(true);
+            $sheet->setCellValue('C' . ($x + 2 + 1), $row['no_invoice'])->getColumnDimension('C')
+                ->setAutoSize(true);
+            $sheet->setCellValue('D' . ($x + 2 + 1), bulan_indo($row['date']))->getColumnDimension('D')
+                ->setAutoSize(true);
+            if ($row['total_ap'] != 0) {
+                $sheet->getStyle("E" . ($x + 2 + 1))->getNumberFormat()->setFormatCode("(\"Rp.\"* #,##0);(\"Rp.\"* \(#,##0\);(\"$\"* \"-\"??);(@_)");
+                $sheet->setCellValue('E' . ($x + 2 + 1), $row['total_ap'])->getColumnDimension('E')
+                    ->setAutoSize(true);
+            } else {
+                $sheet->setCellValue('E' . ($x + 2 + 1), $row['total_ap'])->getColumnDimension('E')
+                    ->setAutoSize(true);
+            }
+            if ($row['ppn'] != 0) {
+                $sheet->getStyle("F" . ($x + 2 + 1))->getNumberFormat()->setFormatCode("(\"Rp.\"* #,##0);(\"Rp.\"* \(#,##0\);(\"$\"* \"-\"??);(@_)");
+                $sheet->setCellValue('F' . ($x + 2 + 1), $row['ppn'])->getColumnDimension('F')
+                    ->setAutoSize(true);
+            } else {
+                $sheet->setCellValue('F' . ($x + 2 + 1), $row['ppn'])->getColumnDimension('F')
+                    ->setAutoSize(true);
+            }
+            if ($row['pph'] != 0) {
+                $sheet->getStyle("G" . ($x + 2 + 1))->getNumberFormat()->setFormatCode("(\"Rp.\"* #,##0);(\"Rp.\"* \(#,##0\);(\"$\"* \"-\"??);(@_)");
+                $sheet->setCellValue('G' . ($x + 2 + 1), $row['pph'])->getColumnDimension('G')
+                    ->setAutoSize(true);
+            } else {
+                $sheet->setCellValue('G' . ($x + 2 + 1), $row['pph'])->getColumnDimension('G')
+                    ->setAutoSize(true);
+            }
+            if ($total_invoice != 0) {
+                $sheet->getStyle("H" . ($x + 2 + 1))->getNumberFormat()->setFormatCode("(\"Rp.\"* #,##0);(\"Rp.\"* \(#,##0\);(\"$\"* \"-\"??);(@_)");
+                $sheet->setCellValue('H' . ($x + 2 + 1), $total_invoice)->getColumnDimension('H')
+                    ->setAutoSize(true);
+            } else {
+                $sheet->setCellValue('H' . ($x + 2 + 1), $total_invoice)->getColumnDimension('H')
+                    ->setAutoSize(true);
+            }
+            $x++;
+            $no++;
+            $total_invoice_all = $total_invoice_all + $row['total_ap'];
+            $total_ppn = $total_ppn + $row['ppn'];
+            $total_pph = $total_pph + $row['pph'];
+            $total_ap = $total_ap + $total_invoice;
+        }
+
+        // ppn
+        $total = $x + 2 + 1 + 1;
+
+        $rowspan = 'A' . $total . ':G' . $total;
         $sheet->setCellValue('A' . $total, 'TOTAL')->mergeCells($rowspan)->getStyle('A' . $total)->getAlignment()->setHorizontal('right');
 
-        $sheet->setCellValue('F' . $total, rupiah($total_amount));
+        $sheet->setCellValue('H' . $total, rupiah($total_amount + $total_invoice_all + $total_ppn + $total_pph));
 
 
         $filename = "Report AP $awal - $akhir";

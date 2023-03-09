@@ -30,6 +30,7 @@
                                             <thead>
                                                 <tr>
                                                     <th>Vendor/Agent</th>
+                                                    <th>No PO</th>
                                                     <!-- <th>No Invoice</th> -->
                                                     <th>Date Created</th>
                                                     <!-- <th>Due Date</th> -->
@@ -63,6 +64,7 @@
                                                         <td><?= $j['vendor'] ?> <br>
                                                             <a href="<?= base_url('cs/apExternal/print/' . $j['no_po'] . '/' . $j['id_vendor'] . '/' . $j['unique_invoice']) ?>"><?= $j['no_invoice'] ?></a>
                                                         </td>
+                                                        <td><?= $j['no_po'] ?></td>
                                                         <td><?= bulan_indo($j['date']) ?></td>
 
                                                         <td><?= rupiah($j['total_ap']) ?></td>

@@ -331,7 +331,8 @@ class SalesOrder extends CI_Controller
         $data = array(
             'status_so' => 2,
             'jobsheet_id' => $kode,
-            'deadline_manager_cs' => $deadline_mgr_js
+            'deadline_manager_cs' => $deadline_mgr_js,
+            'create_js_at' => date('Y-m-d H:i:s'),
         );
         $insert = $this->db->update('tbl_shp_order', $data, ['id' => $id]);
 

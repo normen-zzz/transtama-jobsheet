@@ -733,7 +733,7 @@ class CsModel extends M_Datatables
 			$this->db->from('tbl_invoice_ap_final a');
 			$this->db->join('tbl_shp_order b', 'a.shipment_id=b.id');
 			$this->db->group_by('a.no_invoice');
-			$this->db->order_by('a.due_date', 'ASC');
+			$this->db->order_by('a.created_at', 'DESC');
 			$query = $this->db->get();
 			return $query;
 		} else {

@@ -329,26 +329,25 @@ class ApExternal extends CI_Controller
                     'status' => 1
                 );
                 $this->db->update('tbl_invoice_ap', $datastatusap2, ['shipment_id' => $shipment_id[$i], 'id_vendor' => $this->input->post('id_vendor')]);
-
-                $no_po = $no_pengeluaran;
-                $nama = $this->session->userdata('nama_user');
-                $purpose = $this->input->post('purpose');
-                $date = date('d F Y');
-                $vendor_encrypt = encrypt_url($this->input->post('id_vendor'));
-                $link = "https://jobsheet.transtama.com/Apexternal/cs/$random_string/$vendor_encrypt";
-                $pesan = "Hallo, ada pengajuan Ap External No. *$no_po* Oleh *$nama*  Dengan Tujuan *$purpose* Tanggal *$date*. Silahkan Approve Melalu Link Berikut : $link . Terima Kasih";
-
-                //NO MBA LINA
-                $this->wa->pickup('+6281385687290', "$pesan");
-
-                //NO BU LILI
-                $this->wa->pickup('+6281293753199', "$pesan");
-
-                //NO NORMAN
-                $this->wa->pickup('+6285697780467', "$pesan");
             } else {
             }
         }
+        $no_po = $no_pengeluaran;
+        $nama = $this->session->userdata('nama_user');
+        $purpose = $this->input->post('purpose');
+        $date = date('d F Y');
+        $vendor_encrypt = encrypt_url($this->input->post('id_vendor'));
+        $link = "https://jobsheet.transtama.com/Apexternal/cs/$random_string/$vendor_encrypt";
+        $pesan = "Hallo, ada pengajuan Ap External No. *$no_po* Oleh *$nama*  Dengan Tujuan *$purpose* Tanggal *$date*. Silahkan Approve Melalu Link Berikut : $link . Terima Kasih";
+
+        //NO MBA LINA
+        $this->wa->pickup('+6281385687290', "$pesan");
+
+        //NO BU LILI
+        $this->wa->pickup('+6281293753199', "$pesan");
+
+        //NO NORMAN
+        $this->wa->pickup('+6285697780467', "$pesan");
 
         $this->session->set_flashdata('messageAlert', $this->messageAlert('success', 'Success Create AP'));
         redirect('cs/apExternal/created');
