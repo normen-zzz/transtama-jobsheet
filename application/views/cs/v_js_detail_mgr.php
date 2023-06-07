@@ -105,7 +105,13 @@
                                                                 <input type="text" disabled class="form-control" name="collie[]" value="<?= $do['koli'] ?>">
                                                             </td>
                                                             <td>
-                                                                <input type="text" class="form-control" name="weight[]" value="<?= $do['berat'] ?>">
+                                                                <?php if ($invoice != NULL) { 
+                                                                    if ($invoice['status'] == 1 || $invoice['status'] == 2) {
+                                                                    ?>
+                                                                <input type="text" class="form-control" readonly name="weight[]" value="<?= $do['berat'] ?>">
+                                                                <?php } else{ ?>
+                                                                    <input type="text" class="form-control" name="weight[]" value="<?= $do['berat'] ?>">
+                                                                    <?php }} ?>
                                                             </td>
                                                         </tr>
                                                     <?php $total_berat += $do['berat'];
@@ -139,16 +145,38 @@
 
                                                         <?php    } else {
                                                         ?>
-                                                            <td> <input type="text" class="form-control" placeholder="isi no flight" name="berat_js" value="<?= $msr['berat_js'] ?>"> </td>
-
+                                                        <?php if ($invoice != NULL) { 
+                                                                    if ($invoice['status'] == 1 || $invoice['status'] == 2) {
+                                                                    ?>
+                                                            <td> <input type="text" class="form-control" readonly placeholder="isi no flight" name="berat_js" value="<?= $msr['berat_js'] ?>"> </td>
+                                                            <?php } else { ?>
+                                                                <td> <input type="text" class="form-control" placeholder="isi no flight" name="berat_js" value="<?= $msr['berat_js'] ?>"> </td>
+                                                                <?php }} ?>
+                                                                
                                                         <?php } ?>
-                                                        <td> <input type="text" class="form-control" placeholder="isi no flight" name="berat_msr" value="<?= $msr['berat_msr'] ?>"> </td>
+                                                        <?php if ($invoice != NULL) { 
+                                                                    if ($invoice['status'] == 1 || $invoice['status'] == 2) {
+                                                                    ?>
+                                                        <td> <input type="text" class="form-control" readonly placeholder="isi no flight" name="berat_msr" value="<?= $msr['berat_msr'] ?>"> </td>
+                                                        <?php } else { ?>
+                                                            <td> <input type="text" class="form-control" placeholder="isi no flight" name="berat_msr" value="<?= $msr['berat_msr'] ?>"> </td>
+                                                            <?php }} ?>
                                                     </tr>
 
                                                 </tbody>
 
                                             </table>
+                                            <?php if ($invoice == NULL) { ?>
+                                               
                                             <button class="btn btn-success">Submit</button>
+                                            <?php } else { 
+                                                 if ($invoice['status'] == 1 || $invoice['status'] == 2) {
+                                                ?>
+                                                 
+                                                 <?php } else { ?>
+                                                    <button class="btn btn-success">Submit</button>
+                                                <?php  } }?>
+                                            
                                         </form>
                                     </div>
 

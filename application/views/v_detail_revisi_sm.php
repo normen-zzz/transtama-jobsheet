@@ -155,9 +155,9 @@
 
 
 
-
+<td><?= $msr['berat_js'] ?></td>
 																<td><?= $msr['berat_msr'] ?></td>
-																<td><?= $msr['berat_js'] ?></td>
+																
 															</tr>
 
 														</tbody>
@@ -210,6 +210,7 @@
 																<th>Insurance</th>
 																<th>Disc.</th>
 																<th>Cn</th>
+																<th>Special Cn</th>
 																<th>Action</th>
 
 															</tr>
@@ -269,6 +270,9 @@
 																<td>
 																	<?= $so_lama['cn_lama'] ?> / <?= $so_lama['cn_lama'] * 100 ?> %
 																</td>
+																<td>
+																	<?= rupiah($so_lama['special_cn_lama']) ?>
+																</td>
 																<td></td>
 															</tr>
 															<tr>
@@ -324,6 +328,7 @@
 																<th>Insurance</th>
 																<th>Disc.</th>
 																<th>Cn</th>
+																<th>Special Cn</th>
 																<th>Action</th>
 
 															</tr>
@@ -383,6 +388,9 @@
 																<td>
 																	<?= $msr['cn'] ?> / <?= $msr['cn'] * 100 ?> %
 																</td>
+																<td>
+																	<?= rupiah($msr['special_cn']) ?>
+																</td>
 																<td></td>
 															</tr>
 															<tr>
@@ -438,6 +446,7 @@
 															<th>Insurance</th>
 															<th>Disc.</th>
 															<th>Cn</th>
+															<th>Special Cn</th>
 															<th>Action</th>
 
 														</tr>
@@ -520,6 +529,9 @@
 															</td>
 															<td>
 																<?= $request['cn_baru'] ?> / <?= $request['cn_baru'] * 100 ?> %
+															</td>
+															<td>
+																<?= rupiah($request['special_cn_baru']) ?>
 															</td>
 															<td></td>
 														</tr>

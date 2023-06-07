@@ -242,11 +242,12 @@ class Invoice extends CI_Controller
     }
      public function approve($no_invoice, $id_invoice, $total_amount)
     {
-        $update = $this->db->update('tbl_invoice',  ['status' => 1, 'total_invoice' => decrypt_url($total_amount)], ['no_invoice' => $no_invoice]);
+        // $update = $this->db->update('tbl_invoice',  ['status' => 1, 'total_invoice' => decrypt_url($total_amount)], ['no_invoice' => $no_invoice],['invoice_at' => date('Y-m-d H:i:s')] );
+        $update = $this->db->update('tbl_invoice',  ['status' => 1, 'total_invoice' => decrypt_url($total_amount)], ['no_invoice' => $no_invoice] );
         if ($update) {
             $data = array(
                 'no_invoice' => $no_invoice,
-                'id_user' => $this->session->userdata('id_user')
+                'id_user' => $this->session->userdata('id_user'),
             );
             $this->db->insert('tbl_approve_invoice', $data);
             $this->session->set_flashdata('messageAlert', $this->messageAlert('success', 'Success'));

@@ -159,6 +159,7 @@ class Jobsheet extends CI_Controller
         $data['agents'] = $this->db->order_by('id_vendor', 'DESC')->get_where('tbl_vendor', ['type' => 1])->result_array();
         $data['vendor_selected'] = $this->cs->getVendorByShipment($id)->result_array();
         $data['vendor_lengkap'] = $this->db->order_by('id_vendor', 'DESC')->get_where('tbl_vendor')->result_array();
+        $data['invoice'] = $this->db->get_where('tbl_invoice',array('shipment_id' => $id))->row_array();
         $this->backend->display('cs/v_js_detail_mgr', $data);
     }
     public function cekResi()
@@ -589,6 +590,7 @@ class Jobsheet extends CI_Controller
                 'insurance' => $get_new_so['insurance_baru'],
                 'disc' => $get_new_so['disc_baru'],
                 'cn' => $get_new_so['cn_baru'],
+                'specialcn' => $get_new_so['special_cn_baru'],
             );
             $this->db->update('tbl_shp_order', $data, ['id' => $id]);
             $data = array(
@@ -600,6 +602,7 @@ class Jobsheet extends CI_Controller
                 'insurance_lama' => $get_old_so['insurance'],
                 'disc_lama' => $get_old_so['disc'],
                 'cn_lama' => $get_old_so['cn'],
+                'special_cn_lama' => $get_old_so['specialcn'],
                 'shipment_id' => $id,
             );
             $this->db->insert('tbl_revisi_so_lama', $data);

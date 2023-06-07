@@ -22,18 +22,18 @@
                                 <label>Month</label><br>
                                 <select name="bulan" class="form-control" style="width: 200px; height:100px">
                                     <option value="">Pilih</option>
-                                    <option value="01">Januari</option>
-                                    <option value="02">Februari</option>
-                                    <option value="03">Maret</option>
-                                    <option value="04">April</option>
-                                    <option value="05">Mei</option>
-                                    <option value="06">Juni</option>
-                                    <option value="07">Juli</option>
-                                    <option value="08">Agustus</option>
-                                    <option value="09">September</option>
-                                    <option value="10">Oktober</option>
-                                    <option value="11">November</option>
-                                    <option value="12">Desember</option>
+                                    <option <?php echo $bulan == '01' ? 'selected' : ''; ?> value="01">Januari</option>
+                                    <option <?php echo $bulan == '02' ? 'selected' : ''; ?> value="02">Februari</option>
+                                    <option <?php echo $bulan == '03' ? 'selected' : ''; ?> value="03">Maret</option>
+                                    <option <?php echo $bulan == '04' ? 'selected' : ''; ?> value="04">April</option>
+                                    <option <?php echo $bulan == '05' ? 'selected' : ''; ?> value="05">Mei</option>
+                                    <option <?php echo $bulan == '06' ? 'selected' : ''; ?> value="06">Juni</option>
+                                    <option <?php echo $bulan == '07' ? 'selected' : ''; ?> value="07">Juli</option>
+                                    <option <?php echo $bulan == '08' ? 'selected' : ''; ?> value="08">Agustus</option>
+                                    <option <?php echo $bulan == '09' ? 'selected' : ''; ?> value="09">September</option>
+                                    <option <?php echo $bulan == '10' ? 'selected' : ''; ?> value="10">Oktober</option>
+                                    <option <?php echo $bulan == '11' ? 'selected' : ''; ?> value="11">November</option>
+                                    <option <?php echo $bulan == '12' ? 'selected' : ''; ?> value="12">Desember</option>
                                 </select>
                             </div>
                             <div class="form-group">
@@ -41,9 +41,9 @@
                                 <select name="tahun" class="form-control" style="width: 200px; height:100px">
                                     <option selected="selected">Pilih</option>
                                     <?php
-                                    for ($i = date('Y'); $i >= date('Y') - 5; $i -= 1) {
-                                        echo "<option value='$i'> $i </option>";
-                                    }
+                                    for ($i = date('Y'); $i >= date('Y') - 5; $i -= 1) { ?>
+                                        <option <?php echo $tahun == $i ? 'selected' : ''; ?> value='<?= $i ?>'> <?= $i ?> </option>
+                                    <?php }
                                     ?>
                                 </select>
                             </div>

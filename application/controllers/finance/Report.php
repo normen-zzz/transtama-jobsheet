@@ -35,21 +35,22 @@ class Report extends CI_Controller
     public function ap()
     {
         $bulan = $this->input->post('bulan');
-
         $tahun = $this->input->post('tahun');
         if ($bulan == NULL && $tahun == NULL) {
             $data['title'] = 'Report AP';
             $breadcrumb_items = [];
             $data['subtitle'] = 'Report AP';
             $this->breadcrumb->add_item($breadcrumb_items);
+            $data['tahun'] = date('Y');
+            $data['bulan'] = date('m');
             $data['breadcrumb_bootstrap_style'] = $this->breadcrumb->generate();
             $data['heading'] = 'Overall Delivery Report';
-            $data['total_shipments'] = $this->cs->getInvoiceReport($bulan = null, $tahun = null)->num_rows();
-            $data['invoice_created'] =  $this->cs->getTotalInvoice($bulan = null, $tahun = null)->num_rows();
-            $data['invoice_paid'] =  $this->cs->getInvoicePaid($bulan = null, $tahun = null)->num_rows();
-            $data['invoice_pending'] =  $this->cs->getInvoicePending($bulan = null, $tahun = null)->num_rows();
-            $data['invoice_proforma'] =  $this->cs->getInvoiceProforma($bulan = null, $tahun = null)->num_rows();
-            $this->backend->display('finance/v_report_ap', $data);
+            $data['total_shipments'] = $this->cs->getInvoiceReport(date('m'), date('Y'))->num_rows();
+            $data['invoice_created'] =  $this->cs->getTotalInvoice(date('m'), date('Y'))->num_rows();
+            $data['invoice_paid'] =  $this->cs->getInvoicePaid(date('m'), date('Y'))->num_rows();
+            $data['invoice_pending'] =  $this->cs->getInvoicePending(date('m'), date('Y'))->num_rows();
+            $data['invoice_proforma'] =  $this->cs->getInvoiceProforma(date('m'), date('Y'))->num_rows();
+            $this->backend->display('finance/v_report_ap_filter', $data);
         } else {
             $data['title'] = 'Report AP';
             $breadcrumb_items = [];
@@ -1424,7 +1425,7 @@ class Report extends CI_Controller
                 ->setAutoSize(true);
             $sheet->setCellValue('B' . $x, $row['tgl_pickup'])->getColumnDimension('B')
                 ->setAutoSize(true);
-            $sheet->setCellValue('C' . $x, $row['shipment_id'] . '/' . $row['no_stp'])->getColumnDimension('C')
+            $sheet->setCellValue('C' . $x, $row['shipment_id'] )->getColumnDimension('C')
                 ->setAutoSize(true);
             $sheet->setCellValue('D' . $x, $row['shipper'])->getColumnDimension('D')
                 ->setAutoSize(true);

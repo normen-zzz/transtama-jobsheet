@@ -84,6 +84,9 @@
                                                         <td><?= $j['tree_consignee'] ?></td>
                                                         <td><?= $j['nama_user'] ?></td>
                                                         <td><?php if ($j['status_so'] == 2) {
+                                                            if ($this->session->userdata('id_jabatan') == 2) {
+                                                                
+                                                            
                                                                 echo '<span class="label label-purple label-inline font-weight-lighter" style="width: 150px;">Approve PIC JS</span> <br>';
                                                                 if ($perbedaan > 0) {
                                                                     echo $perbedaan . ' <small>Days Again To Check</small>';
@@ -92,7 +95,7 @@
                                                                 } else {
                                                                     echo '<small>You Late Check</small>';
                                                                 }
-                                                            } elseif ($j['status_so'] == 3) {
+                                                            }} elseif ($j['status_so'] == 3) {
                                                                 echo '<span class="label label-primary label-inline font-weight-lighter" style="width: 150px;">Approve Manager CS</span>';
                                                             } elseif ($j['status_so'] == 4) {
                                                                 echo '<span class="label label-success label-inline font-weight-lighter" style="width: 150px;">Approve Finance</span>';

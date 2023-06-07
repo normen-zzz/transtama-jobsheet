@@ -232,7 +232,9 @@ class ApExternal extends CI_Controller
         $total_ap = $this->input->post('total_ap') + $other;
         $no_invoice = $this->input->post('no_invoice');
         $ppn = ($total_ap) * ($this->input->post('ppn') / 100);
+        $special_ppn = $this->input->post('special_ppn') ;
         $pph = ($total_ap) * ($this->input->post('pph') / 100);
+        $special_pph = $this->input->post('special_pph') ;
         $terbilang = $this->input->post('terbilang');
         $id_vendor = $this->input->post('id_vendor');
 
@@ -246,6 +248,8 @@ class ApExternal extends CI_Controller
                 'other' => $other,
                 'ppn' => $ppn,
                 'pph' => $pph,
+                'special_ppn' => $special_ppn,
+                'special_pph' => $special_pph,
                 'update_by' => $this->session->userdata('id_user'),
                 'update_at' => date('Y-m-d H:i:s')
             );

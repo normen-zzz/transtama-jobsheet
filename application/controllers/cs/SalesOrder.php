@@ -22,12 +22,6 @@ class SalesOrder extends CI_Controller
         // $data['sub_header_page'] = 'exist';
         $this->breadcrumb->add_item($breadcrumb_items);
         $data['breadcrumb_bootstrap_style'] = $this->breadcrumb->generate();
-
-        $data['total_users'] = $this->db->get('tb_user')->num_rows();
-        $data['total_dosen'] = $this->db->get_where('tb_user', ['id_role' => 4])->num_rows();
-        $data['total_mahasiswa'] = $this->db->get_where('tb_user', ['id_role' => 5])->num_rows();
-        $data['total_nonaktif'] = $this->db->get_where('tb_user', ['status' => 0])->num_rows();
-        $data['activity'] = $this->db->order_by('id_log', 'desc')->get('tb_log_login')->result_array();
         $data['js'] = $this->cs->getJs()->result_array();
         // var_dump($data['js']);
         // die;
@@ -323,8 +317,7 @@ class SalesOrder extends CI_Controller
         $no = $sql['kode'];
         // $potong = substr($no, 11, 9);
         $potongJS = ltrim($no, 'JS-');
-        $potong = ltrim($potongJS, '0');
-        $noUrut = $potong + 1;
+        $noUrut = $potongJS + 1;
         $kode  = "JS-$noUrut";
         // var_dump($kode);
         // die;

@@ -185,8 +185,18 @@
                                     </div>
 
                                     <div class="col-md-4">
+                                        <label for="due_date" class="font-weight-bold"> Special Ppn (Rp.)</label>
+                                        <input type="text" class="form-control" name="special_ppn" value="<?= $inv['special_ppn'] ?>">
+                                    </div>
+
+                                    <div class="col-md-4">
                                         <label for="due_date" class="font-weight-bold">Pph (%)</label>
                                         <input type="text" class="form-control" name="pph" value="<?= ($inv['pph'] / ($inv['total_ap'])) * 100 ?>">
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <label for="due_date" class="font-weight-bold">Special Pph (Rp.)</label>
+                                        <input type="text" class="form-control" name="special_pph" value="<?= $inv['special_pph'] ?>">
                                     </div>
 
                                     <div class="col-md-4">

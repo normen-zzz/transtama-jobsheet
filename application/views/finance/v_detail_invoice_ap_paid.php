@@ -192,27 +192,38 @@
                                     </div>
                                     <div class="col-md-2">
                                         <div class="form-group">
-                                            <label for="exampleInputEmail1" class="font-weight-bold">PPN</label>
+                                            <label for="exampleInputEmail1" class="font-weight-bold">PPN (&)</label>
                                             <div class="form-check">
-                                                <input class="form-check-input" name="ppn" disabled type="checkbox" value="1" id="ppn" <?php if ($inv['is_ppn'] == 1) {
-                                                                                                                                            echo 'checked';
-                                                                                                                                        } ?>>
-                                                <label class="form-check-label" for="flexCheckDefault">
-                                                    Ya
-                                                </label>
+                                                <input type="number" class="form-control" required readonly name="other" value="<?= ($inv['ppn'] / ($inv['total_ap'])) * 100 ?>"></input>
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1" class="font-weight-bold">SPECIAL PPN (Rp.)</label>
+                                            <div class="form-check">
+                                                <input type="number" class="form-control" required readonly name="other" value="<?= $inv['special_ppn'] ?>"></input>
+                                                
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-md-2">
                                         <div class="form-group">
-                                            <label for="exampleInputEmail1" class="font-weight-bold">PPH</label>
+                                            <label for="exampleInputEmail1" class="font-weight-bold">PPH (%)</label>
                                             <div class="form-check">
-                                                <input class="form-check-input" name="pph" disabled type="checkbox" value="1" id="pph" <?php if ($inv['is_pph'] == 1) {
-                                                                                                                                            echo 'checked';
-                                                                                                                                        } ?>>
-                                                <label class="form-check-label" for="flexCheckDefault">
-                                                    Ya
-                                                </label>
+                                                <input type="number" class="form-control" required readonly name="other" value="<?= ($inv['pph'] / ($inv['total_ap'])) * 100 ?>"></input>
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1" class="font-weight-bold">SPECIAL PPH (Rp.)</label>
+                                            <div class="form-check">
+                                                <input type="number" class="form-control" required readonly name="other" value="<?= $inv['special_pph'] ?>"></input>
+                                                
                                             </div>
                                         </div>
                                     </div>
@@ -251,13 +262,10 @@
                                                     <span class="text-success font-weight-bold"><?= bulan_indo($inv['payment_date']) ?></span>
                                                 </div>
                                                 <!--end::Text-->
-                                                <span class="label label-xl label-light label-inline my-lg-0 my-2 text-dark-50 font-weight-bolder"><?php if ($vendor['type'] == 0) {
-                                                                                                                                                    ?>
-                                                        <?= rupiah($sub_total_smu) ?>
-                                                    <?php  } else {
-                                                    ?>
-                                                        <?= rupiah($sub_total_hd_daerah) ?>
-                                                    <?php  } ?>
+                                                <span class="label label-xl label-light label-inline my-lg-0 my-2 text-dark-50 font-weight-bolder">
+                                                        
+                                                        <?= rupiah(($sub_total_hd_daerah) - $inv['pph'] + $inv['ppn']+$inv['special_ppn'] + $inv['special_pph']) ?>
+                                                   
                                                 </span>
 
                                             </div>
@@ -284,13 +292,8 @@
                                                     <span class="text-muted font-weight-bold"><?= $perbedaan ?> Days Again</span>
                                                 </div>
                                                 <!--end::Text-->
-                                                <span class="label label-xl label-light label-inline my-lg-0 my-2 text-dark-50 font-weight-bolder"><?php if ($vendor['type'] == 0) {
-                                                                                                                                                    ?>
-                                                        <?= rupiah($sub_total_smu) ?>
-                                                    <?php  } else {
-                                                    ?>
-                                                        <?= rupiah($sub_total_hd_daerah) ?>
-                                                    <?php  } ?></span>
+                                                <span class="label label-xl label-light label-inline my-lg-0 my-2 text-dark-50 font-weight-bolder">
+                                                <?= rupiah(($sub_total_hd_daerah) - $inv['pph'] + $inv['ppn']+$inv['special_ppn'] + $inv['special_pph']) ?>
                                             </div>
                                         <?php  } ?>
                                     </div>

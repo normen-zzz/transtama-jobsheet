@@ -27,9 +27,39 @@ class Ap extends CI_Controller
 
         $data['title'] = 'Account Payable - Payment Order';
         $data['ap'] = $this->ap->getApByCategory(1)->result_array();
-        $data['ap2'] = $this->ap->getApByCategory(1)->result_array();
+        // $data['ap2'] = $this->ap->getApByCategory(1)->result_array();
 
         $this->backend->display('finance/v_ap', $data);
+    }
+    public function getModalPaid()
+    {
+        $no_pengeluaran = $this->input->get('no_pengeluaran');
+        $url = $this->input->get('url');
+
+        $data = [
+            'no_pengeluaran' => $no_pengeluaran,
+            'url' => $url
+        ];
+        echo json_encode($data);
+
+    }
+
+    public function getModalPaidLangsung()
+    {
+        $no_pengeluaran = $this->input->get('no_pengeluaran');
+        $url = $this->input->get('url');
+
+        $result = $this->ap->getApByNo($no_pengeluaran)->result();
+
+        $data = array();
+
+        foreach ($result as $row) {
+            $data[] = $row;
+        }
+        
+        
+        echo json_encode($data);
+        // var_dump($data);
     }
     public function history()
     {

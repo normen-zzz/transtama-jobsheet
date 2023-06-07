@@ -28,7 +28,6 @@ class UserModel extends CI_Model
 	}
 	public function getProfile($id)
 	{
-
 		$hsl = $this->db->query("SELECT * FROM tb_user where id_user='$id'");
 		return $hsl;
 	}

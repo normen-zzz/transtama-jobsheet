@@ -90,17 +90,17 @@
                                             <?php if ($c['id_role'] == 2 || $c['id_role'] == 3 || $c['id_role'] == 5) {
                                                 // jika diapprove manager finance
                                                 if ($c['status'] == 7) { ?>
-                                                    <a href="#" data-toggle="modal" data-target="#modal-paid<?= $c['no_pengeluaran'] ?>" class="btn btn-sm mb-1 text-light" style="background-color: #9c223b;">Pay</a>
+                                                    <button href="#" data-toggle="modal" data-target="#modal-paid" class="btn btn-sm mb-1 text-light modalPaid" data-no_pengeluaran="<?= $c['no_pengeluaran'] ?>" data-url="<?= $url ?>" style="background-color: #9c223b;">Pay</button>
                                                 <?php } ?>
                                                 <!-- jika rolenya ka/sales -->
                                             <?php } elseif ($c['id_role'] == 4 || $c['id_role'] == 6) { ?>
                                                 <?php // jika diapprove GM
                                                 if ($c['status'] == 5) { ?>
-                                                    <a href="#" data-toggle="modal" data-target="#modal-paid<?= $c['no_pengeluaran'] ?>" class="btn btn-sm mb-1 text-light" style="background-color: #9c223b;">Pay</a>
+                                                    <button href="#" data-toggle="modal" data-target="#modal-paid" class="btn btn-sm mb-1 text-light modalPaid" data-no_pengeluaran="<?= $c['no_pengeluaran'] ?>" data-url="<?= $url ?>" style="background-color: #9c223b;">Pay</button>
                                                     <?php } else {
                                                     // jika dia untuk bensin atau transport maka bisa langsung di acc setelah approve manager 
                                                     if ($userAp['id_jabatan'] == 11 && $c['status'] == 7) { ?>
-                                                        <a href="#" data-toggle="modal" data-target="#modal-paidLangsung<?= $c['no_pengeluaran'] ?>" class="btn btn-sm mb-1 text-light" style="background-color: #9c223b;">Pay</a>
+                                                        <button href="#" data-toggle="modal" data-target="#modal-paidLangsung" class="btn btn-sm mb-1 text-light modalPaidLangsung" data-no_pengeluaran="<?= $c['no_pengeluaran'] ?>" data-url="<?= $url ?>" style="background-color: #9c223b;">Pay</button>
                                                 <?php }
                                                 } ?>
                                             <?php } ?>
@@ -121,60 +121,38 @@
     <!--end::Entry-->
 </div>
 
-
-
-<?php foreach ($ap as $c) {
-    $url = $this->uri->segment(3);
-?>
-    <div class="modal fade" id="modal-paid<?= $c['no_pengeluaran'] ?>">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Pay with no <b><?= $c['no_pengeluaran'] ?></b> </h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form action="<?= base_url('finance/ap/paid') ?>" method="POST" enctype="multipart/form-data">
-                        <div class="form-group">
-                            <label for="due_date" class="font-weight-bold">Proof Payment</label>
-                            <input type="file" class="form-control" name="ktp" required>
-
-                        </div>
-                        <div class="form-group">
-                            <label for="due_date" class="font-weight-bold">Payment Date</label>
-                            <input type="date" class="form-control" name="payment_date" required>
-                            <input type="text" hidden class="form-control" name="no_invoice" value="<?= $c['no_pengeluaran'] ?>" required>
-                            <input type="text" hidden class="form-control" name="url" value="<?= $url ?>">
-
-                        </div>
-                        <div class="modal-footer justify-content-between">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Submit</button>
-                        </div>
-                    </form>
-                </div>
+<div class="modal fade" id="modal-paid">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Pay </b> </h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
-            <!-- /.modal-content -->
+            <div class="modal-body">
+                <form action="<?= base_url('finance/ap/paid') ?>" method="POST" enctype="multipart/form-data">
+                    <div id="modal-content-paid">
+
+                    </div>
+
+                    <div class="modal-footer justify-content-between">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </form>
+            </div>
         </div>
-        <!-- /.modal-dialog -->
+        <!-- /.modal-content -->
     </div>
-    <!-- /.modal -->
+    <!-- /.modal-dialog -->
+</div>
 
-<?php } ?>
-
-<?php foreach ($ap2 as $d) {
-    $url = $this->uri->segment(3);
-    $CI = &get_instance();
-    $CI->load->model('ApModel');
-    $detail = $CI->ApModel->getApByNo($d['no_pengeluaran'])->result_array();
-?>
-    <div class="modal fade" id="modal-paidLangsung<?= $d['no_pengeluaran'] ?>">
+<div class="modal fade" id="modal-paidLangsung">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">Pay with no <b><?= $d['no_pengeluaran'] ?></b> </h4>
+                    <h4 class="modal-title">Pay</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -186,31 +164,11 @@
                             <input type="file" class="form-control" name="ktp" required>
                         </div>
 
-                        <div class="form-group">
-                            <?php foreach ($detail as $detail) { ?>
-
-                                <div class="row">
-                                    <div class="col">
-                                        <input type="text" name="id_pengeluaran[]" value="<?= $detail['id_pengeluaran'] ?>" hidden>
-                                        <label for="">Amount Proposed</label>
-                                        <input type="text" name="amount_proposed" class="form-control" id="amount_proposed" value="<?= $detail['amount_proposed'] ?>" disabled>
-                                    </div>
-                                    <div class="col">
-                                        <label for="">Amount Approved</label>
-                                        <input type="number" name="amount_approved[]" class="form-control" id="amount_approved" value="<?= $detail['amount_approved'] ?>">
-                                    </div>
-                                </div>
-
-
-                            <?php } ?>
-                        </div>
-                        <div class="form-group">
-                            <label for="due_date" class="font-weight-bold">Payment Date</label>
-                            <input type="date" class="form-control" name="payment_date" required>
-                            <input type="text" hidden class="form-control" name="no_invoice" value="<?= $d['no_pengeluaran'] ?>" required>
-                            <input type="text" hidden class="form-control" name="url" value="<?= $url ?>">
+                        <div id="modalContentPaidLangsung">
 
                         </div>
+
+                        
                         <div class="modal-footer justify-content-between">
                             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                             <button type="submit" class="btn btn-primary">Submit</button>
@@ -222,6 +180,104 @@
         </div>
         <!-- /.modal-dialog -->
     </div>
-    <!-- /.modal -->
 
-<?php } ?>
+
+<script>
+    $(document).ready(function() {
+        $('.modalPaid').click(function() {
+            var no_pengeluaran = $(this).data('no_pengeluaran'); // Mendapatkan ID dari atribut data-id tombol yang diklik
+            var url = $(this).data('url');
+            $('#modal-content-paid').html('');
+            // Memuat data menggunakan AJAX dengan mengirimkan ID sebagai parameter
+            $.ajax({
+                url: '<?php echo base_url("finance/Ap/getModalPaid"); ?>',
+                type: 'GET',
+                dataType: 'json',
+                data: {
+                    no_pengeluaran: no_pengeluaran,
+                    url: url
+                },
+                success: function(response) {
+                    // Menampilkan data ke dalam modal
+
+                    var content =
+                        '<p>NO Pengeluaran : ' + response.no_pengeluaran + ' </p>' +
+                        '<div class="form-group">' +
+                        '<label for="due_date" class="font-weight-bold">Proof Payment</label>' +
+                        '<input type="file" class="form-control" name="ktp" required>' +
+
+                        '</div>' +
+                        '<div class="form-group">' +
+                        '<label for="due_date" class="font-weight-bold">Payment Date</label>' +
+                        '<input type="date" class="form-control" name="payment_date" required>' +
+                        '<input type="text" hidden class="form-control" name="no_invoice" value="' + response.no_pengeluaran + '" required>' +
+                        '<input type="text" hidden class="form-control" name="url" value="' + response.url + '">' +
+
+                        '</div>';
+                    $('#modal-content-paid').html(content);
+                    $('#selectField').select2();
+
+                },
+                error: function() {
+                    alert('Terjadi kesalahan dalam memuat data.');
+                }
+            });
+        });
+    })
+</script>
+
+<script>
+    $(document).ready(function() {
+        $('.modalPaidLangsung').click(function() {
+            var no_pengeluaran = $(this).data('no_pengeluaran'); // Mendapatkan ID dari atribut data-id tombol yang diklik
+            var url = $(this).data('url');
+            $('#modal-content-paid-langsung').html('');
+            // Memuat data menggunakan AJAX dengan mengirimkan ID sebagai parameter
+            $.ajax({
+                url: '<?php echo base_url("finance/Ap/getModalPaidLangsung"); ?>',
+                type: 'GET',
+                dataType: 'json',
+                data: {
+                    no_pengeluaran: no_pengeluaran,
+                    url: url
+                },
+                success: function(response) {
+                    // Menampilkan data ke dalam modal
+
+                    var content = '';
+                    for (var i = 0; i < response.length; i++) {
+                        var data = response[i];
+                        content +=
+                            '<p>NO Pengeluaran : ' + no_pengeluaran + ' </p>' +
+                            '<div class="form-group">' +
+                            '<div class="row">' +
+                            '<div class="col">' +
+                            '<input type="text" name="id_pengeluaran[]" value="' + data.id_pengeluaran + '" hidden>' +
+                            '<label for="">Amount Proposed</label>' +
+                            '<input type="text" name="amount_proposed" class="form-control" id="amount_proposed" value="' + data.amount_proposed + '" disabled>' +
+                            '</div>' +
+                            '<div class="col">' +
+                            '<label for="">Amount Approved</label>' +
+                            '<input type="number" name="amount_approved[]" class="form-control" id="amount_approved" value="' + data.amount_approved + '">' +
+                            '</div>' +
+                            '</div>' +
+                            '</div>' +
+                            '<div class="form-group">' +
+                            '<label for="due_date" class="font-weight-bold">Payment Date</label>' +
+                            '<input type="date" class="form-control" name="payment_date" required>' +
+                            '<input type="text" hidden class="form-control" name="no_invoice" value="' + no_pengeluaran + '" required>' +
+                            '<input type="text" hidden class="form-control" name="url" value="' + url + '">' +
+
+                            '</div>';
+                    }
+                    $('#modalContentPaidLangsung').html(content);
+                    $('#selectField').select2();
+
+                },
+                error: function() {
+                    alert('Terjadi kesalahan dalam memuat data.');
+                }
+            });
+        });
+    })
+</script>

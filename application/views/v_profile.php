@@ -60,6 +60,12 @@
                                      </div>
                                  </div>
                                  <div class="form-group row">
+									<label class="col-xl-3 col-lg-3 col-form-label">No Telp</label>
+									<div class="col-lg-9 col-xl-6">
+										<input class="form-control form-control-lg form-control-solid" placeholder="Ex : 085697780467" name="no_hp" type="number" value="<?= $no_hp ?>">
+									</div>
+								</div>
+                                 <div class="form-group row">
                                      <label class="col-xl-3 col-lg-3 col-form-label">Password</label>
                                      <div class="col-lg-9 col-xl-6">
                                          <input type="password" class="form-control form-control-lg" name="password" placeholder="Isi jika password ingin diubah" name="password">

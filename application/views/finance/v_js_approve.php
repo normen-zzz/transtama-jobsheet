@@ -81,7 +81,7 @@
                                                             <td><?= $j['shipment_id'] ?></td>
                                                             <!-- No DO -->
                                                             <td><?php foreach ($no_do as $do) {
-                                                                    echo $do['no_do'] + ',';
+                                                                    echo $do['no_do'] . ',';
                                                                 } ?></td>
                                                             <!-- Nomor SO -->
                                                             <td><?php if ($get_revisi_so) {
