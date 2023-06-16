@@ -131,28 +131,28 @@
 
                                                                         // jika statusnya received finance
                                                                         if ($j['status'] == 3) { ?>
-                                                                            <a href="<?= base_url('finance/apExternal/detailInvoice/' . $j['unique_invoice'] . '/' . encrypt_url($j['id_vendor'])) ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">Detail</a>
+                                                                            <a href="<?= base_url('finance/apExternal/detailInvoice/' . $j['unique_invoice'] . '/' . encrypt_url($j['id_vendor'])) ?>" class="btn btn-sm text-light" style="background-color: #9c223b;">Detail</a>
                                                                             <a href="<?= base_url('finance/apExternal/approveMgrFinance/' . $j['unique_invoice']) ?>" class="btn btn-sm mb-1 text-light tombol-konfirmasi mt-2" style="background-color: #9c223b;">Approve</a>
 
                                                                         <?php   } else {
                                                                         ?>
-                                                                            <a href="<?= base_url('finance/apExternal/detailInvoice/' . $j['unique_invoice'] . '/' . encrypt_url($j['id_vendor'])) ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">Detail</a>
+                                                                            <a href="<?= base_url('finance/apExternal/detailInvoice/' . $j['unique_invoice'] . '/' . encrypt_url($j['id_vendor'])) ?>" class="btn btn-sm text-light" style="background-color: #9c223b;">Detail</a>
 
                                                                         <?php  }
                                                                         // jika GM
                                                                     } elseif ($this->session->userdata('id_role') == 6 && $this->session->userdata('id_jabatan') == 11) {
                                                                         // jika statusnya received finance
                                                                         if ($j['status'] == 3) { ?>
-                                                                            <a href="<?= base_url('finance/apExternal/detailInvoice/' . $j['unique_invoice'] . '/' . encrypt_url($j['id_vendor'])) ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">Detail</a>
+                                                                            <a href="<?= base_url('finance/apExternal/detailInvoice/' . $j['unique_invoice'] . '/' . encrypt_url($j['id_vendor'])) ?>" class="btn btn-sm text-light" style="background-color: #9c223b;">Detail</a>
 
                                                                             <!-- jika sudah di approve mgr finance -->
                                                                         <?php   } elseif ($j['status'] == 7) {
                                                                         ?>
-                                                                            <a href="<?= base_url('finance/apExternal/detailInvoice/' . $j['unique_invoice'] . '/' . encrypt_url($j['id_vendor'])) ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">Detail</a>
+                                                                            <a href="<?= base_url('finance/apExternal/detailInvoice/' . $j['unique_invoice'] . '/' . encrypt_url($j['id_vendor'])) ?>" class="btn btn-sm text-light" style="background-color: #9c223b;">Detail</a>
                                                                             <a href="<?= base_url('finance/apExternal/approveGM/' . $j['unique_invoice']) ?>" class="btn btn-sm mb-1 text-light tombol-konfirmasi mt-2" style="background-color: #9c223b;">Approve</a>
 
                                                                         <?php  } else { ?>
-                                                                            <a href="<?= base_url('finance/apExternal/detailInvoice/' . $j['unique_invoice'] . '/' . encrypt_url($j['id_vendor'])) ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">Detail</a>
+                                                                            <a href="<?= base_url('finance/apExternal/detailInvoice/' . $j['unique_invoice'] . '/' . encrypt_url($j['id_vendor'])) ?>" class="btn btn-sm text-light" style="background-color: #9c223b;">Detail</a>
                                                                     <?php }
                                                                     }
                                                                     ?>
@@ -164,21 +164,21 @@
                                                                     <!-- jika recevied finance -->
                                                                     <?php if ($j['status'] == 3) {
                                                                     ?>
-                                                                        <a href="<?= base_url('finance/apExternal/detailInvoice/' . $j['unique_invoice'] . '/' . encrypt_url($j['id_vendor'])) ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">Detail</a>
+                                                                        <a href="<?= base_url('finance/apExternal/detailInvoice/' . $j['unique_invoice'] . '/' . encrypt_url($j['id_vendor'])) ?>" class="btn btn-sm text-light" style="background-color: #9c223b;">Detail</a>
                                                                     <?php  } elseif ($j['status'] == 4) {
                                                                     ?>
-                                                                        <a href="<?= base_url('finance/apExternal/editInvoice/' . $j['unique_invoice'] . '/' . encrypt_url($j['id_vendor'])) ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">Detail</a>
-                                                                        <!-- <button data-toggle="modal" data-target="#modal-paid<?= $j['id_invoice'] ?>" class=" btn btn-sm text-light mt-1" style="background-color: #9c223b;">Paid</button> -->
+                                                                        <a href="<?= base_url('finance/apExternal/editInvoice/' . $j['unique_invoice'] . '/' . encrypt_url($j['id_vendor'])) ?>" class="btn btn-sm text-light" style="background-color: #9c223b;">Detail</a>
+                                                                        <!-- <button data-toggle="modal" data-target="#modal-paid<?= $j['id_invoice'] ?>" class="btn btn-sm text-light mt-1" style="background-color: #9c223b;">Paid</button> -->
                                                                     <?php } elseif ($j['status'] == 5) {
                                                                     ?>
-                                                                        <a href="<?= base_url('finance/apExternal/editInvoice/' . $j['unique_invoice'] . '/' . encrypt_url($j['id_vendor'])) ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">Detail</a>
-                                                                        <button data-toggle="modal" data-target="#modal-paid" data-no_po="<?= $j['no_po'] ?>" data-unique_invoice="<?= $j['unique_invoice'] ?>" class="btn btn-sm text-light mt-1 modalApExternal" style="background-color: #9c223b;">Paid</button>
+                                                                        <a href="<?= base_url('finance/apExternal/editInvoice/' . $j['unique_invoice'] . '/' . encrypt_url($j['id_vendor'])) ?>" class="btn btn-sm text-light" style="background-color: #9c223b;">Detail</a>
+                                                                        <button data-toggle="modal" data-target="#modal-paid-external" data-no_po="<?= $j['no_po'] ?>" data-unique_invoice="<?= $j['unique_invoice'] ?>" class="btn btn-sm text-light mt-1 modalApPaid" style="background-color: #9c223b;">Paid</button>
 
                                                                     <?php  } elseif ($j['status'] == 7) { ?>
-                                                                        <a href="<?= base_url('finance/apExternal/editInvoice/' . $j['unique_invoice'] . '/' . encrypt_url($j['id_vendor'])) ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">Detail</a>
+                                                                        <a href="<?= base_url('finance/apExternal/editInvoice/' . $j['unique_invoice'] . '/' . encrypt_url($j['id_vendor'])) ?>" class="btn btn-sm text-light" style="background-color: #9c223b;">Detail</a>
 
                                                                     <?php } else { ?>
-                                                                        <a href="<?= base_url('finance/apExternal/editInvoice/' . $j['unique_invoice'] . '/' . encrypt_url($j['id_vendor'])) ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">Detail</a>
+                                                                        <a href="<?= base_url('finance/apExternal/editInvoice/' . $j['unique_invoice'] . '/' . encrypt_url($j['id_vendor'])) ?>" class="btn btn-sm text-light" style="background-color: #9c223b;">Detail</a>
                                                                 <?php }
                                                                 } ?>
 
@@ -211,7 +211,7 @@
 
 
 
-<div class="modal fade" id="modal-paid">
+<div class="modal fade" id="modal-paid-external">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -238,32 +238,44 @@
 
 
 
+
+
 <script>
     $(document).ready(function() {
-        $('.modalApExternal').click(function() {
+        $('.modalApPaid').click(function() {
             var no_po = $(this).data('no_po'); // Mendapatkan ID dari atribut data-id tombol yang diklik
             var unique_invoice = $(this).data('unique_invoice');
-            $('#modalContentApExternal').html('');
+            $.ajax({
+                url: '<?php echo base_url("finance/ApExternal/getModalApPaid"); ?>',
+                type: 'GET',
+                dataType: 'json',
+                data: {
+                    no_po: no_po
+                },
+                success: function(response) {
+                    // Menampilkan data ke dalam modal
+                    var content =
 
-            var content =
-               
-            '<div class="modal-body">' +
-            '<p> No PO : ' + no_po + ' </p>'+
-            '<div class="form-group">' +
-            '<label for="due_date" class="font-weight-bold">Payment Date</label>' +
-            '<input type="date" class="form-control" name="payment_date" required>' +
-            '<input type="text" hidden class="form-control" name="unique_invoice" value="' + unique_invoice + '" required>' +
+                        '<div class="modal-body">' +
+                        '<p> No PO : ' + no_po + ' </p>' +
+                        '<div class="form-group">' +
+                        '<label for="due_date" class="font-weight-bold">Payment Date</label>' +
+                        '<input type="date" class="form-control" name="payment_date" required>' +
+                        '<input type="text" hidden class="form-control" name="unique_invoice" value="' + unique_invoice + '" required>' +
 
-                '</div>' +
-                '<div class="form-group">' +
-                '<label class="col-form-label text-lg-right font-weight-bold">Upload Proof</label>' +
-                '<input type="file" id="input-file-now" name="ktp" />' +
-                '</div>' +
-                '</div>';
-            $('#modalContentApExternal').html(content);
-            $('#selectField').select2();
-            // Memuat data menggunakan AJAX dengan mengirimkan ID sebagai parameter
-
+                        '</div>' +
+                        '<div class="form-group">' +
+                        '<label class="col-form-label text-lg-right font-weight-bold">Upload Proof</label>' +
+                        '<input type="file" id="input-file-now" name="ktp" />' +
+                        '</div>' +
+                        '</div>';
+                    $('#modalContentApExternal').html(content);
+                    $('#selectField').select2();
+                },
+                error: function() {
+                    alert('Terjadi kesalahan dalam memuat data.');
+                }
+            });
         });
-    })
+    });
 </script>

@@ -55,6 +55,17 @@ class ApExternal extends CI_Controller
             $this->backend->display('finance/v_invoice_ap', $data);
         }
     }
+
+    public function getModalApPaid()
+    {
+        $no_po = $this->input->get('no_po'); // Mengambil ID dari parameter GET
+        
+		$po = $this->cs->getApVendor($no_po)->row();
+       
+
+        // Kirim data sebagai respons JSON
+        echo json_encode($po);
+    }
     public function ApInternal()
     {
         $shipment_id = $this->input->post('shipment_id');
