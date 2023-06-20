@@ -32,36 +32,26 @@ class ApExternal extends CI_Controller
         $shipment_id = $this->input->post('shipment_id');
         $awal = $this->input->post('awal');
         $akhir = $this->input->post('akhir');
+        $data['title'] = 'Payment Order Vendor/Agent';
+        $data['subtitle'] = 'Payment Order Vendor/Agent';
         if ($awal == NULL && $akhir == NULL) {
-            $data['title'] = 'Payment Order Vendor/Agent';
-            $breadcrumb_items = [];
             $data['awal'] = date('Y-m-d');
             $data['akhir'] = date('Y-m-d');
-            $data['subtitle'] = 'Payment Order Vendor/Agent';
-            $this->breadcrumb->add_item($breadcrumb_items);
-            $data['breadcrumb_bootstrap_style'] = $this->breadcrumb->generate();
             $data['proforma'] = $this->cs->getApVendor()->result_array();
-            $this->backend->display('finance/v_invoice_ap', $data);
         } else {
-
-            $data['title'] = 'Payment Order Vendor/Agent';
             $data['awal'] = $awal;
             $data['akhir'] = $akhir;
-            $breadcrumb_items = [];
-            $data['subtitle'] = 'Payment Order Vendor/Agent';
-            $this->breadcrumb->add_item($breadcrumb_items);
-            $data['breadcrumb_bootstrap_style'] = $this->breadcrumb->generate();
             $data['proforma'] = $this->cs->getApVendorByDate($awal, $akhir)->result_array();
-            $this->backend->display('finance/v_invoice_ap', $data);
         }
+        $this->backend->display('finance/v_invoice_ap', $data);
     }
 
     public function getModalApPaid()
     {
         $no_po = $this->input->get('no_po'); // Mengambil ID dari parameter GET
-        
-		$po = $this->cs->getApVendor($no_po)->row();
-       
+
+        $po = $this->cs->getApVendor($no_po)->row();
+
 
         // Kirim data sebagai respons JSON
         echo json_encode($po);
@@ -243,9 +233,9 @@ class ApExternal extends CI_Controller
         $total_ap = $this->input->post('total_ap') + $other;
         $no_invoice = $this->input->post('no_invoice');
         $ppn = ($total_ap) * ($this->input->post('ppn') / 100);
-        $special_ppn = $this->input->post('special_ppn') ;
+        $special_ppn = $this->input->post('special_ppn');
         $pph = ($total_ap) * ($this->input->post('pph') / 100);
-        $special_pph = $this->input->post('special_pph') ;
+        $special_pph = $this->input->post('special_pph');
         $terbilang = $this->input->post('terbilang');
         $id_vendor = $this->input->post('id_vendor');
 
@@ -437,5 +427,19 @@ class ApExternal extends CI_Controller
 			  })
 			";
         return $messageAlert;
+    }
+
+
+    function getDataTableApExternal()
+    {
+        $search = array('a.no_po');
+        $query  = "SELECT a.id_invoice,a.no_po,a.due_date,a.status,a.id_vendor,a.no_invoice,a.unique_invoice,a.date,a.vendor,a.total_ap,a.ppn,a.special_ppn,a.pph,a.special_pph,a.payment_date, b.shipper,b.shipment_id as resi FROM tbl_invoice_ap_final a 
+        JOIN tbl_shp_order b ON a.shipment_id=b.id GROUP BY a.no_invoice";
+        $where  = "a.status >= 2";
+        $isWhere = null;
+        // $isWhere = 'artikel.deleted_at IS NULL';
+        // jika memakai IS NULL pada where sql
+        header('Content-Type: application/json');
+        echo $this->M_Datatables->get_tables_query($query, $search, $where, $isWhere);
     }
 }
