@@ -48,7 +48,7 @@
                                 <div class="box-body">
                                     <div class="table-responsive">
 
-                                        <table id="tableApExternalFinance" class="table table-bordered" style="width:100%">
+                                        <table id="table" class="table table-bordered" style="width:100%">
                                             <thead>
                                                 <tr>
                                                     <th>Vendor/Agent</th>
@@ -94,7 +94,7 @@
                                                             <td><?= rupiah($j['total_ap']) ?></td>
                                                             <td><?= rupiah($j['ppn'] + $j['special_ppn']) ?></td>
                                                             <td><?= rupiah($j['pph'] + $j['special_pph']) ?></td>
-                                                            <td><?= rupiah(($j['total_ap']) - $j['pph'] + $j['ppn'] + $j['special_ppn'] + $j['special_pph']) ?></td>
+                                                            <td><?= rupiah(($j['total_ap']) - $j['pph'] + $j['ppn'] + $j['special_ppn'] - $j['special_pph']) ?></td>
 
                                                             <td><?= statusAp($j['status'], 1) ?></td>
                                                             <td>
@@ -256,134 +256,3 @@
     });
 </script>
 
-<script>
-    var tabel = null;
-    $(document).ready(function() {
-        tabel = $('#tableApExternalFinance').DataTable({
-            "processing": true,
-            // "responsive": true,
-            "serverSide": true,
-            "ordering": true, // Set true agar bisa di sorting
-            "dom": "<'row'<'col-lg-10 col-md-10 col-xs-12'f>>" +
-                "<'row'<'col-sm-12'tr>>" +
-                "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>" +
-                "<'row'<'col-lg-10 col-md-10 col-xs-12'l>>",
-            "order": [
-                [0, 'desc']
-            ], // Default sortingnya berdasarkan kolom / field ke 0 (paling pertama)
-            "ajax": {
-                "url": "<?= base_url('finance/ApExternal/getDataTableApExternal'); ?>", // URL file untuk proses select datanya
-                "type": "POST"
-            },
-            "deferRender": true,
-            "aLengthMenu": [
-                [5, 10, 50],
-                [5, 10, 50]
-            ], // Combobox Limit
-            "columns": [{
-                    "data": "id_so",
-                    "render": function(data, type, row, meta) {
-                        return row.no_invoice + `<br>` + row.vendor;
-                    }
-                }, {
-                    "data": "no_po",
-                },
-                {
-                    "data": "date",
-                },
-                {
-                    "data": "status",
-                    "render": function(data, type, row, metaphone) {
-                        if (data == 4) {
-                            return '<span class="label label-success label-inline font-weight-lighter">Paid</span>';
-                        } else {
-                            if (row.due_date == NULL) {
-                                return "Due Date Not Setting";
-                            } else {
-                                return row.due_date;
-                            }
-                        }
-
-                    }
-                },
-                {
-                    "data": "destination",
-                },
-                {
-                    "data": "pu_poin",
-                },
-                {
-                    "data": "status",
-                    "render": function(data, type, row, meta) {
-                        if (data == 0) {
-                            return '<span class="label label-danger label-inline font-weight-lighter" style="width: 100px;">Request Pickup</span>';
-                        } else if (data == 5) {
-                            return '<span class="label label-secondary label-inline font-weight-lighter" style="width: 100px;">Cancel</span>';
-
-                        } else {
-                            return '<span class="label label-success label-inline font-weight-lighter" style="width: 100px;">Pickuped</span>';
-
-                        }
-                    }
-                },
-                {
-                    "data": "total_ap",
-                },
-                {
-                    "data": "ppn",
-                    "render": function(data, type, row, metaphone) {
-                        return data + row.special_ppn;
-
-                    }
-                },
-
-                {
-                    "data": "pph",
-                    "render": function(data, type, row, metaphone) {
-                        return data + row.special_pph;
-
-                    }
-                },
-
-                {
-                    "data": "total_ap",
-                    "render": function(data, type, row, metaphone) {
-                        return (data) - row.pph + row.ppn + row.special_ppn + row.special_pph
-
-                    }
-                },
-                {
-                    "data": "is_incoming",
-                    "render": function(data, type, row, meta) {
-                        if (data == 0) {
-                            return 'Outgoing';
-                        } else {
-                            return 'Incoming';
-                        }
-                    }
-                },
-                // {
-                // 	"data": "status",
-                // 	"render": function(data, type, row, meta) {
-                // 		if (data == 0) {
-                // 			return '<a href="#" class="btn btn-danger font-weight-bold btn-pill">Order In</a>';
-                // 		} else if (data == 1) {
-                // 			return '<a href="#" class="btn btn-success font-weight-bold btn-pill">Order PU</a>';
-                // 		} else if (data == 2) {
-                // 			return '<a href="#" class="btn btn-success font-weight-bold btn-pill">Order Pickuped</a>';
-                // 		} else {
-                // 			return '<a href="#" class="btn btn-success font-weight-bold btn-pill">Order Finished</a>';
-                // 		}
-                // 	}
-                // },
-                {
-                    "data": "id_so",
-                    "render": function(data, type, row, meta) {
-                        return `<a onclick='$("#modalLoading").modal("show");' href="<?= base_url('cs/salesOrder/detail/') ?>` + data + `" class="btn btn-sm mb-1 text-light" style="background-color: #9c223b;">Detail</a>`;
-
-                    }
-                },
-            ],
-        });
-    });
-</script>
