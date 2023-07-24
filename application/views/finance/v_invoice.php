@@ -64,9 +64,12 @@
                                 <div class="box-body">
                                     <div class="table-responsive">
 
-                                        <table id="table" class="table table-bordered" style="width:100%">
+                                    <form action="<?= base_url('finance/Invoice/paidInvoice') ?>">
+
+                                        <table id="tableInvoice" class="table table-bordered" style="width:100%">
                                             <thead>
                                                 <tr>
+                                                    <th>#</th>
                                                     <th>No Invoice</th>
                                                     <th>Date Created</th>
                                                     <th>Due Date</th>
@@ -97,6 +100,7 @@
                                                     <tr>
 
                                                         <!-- <td><a target="blank" href="<?= base_url('finance/invoice/printProforma/' . $j['no_invoice']) ?>"><?= $j['no_invoice'] ?></a> </td> -->
+                                                        <td><input type="checkbox" value="<?= $j['no_invoice'] ?>" name="no_invoice" id="no_invoice"></td>
                                                         <td><a target="blank" href="<?= 'https://tesla-smartwork.transtama.com/Invoice/printProforma/' . $j['no_invoice'] ?>"><?= $j['no_invoice'] ?></a> </td>
                                                         <td><?= bulan_indo($j['date']) ?></td>
                                                         <td><?php if ($j['status'] == 2) {
@@ -164,6 +168,8 @@
 
                                         </table>
 
+                                        </form>
+
                                     </div>
 
                                 </div>
@@ -222,4 +228,7 @@
     <!-- /.modal -->
 
 <?php } ?>
+
+
+
 
