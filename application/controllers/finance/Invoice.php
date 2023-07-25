@@ -64,18 +64,26 @@ class Invoice extends CI_Controller
         $no_invoice =  $this->input->post('no_invoice');
         if ($no_invoice == NULL) {
             $this->session->set_flashdata('messageAlert', $this->messageAlert('error', 'Please Select Minimun 1 Invoice'));
-            redirect('finance/jobsheet/final');
+            redirect('finance/Invoice/final');
         }
-        // var_dump($data['shipper']);
-        // die;
-        $data['title'] = 'Create Invoice';
-        $breadcrumb_items = [];
-        $data['subtitle'] = 'Create Invoice';
-        // $data['sub_header_page'] = 'exist';
-        $this->breadcrumb->add_item($breadcrumb_items);
-        $data['breadcrumb_bootstrap_style'] = $this->breadcrumb->generate();
-        $data['no_invoice'] = $no_invoice;
-        $this->backend->display('finance/v_paidInvoice', $data);
+
+        $invoice = array();
+
+        for ($i = 0; $i < sizeof($no_invoice); $i++) {
+            $dataInvoice = $this->cs->getProformaInvoiceFinalDetail($no_invoice[$i])->row_array();
+            $invoice += $dataInvoice;
+        }
+
+        var_dump($invoice);
+        
+        // $data['title'] = 'Create Invoice';
+        // $breadcrumb_items = [];
+        // $data['subtitle'] = 'Create Invoice';
+        // // $data['sub_header_page'] = 'exist';
+        // $this->breadcrumb->add_item($breadcrumb_items);
+        // $data['breadcrumb_bootstrap_style'] = $this->breadcrumb->generate();
+        // $data['noInvoice'] = $no_invoice;
+        // $this->backend->display('finance/v_paidInvoice', $data);
     }
     public function edit($id_invoice, $no_invoice)
     {

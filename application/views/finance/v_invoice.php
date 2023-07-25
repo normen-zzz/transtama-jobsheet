@@ -41,7 +41,7 @@
                                             <td style="font-weight: bold;">Shipment ID/DO Number</td>
                                             <td>: <?= $shipment_id ?> </td>
                                         </tr>
-										 <tr>
+                                        <tr>
                                             <td style="font-weight: bold;">Due Date</td>
                                             <td>: <?= $invoice['due_date'] ?> </td>
                                         </tr>
@@ -64,109 +64,109 @@
                                 <div class="box-body">
                                     <div class="table-responsive">
 
-                                    <form action="<?= base_url('finance/Invoice/paidInvoice') ?>">
-
-                                        <table id="tableInvoice" class="table table-bordered" style="width:100%">
-                                            <thead>
-                                                <tr>
-                                                    <th>#</th>
-                                                    <th>No Invoice</th>
-                                                    <th>Date Created</th>
-                                                    <th>Due Date</th>
-                                                    <th>Time Line</th>
-                                                    <th>Customer Invoice</th>
-                                                    <th>Customer Pickup</th>
-                                                    <th>Payment Status</th>
-                                                    <th>Action</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <?php
-                                                foreach ($proforma as $j) {
-                                                    $total_mepet = 0;
-
-                                                    $tgl1 = strtotime(date('Y-m-d'));
-                                                    $tgl2 = strtotime($j['due_date']);
-
-                                                    $jarak = $tgl2 - $tgl1;
-
-                                                    $perbedaan = $jarak / 60 / 60 / 24;
-
-                                                    if ($perbedaan <= 7) {
-                                                        $total_mepet = $total_mepet + 1;
-                                                    }
-                                                    // echo $total_mepet;
-                                                ?>
+                                        <form method="POST" action="<?= base_url('finance/Invoice/paidInvoice') ?>">
+                                            <button class="btn btn-primary" id="paidInvoiceBtn" type="submit">Paid</button>
+                                            <table id="tableInvoice" class="table table-bordered" style="width:100%">
+                                                <thead>
                                                     <tr>
-
-                                                        <!-- <td><a target="blank" href="<?= base_url('finance/invoice/printProforma/' . $j['no_invoice']) ?>"><?= $j['no_invoice'] ?></a> </td> -->
-                                                        <td><input type="checkbox" value="<?= $j['no_invoice'] ?>" name="no_invoice" id="no_invoice"></td>
-                                                        <td><a target="blank" href="<?= 'https://tesla-smartwork.transtama.com/Invoice/printProforma/' . $j['no_invoice'] ?>"><?= $j['no_invoice'] ?></a> </td>
-                                                        <td><?= bulan_indo($j['date']) ?></td>
-                                                        <td><?php if ($j['status'] == 2) {
-                                                                echo '<span class="label label-success label-inline font-weight-lighter">Paid</span>';
-                                                            } else {
-                                                                echo  bulan_indo($j['due_date']);
-                                                            } ?>
-                                                        </td>
-                                                        <td>
-                                                            <?php if ($j['status'] == 2) {
-                                                                echo '<span class="text-success">Paid</span> ';
-                                                            } else {
-                                                                if ($perbedaan <= 7) {
-                                                                    $total_mepet = $total_mepet + 1;
-                                                            ?>
-                                                                    <span data-perbedaan="<?= $total_mepet ?>" id="the-span"></span>
-                                                                <?php   }
-
-
-                                                                if ($perbedaan < 0) {
-                                                                    $total_mepet += 1;
-                                                                    echo '<span class="text-danger">Expired</span> 
-																	<br> Please Follow up This invoice';
-                                                                ?>
-                                                            <?php
-                                                                } elseif ($perbedaan <= 7 || $perbedaan >= 0) {
-                                                                    echo "<span class='text-danger'>$perbedaan Days Again</span>";
-                                                                } else {
-                                                                    echo "<span class='text-danger'>$perbedaan Days Again</span>";
-                                                                }
-                                                            }
-                                                            ?>
-                                                        </td>
-                                                        <td><?= $j['customer'] ?></td>
-                                                        <td><?= $j['customer_pickup'] ?></td>
-                                                        <td>
-                                                            <?php if ($j['status'] == 1) {
-                                                                echo '<span class="label label-danger label-inline font-weight-lighter">Pending</span>';
-                                                            } elseif ($j['status'] == 2) {
-                                                                echo '<span class="label label-success label-inline font-weight-lighter">Paid</span>';
-                                                            } elseif ($j['status'] == 3) {
-                                                                echo '<span class="label label-purple label-inline font-weight-lighter">Unpaid</span>';
-                                                            }  ?>
-                                                        </td>
-                                                        <td>
-                                                            <?php if ($j['status'] == 2) {
-                                                            ?>
-                                                                <a href="<?= base_url('finance/invoice/detailInvoice/' . $j['id_invoice'] . '/' . $j['no_invoice']) ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">Detail</a>
-                                                            <?php  } else {
-                                                            ?>
-                                                                <a href="<?= base_url('finance/invoice/detailInvoice/' . $j['id_invoice'] . '/' . $j['no_invoice']) ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">Detail</a>
-                                                                <a href="<?= base_url('finance/invoice/editInvoice/' . $j['id_invoice'] . '/' . $j['no_invoice']) ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">Edit</a>
-                                                                <button data-toggle="modal" data-target="#modal-paid<?= $j['no_invoice'] ?>" class=" btn btn-sm text-light mt-1" style="background-color: #9c223b;">Paid</button>
-                                                            <?php } ?>
-                                                            <a target="blank" href="<?= base_url('finance/invoice/printProformaFull/' . $j['no_invoice']) ?>" class="btn btn-sm mt-1 text-light" style="background-color: #9c223b;"><i class="fa fa-print text-light"></i>PDF </a>
-                                                            <!-- <a target="blank" href="<?= base_url('finance/invoice/printProformaExcell/' . $j['no_invoice']) ?>" class="btn btn-sm mt-1 text-light" style="background-color: #9c223b;"><i class="fa fa-print text-light"></i> Excell </a> -->
-                                                            <a target="blank" href="<?= 'https://tesla-smartwork.transtama.com/Invoice/printProformaExcell/'.$j['no_invoice'] ?>" class="btn btn-sm mt-1 text-light" style="background-color: #9c223b;"><i class="fa fa-print text-light"></i> Excell </a>
-                                                        </td>
-
+                                                        <th>#</th>
+                                                        <th>No Invoice</th>
+                                                        <th>Date Created</th>
+                                                        <th>Due Date</th>
+                                                        <th>Time Line</th>
+                                                        <th>Customer Invoice</th>
+                                                        <th>Customer Pickup</th>
+                                                        <th>Payment Status</th>
+                                                        <th>Action</th>
                                                     </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <?php
+                                                    foreach ($proforma as $j) {
+                                                        $total_mepet = 0;
 
-                                                <?php } ?>
+                                                        $tgl1 = strtotime(date('Y-m-d'));
+                                                        $tgl2 = strtotime($j['due_date']);
 
-                                            </tbody>
+                                                        $jarak = $tgl2 - $tgl1;
 
-                                        </table>
+                                                        $perbedaan = $jarak / 60 / 60 / 24;
+
+                                                        if ($perbedaan <= 7) {
+                                                            $total_mepet = $total_mepet + 1;
+                                                        }
+                                                        // echo $total_mepet;
+                                                    ?>
+                                                        <tr>
+
+                                                            <!-- <td><a target="blank" href="<?= base_url('finance/invoice/printProforma/' . $j['no_invoice']) ?>"><?= $j['no_invoice'] ?></a> </td> -->
+                                                            <td><input type="checkbox" class="no_invoice" value="<?= $j['no_invoice'] ?>" name="no_invoice[]" id="no_invoice"></td>
+                                                            <td><a target="blank" href="<?= 'https://tesla-smartwork.transtama.com/Invoice/printProforma/' . $j['no_invoice'] ?>"><?= $j['no_invoice'] ?></a> </td>
+                                                            <td><?= bulan_indo($j['date']) ?></td>
+                                                            <td><?php if ($j['status'] == 2) {
+                                                                    echo '<span class="label label-success label-inline font-weight-lighter">Paid</span>';
+                                                                } else {
+                                                                    echo  bulan_indo($j['due_date']);
+                                                                } ?>
+                                                            </td>
+                                                            <td>
+                                                                <?php if ($j['status'] == 2) {
+                                                                    echo '<span class="text-success">Paid</span> ';
+                                                                } else {
+                                                                    if ($perbedaan <= 7) {
+                                                                        $total_mepet = $total_mepet + 1;
+                                                                ?>
+                                                                        <span data-perbedaan="<?= $total_mepet ?>" id="the-span"></span>
+                                                                    <?php   }
+
+
+                                                                    if ($perbedaan < 0) {
+                                                                        $total_mepet += 1;
+                                                                        echo '<span class="text-danger">Expired</span> 
+																	<br> Please Follow up This invoice';
+                                                                    ?>
+                                                                <?php
+                                                                    } elseif ($perbedaan <= 7 || $perbedaan >= 0) {
+                                                                        echo "<span class='text-danger'>$perbedaan Days Again</span>";
+                                                                    } else {
+                                                                        echo "<span class='text-danger'>$perbedaan Days Again</span>";
+                                                                    }
+                                                                }
+                                                                ?>
+                                                            </td>
+                                                            <td><?= $j['customer'] ?></td>
+                                                            <td><?= $j['customer_pickup'] ?></td>
+                                                            <td>
+                                                                <?php if ($j['status'] == 1) {
+                                                                    echo '<span class="label label-danger label-inline font-weight-lighter">Pending</span>';
+                                                                } elseif ($j['status'] == 2) {
+                                                                    echo '<span class="label label-success label-inline font-weight-lighter">Paid</span>';
+                                                                } elseif ($j['status'] == 3) {
+                                                                    echo '<span class="label label-purple label-inline font-weight-lighter">Unpaid</span>';
+                                                                }  ?>
+                                                            </td>
+                                                            <td>
+                                                                <?php if ($j['status'] == 2) {
+                                                                ?>
+                                                                    <a href="<?= base_url('finance/invoice/detailInvoice/' . $j['id_invoice'] . '/' . $j['no_invoice']) ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">Detail</a>
+                                                                <?php  } else {
+                                                                ?>
+                                                                    <a href="<?= base_url('finance/invoice/detailInvoice/' . $j['id_invoice'] . '/' . $j['no_invoice']) ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">Detail</a>
+                                                                    <a href="<?= base_url('finance/invoice/editInvoice/' . $j['id_invoice'] . '/' . $j['no_invoice']) ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">Edit</a>
+                                                                    <button data-toggle="modal" data-target="#modal-paid<?= $j['no_invoice'] ?>" class=" btn btn-sm text-light mt-1" style="background-color: #9c223b;">Paid</button>
+                                                                <?php } ?>
+                                                                <a target="blank" href="<?= base_url('finance/invoice/printProformaFull/' . $j['no_invoice']) ?>" class="btn btn-sm mt-1 text-light" style="background-color: #9c223b;"><i class="fa fa-print text-light"></i>PDF </a>
+                                                                <!-- <a target="blank" href="<?= base_url('finance/invoice/printProformaExcell/' . $j['no_invoice']) ?>" class="btn btn-sm mt-1 text-light" style="background-color: #9c223b;"><i class="fa fa-print text-light"></i> Excell </a> -->
+                                                                <a target="blank" href="<?= 'https://tesla-smartwork.transtama.com/Invoice/printProformaExcell/' . $j['no_invoice'] ?>" class="btn btn-sm mt-1 text-light" style="background-color: #9c223b;"><i class="fa fa-print text-light"></i> Excell </a>
+                                                            </td>
+
+                                                        </tr>
+
+                                                    <?php } ?>
+
+                                                </tbody>
+
+                                            </table>
 
                                         </form>
 
@@ -230,5 +230,13 @@
 <?php } ?>
 
 
+<script>
+    $(document).ready(function() {
 
+        var $submit = $("#paidInvoiceBtn").hide(),
+            $cbs = $('input[name="no_invoice[]"]').click(function() {
+                $submit.toggle($cbs.is(":checked"));
+            });
 
+    });
+</script>

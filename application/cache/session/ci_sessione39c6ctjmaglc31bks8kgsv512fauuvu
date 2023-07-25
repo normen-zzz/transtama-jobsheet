@@ -1,0 +1,18 @@
+__ci_last_regenerate|i:1690303365;username|s:15:"adminmgrfinance";id_role|s:1:"6";nama_user|s:14:"managerfinance";email|s:24:"managerfinance@gmail.com";id_user|s:2:"59";akses|s:1:"0";id_atasan|s:1:"0";id_jabatan|s:1:"2";messageAlert|s:414:"
+			const Toast = Swal.mixin({
+				toast: true,
+				position: 'top-end',
+				showConfirmButton: false,
+				timer: 3000,
+				timerProgressBar: true,
+				didOpen: (toast) => {
+				toast.addEventListener('mouseenter', Swal.stopTimer)
+				toast.addEventListener('mouseleave', Swal.resumeTimer)
+				}
+			})
+			
+			Toast.fire({
+				icon: 'error',
+				title: 'Please Select Minimun 1 Invoice'
+			  })
+			";__ci_vars|a:1:{s:12:"messageAlert";s:3:"old";}

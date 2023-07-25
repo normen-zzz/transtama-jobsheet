@@ -59,6 +59,19 @@ class CsModel extends M_Datatables
 		$query = $this->db->get();
 		return $query;
 	}
+
+	function getProformaInvoiceFinalDetail($no_invoice)
+	{
+		$this->db->select('a.no_invoice,a.due_date,a.date,a.status,a.customer,a.customer_pickup,a.id_invoice, b.shipper');
+		$this->db->from('tbl_invoice a');
+		$this->db->join('tbl_shp_order b', 'a.shipment_id=b.id');
+		$this->db->where('a.status', 1);
+		$this->db->where('a.no_invoice', $no_invoice);
+		$this->db->group_by('a.no_invoice');
+		$this->db->order_by('a.due_date', 'ASC');
+		$query = $this->db->get();
+		return $query;
+	}
 	function getProformaInvoiceTotal()
 	{
 		$this->db->select('a.no_invoice,a.due_date,a.date,a.status,a.customer,a.customer_pickup,a.id_invoice, b.shipper');
