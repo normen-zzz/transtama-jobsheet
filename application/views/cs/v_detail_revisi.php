@@ -1538,7 +1538,7 @@
                 <?php  } ?>
             </div>
             <div class="col-md-6">
-                <?php if ($tgl_approve_revisi['id_user_gm'] == NULL) {
+                <?php if ($request['status_revisi'] != 3) {
                 ?>
                     <div class="card card-custom gutter-b example example-compact" style="height:100px;">
                         <h3 class="text-title text-center mt-2"><i class="fa fa-calendar text-warning"></i> Wait GM Check Revision</h3> <br>

@@ -54,10 +54,18 @@
                                                             <td>
                                                                 <?php if ($get_invoice) {
                                                                 ?>
-                                                                <?php } else {
-                                                                ?>
-                                                                    <input type="checkbox" class="form-control" name="shipment_id[]" value="<?= $j['id'] ?>">
-                                                                <?php    } ?>
+                                                                    <?php } else {
+
+                                                                    if ($get_revisi_so) {
+                                                                        if ($get_revisi_so['status_revisi'] != 7) { ?>
+                                                                            <input type="checkbox" class="form-control" name="shipment_id[]" value="<?= $j['id'] ?>" disabled>
+
+                                                                        <?php } else { ?>
+                                                                            <input type="checkbox" class="form-control" name="shipment_id[]" value="<?= $j['id'] ?>">
+                                                                <?php    }
+                                                                    } else { ?>
+                                                                     <input type="checkbox" class="form-control" name="shipment_id[]" value="<?= $j['id'] ?>">
+                                                                <?php }} ?>
                                                             </td>
                                                             <td><?= bulan_indo($j['tgl_pickup']) ?></td>
                                                             <!-- No shipment -->
@@ -91,6 +99,12 @@
                                                                     echo '<span class="label label-success label-inline font-weight-lighter" style="width: 150px;">Approve Finance</span>';
                                                                     if ($get_invoice) {
                                                                         echo '<span class="label label-primary label-inline font-weight-lighter mt-1" style="width: 150px;">Invoice Created</span>';
+                                                                    }
+                                                                    if ($get_revisi_so) {
+                                                                        if ($get_revisi_so['status_revisi'] != 7) {
+                                                                            echo '<span class="label label-primary label-inline font-weight-lighter mt-1" style="width: 150px;">On Progress Revisi So</span>';
+                                                                        }
+                                                                        
                                                                     }
                                                                 } ?></td>
                                                             <td>

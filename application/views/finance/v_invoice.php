@@ -152,8 +152,8 @@
                                                                 <?php  } else {
                                                                 ?>
                                                                     <a href="<?= base_url('finance/invoice/detailInvoice/' . $j['id_invoice'] . '/' . $j['no_invoice']) ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">Detail</a>
-                                                                    <a href="<?= base_url('finance/invoice/editInvoice/' . $j['id_invoice'] . '/' . $j['no_invoice']) ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">Edit</a>
-                                                                    <button data-toggle="modal" data-target="#modal-paid<?= $j['no_invoice'] ?>" class=" btn btn-sm text-light mt-1" style="background-color: #9c223b;">Paid</button>
+                                                                    <a href="<?= base_url('finance/invoice/editInvoice/' . $j['id_invoice'] . '/' . $j['no_invoice']) ?>" class=" btn btn-sm text-light mt-1" style="background-color: #9c223b;">Edit</a>
+                                                                    <button data-toggle="modal" type="button" data-target="#modal-paid<?= $j['no_invoice'] ?>" class=" btn btn-sm text-light mt-1" style="background-color: #9c223b;">Paid</button>
                                                                 <?php } ?>
                                                                 <a target="blank" href="<?= base_url('finance/invoice/printProformaFull/' . $j['no_invoice']) ?>" class="btn btn-sm mt-1 text-light" style="background-color: #9c223b;"><i class="fa fa-print text-light"></i>PDF </a>
                                                                 <!-- <a target="blank" href="<?= base_url('finance/invoice/printProformaExcell/' . $j['no_invoice']) ?>" class="btn btn-sm mt-1 text-light" style="background-color: #9c223b;"><i class="fa fa-print text-light"></i> Excell </a> -->
