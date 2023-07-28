@@ -104,14 +104,16 @@
                                                             <td>
                                                                 <input type="text" disabled class="form-control" name="collie[]" value="<?= $do['koli'] ?>">
                                                             </td>
-                                                            <td>
+                                                             <td>
                                                                 <?php if ($invoice != NULL) { 
                                                                     if ($invoice['status'] == 1 || $invoice['status'] == 2) {
                                                                     ?>
                                                                 <input type="text" class="form-control" readonly name="weight[]" value="<?= $do['berat'] ?>">
                                                                 <?php } else{ ?>
                                                                     <input type="text" class="form-control" name="weight[]" value="<?= $do['berat'] ?>">
-                                                                    <?php }} ?>
+                                                                    <?php }} else { ?>
+																	<input type="text" class="form-control" name="weight[]" value="<?= $do['berat'] ?>">
+																	<?php } ?>
                                                             </td>
                                                         </tr>
                                                     <?php $total_berat += $do['berat'];
@@ -151,17 +153,21 @@
                                                             <td> <input type="text" class="form-control" readonly placeholder="isi no flight" name="berat_js" value="<?= $msr['berat_js'] ?>"> </td>
                                                             <?php } else { ?>
                                                                 <td> <input type="text" class="form-control" placeholder="isi no flight" name="berat_js" value="<?= $msr['berat_js'] ?>"> </td>
-                                                                <?php }} ?>
-                                                                
-                                                        <?php } ?>
+                                                                <?php }} else { ?>
+                                                                <td> <input type="text" class="form-control" placeholder="isi no flight" name="berat_js" value="<?= $msr['berat_js'] ?>"> </td>
+                                                        <?php }} ?>
                                                         <?php if ($invoice != NULL) { 
                                                                     if ($invoice['status'] == 1 || $invoice['status'] == 2) {
                                                                     ?>
                                                         <td> <input type="text" class="form-control" readonly placeholder="isi no flight" name="berat_msr" value="<?= $msr['berat_msr'] ?>"> </td>
                                                         <?php } else { ?>
                                                             <td> <input type="text" class="form-control" placeholder="isi no flight" name="berat_msr" value="<?= $msr['berat_msr'] ?>"> </td>
-                                                            <?php }} ?>
-                                                    </tr>
+                                                            <?php }} else { ?>
+															 <td> <input type="text" class="form-control" placeholder="isi no flight" name="berat_msr" value="<?= $msr['berat_msr'] ?>"> </td>
+															
+															<?php } ?>
+															
+															</tr>
 
                                                 </tbody>
 
@@ -176,7 +182,6 @@
                                                  <?php } else { ?>
                                                     <button class="btn btn-success">Submit</button>
                                                 <?php  } }?>
-                                            
                                         </form>
                                     </div>
 
@@ -265,16 +270,16 @@
                                                         </td>
                                                         <td>
                                                             <!-- <?= rupiah($msr['freight_kg']) ?> -->
-                                                            <input type="text" class="form-control" name="freight_kg" value="<?= $msr['freight_kg'] ?>">
+                                                            <input type="text" readonly class="form-control" name="freight_kg" value="<?= $msr['freight_kg'] ?>">
                                                         </td>
                                                         <td>
                                                             <!-- <?= rupiah($msr['special_freight']) ?> -->
-                                                            <input type="text" class="form-control" name="special_freight" value="<?= $msr['special_freight'] ?>">
+                                                            <input type="text" class="form-control" name="special_freight" readonly value="<?= $msr['special_freight'] ?>">
                                                         </td>
                                                         <td> <input type="text" class="form-control" placeholder="isi no flight" name="packing" value="<?= $msr['packing'] ?>"> </td>
-                                                        <td> <input type="text" class="form-control" placeholder="isi no flight" name="others" value="<?= $msr['others'] ?>"> </td>
-                                                        <td> <input type="text" class="form-control" placeholder="isi no flight" name="surcharge" value="<?= $msr['surcharge'] ?>"> </td>
-                                                        <td> <input type="text" class="form-control" placeholder="isi no flight" name="insurance" value="<?= $msr['insurance'] ?>"> </td>
+                                                        <td> <input type="text" class="form-control" placeholder="isi no flight" readonly name="others" value="<?= $msr['others'] ?>"> </td>
+                                                        <td> <input type="text" class="form-control" placeholder="isi no flight" readonly name="surcharge" value="<?= $msr['surcharge'] ?>"> </td>
+                                                        <td> <input type="text" class="form-control" placeholder="isi no flight" readonly name="insurance" value="<?= $msr['insurance'] ?>"> </td>
                                                         <input type="text" class="form-control" hidden name="id" value="<?= $msr['id'] ?>">
                                                         <td>
                                                             <?= $msr['disc'] ?> / <?= $msr['disc'] * 100 ?> %
@@ -312,7 +317,7 @@
                                                 </table>
 
                                             </div>
-                                            <button class="btn btn-success">Submit</button>
+                                           <button class="btn btn-success">Submit</button>
                                         </form>
                                     </div>
 

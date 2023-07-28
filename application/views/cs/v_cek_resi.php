@@ -141,7 +141,7 @@ setlocale(LC_TIME, "id_ID.UTF8");
 
                                             </table>
                                             <?php if ($shipment['status_so'] >= 1) { ?>
-                                                <a href="<?= base_url('cs/Jobsheet/detail/' . $shipment['id']) ?>" class="btn btn-sm mb-1 text-light" style="background-color: #9c223b;">Detail</a>
+                                                <a href="<?= base_url('cs/Jobsheet/detailCekResi/' . $shipment['id']) ?>" class="btn btn-sm mb-1 text-light" style="background-color: #9c223b;">Detail</a>
                                         <?php }
                                         } ?>
 

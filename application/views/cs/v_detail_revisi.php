@@ -92,8 +92,9 @@
                                                         <td> <input type="text" class="form-control" placeholder="isi no smu" name="no_smu" value="<?= $msr['no_smu'] ?>">
                                                             <input type="text" class="form-control" hidden name="id" value="<?= $msr['id'] ?>">
                                                         </td>
-                                                        <td><?= $msr['berat_msr'] ?></td>
+                                                        
                                                         <td><?= $msr['berat_js'] ?></td>
+                                                        <td><?= $msr['berat_msr'] ?></td>
                                                     </tr>
 
                                                 </tbody>

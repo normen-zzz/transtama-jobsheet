@@ -162,6 +162,20 @@ class Jobsheet extends CI_Controller
         $data['invoice'] = $this->db->get_where('tbl_invoice',array('shipment_id' => $id))->row_array();
         $this->backend->display('cs/v_js_detail_mgr', $data);
     }
+
+    public function detailCekResi($id)
+    {
+        $data['subtitle'] = 'Detail Sales Order';
+        $data['title'] = 'Detail Sales Order';
+        $data['msr'] = $this->cs->getDetailSo($id)->row_array();
+        $data['modal'] = $this->db->get_where('tbl_modal', ['shipment_id' => $id])->result_array();
+        $data['vendors'] = $this->db->order_by('id_vendor', 'DESC')->get_where('tbl_vendor', ['type' => 0])->result_array();
+        $data['agents'] = $this->db->order_by('id_vendor', 'DESC')->get_where('tbl_vendor', ['type' => 1])->result_array();
+        $data['vendor_selected'] = $this->cs->getVendorByShipment($id)->result_array();
+        $data['vendor_lengkap'] = $this->db->order_by('id_vendor', 'DESC')->get_where('tbl_vendor')->result_array();
+        $data['invoice'] = $this->db->get_where('tbl_invoice',array('shipment_id' => $id))->row_array();
+        $this->backend->display('cs/v_js_cek_resi', $data);
+    }
     public function cekResi()
     {
         if ($this->input->post('shipment_id') == NULL) {
