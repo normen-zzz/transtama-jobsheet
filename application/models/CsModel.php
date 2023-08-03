@@ -771,6 +771,18 @@ class CsModel extends M_Datatables
 		$query = $this->db->get();
 		return $query;
 	}
+
+	function getApVendorByNoPo($no_po)
+	{
+
+		$this->db->select('a.*, b.shipper,b.shipment_id as resi');
+		$this->db->from('tbl_invoice_ap_final a');
+		$this->db->join('tbl_shp_order b', 'a.shipment_id=b.id');
+		$this->db->where('a.no_po', $no_po);
+		$this->db->group_by('a.no_invoice');
+		$query = $this->db->get();
+		return $query;
+	}
 	function getTotalApVendorIn()
 	{
 		$this->db->select('a.*, b.shipper');

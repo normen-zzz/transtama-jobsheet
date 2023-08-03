@@ -46,6 +46,32 @@ class ApExternal extends CI_Controller
         $this->backend->display('finance/v_invoice_ap', $data);
     }
 
+    public function multiPaid() {
+        $no_po =  $this->input->post('no_po');
+        if ($no_po == NULL) {
+            $this->session->set_flashdata('messageAlert', $this->messageAlert('error', 'Please Select Minimun 1 AP'));
+            redirect('finance/apExternal/created');
+        }
+
+        $apexternal = array();
+
+        for ($i = 0; $i < sizeof($no_po); $i++) {
+            $dataNoPo = $this->cs->getApVendorByNoPo($no_po[$i])->row_array();
+            $apexternal[] = $dataNoPo;
+        }
+
+        // var_dump($apexternal);
+        
+        $data['title'] = 'Paid Ap External';
+        $breadcrumb_items = [];
+        $data['subtitle'] = 'PaidApExternal';
+       
+        $this->breadcrumb->add_item($breadcrumb_items);
+        $data['breadcrumb_bootstrap_style'] = $this->breadcrumb->generate();
+        $data['noInvoice'] = $apexternal;
+        $this->backend->display('finance/v_paidApExternal', $data);
+    }
+
     public function getModalApPaid()
     {
         $no_po = $this->input->get('no_po'); // Mengambil ID dari parameter GET
