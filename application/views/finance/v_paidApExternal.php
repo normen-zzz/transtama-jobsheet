@@ -14,16 +14,16 @@
                 <!-- Main content -->
                 <section class="content">
                     <div class="row" style="overflow: auto;">
-                        <form action="<?= base_url('finance/Invoice/bulkPaid') ?>" method="POST">
+                        <form action="<?= base_url('finance/apExternal/bulkPaid') ?>" method="POST">
                             <div class="col-12">
                                 <div class="box">
                                     <!-- /.box-header -->
                                     <div class="box-body">
                                         <div class="table-responsive">
-                                        <table id="table" class="table table-bordered" style="width:100%">
+                                            <table id="table" class="table table-bordered" style="width:100%">
                                                 <thead>
                                                     <tr>
-                                                        
+
                                                         <th>Vendor/Agent</th>
                                                         <th>No PO</th>
                                                         <!-- <th>No Invoice</th> -->
@@ -36,7 +36,7 @@
                                                         <th>Total Invoice</th>
                                                         <th>PO Status</th>
                                                         <th>Payment Status</th>
-                                                        
+
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -46,8 +46,9 @@
                                                     ?>
                                                         <?php if ($j['status'] >= 2) { ?>
                                                             <tr>
-                                                                
+
                                                                 <td><?= $j['vendor'] ?> <br>
+                                                                <input type="text" name="no_po" value="<?= $j['no_po'] ?>" hidden>
                                                                     <a href="<?= base_url('finance/apExternal/print/' . $j['no_po'] . '/' . $j['id_vendor'] . '/' . $j['unique_invoice']) ?>"><?= $j['no_invoice'] ?></a>
                                                                 </td>
                                                                 <td><?= $j['no_po'] ?></td>
@@ -81,12 +82,13 @@
                                                                     ?>
 
                                                                 </td>
-                                                                
+
 
                                                             </tr>
                                                         <?php } ?>
 
-                                                    <?php $totalInvoice += ($j['total_ap']) - $j['pph'] + $j['ppn'] + $j['special_ppn'] - $j['special_pph']; } ?>
+                                                    <?php $totalInvoice += ($j['total_ap']) - $j['pph'] + $j['ppn'] + $j['special_ppn'] - $j['special_pph'];
+                                                    } ?>
 
                                                     <tr>
                                                         <td style="text-align: right;" colspan="7">Total</td>
@@ -104,14 +106,26 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="row">                              
+                            
+                            <div class="row">
                                 <div class="col text-center">
                                     <label for="due_date" class="font-weight-bold">Date Paid</label>
                                     <input type="date" class="form-control" name="datePaid" required>
-                                
+
                                 </div>
                             </div>
-                            <br><br>                    
+
+                            <div class="row">
+                                <div class="col-4 text-center">
+                                    <label for="due_date" class="font-weight-bold">Type Payment</label>
+                                    <select required class="form-control" name="type_payment" id="type_payment">
+                                        <option value="Cash">Cash</option>
+                                        <option value="KlikBca">Klik Bca</option>
+                                    </select>
+
+                                </div>
+                            </div>
+                            <br><br>
                             <div class="row">
                                 <div class="col-md-5">
                                     <button type="submit" class="btn btn-success mt-6 ml-4" onclick="return confirm('Are you sure ?')">PAID Invoice</button>
