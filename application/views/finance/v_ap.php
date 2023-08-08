@@ -27,11 +27,15 @@
                     <!-- <a href="<?= base_url('finance/ap/history' . $this->uri->segment(3)) ?>" class="btn btn-sm mb-1 text-light" style="background-color: #9c223b;">History</a> -->
 
                 </div>
+
                 <div class="card-body" style="overflow: auto;">
                     <!--begin: Datatable-->
+                    <form action="<?= base_url('finance/Ap/multiPaid') ?>">
+                    <button type="submit" class="btn btn-success ml-3 mt-2 mb-2" id="submitPaid" style="display: none;">Paid</button>
                     <table class="table table-separate table-head-custom table-checkable" id="myTableAp">
                         <thead>
                             <tr>
+                                <th>#</th>
                                 <th>No AP</th>
                                 <th>Created By</th>
                                 <th>Purpose</th>
@@ -47,6 +51,21 @@
                             <?php foreach ($ap as $c) {
                             ?>
                                 <tr>
+                                    <td>
+
+                                        <?php if ($this->session->userdata('id_jabatan') != 11) {
+
+                                            if ($c['id_role'] == 2 || $c['id_role'] == 3 || $c['id_role'] == 5) {
+                                                if ($c['status'] == 7) { ?>
+                                                    <input type="checkbox" name="no_pengeluaran[]" value="<?= $c['no_pengeluaran'] ?>" id="no_pengeluaran">
+                                            <?php }} elseif ($c['id_role'] == 4 || $c['id_role'] == 6) {
+                                                 if ($c['status'] == 5) { ?>
+                                                  <input type="checkbox" name="no_pengeluaran[]" value="<?= $c['no_pengeluaran'] ?>" id="no_pengeluaran">
+                                        <?php }}} ?>
+
+                                        
+
+                                    </td>
                                     <td><?= $c['no_pengeluaran'] . '<br>';
                                         echo ($c['id_kat_ap'] == 3)  ? '<b>' . $c['no_ca'] . '</b>' : ''
                                         ?> </td>
@@ -90,17 +109,17 @@
                                             <?php if ($c['id_role'] == 2 || $c['id_role'] == 3 || $c['id_role'] == 5) {
                                                 // jika diapprove manager finance
                                                 if ($c['status'] == 7) { ?>
-                                                    <button href="#" data-toggle="modal" data-target="#modal-paid" class="btn btn-sm mb-1 text-light modalPaid" data-no_pengeluaran="<?= $c['no_pengeluaran'] ?>" data-url="<?= $url ?>" style="background-color: #9c223b;">Pay</button>
+                                                    <button href="#" data-toggle="modal" data-target="#modal-paid" class="btn btn-sm mb-1 text-light modalPaid" data-no_pengeluaran="<?= $c['no_pengeluaran'] ?>" data-url="<?= $url ?>" style="background-color: #9c223b;" type="button">Pay</button>
                                                 <?php } ?>
                                                 <!-- jika rolenya ka/sales -->
                                             <?php } elseif ($c['id_role'] == 4 || $c['id_role'] == 6) { ?>
                                                 <?php // jika diapprove GM
                                                 if ($c['status'] == 5) { ?>
-                                                    <button href="#" data-toggle="modal" data-target="#modal-paid" class="btn btn-sm mb-1 text-light modalPaid" data-no_pengeluaran="<?= $c['no_pengeluaran'] ?>" data-url="<?= $url ?>" style="background-color: #9c223b;">Pay</button>
+                                                    <button href="#" data-toggle="modal" data-target="#modal-paid" class="btn btn-sm mb-1 text-light modalPaid" data-no_pengeluaran="<?= $c['no_pengeluaran'] ?>" data-url="<?= $url ?>" style="background-color: #9c223b;" type="button">Pay</button>
                                                     <?php } else {
                                                     // jika dia untuk bensin atau transport maka bisa langsung di acc setelah approve manager 
                                                     if ($userAp['id_jabatan'] == 11 && $c['status'] == 7) { ?>
-                                                        <button href="#" data-toggle="modal" data-target="#modal-paidLangsung" class="btn btn-sm mb-1 text-light modalPaidLangsung" data-no_pengeluaran="<?= $c['no_pengeluaran'] ?>" data-url="<?= $url ?>" style="background-color: #9c223b;">Pay</button>
+                                                        <button href="#" data-toggle="modal" data-target="#modal-paidLangsung" class="btn btn-sm mb-1 text-light modalPaidLangsung" data-no_pengeluaran="<?= $c['no_pengeluaran'] ?>" data-url="<?= $url ?>" style="background-color: #9c223b;" type="button">Pay</button>
                                                 <?php }
                                                 } ?>
                                             <?php } ?>
@@ -111,6 +130,7 @@
 
                         </tbody>
                     </table>
+                    </form>
                     <!--end: Datatable-->
                 </div>
             </div>
@@ -149,37 +169,37 @@
 </div>
 
 <div class="modal fade" id="modal-paidLangsung">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Pay</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form action="<?= base_url('finance/ap/paidLangsung') ?>" method="POST" enctype="multipart/form-data">
-                        <div class="form-group">
-                            <label for="due_date" class="font-weight-bold">Proof Payment</label>
-                            <input type="file" class="form-control" name="ktp" required>
-                        </div>
-
-                        <div id="modalContentPaidLangsung">
-
-                        </div>
-
-                        
-                        <div class="modal-footer justify-content-between">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Submit</button>
-                        </div>
-                    </form>
-                </div>
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Pay</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
-            <!-- /.modal-content -->
+            <div class="modal-body">
+                <form action="<?= base_url('finance/ap/paidLangsung') ?>" method="POST" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="due_date" class="font-weight-bold">Proof Payment</label>
+                        <input type="file" class="form-control" name="ktp" required>
+                    </div>
+
+                    <div id="modalContentPaidLangsung">
+
+                    </div>
+
+
+                    <div class="modal-footer justify-content-between">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </form>
+            </div>
         </div>
-        <!-- /.modal-dialog -->
+        <!-- /.modal-content -->
     </div>
+    <!-- /.modal-dialog -->
+</div>
 
 
 <script>
@@ -278,6 +298,9 @@
                     alert('Terjadi kesalahan dalam memuat data.');
                 }
             });
+        });
+        $cbs = $('input[name="no_pengeluaran[]"]').click(function() {
+            $("#submitPaid").toggle($cbs.is(":checked"));
         });
     })
 </script>

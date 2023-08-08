@@ -48,7 +48,7 @@
                                                             <tr>
 
                                                                 <td><?= $j['vendor'] ?> <br>
-                                                                <input type="text" name="no_po" value="<?= $j['no_po'] ?>" hidden>
+                                                                <input type="text" name="no_po[]" value="<?= $j['no_po'] ?>" hidden>
                                                                     <a href="<?= base_url('finance/apExternal/print/' . $j['no_po'] . '/' . $j['id_vendor'] . '/' . $j['unique_invoice']) ?>"><?= $j['no_invoice'] ?></a>
                                                                 </td>
                                                                 <td><?= $j['no_po'] ?></td>
@@ -110,7 +110,7 @@
                             <div class="row">
                                 <div class="col text-center">
                                     <label for="due_date" class="font-weight-bold">Date Paid</label>
-                                    <input type="date" class="form-control" name="datePaid" required>
+                                    <input type="date" class="form-control" name="paymentDate" required>
 
                                 </div>
                             </div>
@@ -118,9 +118,9 @@
                             <div class="row">
                                 <div class="col-4 text-center">
                                     <label for="due_date" class="font-weight-bold">Type Payment</label>
-                                    <select required class="form-control" name="type_payment" id="type_payment">
-                                        <option value="Cash">Cash</option>
-                                        <option value="KlikBca">Klik Bca</option>
+                                    <select required class="form-control" name="typePayment" id="typePayment">
+                                        <option value="cash">Cash</option>
+                                        <option value="klikbca">Klik Bca</option>
                                     </select>
 
                                 </div>

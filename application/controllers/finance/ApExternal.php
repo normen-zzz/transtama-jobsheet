@@ -46,7 +46,8 @@ class ApExternal extends CI_Controller
         $this->backend->display('finance/v_invoice_ap', $data);
     }
 
-    public function multiPaid() {
+    public function multiPaid()
+    {
         $no_po =  $this->input->post('no_po');
         if ($no_po == NULL) {
             $this->session->set_flashdata('messageAlert', $this->messageAlert('error', 'Please Select Minimun 1 AP'));
@@ -61,11 +62,11 @@ class ApExternal extends CI_Controller
         }
 
         // var_dump($apexternal);
-        
+
         $data['title'] = 'Paid Ap External';
         $breadcrumb_items = [];
         $data['subtitle'] = 'PaidApExternal';
-       
+
         $this->breadcrumb->add_item($breadcrumb_items);
         $data['breadcrumb_bootstrap_style'] = $this->breadcrumb->generate();
         $data['noInvoice'] = $apexternal;
@@ -326,6 +327,25 @@ class ApExternal extends CI_Controller
         $this->dompdf->render();
         // $sekarang = date("d:F:Y:h:m:s");
         $this->dompdf->stream("Invoice$no_invoice.pdf", array('Attachment' => 0));
+    }
+
+    public function bulkPaid()
+    {
+
+        $no_po = $this->input->post('no_po');
+
+        for ($i = 0; $i < sizeof($no_po); $i++) {
+            $data = array(
+                'payment_date' => $this->input->post('paymentDate'),
+                'status' => 4,
+                'payment_eksekusi' => date('Y-m-d H:i:s'),
+                'user_payment' => $this->session->userdata('id_user'),
+                'type_payment' => $this->input->post('typePayment'),
+            );
+            $this->db->update('tbl_invoice_ap_final', $data, ['no_po' => $no_po[$i]]);
+        }
+        $this->session->set_flashdata('messageAlert', $this->messageAlert('success', 'Success Paid'));
+        redirect('finance/apExternal/created');
     }
 
 
