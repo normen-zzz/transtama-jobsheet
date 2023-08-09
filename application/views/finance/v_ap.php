@@ -30,7 +30,7 @@
 
                 <div class="card-body" style="overflow: auto;">
                     <!--begin: Datatable-->
-                    <form action="<?= base_url('finance/Ap/multiPaid') ?>">
+                    <form action="<?= base_url('finance/Ap/multiPaid') ?>" method="POST">
                     <button type="submit" class="btn btn-success ml-3 mt-2 mb-2" id="submitPaid" style="display: none;">Paid</button>
                     <table class="table table-separate table-head-custom table-checkable" id="myTableAp">
                         <thead>

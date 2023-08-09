@@ -31,6 +31,36 @@ class Ap extends CI_Controller
 
         $this->backend->display('finance/v_ap', $data);
     }
+    public function multiPaid($link = null)
+    {
+        $no_pengeluaran =  $this->input->post('no_pengeluaran');
+        if ($no_pengeluaran == NULL) {
+            $this->session->set_flashdata('messageAlert', $this->messageAlert('error', 'Please Select Minimun 1 AP'));
+            if ($link == NULL) {
+                redirect('finance/Ap');
+            } else{
+                redirect('finance/Ap/'.$link);
+            }
+           
+        }
+
+        $pengeluaran = array();
+
+        for ($i = 0; $i < sizeof($no_pengeluaran); $i++) {
+            $dataPengeluaran = $this->ap->getApByNoPengeluaran($no_pengeluaran[$i])->row_array();
+            $pengeluaran[] = $dataPengeluaran;
+        }
+
+        // var_dump($apexternal);
+
+        $data['title'] = 'Paid Ap ';
+       
+        $data['subtitle'] = 'Paid Ap';
+
+        
+        $data['ap'] = $pengeluaran;
+        $this->backend->display('finance/v_paidAp', $data);
+    }
     public function getModalPaid()
     {
         $no_pengeluaran = $this->input->get('no_pengeluaran');
