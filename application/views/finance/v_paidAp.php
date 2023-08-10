@@ -14,7 +14,7 @@
                 <!-- Main content -->
                 <section class="content">
                     <div class="row" style="overflow: auto;">
-                        <form action="<?= base_url('finance/apExternal/bulkPaid') ?>" method="POST">
+                        <form action="<?= base_url('finance/Ap/multiPaidAct/' . $url) ?>" method="POST" enctype="multipart/form-data">
                             <div class="col-12">
                                 <div class="box">
                                     <!-- /.box-header -->
@@ -31,11 +31,13 @@
                                                         <th>Amount Proposed</th>
                                                         <th>Amount Approved</th>
                                                         <th>Status</th>
+                                                        <th>Bukti Pembayaran</th>
 
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <?php $total = 0;
+                                                    <?php $no = 1;
+                                                    $total = 0;
                                                     foreach ($ap as $c) {
                                                     ?>
                                                         <tr>
@@ -51,10 +53,15 @@
                                                             <td><?= statusAp($c['status'], $c['is_approve_sm']) ?>
 
                                                             </td>
+                                                            <td>
+                                                                <input type="file" name="photo[]" class="form-control" onchange="handleImageUploadTracker(this.id);" id="photoPengeluaran<?= $no ?>" accept="image/*" required>
+                                                                <input type="file" name="photo_pengeluaran[]" class="form-control" id="upload_file-photoPengeluaran<?= $no ?>">
+                                                            </td>
 
 
                                                         </tr>
                                                     <?php $total += $c['total_approved'];
+                                                        $no += 1;
                                                     } ?>
                                                     <tr>
                                                         <td style="text-align: right;" colspan="4"><b>Total Approved :</b></td>
@@ -72,14 +79,14 @@
                             </div>
 
                             <div class="row">
-                                <div class="col text-center">
+                                <div class="col-4 text-center">
                                     <label for="due_date" class="font-weight-bold">Date Paid</label>
-                                    <input type="date" class="form-control" name="paymentDate" required>
+                                    <input type="date" class="form-control" name="datePayment" required>
 
                                 </div>
-                            </div>
 
-                            <div class="row">
+
+
                                 <div class="col-4 text-center">
                                     <label for="due_date" class="font-weight-bold">Type Payment</label>
                                     <select required class="form-control" name="typePayment" id="typePayment">
@@ -89,6 +96,7 @@
 
                                 </div>
                             </div>
+
                             <br><br>
                             <div class="row">
                                 <div class="col-md-5">

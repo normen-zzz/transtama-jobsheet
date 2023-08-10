@@ -143,7 +143,7 @@
 													<table class="table table-bordered" style="width:100%">
 														<thead>
 															<tr>
-																
+
 																<th>WEIGHT JS/MSR</th>
 																<th>WEIGHT SPECIAL HD</th>
 															</tr>
@@ -151,7 +151,7 @@
 														<tbody>
 															<tr>
 
-																
+
 																<td><?= $msr['berat_msr'] ?></td>
 																<td><?= $msr['berat_js'] ?></td>
 															</tr>
@@ -564,7 +564,7 @@
 					</div>
 				</div>
 
-				
+
 				<div class="row">
 					<div class="col-md-6">
 						<div class="card card-custom gutter-b example example-compact">
@@ -698,6 +698,18 @@
 										<div class="card card-custom gutter-b example example-compact" style="height:100px;">
 											<h4 class="text-title text-center mt-2"><i class="fa fa-calendar text-warning"></i> Wait GM Check Request</h4> <br>
 											<!-- <h4 class="text-title text-center"><?= $tgl_approve_revisi['tgl_approve_gm'] ?></h4> -->
+											<div class="row">
+												<div class="col-md-6">
+													<div class="card card-custom gutter-b example example-compact" style="height:100px;">
+														<div class="col-md-12 mt-8"> <a href="<?= base_url('approval/approveRevisiGm/' . $msr['id']) ?>" class="btn btn-success tombol-konfirmasi">Approve Revision</a> </div>
+													</div>
+												</div>
+												<div class="col-md-6">
+													<div class="card card-custom gutter-b example example-compact" style="height:100px;">
+														<div class="col-md-12 mt-8"> <a href="<?= base_url('approval/declineRevisiGm/' . $msr['id']) ?>" class="btn btn-danger tombol-konfirmasi">Decline Revision</a> </div>
+													</div>
+												</div>
+											</div>
 										</div>
 									<?php  } else {
 									?> <div class="card card-custom gutter-b example example-compact" style="height:100px;">
@@ -749,6 +761,18 @@
 										<div class="card card-custom gutter-b example example-compact" style="height:100px;">
 											<h3 class="text-title text-center mt-2"><i class="fa fa-calendar text-warning"></i> Wait GM Check Request</h3> <br>
 											<!-- <h4 class="text-title text-center"><?= $tgl_approve_revisi['tgl_approve_gm'] ?></h4> -->
+											<div class="row">
+												<div class="col-md-6">
+													<div class="card card-custom gutter-b example example-compact" style="height:100px;">
+														<div class="col-md-12 mt-8"> <a href="<?= base_url('approval/approveRevisiGm/' . $msr['id']) ?>" class="btn btn-success tombol-konfirmasi">Approve Revision</a> </div>
+													</div>
+												</div>
+												<div class="col-md-6">
+													<div class="card card-custom gutter-b example example-compact" style="height:100px;">
+														<div class="col-md-12 mt-8"> <a href="<?= base_url('approval/declineRevisiGm/' . $msr['id']) ?>" class="btn btn-danger tombol-konfirmasi">Decline Revision</a> </div>
+													</div>
+												</div>
+											</div>
 										</div>
 									<?php  } else {
 									?> <div class="card card-custom gutter-b example example-compact" style="height:100px;">
@@ -805,6 +829,18 @@
 									<div class="card card-custom gutter-b example example-compact" style="height:100px;">
 										<h3 class="text-title text-center mt-2"><i class="fa fa-calendar text-warning"></i> Wait GM Check Request</h3> <br>
 										<!-- <h4 class="text-title text-center"><?= $tgl_approve_revisi['tgl_approve_gm'] ?></h4> -->
+										<div class="row">
+											<div class="col-md-6">
+												<div class="card card-custom gutter-b example example-compact" style="height:100px;">
+													<div class="col-md-12 mt-8"> <a href="<?= base_url('approval/approveRevisiGm/' . $msr['id']) ?>" class="btn btn-success tombol-konfirmasi">Approve Revision</a> </div>
+												</div>
+											</div>
+											<div class="col-md-6">
+												<div class="card card-custom gutter-b example example-compact" style="height:100px;">
+													<div class="col-md-12 mt-8"> <a href="<?= base_url('approval/declineRevisiGm/' . $msr['id']) ?>" class="btn btn-danger tombol-konfirmasi">Decline Revision</a> </div>
+												</div>
+											</div>
+										</div>
 									</div>
 								<?php  } else {
 								?> <div class="card card-custom gutter-b example example-compact" style="height:100px;">
@@ -859,6 +895,7 @@
 
 						<?php  } ?>
 					</div>
+
 				</div>
 
 

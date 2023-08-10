@@ -30,106 +30,115 @@
 
                 <div class="card-body" style="overflow: auto;">
                     <!--begin: Datatable-->
-                    <form action="<?= base_url('finance/Ap/multiPaid') ?>" method="POST">
-                    <button type="submit" class="btn btn-success ml-3 mt-2 mb-2" id="submitPaid" style="display: none;">Paid</button>
-                    <table class="table table-separate table-head-custom table-checkable" id="myTableAp">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>No AP</th>
-                                <th>Created By</th>
-                                <th>Purpose</th>
-                                <th>Date</th>
-                                <!-- <th>Address</th> -->
-                                <th>Amount Proposed</th>
-                                <th>Amount Approved</th>
-                                <th>Status</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach ($ap as $c) {
-                            ?>
+                    <form action="<?= base_url('finance/Ap/multiPaid/'.$this->uri->segment(3)) ?>" method="POST">
+                        <button type="submit" class="btn btn-success ml-3 mt-2 mb-2" id="submitPaid" style="display: none;">Paid</button>
+                        <table class="table table-separate table-head-custom table-checkable" id="myTableAp">
+                            <thead>
                                 <tr>
-                                    <td>
-
-                                        <?php if ($this->session->userdata('id_jabatan') != 11) {
-
-                                            if ($c['id_role'] == 2 || $c['id_role'] == 3 || $c['id_role'] == 5) {
-                                                if ($c['status'] == 7) { ?>
-                                                    <input type="checkbox" name="no_pengeluaran[]" value="<?= $c['no_pengeluaran'] ?>" id="no_pengeluaran">
-                                            <?php }} elseif ($c['id_role'] == 4 || $c['id_role'] == 6) {
-                                                 if ($c['status'] == 5) { ?>
-                                                  <input type="checkbox" name="no_pengeluaran[]" value="<?= $c['no_pengeluaran'] ?>" id="no_pengeluaran">
-                                        <?php }}} ?>
-
-                                        
-
-                                    </td>
-                                    <td><?= $c['no_pengeluaran'] . '<br>';
-                                        echo ($c['id_kat_ap'] == 3)  ? '<b>' . $c['no_ca'] . '</b>' : ''
-                                        ?> </td>
-                                    <td><?= $c['nama_user'] ?></td>
-                                    <td><?= $c['purpose'] ?></td>
-                                    <td><?= bulan_indo($c['date']) ?></td>
-                                    <td><?= rupiah($c['total']) ?></td>
-                                    <td><?= ($c['status'] == 2 ? 'Wait Received' : rupiah($c['total_approved'])) ?></td>
-                                    <td><?= statusAp($c['status'], $c['is_approve_sm']) ?>
-
-                                    </td>
-                                    <td>
-                                        <?php
-                                        $id_jabatan = $this->session->userdata('id_jabatan');
-                                        $userAp = $this->db->get_where('tb_user', array('id_user' => $c['id_user']))->row_array();
-                                        // kalo dia jabatannya GM
-                                        if ($id_jabatan == 11) {
-                                            $url = $this->uri->segment(3);
-                                            // echo $url;
-                                            if ($c['status'] == 7) {
-                                                if ($c['id_role'] == 4 || $c['id_role'] == 6) {
-                                        ?>
-                                                    <a href="<?= base_url('finance/ap/detail/' . $c['no_pengeluaran']) ?>" class="btn btn-sm mb-1 text-light" style="background-color: #9c223b;">Detail</a>
-                                                    <a href="<?= base_url('finance/ap/approveGm/' . $c['no_pengeluaran'] . '/' . $url) ?>" class="btn btn-sm mb-1 text-light tombol-konfirmasi" style="background-color: #9c223b;">Approve</a>
-
-                                                <?php  } else { ?>
-                                                    <a href="<?= base_url('finance/ap/detail/' . $c['no_pengeluaran']) ?>" class="btn btn-sm mb-1 text-light" style="background-color: #9c223b;">Detail</a>
-                                                <?php  }
-                                            } else {
-                                                ?>
-                                                <a href="<?= base_url('finance/ap/detail/' . $c['no_pengeluaran']) ?>" class="btn btn-sm mb-1 text-light" style="background-color: #9c223b;">Detail</a>
-                                            <?php }
-                                            ?>
-
-                                        <?php  }
-                                        // Jika yang buka bukan gm 
-                                        else { ?>
-                                            <a href="<?= base_url('finance/ap/detail/' . $c['no_pengeluaran']) ?>" class="btn btn-sm mb-1 text-light" style="background-color: #9c223b;">Detail</a>
-                                            <a target="blank" href="<?= base_url('finance/ap/print/' . $c['no_pengeluaran']) ?>" class="btn btn-sm mb-1 text-light" style="background-color: #9c223b;"> <i class="fa fa-print text-light"></i> Print</a>
-                                            <!-- jika yang mengajukan rolenya cs / ops -->
-                                            <?php if ($c['id_role'] == 2 || $c['id_role'] == 3 || $c['id_role'] == 5) {
-                                                // jika diapprove manager finance
-                                                if ($c['status'] == 7) { ?>
-                                                    <button href="#" data-toggle="modal" data-target="#modal-paid" class="btn btn-sm mb-1 text-light modalPaid" data-no_pengeluaran="<?= $c['no_pengeluaran'] ?>" data-url="<?= $url ?>" style="background-color: #9c223b;" type="button">Pay</button>
-                                                <?php } ?>
-                                                <!-- jika rolenya ka/sales -->
-                                            <?php } elseif ($c['id_role'] == 4 || $c['id_role'] == 6) { ?>
-                                                <?php // jika diapprove GM
-                                                if ($c['status'] == 5) { ?>
-                                                    <button href="#" data-toggle="modal" data-target="#modal-paid" class="btn btn-sm mb-1 text-light modalPaid" data-no_pengeluaran="<?= $c['no_pengeluaran'] ?>" data-url="<?= $url ?>" style="background-color: #9c223b;" type="button">Pay</button>
-                                                    <?php } else {
-                                                    // jika dia untuk bensin atau transport maka bisa langsung di acc setelah approve manager 
-                                                    if ($userAp['id_jabatan'] == 11 && $c['status'] == 7) { ?>
-                                                        <button href="#" data-toggle="modal" data-target="#modal-paidLangsung" class="btn btn-sm mb-1 text-light modalPaidLangsung" data-no_pengeluaran="<?= $c['no_pengeluaran'] ?>" data-url="<?= $url ?>" style="background-color: #9c223b;" type="button">Pay</button>
-                                                <?php }
-                                                } ?>
-                                            <?php } ?>
-                                        <?php  } ?>
-                                    </td>
+                                    <th>#</th>
+                                    <th>No AP</th>
+                                    <th>Created By</th>
+                                    <th>Purpose</th>
+                                    <th>Date</th>
+                                    <!-- <th>Address</th> -->
+                                    <th>Amount Proposed</th>
+                                    <th>Amount Approved</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
                                 </tr>
-                            <?php } ?>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($ap as $c) {
+                                    $id_jabatan = $this->session->userdata('id_jabatan');
+                                    $userAp = $this->db->get_where('tb_user', array('id_user' => $c['id_user']))->row_array();
+                                ?>
+                                    <tr>
+                                        <td>
 
-                        </tbody>
-                    </table>
+                                            <?php if ($this->session->userdata('id_jabatan') != 11) {
+
+                                                if ($c['id_role'] == 2 || $c['id_role'] == 3 || $c['id_role'] == 5) {
+                                                    if ($c['status'] == 7) { ?>
+                                                        <input type="checkbox" name="no_pengeluaran[]" value="<?= $c['no_pengeluaran'] ?>" id="no_pengeluaran">
+                                                    <?php }
+                                                } elseif ($c['id_role'] == 4 || $c['id_role'] == 6) {
+                                                    if ($c['status'] == 5) { ?>
+                                                        <input type="checkbox" name="no_pengeluaran[]" value="<?= $c['no_pengeluaran'] ?>" id="no_pengeluaran">
+                                                        <?php } else {
+                                                        if ($userAp['id_jabatan'] == 11 && $c['status'] == 7) { ?>
+                                                            <input type="checkbox" name="no_pengeluaran[]" value="<?= $c['no_pengeluaran'] ?>" id="no_pengeluaran">
+
+                                            <?php }
+                                                    }
+                                                }
+                                            } ?>
+
+
+
+                                        </td>
+                                        <td><?= $c['no_pengeluaran'] . '<br>';
+                                            echo ($c['id_kat_ap'] == 3)  ? '<b>' . $c['no_ca'] . '</b>' : ''
+                                            ?> </td>
+                                        <td><?= $c['nama_user'] ?></td>
+                                        <td><?= $c['purpose'] ?></td>
+                                        <td><?= bulan_indo($c['date']) ?></td>
+                                        <td><?= rupiah($c['total']) ?></td>
+                                        <td><?= ($c['status'] == 2 ? 'Wait Received' : rupiah($c['total_approved'])) ?></td>
+                                        <td><?= statusAp($c['status'], $c['is_approve_sm']) ?>
+
+                                        </td>
+                                        <td>
+                                            <?php
+                                            
+                                            // kalo dia jabatannya GM
+                                            if ($id_jabatan == 11) {
+                                                $url = $this->uri->segment(3);
+                                                // echo $url;
+                                                if ($c['status'] == 7) {
+                                                    if ($c['id_role'] == 4 || $c['id_role'] == 6) {
+                                            ?>
+                                                        <a href="<?= base_url('finance/ap/detail/' . $c['no_pengeluaran']) ?>" class="btn btn-sm mb-1 text-light" style="background-color: #9c223b;">Detail</a>
+                                                        <a href="<?= base_url('finance/ap/approveGm/' . $c['no_pengeluaran'] . '/' . $url) ?>" class="btn btn-sm mb-1 text-light tombol-konfirmasi" style="background-color: #9c223b;">Approve</a>
+
+                                                    <?php  } else { ?>
+                                                        <a href="<?= base_url('finance/ap/detail/' . $c['no_pengeluaran']) ?>" class="btn btn-sm mb-1 text-light" style="background-color: #9c223b;">Detail</a>
+                                                    <?php  }
+                                                } else {
+                                                    ?>
+                                                    <a href="<?= base_url('finance/ap/detail/' . $c['no_pengeluaran']) ?>" class="btn btn-sm mb-1 text-light" style="background-color: #9c223b;">Detail</a>
+                                                <?php }
+                                                ?>
+
+                                            <?php  }
+                                            // Jika yang buka bukan gm 
+                                            else { ?>
+                                                <a href="<?= base_url('finance/ap/detail/' . $c['no_pengeluaran']) ?>" class="btn btn-sm mb-1 text-light" style="background-color: #9c223b;">Detail</a>
+                                                <a target="blank" href="<?= base_url('finance/ap/print/' . $c['no_pengeluaran']) ?>" class="btn btn-sm mb-1 text-light" style="background-color: #9c223b;"> <i class="fa fa-print text-light"></i> Print</a>
+                                                <!-- jika yang mengajukan rolenya cs / ops -->
+                                                <?php if ($c['id_role'] == 2 || $c['id_role'] == 3 || $c['id_role'] == 5) {
+                                                    // jika diapprove manager finance
+                                                    if ($c['status'] == 7) { ?>
+                                                        <button href="#" data-toggle="modal" data-target="#modal-paid" class="btn btn-sm mb-1 text-light modalPaid" data-no_pengeluaran="<?= $c['no_pengeluaran'] ?>" data-url="<?= $url ?>" style="background-color: #9c223b;" type="button">Pay1</button>
+                                                    <?php } ?>
+                                                    <!-- jika rolenya ka/sales -->
+                                                <?php } elseif ($c['id_role'] == 4 || $c['id_role'] == 6) { ?>
+                                                    <?php // jika diapprove GM
+                                                    if ($c['status'] == 5) { ?>
+                                                        <button href="#" data-toggle="modal" data-target="#modal-paid" class="btn btn-sm mb-1 text-light modalPaid" data-no_pengeluaran="<?= $c['no_pengeluaran'] ?>" data-url="<?= $url ?>" style="background-color: #9c223b;" type="button">Pay2</button>
+                                                        <?php } else {
+                                                        // jika dia untuk bensin atau transport maka bisa langsung di acc setelah approve manager 
+                                                        if ($userAp['id_jabatan'] == 11 && $c['status'] == 7) { ?>
+                                                            <button href="#" data-toggle="modal" data-target="#modal-paidLangsung" class="btn btn-sm mb-1 text-light modalPaidLangsung" data-no_pengeluaran="<?= $c['no_pengeluaran'] ?>" data-url="<?= $url ?>" style="background-color: #9c223b;" type="button">Pay3</button>
+                                                    <?php }
+                                                    } ?>
+                                                <?php } ?>
+                                            <?php  } ?>
+                                        </td>
+                                    </tr>
+                                <?php } ?>
+
+                            </tbody>
+                        </table>
                     </form>
                     <!--end: Datatable-->
                 </div>

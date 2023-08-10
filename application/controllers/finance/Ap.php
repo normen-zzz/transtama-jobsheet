@@ -38,10 +38,9 @@ class Ap extends CI_Controller
             $this->session->set_flashdata('messageAlert', $this->messageAlert('error', 'Please Select Minimun 1 AP'));
             if ($link == NULL) {
                 redirect('finance/Ap');
-            } else{
-                redirect('finance/Ap/'.$link);
+            } else {
+                redirect('finance/Ap/' . $link);
             }
-           
         }
 
         $pengeluaran = array();
@@ -54,12 +53,51 @@ class Ap extends CI_Controller
         // var_dump($apexternal);
 
         $data['title'] = 'Paid Ap ';
-       
+
         $data['subtitle'] = 'Paid Ap';
 
-        
+
         $data['ap'] = $pengeluaran;
+        $data['url'] = $link;
         $this->backend->display('finance/v_paidAp', $data);
+    }
+    public function multiPaidAct($url = NULL)
+    {
+
+        $no_pengeluaran =  $this->input->post('no_pengeluaran');
+
+        if ($url == NULL) {
+            $url = "finance/ap/";
+        } else {
+            $url = "finance/ap/$url";
+        }
+        for ($i = 0; $i < sizeof($no_pengeluaran); $i++) {
+            $data = array(
+                'payment_date' => $this->input->post('datePayment'),
+                'payment_type' => $this->input->post('typePayment'),
+                'status' => 4
+            );
+
+            $folderUpload = "./uploads/ap_proof/";
+            $files = $_FILES;
+            $namaFile = $files['photo_pengeluaran']['name'][$i];
+            $lokasiTmp = $files['photo_pengeluaran']['tmp_name'][$i];
+
+            # kita tambahkan uniqid() agar nama gambar bersifat unik
+            $namaBaru = uniqid() . '-' . $namaFile;
+
+            array_push($listNamaBaru, $namaBaru);
+            $lokasiBaru = "{$folderUpload}/{$namaBaru}";
+            move_uploaded_file($lokasiTmp, $lokasiBaru);
+
+            $photo = array('payment_proof' => $namaBaru);
+            $data = array_merge($data, $photo);
+
+            $this->db->update('tbl_pengeluaran', $data, ['no_pengeluaran' => $no_pengeluaran[$i]]);
+        }
+
+        $this->session->set_flashdata('messageAlert', $this->messageAlert('success', 'Success Paid'));
+        redirect($url);
     }
     public function getModalPaid()
     {
@@ -71,7 +109,6 @@ class Ap extends CI_Controller
             'url' => $url
         ];
         echo json_encode($data);
-
     }
 
     public function getModalPaidLangsung()
@@ -86,8 +123,8 @@ class Ap extends CI_Controller
         foreach ($result as $row) {
             $data[] = $row;
         }
-        
-        
+
+
         echo json_encode($data);
         // var_dump($data);
     }

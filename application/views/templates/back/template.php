@@ -61,6 +61,15 @@
 <!--end::Head-->
 <!--begin::Body-->
 
+<!-- Modal -->
+<div class="modal fade" id="modalLoading" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered" role="document">
+			<div class="mx-auto spinner-border text-danger" role="status">
+				<span class="sr-only">Loading...</span>
+			</div>
+		</div>
+	</div>
+
 <body id="kt_body" class="header-fixed header-mobile-fixed subheader-enabled subheader-fixed aside-enabled aside-fixed aside-minimize-hoverable page-loading">
     <!--begin::Main-->
     <!--begin::Header Mobile-->
@@ -335,6 +344,10 @@
         <script src="<?= base_url('assets/assets/backend/') ?>vendor_components/flexslider/jquery.flexslider.js"></script>
         <script src="<?= base_url('assets/assets/') ?>js/sweetalert2.all.min.js"></script>
         <script src="//cdn.ckeditor.com/4.13.1/basic/ckeditor.js"></script>
+
+        <!-- compress foto  -->
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/browser-image-compression@2.0.0/dist/browser-image-compression.js"></script>
+        <script src="<?= base_url('assets/compress/tracker.js') ?>"></script>
 
 </body>
 <!--end::Body-->
