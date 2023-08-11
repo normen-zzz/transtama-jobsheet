@@ -118,17 +118,17 @@
                                                 <?php if ($c['id_role'] == 2 || $c['id_role'] == 3 || $c['id_role'] == 5) {
                                                     // jika diapprove manager finance
                                                     if ($c['status'] == 7) { ?>
-                                                        <button href="#" data-toggle="modal" data-target="#modal-paid" class="btn btn-sm mb-1 text-light modalPaid" data-no_pengeluaran="<?= $c['no_pengeluaran'] ?>" data-url="<?= $url ?>" style="background-color: #9c223b;" type="button">Pay1</button>
+                                                        <button href="#" data-toggle="modal" data-target="#modal-paid" class="btn btn-sm mb-1 text-light modalPaid" data-no_pengeluaran="<?= $c['no_pengeluaran'] ?>" data-url="<?= $url ?>" style="background-color: #9c223b;" type="button">Pay</button>
                                                     <?php } ?>
                                                     <!-- jika rolenya ka/sales -->
                                                 <?php } elseif ($c['id_role'] == 4 || $c['id_role'] == 6) { ?>
                                                     <?php // jika diapprove GM
                                                     if ($c['status'] == 5) { ?>
-                                                        <button href="#" data-toggle="modal" data-target="#modal-paid" class="btn btn-sm mb-1 text-light modalPaid" data-no_pengeluaran="<?= $c['no_pengeluaran'] ?>" data-url="<?= $url ?>" style="background-color: #9c223b;" type="button">Pay2</button>
+                                                        <button href="#" data-toggle="modal" data-target="#modal-paid" class="btn btn-sm mb-1 text-light modalPaid" data-no_pengeluaran="<?= $c['no_pengeluaran'] ?>" data-url="<?= $url ?>" style="background-color: #9c223b;" type="button">Pay</button>
                                                         <?php } else {
                                                         // jika dia untuk bensin atau transport maka bisa langsung di acc setelah approve manager 
                                                         if ($userAp['id_jabatan'] == 11 && $c['status'] == 7) { ?>
-                                                            <button href="#" data-toggle="modal" data-target="#modal-paidLangsung" class="btn btn-sm mb-1 text-light modalPaidLangsung" data-no_pengeluaran="<?= $c['no_pengeluaran'] ?>" data-url="<?= $url ?>" style="background-color: #9c223b;" type="button">Pay3</button>
+                                                            <button href="#" data-toggle="modal" data-target="#modal-paidLangsung" class="btn btn-sm mb-1 text-light modalPaidLangsung" data-no_pengeluaran="<?= $c['no_pengeluaran'] ?>" data-url="<?= $url ?>" style="background-color: #9c223b;" type="button">Pay</button>
                                                     <?php }
                                                     } ?>
                                                 <?php } ?>

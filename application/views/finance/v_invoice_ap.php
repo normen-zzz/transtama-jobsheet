@@ -49,7 +49,7 @@
                                     <div class="table-responsive">
                                         <form action="<?= base_url('finance/apExternal/multiPaid') ?>" method="POST">
                                             <button type="submit" class="btn btn-success ml-3 mt-2 mb-2" id="submitPaid" style="display: none;">Paid</button>
-                                            <table id="table" class="table table-bordered" style="width:100%">
+                                            <table id="tableApExternal" class="table table-bordered" style="width:100%">
                                                 <thead>
                                                     <tr>
                                                         <th>#</th>
@@ -130,7 +130,7 @@
                                                                             ?>
                                                                                 <a href="<?= base_url('finance/apExternal/editInvoice/' . $j['unique_invoice'] . '/' . encrypt_url($j['id_vendor'])) ?>" class="btn btn-sm text-light" style="background-color: #9c223b;">Detail</a>
 
-                                                                                <button type="button" class="btn btn-sm text-light mt-2 mod" data-toggle="modal" data-unique_invoice="<?= $j['unique_invoice'] ?>" data-no_po="<?= $j['no_po'] ?>" data-target="#modal-paid-external" style="background-color: #9c223b;">Paid</button>
+                                                                                <button type="button" class="btn btn-sm text-light mt-2 mod" data-toggle="modal" data-unique_invoice="<?= $j['unique_invoice'] ?>" data-no_po="<?= $j['no_po'] ?>" data-target="#modal-paid-external" style="background-color: #9c223b;">Paid 1</button>
 
                                                                             <?php  } else {
                                                                             ?>
@@ -171,7 +171,7 @@
                                                                         ?>
                                                                             <a href="<?= base_url('finance/apExternal/editInvoice/' . $j['unique_invoice'] . '/' . encrypt_url($j['id_vendor'])) ?>" class="btn btn-sm text-light" style="background-color: #9c223b;">Detail</a>
 
-                                                                            <button type="button" class="btn btn-sm text-light mt-2 mod" data-toggle="modal" data-unique_invoice="<?= $j['unique_invoice'] ?>" data-no_po="<?= $j['no_po'] ?>" data-target="#modal-paid-external" style="background-color: #9c223b;">Paid</button>
+                                                                            <button type="button" class="btn btn-sm text-light mt-2 mod" data-toggle="modal" data-unique_invoice="<?= $j['unique_invoice'] ?>" data-no_po="<?= $j['no_po'] ?>" data-target="#modal-paid-external" style="background-color: #9c223b;">Paid 2</button>
 
                                                                         <?php  } elseif ($j['status'] == 7) { ?>
                                                                             <a href="<?= base_url('finance/apExternal/editInvoice/' . $j['unique_invoice'] . '/' . encrypt_url($j['id_vendor'])) ?>" class="btn btn-sm text-light" style="background-color: #9c223b;">Detail</a>

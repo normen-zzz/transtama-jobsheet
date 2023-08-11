@@ -55,10 +55,8 @@
                                                             </td>
                                                             <td>
                                                                 <input type="file" name="photo[]" class="form-control" onchange="handleImageUploadTracker(this.id);" id="photoPengeluaran<?= $no ?>" accept="image/*" required>
-                                                                <input type="file" name="photo_pengeluaran[]" class="form-control" id="upload_file-photoPengeluaran<?= $no ?>">
+                                                                <input type="file" name="photo_pengeluaran[]" required class="form-control" hidden id="upload_file-photoPengeluaran<?= $no ?>">
                                                             </td>
-
-
                                                         </tr>
                                                     <?php $total += $c['total_approved'];
                                                         $no += 1;

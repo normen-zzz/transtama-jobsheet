@@ -36,11 +36,12 @@
                                                         <th>Total Invoice</th>
                                                         <th>PO Status</th>
                                                         <th>Payment Status</th>
+                                                        <th>Bukti Pembayaran</th>
 
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <?php $totalInvoice = 0;
+                                                    <?php $no = 1; $totalInvoice = 0;
                                                     foreach ($noInvoice as $j) {
 
                                                     ?>
@@ -82,12 +83,17 @@
                                                                     ?>
 
                                                                 </td>
+                                                                <td>
+                                                                <input type="file" name="photo[]" class="form-control" onchange="handleImageUploadTracker(this.id);" id="photoPengeluaran<?= $no ?>" accept="image/*" required>
+                                                                <input type="file" name="photo_pengeluaran[]" required class="form-control" hidden id="upload_file-photoPengeluaran<?= $no ?>">
+                                                            </td>
 
 
                                                             </tr>
                                                         <?php } ?>
 
                                                     <?php $totalInvoice += ($j['total_ap']) - $j['pph'] + $j['ppn'] + $j['special_ppn'] - $j['special_pph'];
+                                                    $no +=1;
                                                     } ?>
 
                                                     <tr>
