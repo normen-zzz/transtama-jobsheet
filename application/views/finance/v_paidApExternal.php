@@ -14,7 +14,7 @@
                 <!-- Main content -->
                 <section class="content">
                     <div class="row" style="overflow: auto;">
-                        <form action="<?= base_url('finance/apExternal/bulkPaid') ?>" method="POST">
+                        <form action="<?= base_url('finance/apExternal/bulkPaid') ?>" method="POST" enctype="multipart/form-data">
                             <div class="col-12">
                                 <div class="box">
                                     <!-- /.box-header -->
@@ -114,14 +114,11 @@
                             </div>
                             
                             <div class="row">
-                                <div class="col text-center">
+                                <div class="col-4 text-center">
                                     <label for="due_date" class="font-weight-bold">Date Paid</label>
                                     <input type="date" class="form-control" name="paymentDate" required>
 
                                 </div>
-                            </div>
-
-                            <div class="row">
                                 <div class="col-4 text-center">
                                     <label for="due_date" class="font-weight-bold">Type Payment</label>
                                     <select required class="form-control" name="typePayment" id="typePayment">

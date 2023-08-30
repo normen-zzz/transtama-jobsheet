@@ -130,7 +130,7 @@
                                                                             ?>
                                                                                 <a href="<?= base_url('finance/apExternal/editInvoice/' . $j['unique_invoice'] . '/' . encrypt_url($j['id_vendor'])) ?>" class="btn btn-sm text-light" style="background-color: #9c223b;">Detail</a>
 
-                                                                                <button type="button" class="btn btn-sm text-light mt-2 mod" data-toggle="modal" data-unique_invoice="<?= $j['unique_invoice'] ?>" data-no_po="<?= $j['no_po'] ?>" data-target="#modal-paid-external" style="background-color: #9c223b;">Paid 1</button>
+                                                                                <button type="button" class="btn btn-sm text-light mt-2 mod" data-toggle="modal" data-unique_invoice="<?= $j['unique_invoice'] ?>" data-no_po="<?= $j['no_po'] ?>" data-target="#modal-paid-external" style="background-color: #9c223b;">Paid</button>
 
                                                                             <?php  } else {
                                                                             ?>
@@ -171,7 +171,7 @@
                                                                         ?>
                                                                             <a href="<?= base_url('finance/apExternal/editInvoice/' . $j['unique_invoice'] . '/' . encrypt_url($j['id_vendor'])) ?>" class="btn btn-sm text-light" style="background-color: #9c223b;">Detail</a>
 
-                                                                            <button type="button" class="btn btn-sm text-light mt-2 mod" data-toggle="modal" data-unique_invoice="<?= $j['unique_invoice'] ?>" data-no_po="<?= $j['no_po'] ?>" data-target="#modal-paid-external" style="background-color: #9c223b;">Paid 2</button>
+                                                                            <button type="button" class="btn btn-sm text-light mt-2 mod" data-toggle="modal" data-unique_invoice="<?= $j['unique_invoice'] ?>" data-no_po="<?= $j['no_po'] ?>" data-target="#modal-paid-external" style="background-color: #9c223b;">Paid</button>
 
                                                                         <?php  } elseif ($j['status'] == 7) { ?>
                                                                             <a href="<?= base_url('finance/apExternal/editInvoice/' . $j['unique_invoice'] . '/' . encrypt_url($j['id_vendor'])) ?>" class="btn btn-sm text-light" style="background-color: #9c223b;">Detail</a>

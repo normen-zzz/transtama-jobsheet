@@ -342,6 +342,20 @@ class ApExternal extends CI_Controller
                 'user_payment' => $this->session->userdata('id_user'),
                 'type_payment' => $this->input->post('typePayment'),
             );
+            $folderUpload = "./uploads/ap_proof/";
+            $files = $_FILES;
+            $namaFile = $files['photo_pengeluaran']['name'][$i];
+            $lokasiTmp = $files['photo_pengeluaran']['tmp_name'][$i];
+
+            # kita tambahkan uniqid() agar nama gambar bersifat unik
+            $namaBaru = uniqid() . '-' . $namaFile;
+
+            array_push($listNamaBaru, $namaBaru);
+            $lokasiBaru = "{$folderUpload}/{$namaBaru}";
+            move_uploaded_file($lokasiTmp, $lokasiBaru);
+
+            $ktp = array('bukti_bayar' => $namaBaru);
+            $data = array_merge($data, $ktp);
             $this->db->update('tbl_invoice_ap_final', $data, ['no_po' => $no_po[$i]]);
         }
         $this->session->set_flashdata('messageAlert', $this->messageAlert('success', 'Success Paid'));

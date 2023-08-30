@@ -242,7 +242,7 @@ class CsModel extends M_Datatables
 	}
 	function getJsApproveFinance()
 	{
-		$this->db->select('a.tgl_pickup, b.shipment_id,b.id,b.so_id,b.jobsheet_id,b.shipper,b.tree_consignee,b.pic_invoice,b.status_so,b.id_so, c.nama_user');
+		$this->db->select('b.tgl_pickup, b.shipment_id,b.id,b.so_id,b.jobsheet_id,b.shipper,b.tree_consignee,b.pic_invoice,b.status_so,b.id_so, c.nama_user');
 		$this->db->from('tbl_so a');
 		$this->db->join('tbl_shp_order b', 'a.id_so=b.id_so');
 		$this->db->join('tb_user c', 'a.id_sales=c.id_user');

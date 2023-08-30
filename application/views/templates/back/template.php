@@ -26,10 +26,10 @@
     <link href="<?= base_url('assets/') ?>back/metronic2/css/themes/layout/aside/light.css" rel="stylesheet" type="text/css" />
     <link href="<?= base_url('assets/back/') ?>plugins/select2/css/select2.min.css" rel="stylesheet" type="text/css" />
     <link href="<?= base_url('assets/') ?>back/metronic2/plugins/custom/datatables/datatables.bundle.css" rel="stylesheet" type="text/css" />
-	<link rel="stylesheet" href="https://cdn.datatables.net/searchpanes/2.0.2/css/searchPanes.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/searchpanes/2.0.2/css/searchPanes.dataTables.min.css">
     <script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
-	
-	<!-- chart -->
+
+    <!-- chart -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
@@ -63,12 +63,12 @@
 
 <!-- Modal -->
 <div class="modal fade" id="modalLoading" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-		<div class="modal-dialog modal-dialog-centered" role="document">
-			<div class="mx-auto spinner-border text-danger" role="status">
-				<span class="sr-only">Loading...</span>
-			</div>
-		</div>
-	</div>
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="mx-auto spinner-border text-danger" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+    </div>
+</div>
 
 <body id="kt_body" class="header-fixed header-mobile-fixed subheader-enabled subheader-fixed aside-enabled aside-fixed aside-minimize-hoverable page-loading">
     <!--begin::Main-->
@@ -334,7 +334,7 @@
         <!--begin::Page Scripts(used by this page)-->
         <script src="<?= base_url('assets/') ?>back/metronic2/js/pages/widgets.js"></script>
         <script src="<?= base_url('assets/') ?>back/metronic2/plugins/custom/datatables/datatables.bundle.js"></script>
-		<script src="https://cdn.datatables.net/searchpanes/2.0.2/js/dataTables.searchPanes.min.js"></script>
+        <script src="https://cdn.datatables.net/searchpanes/2.0.2/js/dataTables.searchPanes.min.js"></script>
         <!--end::Page Scripts-->
         <!-- Select2 -->
         <script src="<?= base_url('assets/back/') ?>plugins/select2/js/select2.min.js"></script>
@@ -472,7 +472,7 @@
 <script>
     <?= $this->session->flashdata('messageAlert'); ?>
 </script>
-	<script type="text/javascript">
+<script type="text/javascript">
     $('select').select2({
         allowClear: true,
     });
@@ -554,7 +554,9 @@ $dataflash = json_encode($this->session->flashdata('message'));
 
     $(document).ready(function() {
 
-        var myTable = $('#myTable').DataTable({"pageLength": 100});
+        var myTable = $('#myTable').DataTable({
+            "pageLength": 100
+        });
     });
 </script>
 
@@ -603,36 +605,36 @@ $dataflash = json_encode($this->session->flashdata('message'));
 
 <script>
     $('#table').DataTable({
-		"pageLength": 100,
+        "pageLength": 100,
         "ordering": false,
-		dom: "<'row'<'col-sm-3'l><'col-sm-3'f><'col-sm-6'p>>" +
-         "<'row'<'col-sm-12'tr>>" +
-         "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+        dom: "<'row'<'col-sm-3'l><'col-sm-3'f><'col-sm-6'p>>" +
+            "<'row'<'col-sm-12'tr>>" +
+            "<'row'<'col-sm-5'i><'col-sm-7'p>>",
     });
 </script>
 
 <script>
     $('#tableApExternal').DataTable({
-		"bPaginate": false,
+        "bPaginate": false,
         "ordering": false,
-		dom: "<'row'<'col-sm-3'l><'col-sm-3'f><'col-sm-6'p>>" +
-         "<'row'<'col-sm-12'tr>>" +
-         "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+        dom: "<'row'<'col-sm-3'l><'col-sm-3'f><'col-sm-6'p>>" +
+            "<'row'<'col-sm-12'tr>>" +
+            "<'row'<'col-sm-5'i><'col-sm-7'p>>",
     });
 </script>
 <script>
     $('#tableInvoice').DataTable({
-		"bPaginate": false,
+        "bPaginate": false,
         "ordering": false,
-		dom: "<'row'<'col-sm-3'l><'col-sm-3'f><'col-sm-6'p>>" +
-         "<'row'<'col-sm-12'tr>>" +
-         "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+        dom: "<'row'<'col-sm-3'l><'col-sm-3'f><'col-sm-6'p>>" +
+            "<'row'<'col-sm-12'tr>>" +
+            "<'row'<'col-sm-5'i><'col-sm-7'p>>",
     });
 </script>
 
 <script>
     $('#example1').DataTable({
-		"pageLength": 100,
+        "pageLength": 100,
         "ordering": false
     });
 </script>
@@ -641,7 +643,7 @@ $dataflash = json_encode($this->session->flashdata('message'));
     var tabel = null;
     $(document).ready(function() {
         tabel = $('#myTableMsr').DataTable({
-			"pageLength": 100,
+            "pageLength": 100,
             "processing": true,
             // "responsive": true,
             "serverSide": true,
@@ -706,7 +708,7 @@ $dataflash = json_encode($this->session->flashdata('message'));
 
 <script type="text/javascript">
     $(document).ready(function() {
-         const inputEl = document.getElementById("mode");
+        const inputEl = document.getElementById("mode");
         const car = document.getElementById("car");
         $('#kat').change(function() {
 

@@ -35,7 +35,6 @@
                                                     <th>JS ID</th>
                                                     <th>Customer</th>
                                                     <th>Destination</th>
-                                                    <!-- <th>Colly</th> -->
                                                     <th>Sales</th>
                                                     <th>Status</th>
                                                     <th>Action</th>
@@ -54,30 +53,34 @@
                                                 ?>
                                                     <tr>
                                                         <td><?= bulan_indo($j['tgl_pickup']) ?></td>
-                                                        <!-- shipment -->
+                                                 
                                                         <td><?= $j['shipment_id'] ?></td>
-                                                        <!-- Do -->
+                                                     
                                                         <td><?php foreach ($no_do as $do) {
                                                                 echo $do['no_do'] . ' , ';
                                                             } ?></td>
                                                         <!-- SO -->
                                                         <td><?php if ($get_revisi_so) {
                                                             ?>
-                                                                <a target="blank" href="<?= base_url('cs/jobsheet/cetakSo/' . $j['id'] . '/' . $j['id_so']) ?>" class="text-danger"><?= $j['so_id'] ?> </a>
+                                                                <!-- <a target="blank" href="<?= base_url('cs/jobsheet/cetakSo/' . $j['id'] . '/' . $j['id_so']) ?>" class="text-danger">SO-<?= $j['shipment_id'] ?> </a> -->
+                                                                <p class="text-danger">SO-<?= $j['shipment_id'] ?></p>
                                                             <?php  } else {
                                                             ?>
-                                                                <a target="blank" href="<?= base_url('cs/jobsheet/cetakSo/' . $j['id'] . '/' . $j['id_so']) ?>"><?= $j['so_id'] ?> </a>
+                                                                <!-- <a target="blank" href="<?= base_url('cs/jobsheet/cetakSo/' . $j['id'] . '/' . $j['id_so']) ?>">SO-<?= $j['shipment_id'] ?> </a> -->
+                                                                <p>SO-<?= $j['shipment_id'] ?></p>
                                                             <?php   }  ?>
                                                         </td>
 
                                                         <!-- Jobsheet -->
                                                         <td><?php if ($get_revisi_so) {
                                                             ?>
-                                                                <a target="blank" href="<?= base_url('cs/jobsheet/cetakMsr/' . $j['id']) ?>" class="text-danger"><?= $j['jobsheet_id'] ?> </a>
+                                                                <!-- <a target="blank" href="<?= base_url('cs/jobsheet/cetakMsr/' . $j['id']) ?>" class="text-danger">JS-<?= $j['shipment_id'] ?> </a> -->
+                                                                <p class="text-danger">JS-<?= $j['shipment_id'] ?></p>
 
                                                             <?php  } else {
                                                             ?>
-                                                                <a target="blank" href="<?= base_url('cs/jobsheet/cetakSo/' . $j['id']) ?>"><?= $j['jobsheet_id'] ?> </a>
+                                                                <!-- <a target="blank" href="<?= base_url('cs/jobsheet/cetakSo/' . $j['id']) ?>">SO-<?= $j['shipment_id'] ?> </a> -->
+                                                                <p >JS-<?= $j['shipment_id'] ?></p>
                                                             <?php }  ?>
                                                         </td>
                                                         <td><?= $j['shipper'] ?></td>

@@ -46,8 +46,8 @@
                                                 ?>
                                                     <tr>
 
-                                                        <!-- <td><a target="blank" href="<?= base_url('finance/invoice/printProforma/' . $j['no_invoice']) ?>"><?= $j['no_invoice'] ?></a> </td> -->
-                                                        <td><a target="blank" href="<?=  'https://tesla-smartwork.transtama.com/Invoice/printProforma/'. $j['no_invoice'] ?>"><?= $j['no_invoice'] ?></a> </td>
+                                                        <td><a target="blank" href="<?= base_url('finance/invoice/printProforma/' . $j['no_invoice']) ?>"><?= $j['no_invoice'] ?></a> </td>
+                                                        <!-- <td><a target="blank" href="<?=  'https://tesla-smartwork.transtama.com/Invoice/printProforma/'. $j['no_invoice'] ?>"><?= $j['no_invoice'] ?></a> </td> -->
                                                         <td><?= bulan_indo($j['date']) ?></td>
                                                         <td><?= bulan_indo($j['due_date']) ?></td>
                                                         <!-- <td> <span class="text-danger"><?= $perbedaan ?> Days Again</span></td> -->
@@ -59,8 +59,8 @@
                                                             }  ?></td>
 
                                                         <td>
-                                                                                               <!-- <a target="blank" href="<?= base_url('finance/invoice/printProformaExcell/' . $j['no_invoice']) ?>" class="btn btn-sm mt-1 text-light" style="background-color: #9c223b;"><i class="fa fa-print text-light"></i> Excell </a> -->
-                                                            <a target="blank" href="<?= 'https://tesla-smartwork.transtama.com/Invoice/printProformaExcell/'.$j['no_invoice'] ?>" class="btn btn-sm mt-1 text-light" style="background-color: #9c223b;"><i class="fa fa-print text-light"></i> Excell </a>
+                                                                                               <a target="blank" href="<?= base_url('finance/invoice/printProformaExcell/' . $j['no_invoice']) ?>" class="btn btn-sm mt-1 text-light" style="background-color: #9c223b;"><i class="fa fa-print text-light"></i> Excell </a>
+                                                            <!-- <a target="blank" href="<?= 'https://tesla-smartwork.transtama.com/Invoice/printProformaExcell/'.$j['no_invoice'] ?>" class="btn btn-sm mt-1 text-light" style="background-color: #9c223b;"><i class="fa fa-print text-light"></i> Excell </a> -->
                                                             <a href="<?= base_url('finance/invoice/edit/' . $j['id_invoice'] . '/' . $j['no_invoice']) ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">Detail</a>
                                                         </td>
 
