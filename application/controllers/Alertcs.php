@@ -37,4 +37,29 @@ class Alertcs extends CI_Controller
        
 
     }
+
+    public function picJs()
+    {
+        $js = $this->cs->getJs();
+
+       
+        $resi = '';
+
+        foreach ($js->result_array()  as $js1) {
+
+            $date = date('d-m-Y',strtotime($js1['tgl_pickup']));
+            $resi .= '\r\n'.$js1['shipment_id'] . ' Tanggal Pickup: '. $date;
+        }
+
+        $pesan = "Halo Pic Jobsheet (CS), Ada jobsheet yang belum anda Kerjakan, berikut resi yang terlampir $resi";
+
+        if ($js->num_rows() != 0) {
+            // Norman
+            $this->wa->pickup('+6285697780467', "$pesan");
+            //Raga CS
+            $this->wa->pickup('+6287776150830', "$pesan");
+        }
+       
+
+    }
 }
