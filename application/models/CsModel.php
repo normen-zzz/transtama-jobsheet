@@ -771,7 +771,6 @@ class CsModel extends M_Datatables
 		$query = $this->db->get();
 		return $query;
 	}
-
 	function getApVendorByNoPo($no_po)
 	{
 
