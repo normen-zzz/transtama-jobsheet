@@ -153,7 +153,8 @@ class ApModel extends CI_Model
 
         $ignore = array(0, 1);
 
-        $this->db->select('a.*, b.nama_kategori, b.keterangan,c.nama_kategori_pengeluaran, d.nama_user,d.id_role');
+        
+        $this->db->select('a.no_pengeluaran,a.total_approved,a.id_user,a.is_approve_sm,a.id_kat_ap,a.purpose,a.date,a.total,a.status, b.nama_kategori, b.keterangan,c.nama_kategori_pengeluaran, d.nama_user,d.id_role');
         $this->db->from('tbl_pengeluaran a');
         $this->db->join('tbl_kat_ap b', 'a.id_kat_ap=b.id_kategori_ap');
         $this->db->join('tbl_list_pengeluaran c', 'a.id_kategori_pengeluaran=c.id_kategori');
@@ -162,6 +163,7 @@ class ApModel extends CI_Model
         $this->db->where_not_in('a.status', $ignore);
         // $this->db->where('a.status>=', 2);
         $this->db->group_by('a.no_pengeluaran');
+        // $this->db->limit(1);
         $this->db->order_by('a.id_pengeluaran', 'DESC');
         return $this->db->get();
     }

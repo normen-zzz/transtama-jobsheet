@@ -194,9 +194,7 @@
                                         <div class="form-group">
                                             <label for="exampleInputEmail1" class="font-weight-bold">PPN</label>
                                             <div class="form-check">
-                                                <input class="form-check-input" name="ppn" disabled type="checkbox" value="1" id="ppn" <?php if ($inv['is_ppn'] == 1) {
-                                                                                                                                            echo 'checked';
-                                                                                                                                        } ?>>
+                                            <input type="number" class="form-control" required readonly name="other" value="<?= ($inv['ppn'] / ($inv['total_ap'])) * 100 ?>"></input>
                                                 <label class="form-check-label" for="flexCheckDefault">
                                                     Ya
                                                 </label>
@@ -207,9 +205,7 @@
                                         <div class="form-group">
                                             <label for="exampleInputEmail1" class="font-weight-bold">PPH</label>
                                             <div class="form-check">
-                                                <input class="form-check-input" name="pph" disabled type="checkbox" value="1" id="pph" <?php if ($inv['is_pph'] == 1) {
-                                                                                                                                            echo 'checked';
-                                                                                                                                        } ?>>
+                                            <input type="number" class="form-control" required readonly name="other"value="<?= ($inv['pph'] / ($inv['total_ap'])) * 100 ?>"></input>
                                                 <label class="form-check-label" for="flexCheckDefault">
                                                     Ya
                                                 </label>

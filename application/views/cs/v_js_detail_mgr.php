@@ -104,8 +104,16 @@
                                                             <td>
                                                                 <input type="text" disabled class="form-control" name="collie[]" value="<?= $do['koli'] ?>">
                                                             </td>
-                                                            <td>
-                                                                <input type="text" class="form-control" name="weight[]" value="<?= $do['berat'] ?>">
+                                                             <td>
+                                                                <?php if ($invoice != NULL) { 
+                                                                    if ($invoice['status'] == 1 || $invoice['status'] == 2) {
+                                                                    ?>
+                                                                <input type="text" class="form-control" readonly name="weight[]" value="<?= $do['berat'] ?>">
+                                                                <?php } else{ ?>
+                                                                    <input type="text" class="form-control" name="weight[]" value="<?= $do['berat'] ?>">
+                                                                    <?php }} else { ?>
+																	<input type="text" class="form-control" name="weight[]" value="<?= $do['berat'] ?>">
+																	<?php } ?>
                                                             </td>
                                                         </tr>
                                                     <?php $total_berat += $do['berat'];
@@ -139,16 +147,41 @@
 
                                                         <?php    } else {
                                                         ?>
-                                                            <td> <input type="text" class="form-control" placeholder="isi no flight" name="berat_js" value="<?= $msr['berat_js'] ?>"> </td>
-
-                                                        <?php } ?>
-                                                        <td> <input type="text" class="form-control" placeholder="isi no flight" name="berat_msr" value="<?= $msr['berat_msr'] ?>"> </td>
-                                                    </tr>
+                                                        <?php if ($invoice != NULL) { 
+                                                                    if ($invoice['status'] == 1 || $invoice['status'] == 2) {
+                                                                    ?>
+                                                            <td> <input type="text" class="form-control" readonly placeholder="isi no flight" name="berat_js" value="<?= $msr['berat_js'] ?>"> </td>
+                                                            <?php } else { ?>
+                                                                <td> <input type="text" class="form-control" placeholder="isi no flight" name="berat_js" value="<?= $msr['berat_js'] ?>"> </td>
+                                                                <?php }} else { ?>
+                                                                <td> <input type="text" class="form-control" placeholder="isi no flight" name="berat_js" value="<?= $msr['berat_js'] ?>"> </td>
+                                                        <?php }} ?>
+                                                        <?php if ($invoice != NULL) { 
+                                                                    if ($invoice['status'] == 1 || $invoice['status'] == 2) {
+                                                                    ?>
+                                                        <td> <input type="text" class="form-control" readonly placeholder="isi no flight" name="berat_msr" value="<?= $msr['berat_msr'] ?>"> </td>
+                                                        <?php } else { ?>
+                                                            <td> <input type="text" class="form-control" placeholder="isi no flight" name="berat_msr" value="<?= $msr['berat_msr'] ?>"> </td>
+                                                            <?php }} else { ?>
+															 <td> <input type="text" class="form-control" placeholder="isi no flight" name="berat_msr" value="<?= $msr['berat_msr'] ?>"> </td>
+															
+															<?php } ?>
+															
+															</tr>
 
                                                 </tbody>
 
                                             </table>
+                                            <?php if ($invoice == NULL) { ?>
+                                               
                                             <button class="btn btn-success">Submit</button>
+                                            <?php } else { 
+                                                 if ($invoice['status'] == 1 || $invoice['status'] == 2) {
+                                                ?>
+                                                 
+                                                 <?php } else { ?>
+                                                    <button class="btn btn-success">Submit</button>
+                                                <?php  } }?>
                                         </form>
                                     </div>
 
@@ -237,16 +270,16 @@
                                                         </td>
                                                         <td>
                                                             <!-- <?= rupiah($msr['freight_kg']) ?> -->
-                                                            <input type="text" class="form-control" name="freight_kg" value="<?= $msr['freight_kg'] ?>">
+                                                            <input type="text" readonly class="form-control" name="freight_kg" value="<?= $msr['freight_kg'] ?>">
                                                         </td>
                                                         <td>
                                                             <!-- <?= rupiah($msr['special_freight']) ?> -->
-                                                            <input type="text" class="form-control" name="special_freight" value="<?= $msr['special_freight'] ?>">
+                                                            <input type="text" class="form-control" name="special_freight" readonly value="<?= $msr['special_freight'] ?>">
                                                         </td>
                                                         <td> <input type="text" class="form-control" placeholder="isi no flight" name="packing" value="<?= $msr['packing'] ?>"> </td>
-                                                        <td> <input type="text" class="form-control" placeholder="isi no flight" name="others" value="<?= $msr['others'] ?>"> </td>
-                                                        <td> <input type="text" class="form-control" placeholder="isi no flight" name="surcharge" value="<?= $msr['surcharge'] ?>"> </td>
-                                                        <td> <input type="text" class="form-control" placeholder="isi no flight" name="insurance" value="<?= $msr['insurance'] ?>"> </td>
+                                                        <td> <input type="text" class="form-control" placeholder="isi no flight" readonly name="others" value="<?= $msr['others'] ?>"> </td>
+                                                        <td> <input type="text" class="form-control" placeholder="isi no flight" readonly name="surcharge" value="<?= $msr['surcharge'] ?>"> </td>
+                                                        <td> <input type="text" class="form-control" placeholder="isi no flight" readonly name="insurance" value="<?= $msr['insurance'] ?>"> </td>
                                                         <input type="text" class="form-control" hidden name="id" value="<?= $msr['id'] ?>">
                                                         <td>
                                                             <?= $msr['disc'] ?> / <?= $msr['disc'] * 100 ?> %
@@ -284,7 +317,7 @@
                                                 </table>
 
                                             </div>
-                                            <button class="btn btn-success">Submit</button>
+                                           <button class="btn btn-success">Submit</button>
                                         </form>
                                     </div>
 
@@ -411,7 +444,7 @@
 
                                                             if ($service == 'Charter Service') {
                                                                 $total_cost += $m['flight_msu2'] + ($m['ra2']) + ($m['packing2']) +
-                                                                    ($total_sales * $refund) + ($m['specialrefund2'] * $msr['berat_js']) + ($m['specialrefund2'] * $msr['berat_msr'])  + $m['insurance2'] + $m['surcharge2'] + ($m['hand_cgk2']) +
+                                                                    ($total_sales * $refund) + $m['specialrefund2']  + $m['insurance2'] + $m['surcharge2'] + ($m['hand_cgk2']) +
                                                                     ($m['hand_pickup2']) + ($m['hd_daerah2']) + ($total_sales * $pph) +
                                                                     $m['sdm2'] + $m['others2'];
                                                             } else {
@@ -438,7 +471,7 @@
                                                                 $hand_pickup = $hand_pickup_biasa + $hand_pickup_special;
 
                                                                 $total_cost += $m['flight_msu2'] + $ra + $packing +
-                                                                    ($total_sales * $refund) + ($m['specialrefund2'] * $msr['berat_js']) + ($m['specialrefund2'] * $msr['berat_msr']) + $m['insurance2'] + $m['surcharge2'] + $hand_cgk +
+                                                                    ($total_sales * $refund) + $m['specialrefund2'] + $m['insurance2'] + $m['surcharge2'] + $hand_cgk +
                                                                     $hand_pickup + $m['hd_daerah2'] + ($total_sales * $pph) +
                                                                     $sdm + $m['others2'];
                                                             }
@@ -492,7 +525,7 @@
                                                             <?= rupiah($total_sales * $refund2) ?>
                                                         </td>
                                                         <td>
-                                                            <?= rupiah(($special_refund2 * $msr['berat_js']) + ($special_refund2 * $msr['berat_msr'])) ?>
+                                                            <?= rupiah($special_refund2) ?>
                                                         </td>
                                                         <td>
                                                             <?= rupiah($insurance2) ?>
