@@ -296,7 +296,7 @@ class CsModel extends M_Datatables
 	}
 	function getRevisiSoNew()
 	{
-		$this->db->select('a.*, b.created_at as tgl_so_new, b.alasan, b.status_revisi, c.nama_user');
+		$this->db->select('a.shipment_id,a.tgl_pickup,a.so_id,a.jobsheet_id,a.shipper,a.tree_consignee,a.id, b.created_at as tgl_so_new, b.alasan, b.status_revisi, c.nama_user');
 		$this->db->from('tbl_shp_order a');
 		$this->db->join('tbl_revisi_so b', 'a.id=b.shipment_id');
 		$this->db->join('tbl_so d', 'a.id_so=d.id_so');

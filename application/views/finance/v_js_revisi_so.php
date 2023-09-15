@@ -11,6 +11,7 @@
                         <div class="mr-auto">
                             <h3 class="page-title"><?= $title; ?></h3>
                             <div class="d-inline-block align-items-center">
+							<?php $jabatan = $this->session->userdata('id_jabatan'); ?>
 
                             </div>
                         </div>

@@ -503,9 +503,6 @@ class Jobsheet extends CI_Controller
     }
     public function approveRevisiMgrCs($id)
     {
-        $data = array(
-            'status_revisi' => 2,
-        );
 
         $approveRevisiSo = $this->db->query("SELECT shipment_id FROM tbl_approve_revisi_so WHERE shipment_id = $id");
 
@@ -516,6 +513,10 @@ class Jobsheet extends CI_Controller
             );
             $this->db->insert('tbl_approve_revisi_so', $data);
         }
+
+        $data = array(
+            'status_revisi' => 2,
+        );
 
         $update = $this->db->update('tbl_revisi_so', $data, ['shipment_id' => $id]);
         if ($update) {
