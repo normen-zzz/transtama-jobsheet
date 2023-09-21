@@ -51,8 +51,8 @@
                                                             <td><?php foreach ($no_do as $do) {
                                                                     echo $do['no_do'];
                                                                 } ?></td>
-                                                            <td><?= $j['so_id'] ?></td>
-                                                            <td><?= $j['jobsheet_id'] ?></td>
+                                                            <td>SO-<?= $j['shipment_id'] ?></td>
+                                                            <td>JS-<?= $j['shipment_id'] ?></td>
                                                             <td><?= $j['shipper'] ?></td>
                                                             <td><?= $j['tree_consignee'] ?></td>
                                                             <td><?= $j['tgl_pengajuan'] ?></td>

@@ -54,8 +54,8 @@
                                                             <td class="text-danger"><?php foreach ($no_do as $do) {
                                                                                         echo $do['no_do'] . ',';
                                                                                     } ?></td>
-                                                            <td class="text-danger"><?= $j['so_id'] ?></td>
-                                                            <td class="text-danger"><?= $j['jobsheet_id'] ?></td>
+                                                            <td class="text-danger">SO-<?= $j['shipment_id'] ?></td>
+                                                            <td class="text-danger">JS-<?= $j['shipment_id'] ?></td>
                                                             <td class="text-danger"><?= $j['shipper'] ?></td>
                                                             <td class="text-danger"><?= $j['tree_consignee'] ?></td>
                                                             <td class="text-danger"><?= $j['tgl_so_new'] ?></td>
@@ -74,8 +74,8 @@
                                                             <td class="text-danger"><?php foreach ($no_do as $do) {
                                                                                         echo $do['no_do'] . ',';
                                                                                     } ?></td>
-                                                            <td class="text-danger"><?= $j['so_id'] ?></td>
-                                                            <td class="text-danger"><?= $j['jobsheet_id'] ?></td>
+                                                              <td class="text-danger">SO-<?= $j['shipment_id'] ?></td>
+                                                            <td class="text-danger">JS-<?= $j['shipment_id'] ?></td>
                                                             <td class="text-danger"><?= $j['shipper'] ?></td>
                                                             <td class="text-danger"><?= $j['tree_consignee'] ?></td>
                                                             <td class="text-danger"><?= $j['tgl_so_new'] ?></td>
@@ -93,8 +93,8 @@
                                                             <td class="text-danger"><?php foreach ($no_do as $do) {
                                                                                         echo $do['no_do'] . ',';
                                                                                     } ?></td>
-                                                            <td class="text-danger"><?= $j['so_id'] ?></td>
-                                                            <td class="text-danger"><?= $j['jobsheet_id'] ?></td>
+                                                              <td class="text-danger">SO-<?= $j['shipment_id'] ?></td>
+                                                            <td class="text-danger">JS-<?= $j['shipment_id'] ?></td>
                                                             <td class="text-danger"><?= $j['shipper'] ?></td>
                                                             <td class="text-danger"><?= $j['tree_consignee'] ?></td>
                                                             <td class="text-danger"><?= $j['tgl_so_new'] ?></td>
