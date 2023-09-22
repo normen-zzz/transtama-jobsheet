@@ -148,8 +148,10 @@ setlocale(LC_TIME, "id_ID.UTF8");
                                                                 <h5>No PO : </h5>
                                                             </td>
                                                             <td>
+                                                                <?php foreach ($Po as $Po1) { ?>
+                                                                    <a target="_blank" href="<?= base_url('cs/ApExternal/detailInvoice/'.$Po1['unique_invoice']."/" . encrypt_url($Po1['id_vendor'])) ?>" ><?= $Po1['no_po'] ?> (<?= $Po1['vendor'] ?>)</a><br>
+                                                                    <?php } ?>
                                                                 
-                                                                <a target="_blank" href="<?= base_url('cs/ApExternal/detailInvoice/'.$Po['unique_invoice']."/" . encrypt_url($Po['id_vendor'])) ?>" ><?= $Po['no_po'] ?></a>
                                                             </td>
                                                         </tr>
                                                     <?php } ?>
