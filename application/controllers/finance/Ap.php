@@ -714,19 +714,20 @@ class Ap extends CI_Controller
         if ($this->input->post('no_pengeluaran') == NULL) {
             $data['title'] = 'CEK AP';
             $data['no_pengeluaran'] = NULL;
+            $data['pengeluaran'] = NULL;
             $this->backend->display('finance/v_cek_ap', $data);
         } else {
-            
             $pengeluaran = $this->db->query('SELECT * FROM tbl_pengeluaran WHERE no_pengeluaran = "'.$this->input->post('no_pengeluaran').'" LIMIT 1 ');
-            $pengeluaranExternal = $this->db->query('SELECT * FROM tbl_pengeluaran WHERE no_po = "'.$this->input->post('no_pengeluaran').'" LIMIT 1 ');
-            
+            $pengeluaranExternal = $this->db->query('SELECT * FROM tbl_invoice_ap_final WHERE no_po = "'.$this->input->post('no_pengeluaran').'" LIMIT 1 ');
             $data['title'] = 'CEK AP';
             $data['no_pengeluaran'] = $this->input->post('no_pengeluaran');
 
             if ($pengeluaran->num_rows() == NULL && $pengeluaranExternal->num_rows() != NULL) {
                 $data['pengeluaran'] = $pengeluaranExternal->row_array();
+                $data['is'] = 1; //is external
             } elseif ($pengeluaran->num_rows() != NULL && $pengeluaranExternal->num_rows() == NULL) {
                 $data['pengeluaran'] = $pengeluaran->row_array();
+                $data['is'] = 0; //is internal
             }else{
                 $data['pengeluaran'] = NULL;
             }
