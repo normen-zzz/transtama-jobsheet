@@ -27,7 +27,6 @@ class Ap extends CI_Controller
 
         $data['title'] = 'Account Payable - Payment Order';
         $data['ap'] = $this->ap->getApByCategory(1)->result_array();
-        // $data['ap2'] = $this->ap->getApByCategory(1)->result_array();
 
         $this->backend->display('finance/v_ap', $data);
     }

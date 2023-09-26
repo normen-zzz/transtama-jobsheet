@@ -196,8 +196,16 @@ class Jobsheet extends CI_Controller
             $this->backend->display('finance/v_cek_resi', $data);
         } else {
             $data['title'] = 'CEK RESI';
+            $resi = $this->db->query("SELECT shipper,consigne,tgl_pickup,tgl_diterima,status_so,id FROM tbl_shp_order WHERE shipment_id = ".$this->input->post('shipment_id')." ")->row_array();
+            $poExternal = $this->db->query("SELECT no_po,id_vendor,unique_invoice,vendor FROM tbl_invoice_ap_final WHERE shipment_id = ".$resi['id']." GROUP BY no_po ");
+            $data['title'] = 'CEK RESI';
             $data['resi'] = $this->input->post('shipment_id');
-            $data['shipment'] = $this->db->get_where('tbl_shp_order', array('shipment_id' => $this->input->post('shipment_id')))->row_array();
+            // $data['shipment'] = $this->db->get_where('tbl_shp_order', array('shipment_id' => $this->input->post('shipment_id')))->row_array();
+            $data['shipment'] = $resi;
+            $data['invoice'] = $this->db->query("SELECT status,no_invoice FROM tbl_invoice WHERE shipment_id = ".$resi['id']." ")->row_array();
+            if ($poExternal->num_rows() != NULL) {
+                $data['Po'] = $poExternal->result_array();
+            }
             $this->backend->display('finance/v_cek_resi', $data);
         }
     }

@@ -50,7 +50,8 @@
                             <tbody>
                                 <?php foreach ($ap as $c) {
                                     $id_jabatan = $this->session->userdata('id_jabatan');
-                                    $userAp = $this->db->get_where('tb_user', array('id_user' => $c['id_user']))->row_array();
+                                    // $userAp = $this->db->get_where('tb_user', array('id_user' => $c['id_user']))->row_array();
+                                    $userAp = $this->db->query("SELECT id_jabatan FROM tb_user WHERE id_user = ".$c['id_user']." ")->row_array();
                                 ?>
                                     <tr>
                                         <td>
