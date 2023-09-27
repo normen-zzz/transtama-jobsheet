@@ -26,7 +26,7 @@
                                 <div class="box-body">
                                     <div class="table-responsive">
 
-                                        <table id="table" class="table table-bordered" style="width:100%">
+                                        <table id="tablePoCreatedCs" class="table table-bordered" style="width:100%">
                                             <thead>
                                                 <tr>
                                                     <th>Vendor/Agent</th>
@@ -46,19 +46,7 @@
                                             <tbody>
                                                 <?php
                                                 foreach ($proforma as $j) {
-                                                    $total_mepet = 0;
-
-                                                    $tgl1 = strtotime(date('Y-m-d'));
-                                                    $tgl2 = strtotime($j['due_date']);
-
-                                                    $jarak = $tgl2 - $tgl1;
-
-                                                    $perbedaan = $jarak / 60 / 60 / 24;
-
-                                                    if ($perbedaan <= 7) {
-                                                        $total_mepet = $total_mepet + 1;
-                                                    }
-                                                    // echo $perbedaan;
+                                                   
                                                 ?>
                                                     <tr>
                                                         <td><?= $j['vendor'] ?> <br>
