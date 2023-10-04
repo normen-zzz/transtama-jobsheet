@@ -1538,34 +1538,7 @@
 
                 <?php  } ?>
             </div>
-            <div class="col-md-6">
-                <?php if ($request['status_revisi'] != 3) {
-                ?>
-                    <div class="card card-custom gutter-b example example-compact" style="height:100px;">
-                        <h3 class="text-title text-center mt-2"><i class="fa fa-calendar text-warning"></i> Wait GM Check Revision</h3> <br>
-                    </div>
-                <?php  } else {
-                ?> <div class="card card-custom gutter-b example example-compact" style="height:100px;">
-                        <?php if ($tgl_approve_revisi['id_sm'] == NULL) {
-                        ?>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="card card-custom gutter-b example example-compact" style="height:100px;">
-                                        <div class="col-md-12 mt-8"> <a href="<?= base_url('cs/jobsheet/approveRevisiGm/' . $msr['id']) ?>" class="btn btn-success tombol-konfirmasi">Approved Revision</a> </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="card card-custom gutter-b example example-compact" style="height:100px;">
-                                        <div class="col-md-12 mt-8"> <a href="<?= base_url('cs/jobsheet/declineRevisiSm/' . $msr['id']) ?>" class="btn btn-danger tombol-konfirmasi">Decline Revision</a> </div>
-                                    </div>
-                                </div>
-                            </div>
-                        <?php  }  ?>
-
-                    </div>
-
-                <?php  } ?>
-            </div>
+            
 
 
         </div>

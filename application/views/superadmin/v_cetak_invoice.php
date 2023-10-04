@@ -959,7 +959,7 @@
                                                                                                                                                                     if ($inv['freight_kg'] != 0 && $inv['special_freight'] != 0) {
                                                                                                                                                                         echo  rupiah($inv['freight_kg']);
                                                                                                                                                                     } else {
-                                                                                                                                                                        echo  rupiah($inv['freight_kg']);
+                                                                                                                                                                        echo  rupiah($inv['freight_kg']).'hrr';
                                                                                                                                                                     }
                                                                                                                                                                 } ?></td>
 

@@ -185,6 +185,23 @@ class Approval extends CI_Controller
 
     public function approveRevisiGm($id)
     {
+
+        $approveRevisiSo = $this->db->query("SELECT shipment_id FROM tbl_approve_revisi_so WHERE shipment_id = $id");
+
+        if ($approveRevisiSo == NULL) {
+            $data = array(
+                'shipment_id' => $id,
+                'id_user_cs' => $this->session->userdata('id_user')
+            );
+            $this->db->insert('tbl_approve_revisi_so', $data);
+
+            $data = array(
+                'id_user_mgr' => $this->session->userdata('id_user'),
+                'tgl_approve_mgr_cs' => date('Y-m-d H:i:s'),
+                'status_approve_cs' => 1
+            );
+            $this->db->update('tbl_approve_revisi_so', $data, ['shipment_id' => $id]);
+        }
         $data = array(
             'status_revisi' => 3,
         );

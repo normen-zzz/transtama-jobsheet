@@ -249,6 +249,13 @@
                         </a>
                     </li>
 
+                    <li class="menu-item" aria-haspopup="true">
+                        <a href="<?= base_url('finance/ap/cekAp') ?>" class="menu-link">
+                            <i class="fa fa-search mt-2 fa-1x mr-2 text-danger"></i>
+                            <span class="menu-text" style="font-size:11px">Cek Ap</span>
+                        </a>
+                    </li>
+
                     <li class="menu-section">
                         <h4 class="menu-text">MASTER DATA</h4>
                         <i class="menu-icon ki ki-bold-more-hor icon-md"></i>

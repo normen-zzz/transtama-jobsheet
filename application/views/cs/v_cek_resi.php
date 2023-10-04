@@ -108,7 +108,8 @@ setlocale(LC_TIME, "id_ID.UTF8");
                                                                 echo 'Sudah di Approve Oleh Manager Finance';
                                                                 break;
                                                             case '5':
-                                                                $invoice = $this->db->get_where('tbl_invoice', array('shipment_id' => $shipment['id']))->row_array();
+                                                                
+                                                                
                                                                 if ($invoice['status'] == 0) {
                                                                     echo 'On Proforma';
                                                                 } elseif ($invoice['status'] == 1) {
@@ -127,7 +128,7 @@ setlocale(LC_TIME, "id_ID.UTF8");
                                                     </td>
                                                 </tr>
                                                 <?php if ($shipment['status_so'] == 5) {
-                                                    $invoice = $this->db->get_where('tbl_invoice', array('shipment_id' => $shipment['id']))->row_array();
+                                                    
                                                 ?>
                                                     <tr>
                                                         <td>
@@ -138,6 +139,22 @@ setlocale(LC_TIME, "id_ID.UTF8");
                                                         </td>
                                                     </tr>
                                                 <?php } ?>
+
+                                                <?php if (isset($Po)) {
+                                                    
+                                                    ?>
+                                                        <tr>
+                                                            <td>
+                                                                <h5>No PO : </h5>
+                                                            </td>
+                                                            <td>
+                                                                <?php foreach ($Po as $Po1) { ?>
+                                                                    <a target="_blank" href="<?= base_url('cs/ApExternal/detailInvoice/'.$Po1['unique_invoice']."/" . encrypt_url($Po1['id_vendor'])) ?>" ><?= $Po1['no_po'] ?> (<?= $Po1['vendor'] ?>)</a><br>
+                                                                    <?php } ?>
+                                                                
+                                                            </td>
+                                                        </tr>
+                                                    <?php } ?>
 
                                             </table>
                                             <?php if ($shipment['status_so'] >= 1) { ?>

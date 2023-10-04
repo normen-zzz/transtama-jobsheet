@@ -198,6 +198,7 @@ class ApModel extends CI_Model
         $this->db->where_not_in('a.status', $ignore);
         // $this->db->where('a.status>=', 2);
         $this->db->group_by('a.no_pengeluaran');
+        // $this->db->limit(1);
         $this->db->order_by('a.id_pengeluaran', 'DESC');
         return $this->db->get();
     }
