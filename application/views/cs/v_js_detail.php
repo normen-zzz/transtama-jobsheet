@@ -38,7 +38,7 @@
                                                 <tr>
                                                     <td><?= bulan_indo($msr['tgl_pickup']) ?></td>
                                                     <td><?= $msr['shipment_id'] ?></td>
-                                                    <td><?= $msr['so_id'] ?></td>
+                                                    <td>SO-<?= $msr['shipment_id'] ?></td>
                                                     <td><?= $msr['shipper'] ?></td>
                                                     <td><?= $msr['consigne'] ?></td>
                                                     <!-- <td><?= $msr['destination'] ?></td> -->
