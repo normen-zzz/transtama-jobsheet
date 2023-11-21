@@ -57,6 +57,7 @@ class ApExternal extends CI_Controller
             }
         }
     }
+    
     public function ApInternal()
     {
         $shipment_id = $this->input->post('shipment_id');
@@ -552,9 +553,9 @@ class ApExternal extends CI_Controller
 
     function getDataPoCreated()
     {
-        $query  = "SELECT a.id_invoice,a.no_po,a.due_date,a.status,a.id_vendor,a.no_invoice,a.unique_invoice,a.date,a.vendor,a.total_ap,a.ppn,a.special_ppn,a.pph,a.special_pph,a.payment_date, b.shipper,b.shipment_id as resi FROM tbl_invoice_ap_final INNER JOIN tbl_shp_order b ON a.shipment_id = b.id GROUP BY a.no_invoice ORDER BY a.created_at DESC";
+        $query  = "SELECT a.id_invoice,a.no_po,a.due_date,a.status,a.id_vendor,a.no_invoice,a.unique_invoice,a.date,a.vendor,a.total_ap,a.ppn,a.special_ppn,a.pph,a.special_pph,a.payment_date, b.shipper,b.shipment_id as resi FROM tbl_invoice_ap_final INNER JOIN tbl_shp_order b ON a.shipment_id = b.id";
         $search = array('a.no_po');
-        $where  = null;
+        $where  = array('a.status' => 1);
         // jika memakai IS NULL pada where sql
         $isWhere = null;
         // $isWhere = 'artikel.deleted_at IS NULL';

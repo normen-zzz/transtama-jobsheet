@@ -22,19 +22,22 @@ class Jobsheet extends CI_Controller
         $data['subtitle'] = 'Enter Jobsheet';
         $this->breadcrumb->add_item($breadcrumb_items);
         $data['breadcrumb_bootstrap_style'] = $this->breadcrumb->generate();
-        $customer = $this->input->post('customer');
+        $this->backend->display('finance/v_js_approve', $data);
 
-        if ($customer == NULL) {
-            $data['customer'] = $customer;
-            $data['customers'] = $this->db->get('tb_customer')->result_array();
-            $data['js'] = $this->cs->getAll()->result_array();
-            $this->backend->display('finance/v_js_approve', $data);
-        } else {
-            $data['customer'] = $customer;
-            $data['customers'] = $this->db->get('tb_customer')->result_array();
-            $data['js'] = $this->cs->getAll($customer)->result_array();
-            $this->backend->display('finance/v_js_approve', $data);
-        }
+       
+    }
+    function getDataEnterJobsheet()
+    {
+        $query  = "SELECT a.tgl_pickup, b.shipment_id,b.id,b.so_id,b.jobsheet_id,b.shipper,b.tree_consignee,b.status_so,b.id_so, c.nama_user,d.service_name,e.status_revisi FROM tbl_so AS a INNER JOIN tbl_shp_order AS b ON a.id_so = b.id_so INNER JOIN tb_user AS c ON a.id_sales = c.id_user INNER JOIN tb_service_type AS d on b.service_type = d.code LEFT JOIN tbl_revisi_so  e ON b.id = e.shipment_id";
+        $search = array('b.shipment_id','b.shipper');
+        $where  = array('b.status_so' => 3);
+        // $where  = array('a.id_user' => $this->session->userdata('id_user'));
+
+        // jika memakai IS NULL pada where sql
+        $isWhere = null;
+        // $isWhere = 'artikel.deleted_at IS NULL';
+        header('Content-Type: application/json');
+        echo $this->M_Datatables->get_tables_query($query, $search, $where, $isWhere);
     }
     public function final()
     {

@@ -910,3 +910,181 @@ $dataflash = json_encode($this->session->flashdata('message'));
         });
     });
 </script>
+
+
+<script>
+    var tabel = null;
+    $(document).ready(function() {
+        tabel = $('#tableEnterJobsheet').DataTable({
+            "processing": true,
+            // "responsive": true,
+            "serverSide": true,
+            "ordering": true, // Set true agar bisa di sorting
+            "dom": "<'row'<'col-lg-10 col-md-10 col-xs-12'fpl>>" +
+                "<'row'<'col-sm-12'tr>>" +
+                "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>" +
+                "<'row'<'col-lg-10 col-md-10 col-xs-12'l>>",
+            "order": [
+                [0, 'desc']
+            ], // Default sortingnya berdasarkan kolom / field ke 0 (paling pertama)
+            "ajax": {
+                "url": "<?= base_url('finance/jobsheet/getDataEnterJobsheet'); ?>", // URL file untuk proses select datanya
+                "type": "POST"
+            },
+            "deferRender": true,
+            "pageLength": 100,
+            "aLengthMenu": [
+                [5, 10, 50, 100],
+                [5, 10, 50, 100]
+            ], // Combobox Limit
+            "columns": [{
+                    "data": "tgl_pickup",
+                    
+
+                },
+                {
+                    "data": "shipment_id",
+
+                },
+
+                {
+                    "data": "shipment_id",
+                    "render": function(data, type, row, meta) {
+                        return 'SO-'+data;
+                    }
+
+                },
+                {
+                    "data": "shipment_id",
+                    "render": function(data, type, row, meta) {
+                        return 'JS-'+data;
+                    }
+
+                },
+                {
+                    "data": "shipper",
+
+                },
+                {
+                    "data": "tree_consignee",
+
+                },
+                {
+                    "data": "nama_user",
+
+                },
+                {
+                    "data": "status_so",
+                    "render": function(data, type, row, meta) {
+                        if (data == 1) {
+                            return '<span class="label label-danger label-inline font-weight-lighter" style="width: 150px;">SO Create By Sales</span>';
+                        } else if (data == 2) {
+                            return '<span class="label label-warning label-inline font-weight-lighter" style="width: 150px;">Approve PIC JS</span>';
+                        } else if (data == 3) {
+                            return '<span class="label label-primary label-inline font-weight-lighter" style="width: 150px;">Approve Manager CS</span>';
+                        } else if (data == 4) {
+                            return '<span class="label label-success label-inline font-weight-lighter" style="width: 150px;">Approve Finance</span>';
+                        }
+
+
+
+                    }
+                },
+                {
+                    "data": "id",
+                    "render": function(data, type, row, meta) {
+                        if (row.status_revisi == 0) {
+                            return '<a href="<?= base_url('finance/jobsheet/detailRevisi/') ?>' + data + '" class=" btn btn-sm text-light" style="background-color: #9c223b;">View Revision</a> <br><small>Jobsheet New</small><br>' + ' <a href="<?= base_url('finance/jobsheet/detail/') ?>' + data + '/' + row.id_so + ' " class=" btn btn-sm text-light mt-2" style="background-color: #9c223b;">Detail</a><a href="<?= base_url('finance/jobsheet/Exportexcel/') ?> ' + data + '" class=" btn btn-sm text-light" style="background-color: #9c223b;"><span class="fa fa-download"></span></a>';
+                        } else if (row.status_revisi == 1) {
+                            return '<a href="<?= base_url('finance/jobsheet/detailRevisi/') ?>' + data + '" class=" btn btn-sm text-light" style="background-color: #9c223b;">View Revision</a> <br><small>Jobsheet Approve By Pic Js</small><br>' + ' <a href="<?= base_url('finance/jobsheet/detail/') ?>' + data + '/' + row.id_so + ' " class=" btn btn-sm text-light mt-2" style="background-color: #9c223b;">Detail</a><a href="<?= base_url('finance/jobsheet/Exportexcel/') ?> ' + data + '" class=" btn btn-sm text-light" style="background-color: #9c223b;"><span class="fa fa-download"></span></a>';
+                        } else if (row.status_revisi == 2) {
+                            return '<a href="<?= base_url('finance/jobsheet/detailRevisi/') ?>' + data + '" class=" btn btn-sm text-light" style="background-color: #9c223b;">View Revision</a> <br><small>Jobsheet Approve By Manager CS</small><br>' + ' <a href="<?= base_url('finance/jobsheet/detail/') ?>' + data + '/' + row.id_so + ' " class=" btn btn-sm text-light mt-2" style="background-color: #9c223b;">Detail</a><a href="<?= base_url('finance/jobsheet/Exportexcel/') ?> ' + data + '" class=" btn btn-sm text-light" style="background-color: #9c223b;"><span class="fa fa-download"></span></a>';
+                        } else if (row.status_revisi == 3) {
+                            return '<a href="<?= base_url('finance/jobsheet/detailRevisi/') ?>' + data + '" class=" btn btn-sm text-light" style="background-color: #9c223b;">View Revision</a> <br><small>Jobsheet Approve By GM</small><br>' + ' <a href="<?= base_url('finance/jobsheet/detail/') ?>' + data + '/' + row.id_so + ' " class=" btn btn-sm text-light mt-2" style="background-color: #9c223b;">Detail</a><a href="<?= base_url('finance/jobsheet/Exportexcel/') ?> ' + data + '" class=" btn btn-sm text-light" style="background-color: #9c223b;"><span class="fa fa-download"></span></a>';
+                        } else if (row.status_revisi == 4) {
+                            return '<a href="<?= base_url('finance/jobsheet/detailRevisi/') ?>' + data + '" class=" btn btn-sm text-light" style="background-color: #9c223b;">View Revision</a> <br><small>Jobsheet Decline By PIC JS</small><br>' + ' <a href="<?= base_url('finance/jobsheet/detail/') ?>' + data + '/' + row.id_so + ' " class=" btn btn-sm text-light mt-2 " style="background-color: #9c223b;">Detail</a><a href="<?= base_url('finance/jobsheet/Exportexcel/') ?> ' + data + '" class=" btn btn-sm text-light" style="background-color: #9c223b;"><span class="fa fa-download"></span></a>';
+                        } else if (row.status_revisi == 5) {
+                            return '<a href="<?= base_url('finance/jobsheet/detailRevisi/') ?>' + data + '" class=" btn btn-sm text-light" style="background-color: #9c223b;">View Revision</a> <br><small>Jobsheet Decline By Manager CS</small><br>' + ' <a href="<?= base_url('finance/jobsheet/detail/') ?>' + data + '/' + row.id_so + ' " class=" btn btn-sm text-light mt-2" style="background-color: #9c223b;">Detail</a><a href="<?= base_url('finance/jobsheet/Exportexcel/') ?> ' + data + '" class=" btn btn-sm text-light" style="background-color: #9c223b;"><span class="fa fa-download"></span></a>';
+                        } else if (row.status_revisi == 6) {
+                            return '<a href="<?= base_url('finance/jobsheet/detailRevisi/') ?>' + data + '" class=" btn btn-sm text-light" style="background-color: #9c223b;">View Revision</a> <br><small>Jobsheet Decline By GM</small><br>' + ' <a href="<?= base_url('finance/jobsheet/detail/') ?>' + data + '/' + row.id_so + ' " class=" btn btn-sm text-light mt-2" style="background-color: #9c223b;">Detail</a><a href="<?= base_url('finance/jobsheet/Exportexcel/') ?> ' + data + '" class=" btn btn-sm text-light" style="background-color: #9c223b;"><span class="fa fa-download"></span></a>';
+                        } else {
+                            return ' <a href="<?= base_url('finance/jobsheet/detail/') ?>' + data + '/' + row.id_so + ' " class=" btn btn-sm text-light mr-2" style="background-color: #9c223b;">Detail</a><a href="<?= base_url('finance/jobsheet/Exportexcel/') ?>' + data + '" class=" btn btn-sm text-light" style="background-color: #9c223b;"><span class="fa fa-download"></span></a>';
+                        }
+
+
+
+                    }
+                },
+
+            ],
+        });
+    });
+</script>
+
+<script>
+    var tabel = null;
+    $(document).ready(function() {
+        tabel = $('#tablePoCreatedCs').DataTable({
+            "processing": true,
+            // "responsive": true,
+            "serverSide": true,
+            "ordering": true, // Set true agar bisa di sorting
+            "dom": "<'row'<'col-lg-10 col-md-10 col-xs-12'fpl>>" +
+                "<'row'<'col-sm-12'tr>>" +
+                "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>" +
+                "<'row'<'col-lg-10 col-md-10 col-xs-12'l>>",
+            "order": [
+                [0, 'desc']
+            ], // Default sortingnya berdasarkan kolom / field ke 0 (paling pertama)
+            "ajax": {
+                "url": "<?= base_url('cs/ApExternal/getDataPoCreated'); ?>", // URL file untuk proses select datanya
+                "type": "POST"
+            },
+            "deferRender": true,
+            "pageLength": 5,
+            "aLengthMenu": [
+                [5, 10, 50, 100],
+                [5, 10, 50, 100]
+            ], // Combobox Limit
+            "columns": [{
+                    "data": "vendor",
+                    
+
+                },
+                {
+                    "data": "no_po",
+
+                },
+
+                {
+                    "data": "date",
+                    
+
+                },
+                {
+                    "data": "total_ap",
+                    
+
+                },
+                {
+                    "data": "ppn",
+
+                },
+                {
+                    "data": "pph",
+
+                },
+                {
+                    "data": "status",
+
+                },
+                {
+                    "data": "status",
+                    
+                },
+               
+
+            ],
+        });
+    });
+</script>
