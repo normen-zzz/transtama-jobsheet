@@ -56,6 +56,10 @@
         .select2-selection__arrow {
             height: 34px !important;
         }
+
+        div.dataTables_wrapper div.dataTables_processing {
+  top: 0;
+}
     </style>
 </head>
 <!--end::Head-->
@@ -939,7 +943,7 @@ $dataflash = json_encode($this->session->flashdata('message'));
             ], // Combobox Limit
             "columns": [{
                     "data": "tgl_pickup",
-                    
+
 
                 },
                 {
@@ -950,14 +954,14 @@ $dataflash = json_encode($this->session->flashdata('message'));
                 {
                     "data": "shipment_id",
                     "render": function(data, type, row, meta) {
-                        return 'SO-'+data;
+                        return 'SO-' + data;
                     }
 
                 },
                 {
                     "data": "shipment_id",
                     "render": function(data, type, row, meta) {
-                        return 'JS-'+data;
+                        return 'JS-' + data;
                     }
 
                 },
@@ -1021,70 +1025,3 @@ $dataflash = json_encode($this->session->flashdata('message'));
     });
 </script>
 
-<script>
-    var tabel = null;
-    $(document).ready(function() {
-        tabel = $('#tablePoCreatedCs').DataTable({
-            "processing": true,
-            // "responsive": true,
-            "serverSide": true,
-            "ordering": true, // Set true agar bisa di sorting
-            "dom": "<'row'<'col-lg-10 col-md-10 col-xs-12'fpl>>" +
-                "<'row'<'col-sm-12'tr>>" +
-                "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>" +
-                "<'row'<'col-lg-10 col-md-10 col-xs-12'l>>",
-            "order": [
-                [0, 'desc']
-            ], // Default sortingnya berdasarkan kolom / field ke 0 (paling pertama)
-            "ajax": {
-                "url": "<?= base_url('cs/ApExternal/getDataPoCreated'); ?>", // URL file untuk proses select datanya
-                "type": "POST"
-            },
-            "deferRender": true,
-            "pageLength": 5,
-            "aLengthMenu": [
-                [5, 10, 50, 100],
-                [5, 10, 50, 100]
-            ], // Combobox Limit
-            "columns": [{
-                    "data": "vendor",
-                    
-
-                },
-                {
-                    "data": "no_po",
-
-                },
-
-                {
-                    "data": "date",
-                    
-
-                },
-                {
-                    "data": "total_ap",
-                    
-
-                },
-                {
-                    "data": "ppn",
-
-                },
-                {
-                    "data": "pph",
-
-                },
-                {
-                    "data": "status",
-
-                },
-                {
-                    "data": "status",
-                    
-                },
-               
-
-            ],
-        });
-    });
-</script>
