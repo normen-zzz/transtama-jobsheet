@@ -63,112 +63,25 @@
                                 <!-- /.box-header -->
                                 <div class="box-body">
                                     <div class="table-responsive">
+                                        <table id="tableInvoiceFinal" class="table table-bordered" style="width:100%">
+                                            <thead>
+                                                <tr>
 
-                                        <form method="POST" action="<?= base_url('finance/Invoice/paidInvoice') ?>">
-                                            <button class="btn btn-primary" id="paidInvoiceBtn" type="submit">Paid</button>
-                                            <table id="tableInvoice" class="table table-bordered" style="width:100%">
-                                                <thead>
-                                                    <tr>
-                                                        <th>#</th>
-                                                        <th>No Invoice</th>
-                                                        <th>Date Created</th>
-                                                        <th>Due Date</th>
-                                                        <th>Time Line</th>
-                                                        <th>Customer Invoice</th>
-                                                        <th>Customer Pickup</th>
-                                                        <th>Payment Status</th>
-                                                        <th>Action</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <?php
-                                                    foreach ($proforma as $j) {
-                                                        $total_mepet = 0;
-
-                                                        $tgl1 = strtotime(date('Y-m-d'));
-                                                        $tgl2 = strtotime($j['due_date']);
-
-                                                        $jarak = $tgl2 - $tgl1;
-
-                                                        $perbedaan = $jarak / 60 / 60 / 24;
-
-                                                        if ($perbedaan <= 7) {
-                                                            $total_mepet = $total_mepet + 1;
-                                                        }
-                                                        // echo $total_mepet;
-                                                    ?>
-                                                        <tr>
-
-                                                            <td><a target="blank" href="<?= base_url('finance/invoice/printProforma/' . $j['no_invoice']) ?>"><?= $j['no_invoice'] ?></a> </td>
-                                                            <td><input type="checkbox" class="no_invoice" value="<?= $j['no_invoice'] ?>" name="no_invoice[]" id="no_invoice"></td>
-                                                            <!-- <td><a target="blank" href="<?= 'https://tesla-smartwork.transtama.com/Invoice/printProforma/' . $j['no_invoice'] ?>"><?= $j['no_invoice'] ?></a> </td> -->
-                                                            <td><?= bulan_indo($j['date']) ?></td>
-                                                            <td><?php if ($j['status'] == 2) {
-                                                                    echo '<span class="label label-success label-inline font-weight-lighter">Paid</span>';
-                                                                } else {
-                                                                    echo  bulan_indo($j['due_date']);
-                                                                } ?>
-                                                            </td>
-                                                            <td>
-                                                                <?php if ($j['status'] == 2) {
-                                                                    echo '<span class="text-success">Paid</span> ';
-                                                                } else {
-                                                                    if ($perbedaan <= 7) {
-                                                                        $total_mepet = $total_mepet + 1;
-                                                                ?>
-                                                                        <span data-perbedaan="<?= $total_mepet ?>" id="the-span"></span>
-                                                                    <?php   }
+                                                    <th>No Invoice</th>
+                                                    <th>Date Created</th>
+                                                    <th>Due Date</th>
+                                                    <th>Time Line</th>
+                                                    <th>Customer Invoice</th>
+                                                    <th>Customer Pickup</th>
+                                                    <th>Payment Status</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
 
 
-                                                                    if ($perbedaan < 0) {
-                                                                        $total_mepet += 1;
-                                                                        echo '<span class="text-danger">Expired</span> 
-																	<br> Please Follow up This invoice';
-                                                                    ?>
-                                                                <?php
-                                                                    } elseif ($perbedaan <= 7 || $perbedaan >= 0) {
-                                                                        echo "<span class='text-danger'>$perbedaan Days Again</span>";
-                                                                    } else {
-                                                                        echo "<span class='text-danger'>$perbedaan Days Again</span>";
-                                                                    }
-                                                                }
-                                                                ?>
-                                                            </td>
-                                                            <td><?= $j['customer'] ?></td>
-                                                            <td><?= $j['customer_pickup'] ?></td>
-                                                            <td>
-                                                                <?php if ($j['status'] == 1) {
-                                                                    echo '<span class="label label-danger label-inline font-weight-lighter">Pending</span>';
-                                                                } elseif ($j['status'] == 2) {
-                                                                    echo '<span class="label label-success label-inline font-weight-lighter">Paid</span>';
-                                                                } elseif ($j['status'] == 3) {
-                                                                    echo '<span class="label label-purple label-inline font-weight-lighter">Unpaid</span>';
-                                                                }  ?>
-                                                            </td>
-                                                            <td>
-                                                                <?php if ($j['status'] == 2) {
-                                                                ?>
-                                                                    <a href="<?= base_url('finance/invoice/detailInvoice/' . $j['id_invoice'] . '/' . $j['no_invoice']) ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">Detail</a>
-                                                                <?php  } else {
-                                                                ?>
-                                                                    <a href="<?= base_url('finance/invoice/detailInvoice/' . $j['id_invoice'] . '/' . $j['no_invoice']) ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">Detail</a>
-                                                                    <a href="<?= base_url('finance/invoice/editInvoice/' . $j['id_invoice'] . '/' . $j['no_invoice']) ?>" class=" btn btn-sm text-light mt-1" style="background-color: #9c223b;">Edit</a>
-                                                                    <button data-toggle="modal" type="button" data-target="#modal-paid<?= $j['no_invoice'] ?>" class=" btn btn-sm text-light mt-1" style="background-color: #9c223b;">Paid</button>
-                                                                <?php } ?>
-                                                                <a target="blank" href="<?= base_url('finance/invoice/printProformaFull/' . $j['no_invoice']) ?>" class="btn btn-sm mt-1 text-light" style="background-color: #9c223b;"><i class="fa fa-print text-light"></i>PDF </a>
-                                                                <a target="blank" href="<?= base_url('finance/invoice/printProformaExcell/' . $j['no_invoice']) ?>" class="btn btn-sm mt-1 text-light" style="background-color: #9c223b;"><i class="fa fa-print text-light"></i> Excell </a>
-                                                                <!-- <a target="blank" href="<?= 'https://tesla-smartwork.transtama.com/Invoice/printProformaExcell/' . $j['no_invoice'] ?>" class="btn btn-sm mt-1 text-light" style="background-color: #9c223b;"><i class="fa fa-print text-light"></i> Excell </a> -->
-                                                            </td>
+                                        </table>
 
-                                                        </tr>
 
-                                                    <?php } ?>
-
-                                                </tbody>
-
-                                            </table>
-
-                                        </form>
 
                                     </div>
 
@@ -184,28 +97,24 @@
     </div>
 </div>
 
+<div class="modal fade" id="modal-paid">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
 
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="<?= base_url('finance/invoice/paid') ?>" method="POST" enctype="multipart/form-data">
+                <div class="modal-body">
+                    <div class="form-group">
 
-<?php foreach ($proforma as $j) {
-?>
-    <div class="modal fade" id="modal-paid<?= $j['no_invoice'] ?>">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Proof of Payment with no <b><?= $j['no_invoice'] ?></b> </h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <form action="<?= base_url('finance/invoice/paid') ?>" method="POST" enctype="multipart/form-data">
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <label for="due_date" class="font-weight-bold">Payment Date</label>
-                            <input type="date" class="form-control" name="payment_date" required>
-                            <input type="text" hidden class="form-control" name="no_invoice" value="<?= $j['no_invoice'] ?>" required>
+                        <div id="content-paid-invoice">
 
                         </div>
-                        <!-- <div class="form-group">
+                    </div>
+                    <!-- <div class="form-group">
                             <label for="due_date" class="font-weight-bold">Payment Time</label>
                             <input type="time" class="form-control" name="payment_time" required>
 
@@ -214,29 +123,168 @@
                             <label class="col-form-label text-lg-right font-weight-bold">Upload Proof</label>
                             <input type="file" id="input-file-now" name="ktp[]" accept="image/*" multiple />
                         </div> -->
-                    </div>
-                    <div class="modal-footer justify-content-between">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Submit</button>
-                    </div>
-                </form>
-            </div>
-            <!-- /.modal-content -->
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </form>
         </div>
-        <!-- /.modal-dialog -->
+        <!-- /.modal-content -->
     </div>
-    <!-- /.modal -->
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
 
-<?php } ?>
+
+
+
 
 
 <script>
+    var tabel = null;
     $(document).ready(function() {
+        tabel = $('#tableInvoiceFinal').DataTable({
+            "processing": true,
+            // "responsive": true,
+            "serverSide": true,
+            "ordering": true, // Set true agar bisa di sorting
+            "dom": "<'row'<'col-lg-10 col-md-10 col-xs-12'fpl>>" +
+                "<'row'<'col-sm-12'tr>>" +
+                "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>" +
+                "<'row'<'col-lg-10 col-md-10 col-xs-12'l>>",
+            "order": [
+                [0, 'desc']
+            ], // Default sortingnya berdasarkan kolom / field ke 0 (paling pertama)
+            "ajax": {
+                "url": "<?= base_url('finance/Invoice/getDataInvoiceFinal'); ?>", // URL file untuk proses select datanya
+                "type": "POST"
+            },
+            "deferRender": true,
+            "pageLength": 100,
+            "aLengthMenu": [
+                [5, 10, 50, 100],
+                [5, 10, 50, 100]
+            ], // Combobox Limit
+            "columns": [{
+                    "data": "no_invoice",
+                    "render": function(data, type, row, meta) {
+                        return '<a target="blank" href="<?= base_url('finance/invoice/printProforma/') ?>' + row.no_invoice + '">' + data + '</a>';
+                    }
 
-        var $submit = $("#paidInvoiceBtn").hide(),
-            $cbs = $('input[name="no_invoice[]"]').click(function() {
-                $submit.toggle($cbs.is(":checked"));
-            });
 
+                },
+                {
+                    "data": "date",
+
+                },
+                {
+                    "data": "due_date",
+
+                },
+                {
+                    "data": "date",
+                    "render": function(data, type, row, meta) {
+                        function formatDate(date) {
+                            var d = new Date(date),
+                                month = '' + (d.getMonth() + 1),
+                                day = '' + d.getDate(),
+                                year = d.getFullYear();
+
+                            if (month.length < 2)
+                                month = '0' + month;
+                            if (day.length < 2)
+                                day = '0' + day;
+
+                            return [year, month, day].join('-');
+                        }
+                        var start = new Date(row.due_date);
+                        var end = new Date();
+                        var diff = new Date(start - end);
+                        var days = diff / 1000 / 60 / 60 / 24;
+                        if (days > 0) {
+                            return "<span class='text-danger'>" + Math.ceil(days) + " Days Again</span>";
+                        } else {
+                            return '<span class="text-danger">Expired</span><br> Please Follow up This invoice';
+                        }
+                    }
+
+                },
+                {
+                    "data": "customer",
+
+                },
+                {
+                    "data": "customer_pickup",
+
+                },
+                {
+                    "data": "status",
+                    "render": function(data, type, row, meta) {
+                        if (data == 1) {
+                            return '<span class="label label-danger label-inline font-weight-lighter">Pending</span>';
+                        } else if (data == 2) {
+                            return '<span class="label label-success label-inline font-weight-lighter">Paid</span>';
+                        } else if (data == 3) {
+                            return '<span class="label label-purple label-inline font-weight-lighter">Unpaid</span>';
+
+                        }
+                    }
+
+                },
+                {
+                    "data": "status",
+                    "render": function(data, type, row, meta) {
+                        if (data == 2) {
+                            return '<a href="<?= base_url('finance/invoice/detailInvoice/') ?>' + row.id_invoice + '/' + row.no_invoice + '" class="btn btn-sm text-light" style="background-color: #9c223b;">Detail</a>' +
+                                '<a target="blank" href="<?= base_url('finance/invoice/printProformaFull/') ?>' + row.no_invoice + '" class="btn btn-sm mt-1 text-light" style="background-color: #9c223b;"><i class="fa fa-print text-light"></i>PDF </a>' +
+                                '<a target="blank" href="<?= base_url('finance/invoice/printProformaExcell/') ?>' + row.no_invoice + '" class="btn btn-sm mt-1 text-light" style="background-color: #9c223b;"><i class="fa fa-print text-light"></i> Excell </a>';
+                        } else {
+                            return '<a href="<?= base_url('finance/invoice/detailInvoice/') ?>' + row.id_invoice + '/' + row.no_invoice + '" class="btn btn-sm text-light" style="background-color: #9c223b;">Detail</a>' +
+                                '<a href="<?= base_url('finance/invoice/editInvoice/') ?>' + row.id_invoice + '/' + row.no_invoice + '" class="btn btn-sm text-light mt-1" style="background-color: #9c223b;">Edit</a>' +
+                                '<button type="button" href="#" data-toggle="modal" data-target="#modal-paid" data-no_invoice="' + row.no_invoice + '" class="btn btn-sm text-light mt-1 paidInvoice" id="paidInvoice" style="background-color: #9c223b;">Paid</button>' +
+                                '<a target="blank" href="<?= base_url('finance/invoice/printProformaFull/') ?>' + row.no_invoice + '" class="btn btn-sm mt-1 text-light" style="background-color: #9c223b;"><i class="fa fa-print text-light"></i>PDF </a>' +
+                                '<a target="blank" href="<?= base_url('finance/invoice/printProformaExcell/') ?>' + row.no_invoice + '" class="btn btn-sm mt-1 text-light" style="background-color: #9c223b;"><i class="fa fa-print text-light"></i> Excell </a>';
+                        }
+                    }
+
+                },
+
+
+            ],
+        });
     });
+</script>
+
+<script>
+    $(document).ready(function() {
+        $(document).on('click', '.paidInvoice', function() {
+            var no_invoice = $(this).data('no_invoice'); // Mendapatkan ID dari atribut data-id tombol yang diklik
+            // Memuat data menggunakan AJAX dengan mengirimkan ID sebagai parameter
+            $('#content-paid-invoice').html('');
+            $.ajax({
+                url: '<?php echo base_url("finance/Invoice/getNoInvoice"); ?>',
+                type: 'GET',
+                dataType: 'json',
+                data: {
+                    no_invoice: no_invoice,
+
+                },
+                success: function(response) {
+                    // Menampilkan data ke dalam modal
+
+                    var content = '<h4 class="modal-title">Proof of Payment ' + response.no_invoice + '</b> </h4>' +
+                        '<label for="due_date" class="font-weight-bold">Payment Date</label>' +
+                        '<input type="date" class="form-control" name="payment_date" required>' +
+                        '<input type="text" hidden class="form-control" name="no_invoice" value="' + response.no_invoice + '" required>';
+                    $('#content-paid-invoice').html(content);
+
+                },
+                error: function() {
+                    alert('Terjadi kesalahan dalam memuat data.');
+                }
+            });
+        });
+
+    })
 </script>

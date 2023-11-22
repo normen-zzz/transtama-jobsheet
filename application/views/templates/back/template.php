@@ -58,8 +58,8 @@
         }
 
         div.dataTables_wrapper div.dataTables_processing {
-  top: 0;
-}
+            top: 0;
+        }
     </style>
 </head>
 <!--end::Head-->
@@ -839,81 +839,7 @@ $dataflash = json_encode($this->session->flashdata('message'));
 
 <!-- untuk tabel  -->
 
-<script>
-    var tabel = null;
-    $(document).ready(function() {
-        tabel = $('#tablePoCreatedCs').DataTable({
-            "processing": true,
 
-            "serverSide": true,
-            "ordering": true, // Set true agar bisa di sorting
-            "dom": "<'row'<'col-lg-10 col-md-10 col-xs-12'f>>" +
-                "<'row'<'col-sm-12'tr>>" +
-                "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>" +
-                "<'row'<'col-lg-10 col-md-10 col-xs-12'l>>",
-            "order": [
-                [0, 'desc']
-            ], // Default sortingnya berdasarkan kolom / field ke 0 (paling pertama)
-            "ajax": {
-                "url": "<?= base_url('cs/ApExternal/getDataPoCreated'); ?>", // URL file untuk proses select datanya
-                "type": "POST"
-            },
-            "deferRender": true,
-            "aLengthMenu": [
-                [5, 10, 50],
-                [5, 10, 50]
-            ], // Combobox Limit
-            "columns": [{
-                    "data": 'vendor',
-                    "render": function(data, type, row, meta) {
-                        return '<a target="blank" href="<?= base_url('superadmin/order/print2') ?>/' + data + '">' + data + '</a>';
-                        return '<a href="<?= base_url('cs/apExternal/print/') ?>' + row.no_po + '/' + row.id_vendor + '/' + row, unique_invoice + '">' + row.no_invoice + '</a>';
-                    }
-                },
-                {
-                    "data": 'no_po',
-
-                },
-                {
-                    "data": 'date',
-
-                },
-                {
-                    "data": 'total_ap',
-
-                },
-                {
-                    "data": 'total_ap',
-
-                },
-                {
-                    "data": 'status',
-
-                },
-
-
-                {
-                    "data": "id",
-                    "render": function(data, type, row, meta) {
-                        <?php
-                        $jabatan = $this->session->userdata('id_jabatan');
-                        $id_atasan = $this->session->userdata('id_atasan');
-                        if ($jabatan == 10) {
-                            if ($j['status'] == 1) {
-                        ?>
-                                return '<a href="<?= base_url('cs/apExternal/approveSm/') ?>' + row.unique_invoice + '" class=" btn btn-sm text-light tombol-konfirmasi" style="background-color: #9c223b;">Approve</a>' +
-                                    '<a href="<?= base_url('cs/apExternal/detailInvoice/') ?>' + row.unique_invoice + '/' + row.id_vendor + '" class=" btn btn-sm text-light" style="background-color: #9c223b;">Detail</a>';
-                            <?php } else { ?>
-                                return '<a href="<?= base_url('cs/apExternal/detailInvoice/') ?>' + row.unique_invoice + '/' + row.id_vendor + '" class=" btn btn-sm text-light" style="background-color: #9c223b;">Detail</a>';
-                        <?php }
-                        } ?>
-                    }
-                },
-
-            ],
-        });
-    });
-</script>
 
 
 <script>

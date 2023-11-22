@@ -38,7 +38,7 @@
                                                     <th>Action</th>
                                                 </tr>
                                             </thead>
-                                            
+
 
                                         </table>
 
@@ -58,45 +58,125 @@
 
 
 
-<?php foreach ($proforma as $j) {
-?>
-    <div class="modal fade" id="modal-paid<?= $j['id_invoice'] ?>">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Proof of Payment with no <b><?= $j['no_invoice'] ?></b> </h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <form action="<?= base_url('finance/apExternal/paid') ?>" method="POST" enctype="multipart/form-data">
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <label for="due_date" class="font-weight-bold">Payment Date</label>
-                            <input type="date" class="form-control" name="payment_date" required>
-                            <input type="text" hidden class="form-control" name="unique_invoice" value="<?= $j['unique_invoice'] ?>" required>
+<script>
+    var tabel = null;
+    $(document).ready(function() {
+        tabel = $('#tablePoCreatedCs').DataTable({
+            "processing": true,
 
-                        </div>
-                        <!-- <div class="form-group">
-                            <label for="due_date" class="font-weight-bold">Payment Time</label>
-                            <input type="time" class="form-control" name="payment_time" required>
+            "serverSide": true,
+            "ordering": true, // Set true agar bisa di sorting
+            "dom": "<'row'<'col-lg-10 col-md-10 col-xs-12'f>>" +
+                "<'row'<'col-sm-12'tr>>" +
+                "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>" +
+                "<'row'<'col-lg-10 col-md-10 col-xs-12'l>>",
+            "order": [
+                [1, 'desc']
+            ], // Default sortingnya berdasarkan kolom / field ke 0 (paling pertama)
+            "ajax": {
+                "url": "<?= base_url('cs/ApExternal/getDataPoCreated'); ?>", // URL file untuk proses select datanya
+                "type": "POST"
+            },
+            "deferRender": true,
 
-                        </div>
-                        <div class="form-group">
-                            <label class="col-form-label text-lg-right font-weight-bold">Upload Proof</label>
-                            <input type="file" id="input-file-now" name="ktp[]" accept="image/*" multiple />
-                        </div> -->
-                    </div>
-                    <div class="modal-footer justify-content-between">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Submit</button>
-                    </div>
-                </form>
-            </div>
-            <!-- /.modal-content -->
-        </div>
-        <!-- /.modal-dialog -->
-    </div>
-    <!-- /.modal -->
+            "pageLength": 50,
+            "aLengthMenu": [
+                [10, 50, 100],
+                [10, 50, 100]
+            ], // Combobox Limit
+            "columns": [{
+                    "data": 'vendor',
+                    "render": function(data, type, row, meta) {
+                        return row.vendor + ' <br><a href="<?= base_url('cs/apExternal/print/') ?>' + row.no_po + '/' + row.id_vendor + '/' + row.unique_invoice + '">' + row.no_invoice + '</a>';
+                    }
+                },
+                {
+                    "data": 'no_po',
 
-<?php } ?>
+                },
+                {
+                    "data": 'date',
+
+                },
+                {
+                    "data": 'total_ap',
+                    "render": function(data, type, row, meta) {
+                        var number_string = data.toString(),
+                            sisa = number_string.length % 3,
+                            rupiah = number_string.substr(0, sisa),
+                            ribuan = number_string.substr(sisa).match(/\d{3}/g);
+
+                        if (ribuan) {
+                            separator = sisa ? '.' : '';
+                            rupiah += separator + ribuan.join('.');
+                        }
+                        return 'Rp.'+rupiah;
+                    }
+
+                },
+                {
+                    "data": 'total_ap',
+                    "render": function(data, type, row, meta) {
+                        var number_string = data.toString(),
+                            sisa = number_string.length % 3,
+                            rupiah = number_string.substr(0, sisa),
+                            ribuan = number_string.substr(sisa).match(/\d{3}/g);
+
+                        if (ribuan) {
+                            separator = sisa ? '.' : '';
+                            rupiah += separator + ribuan.join('.');
+                        }
+                        return 'Rp.'+rupiah;
+                    }
+
+                },
+                {
+                    "data": 'status',
+                    "render": function(data, type, row, meta) {
+                        if (data == 0) {
+                            return '<span class="label label-danger label-inline font-weight-lighter" style="height:50px; ">Request Ap</span>';
+                        } else if (data == 1) {
+                            return '<span class="label label-primary label-inline font-weight-lighter" style="height:50px;background-color:#00a9bf;">Approved By Manager</span>';
+                        } else if (data == 2) {
+                            return '<span class="label label-primary label-inline font-weight-lighter" style="height:50px; background-color:#ff4d00">Approved By SM</span>';
+                        } else if (data == 3) {
+                            return '<span class="label label-warning label-inline font-weight-lighter" style="height:50px">Received By Finance</span>';
+                        } else if (data == 6) {
+                            return '<span class="label label-secondary label-inline font-weight-lighter">Void</span>';
+                        } else if (data == 5) {
+                            return '<span class="label label-success label-inline font-weight-lighter" style="height:50px; background-color:#7c4dff;">Approved By GM</span>';
+                        } else if (data == 7) {
+                            return '<span class="label label-primary label-inline font-weight-lighter" style="height:50px">Approved By Mgr Finance</span>';
+                        } else {
+                            return '<span class="label label-success label-inline font-weight-lighter">Paid</span>';
+                        }
+                    }
+
+                },
+
+                {
+                    "data": 'status',
+                    "render": function(data, type, row, meta) {
+                        if (data == 0) {
+                            return '<a href="<?= base_url('cs/apExternal/detailInvoice/') ?>' + row.unique_invoice + '/' + row.id_vendor + '" class="btn btn-sm text-light" style="background-color: #9c223b;">Detail</a>' +
+                                ' <a href="<?= base_url('cs/apExternal/editInvoice/') ?>' + row.unique_invoice + '/' + row.id_vendor + '" class=" btn btn-sm text-light mt-2" style="background-color: #9c223b;">Edit</a>' +
+                                '<?php $id_atasan = $this->session->userdata('id_atasan');
+                                    if ($id_atasan == NULL || $id_atasan == 0) { ?>  <a href="<?= base_url('cs/apExternal/approveAtasan/') ?>' + row.unique_invoice + '" class=" btn btn-sm mt-2 text-light tombol-konfirmasi" style="background-color: #9c223b;">Approve</a> <?php } ?>';
+                        } else if (data == 1) {
+                            return '<a href="<?= base_url('cs/apExternal/detailInvoice/') ?>' + row.unique_invoice + '/' + row.id_vendor + '" class="btn btn-sm text-light" style="background-color: #9c223b;">Detail</a>' +
+                                '<?php $jabatan = $this->session->userdata('id_jabatan');
+                                    if ($jabatan == 10) { ?> <a href="<?= base_url('cs/apExternal/approveSm/') ?>' + row.unique_invoice + '" class=" btn btn-sm text-light tombol-konfirmasi mt-2" style="background-color: #9c223b;">Approve</a> <?php } ?>';
+                        } else {
+                            return '<a href="<?= base_url('cs/apExternal/detailInvoice/') ?>' + row.unique_invoice + '/' + row.id_vendor + '" class="btn btn-sm text-light" style="background-color: #9c223b;">Detail</a>';
+                        }
+                    }
+
+                },
+
+
+
+
+            ],
+        });
+    });
+</script>

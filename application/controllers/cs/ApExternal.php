@@ -36,7 +36,7 @@ class ApExternal extends CI_Controller
             $data['subtitle'] = 'PO AGENT/VENDOR';
             $this->breadcrumb->add_item($breadcrumb_items);
             $data['breadcrumb_bootstrap_style'] = $this->breadcrumb->generate();
-            $data['proforma'] = $this->cs->getApVendor()->result_array();
+            // $data['proforma'] = $this->cs->getApVendor()->result_array();
 
             $this->backend->display('cs/v_invoice_ap', $data);
         } else {
@@ -49,7 +49,7 @@ class ApExternal extends CI_Controller
                 $data['subtitle'] = 'PO AGENT/VENDOR';
                 $this->breadcrumb->add_item($breadcrumb_items);
                 $data['breadcrumb_bootstrap_style'] = $this->breadcrumb->generate();
-                $data['proforma'] = $this->cs->getApVendor()->result_array();
+                // $data['proforma'] = $this->cs->getApVendor()->result_array();
                 $this->backend->display('cs/v_invoice_ap', $data);
             } else {
                 $this->session->set_flashdata('messageAlert', $this->messageAlert('error', 'Shipment ID Not Found'));
@@ -205,7 +205,7 @@ class ApExternal extends CI_Controller
     }
     public function editInvoice($unique_invoice, $id_vendor)
     {
-        $id_vendor = decrypt_url($id_vendor);
+       
         $data['title'] = "Edit PO";
         $breadcrumb_items = [];
         $data['subtitle'] = "Edit PO";
@@ -220,7 +220,7 @@ class ApExternal extends CI_Controller
     }
     public function detailInvoice($unique_invoice, $id_vendor)
     {
-        $id_vendor = decrypt_url($id_vendor);
+       
         $data['title'] = "Detail Invoice AP";
         $breadcrumb_items = [];
         $data['subtitle'] = "Detail Invoice AP";
@@ -238,7 +238,7 @@ class ApExternal extends CI_Controller
         $id_vendor =  $this->input->post('id_vendor');
         if ($shipment_id == NULL) {
             $this->session->set_flashdata('messageAlert', $this->messageAlert('error', 'Please Select Minimun 1 Shipment'));
-            redirect('cs/apExternal/detailAp/' . encrypt_url($id_vendor));
+            redirect('cs/apExternal/detailAp/' . $id_vendor);
         }
 
         $data['title'] = 'Create AP';
@@ -337,7 +337,7 @@ class ApExternal extends CI_Controller
         $nama = $this->session->userdata('nama_user');
         $purpose = $this->input->post('purpose');
         $date = date('d F Y');
-        $vendor_encrypt = encrypt_url($this->input->post('id_vendor'));
+        $vendor_encrypt = $this->input->post('id_vendor');
         $link = "https://jobsheet.transtama.com/Apexternal/cs/$random_string/$vendor_encrypt";
         $pesan = "Hallo, ada pengajuan Ap External No. *$no_po* Oleh *$nama*  Dengan Tujuan *$purpose* Tanggal *$date*. Silahkan Approve Melalu Link Berikut : $link . Terima Kasih";
 
@@ -400,10 +400,10 @@ class ApExternal extends CI_Controller
         }
         if ($update) {
             $this->session->set_flashdata('messageAlert', $this->messageAlert('success', 'Success Update PO'));
-            redirect('cs/apExternal/editInvoice/' . $unique_invoice . '/' . encrypt_url($id_vendor));
+            redirect('cs/apExternal/editInvoice/' . $unique_invoice . '/' . $id_vendor);
         } else {
             $this->session->set_flashdata('messageAlert', $this->messageAlert('error', 'Failed'));
-            redirect('cs/apExternal/editInvoice/' . $unique_invoice . '/' . encrypt_url($id_vendor));
+            redirect('cs/apExternal/editInvoice/' . $unique_invoice . '/' . $id_vendor);
         }
     }
 
@@ -461,7 +461,7 @@ class ApExternal extends CI_Controller
             $nama = $user['nama_user'];
             $purpose = $ap['purpose'];
             $date = date('d F Y', strtotime($ap['created_at']));
-            $vendor_encrypt = encrypt_url($ap['id_vendor']);
+            $vendor_encrypt = $ap['id_vendor'];
             $link = "https://jobsheet.transtama.com/Apexternal/sm/$uniq/$vendor_encrypt";
             $pesan = "Hallo, ada pengajuan Ap External No. *$no_po* Oleh *$nama*  Dengan Tujuan *$purpose* Tanggal *$date*. Silahkan Approve Melalu Link Berikut : $link . Terima Kasih";
 
@@ -553,13 +553,14 @@ class ApExternal extends CI_Controller
 
     function getDataPoCreated()
     {
-        $query  = "SELECT a.id_invoice,a.no_po,a.due_date,a.status,a.id_vendor,a.no_invoice,a.unique_invoice,a.date,a.vendor,a.total_ap,a.ppn,a.special_ppn,a.pph,a.special_pph,a.payment_date, b.shipper,b.shipment_id as resi FROM tbl_invoice_ap_final AS a LEFT JOIN tbl_shp_order AS b ON a.shipment_id = b.id";
+        $query  = "SELECT a.id_invoice,a.no_po,a.due_date,a.status,a.id_vendor,a.no_invoice,a.unique_invoice,a.date,a.vendor,a.total_ap,a.ppn,a.special_ppn,a.pph,a.special_pph,a.payment_date, b.shipper,b.shipment_id as resi FROM tbl_invoice_ap_final AS a INNER JOIN tbl_shp_order AS b ON a.shipment_id = b.id";
         $search = array('a.no_po');
         $where  = null;
         // jika memakai IS NULL pada where sql
         $isWhere = null;
+        $group = 'GROUP BY a.no_invoice';
         // $isWhere = 'artikel.deleted_at IS NULL';
         header('Content-Type: application/json');
-        echo $this->M_Datatables->get_tables_query($query, $search, $where, $isWhere);
+        echo $this->M_Datatables->get_tables_query($query, $search, $where, $isWhere,$group);
     }
 }

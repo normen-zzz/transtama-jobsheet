@@ -16,7 +16,6 @@ class Apexternal extends CI_Controller
 
     public function cs($unique_invoice, $id_vendor)
     {
-        $id_vendor = decrypt_url($id_vendor);
         $data['title'] = "Detail Invoice AP";
         $breadcrumb_items = [];
         $data['subtitle'] = "Detail Invoice AP";
@@ -62,7 +61,6 @@ class Apexternal extends CI_Controller
 
     public function sm($unique_invoice, $id_vendor)
     {
-        $id_vendor = decrypt_url($id_vendor);
         $data['title'] = "Detail Invoice AP";
         $breadcrumb_items = [];
         $data['subtitle'] = "Detail Invoice AP";

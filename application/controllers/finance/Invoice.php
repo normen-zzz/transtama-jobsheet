@@ -38,7 +38,7 @@ class Invoice extends CI_Controller
             $data['subtitle'] = 'Invoice';
             $this->breadcrumb->add_item($breadcrumb_items);
             $data['breadcrumb_bootstrap_style'] = $this->breadcrumb->generate();
-            $data['proforma'] = $this->cs->getProformaInvoiceFinal()->result_array();
+            // $data['proforma'] = $this->cs->getProformaInvoiceFinal()->result_array();
             $this->backend->display('finance/v_invoice', $data);
         } else {
              $cek_data = $this->cs->cekShipment($shipment_id)->row_array();
@@ -50,13 +50,36 @@ class Invoice extends CI_Controller
                 $data['subtitle'] = 'Invoice';
                 $this->breadcrumb->add_item($breadcrumb_items);
                 $data['breadcrumb_bootstrap_style'] = $this->breadcrumb->generate();
-                $data['proforma'] = $this->cs->getProformaInvoiceFinal()->result_array();
+                // $data['proforma'] = $this->cs->getProformaInvoiceFinal()->result_array();
                 $this->backend->display('finance/v_invoice', $data);
             } else {
                 $this->session->set_flashdata('messageAlert', $this->messageAlert('error', 'Shipment ID Not Found'));
                 redirect('finance/invoice/final');
             }
         }
+    }
+
+    public function getNoInvoice()
+    {
+        $no_invoice = $this->input->get('no_invoice');
+        
+
+        $data = [
+            'no_invoice' => $no_invoice,
+            
+        ];
+        echo json_encode($data);
+    }
+
+    function getDataInvoiceFinal()
+    {
+        $query  = "SELECT a.no_invoice,a.due_date,a.date,a.status,a.customer,a.customer_pickup,a.id_invoice, b.shipper FROM tbl_invoice AS a INNER JOIN tbl_shp_order AS b ON a.shipment_id = b.id";
+        $search = array('a.no_invoice','a.customer');
+        $where  = array('a.status' => 1);
+        $isWhere = null;
+        $group = 'GROUP BY a.no_invoice';
+        header('Content-Type: application/json');
+        echo $this->M_Datatables->get_tables_query($query, $search, $where, $isWhere,$group);
     }
 
     public function paidInvoice()

@@ -133,7 +133,7 @@ class M_Datatables extends CI_Model
     return json_encode($callback); // Convert array $callback ke json
   }
 
-  function get_tables_query($query, $cari, $where, $iswhere)
+  function get_tables_query($query, $cari, $where, $iswhere, $group)
   {
     // Ambil data yang di ketik user pada textbox pencarian
     $search = htmlspecialchars($_POST['search']['value']);
@@ -150,9 +150,9 @@ class M_Datatables extends CI_Model
       $fwhere = implode(' AND ', $setWhere);
 
       if (!empty($iswhere)) {
-        $sql = $this->db->query($query . " WHERE  $iswhere AND " . $fwhere);
+        $sql = $this->db->query($query . " WHERE  $iswhere AND " . $fwhere . $group);
       } else {
-        $sql = $this->db->query($query . " WHERE " . $fwhere);
+        $sql = $this->db->query($query . " WHERE " . $fwhere.$group);
       }
       $sql_count = $sql->num_rows();
 
@@ -166,32 +166,32 @@ class M_Datatables extends CI_Model
       $order = " ORDER BY " . $_POST['columns'][$order_field]['data'] . " " . $order_ascdesc;
 
       if (!empty($iswhere)) {
-        $sql_data = $this->db->query($query . " WHERE $iswhere AND " . $fwhere . " AND (" . $cari . ")" . $order . " LIMIT " . $limit . " OFFSET " . $start);
+        $sql_data = $this->db->query($query . " WHERE $iswhere AND " . $fwhere . " AND (" . $cari . ")" .$group. $order . " LIMIT " . $limit . " OFFSET " . $start);
       } else {
-        $sql_data = $this->db->query($query . " WHERE " . $fwhere . " AND (" . $cari . ")" . $order . " LIMIT " . $limit . " OFFSET " . $start);
+        $sql_data = $this->db->query($query . " WHERE " . $fwhere . " AND (" . $cari . ")" .$group. $order . " LIMIT " . $limit . " OFFSET " . $start);
       }
 
       if (isset($search)) {
         if (!empty($iswhere)) {
-          $sql_cari =  $this->db->query($query . " WHERE $iswhere AND " . $fwhere . " AND (" . $cari . ")");
+          $sql_cari =  $this->db->query($query . " WHERE $iswhere AND " . $fwhere . " AND (" . $cari . ")".$group);
         } else {
-          $sql_cari =  $this->db->query($query . " WHERE " . $fwhere . " AND (" . $cari . ")");
+          $sql_cari =  $this->db->query($query . " WHERE " . $fwhere . " AND (" . $cari . ")".$group);
         }
         $sql_filter_count = $sql_cari->num_rows();
       } else {
         if (!empty($iswhere)) {
-          $sql_filter = $this->db->query($query . " WHERE $iswhere AND " . $fwhere);
+          $sql_filter = $this->db->query($query . " WHERE $iswhere AND " . $fwhere.$group);
         } else {
-          $sql_filter = $this->db->query($query . " WHERE " . $fwhere);
+          $sql_filter = $this->db->query($query . " WHERE " . $fwhere.$group);
         }
         $sql_filter_count = $sql_filter->num_rows();
       }
       $data = $sql_data->result_array();
     } else {
       if (!empty($iswhere)) {
-        $sql = $this->db->query($query . " WHERE  $iswhere ");
+        $sql = $this->db->query($query . " WHERE  $iswhere ".$group);
       } else {
-        $sql = $this->db->query($query);
+        $sql = $this->db->query($query." ".$group);
       }
       $sql_count = $sql->num_rows();
 
@@ -205,23 +205,23 @@ class M_Datatables extends CI_Model
       $order = " ORDER BY " . $_POST['columns'][$order_field]['data'] . " " . $order_ascdesc;
 
       if (!empty($iswhere)) {
-        $sql_data = $this->db->query($query . " WHERE $iswhere AND (" . $cari . ")" . $order . " LIMIT " . $limit . " OFFSET " . $start);
+        $sql_data = $this->db->query($query . " WHERE $iswhere AND (" . $cari . ")" .$group. $order . " LIMIT " . $limit . " OFFSET " . $start);
       } else {
-        $sql_data = $this->db->query($query . " WHERE (" . $cari . ")" . $order . " LIMIT " . $limit . " OFFSET " . $start);
+        $sql_data = $this->db->query($query . " WHERE (" . $cari . ")" .$group. $order . " LIMIT " . $limit . " OFFSET " . $start);
       }
 
       if (isset($search)) {
         if (!empty($iswhere)) {
-          $sql_cari =  $this->db->query($query . " WHERE $iswhere AND (" . $cari . ")");
+          $sql_cari =  $this->db->query($query . " WHERE $iswhere AND (" . $cari . ")".$group);
         } else {
-          $sql_cari =  $this->db->query($query . " WHERE (" . $cari . ")");
+          $sql_cari =  $this->db->query($query . " WHERE (" . $cari . ")".$group);
         }
         $sql_filter_count = $sql_cari->num_rows();
       } else {
         if (!empty($iswhere)) {
-          $sql_filter = $this->db->query($query . " WHERE $iswhere");
+          $sql_filter = $this->db->query($query . " WHERE $iswhere".$group);
         } else {
-          $sql_filter = $this->db->query($query);
+          $sql_filter = $this->db->query($query." ".$group);
         }
         $sql_filter_count = $sql_filter->num_rows();
       }
