@@ -49,7 +49,7 @@
                                                 <tr>
                                                     <td><?= bulan_indo($msr['tgl_pickup']) ?></td>
                                                     <td><?= $msr['shipment_id'] ?></td>
-                                                    <td><?= $msr['so_id'] ?></td>
+                                                    <td>SO-<?= $msr['shipment_id'] ?></td>
                                                     <td><?= $msr['shipper'] ?></td>
                                                     <td><?= $msr['consigne'] ?></td>
                                                     <!-- <td><?= $msr['destination'] ?></td> -->
@@ -92,7 +92,7 @@
                                                         <td> <input type="text" class="form-control" placeholder="isi no smu" name="no_smu" value="<?= $msr['no_smu'] ?>">
                                                             <input type="text" class="form-control" hidden name="id" value="<?= $msr['id'] ?>">
                                                         </td>
-                                                        
+
                                                         <td><?= $msr['berat_js'] ?></td>
                                                         <td><?= $msr['berat_msr'] ?></td>
                                                     </tr>
@@ -613,7 +613,7 @@
 
                                                             if ($service == 'Charter Service') {
                                                                 $total_cost_old += $m['flight_msu2'] + ($m['ra2']) + ($m['packing2']) +
-                                                                    ($total_sales * $refund) + ($m['specialrefund2'] * $msr['berat_js']) + ($m['specialrefund2'] * $msr['berat_msr'])  + $m['insurance2'] + $m['surcharge2'] + ($m['hand_cgk2']) +
+                                                                    ($total_sales * $refund) + ($m['specialrefund2'])  + $m['insurance2'] + $m['surcharge2'] + ($m['hand_cgk2']) +
                                                                     ($m['hand_pickup2']) + ($m['hd_daerah2']) + ($total_sales * $pph) +
                                                                     $m['sdm2'] + $m['others2'];
                                                             } else {
@@ -640,7 +640,7 @@
                                                                 $hand_pickup = $hand_pickup_biasa + $hand_pickup_special;
 
                                                                 $total_cost_old += $m['flight_msu2'] + $ra + $packing +
-                                                                    ($total_sales * $refund) + ($m['specialrefund2'] * $msr['berat_js']) + ($m['specialrefund2'] * $msr['berat_msr']) + $m['insurance2'] + $m['surcharge2'] + $hand_cgk +
+                                                                    ($total_sales * $refund) + ($m['specialrefund2'])  + $m['insurance2'] + $m['surcharge2'] + $hand_cgk +
                                                                     $hand_pickup + $m['hd_daerah2'] + ($total_sales * $pph) +
                                                                     $sdm + $m['others2'];
                                                             }
@@ -694,7 +694,7 @@
                                                             <?= rupiah($total_sales * $refund2) ?>
                                                         </td>
                                                         <td>
-                                                            <?= rupiah(($special_refund2 * $msr['berat_js']) + ($special_refund2 * $msr['berat_msr'])) ?>
+                                                            <?= rupiah(($special_refund2)) ?>
                                                         </td>
                                                         <td>
                                                             <?= rupiah($insurance2) ?>
@@ -971,7 +971,7 @@
 
                                                             if ($service == 'Charter Service') {
                                                                 $total_cost += $m['flight_msu2'] + ($m['ra2']) + ($m['packing2']) +
-                                                                    ($total_sales * $refund) + ($m['specialrefund2'] * $msr['berat_js']) + ($m['specialrefund2'] * $msr['berat_msr'])  + $m['insurance2'] + $m['surcharge2'] + ($m['hand_cgk2']) +
+                                                                    ($total_sales * $refund) + ($m['specialrefund2'])  + $m['insurance2'] + $m['surcharge2'] + ($m['hand_cgk2']) +
                                                                     ($m['hand_pickup2']) + ($m['hd_daerah2']) + ($total_sales_new * $pph) +
                                                                     $m['sdm2'] + $m['others2'];
                                                             } else {
@@ -998,7 +998,7 @@
                                                                 $hand_pickup = $hand_pickup_biasa + $hand_pickup_special;
 
                                                                 $total_cost += $m['flight_msu2'] + $ra + $packing +
-                                                                    ($total_sales_new * $refund) + ($m['specialrefund2'] * $msr['berat_js']) + ($m['specialrefund2'] * $msr['berat_msr']) + $m['insurance2'] + $m['surcharge2'] + $hand_cgk +
+                                                                    ($total_sales_new * $refund) + ($m['specialrefund2']) + $m['insurance2'] + $m['surcharge2'] + $hand_cgk +
                                                                     $hand_pickup + $m['hd_daerah2'] + ($total_sales_new * $pph) +
                                                                     $sdm + $m['others2'];
                                                             }
@@ -1052,7 +1052,7 @@
                                                             <?= rupiah($total_sales_new * $refund2) ?>
                                                         </td>
                                                         <td>
-                                                            <?= rupiah(($special_refund2 * $msr['berat_js']) + ($special_refund2 * $msr['berat_msr'])) ?>
+                                                            <?= rupiah(($special_refund2)) ?>
                                                         </td>
                                                         <td>
                                                             <?= rupiah($insurance2) ?>
@@ -1522,6 +1522,19 @@
                 ?>
                     <div class="card card-custom gutter-b example example-compact" style="height:100px;">
                         <h3 class="text-title text-center mt-2"><i class="fa fa-calendar text-warning"></i> Wait Senior Manager To Check Revision</h3> <br>
+                        <?php if ($this->session->userdata('id_jabatan') == 10) { ?>
+
+                            <div class="row">
+                                
+                                    <div class="col-md-6"> <a href="<?= base_url('cs/jobsheet/approveRevisiSm/' . $msr['id']) ?>" class="btn btn-success tombol-konfirmasi">Approved Revision</a> </div>
+                               
+                               
+                                    <div class="col-md-6"> <a href="<?= base_url('cs/jobsheet/declineRevisiSm/' . $msr['id']) ?>" class="btn btn-danger tombol-konfirmasi">Decline Revision</a> </div>
+                              
+                            </div>
+
+
+                        <?php } ?>
                         <!-- <h4 class="text-title text-center"><?= $tgl_approve_revisi['tgl_approve_gm'] ?></h4> -->
                     </div>
                 <?php  } else {
@@ -1538,7 +1551,7 @@
 
                 <?php  } ?>
             </div>
-            
+
 
 
         </div>

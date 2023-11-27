@@ -8,6 +8,7 @@ class Backoffice extends CI_Controller
         parent::__construct();
         $this->load->library('form_validation');
     }
+    #[\ReturnTypeWillChange]
     public function index()
     {
         $this->form_validation->set_rules('username', 'Username', 'trim|required');
