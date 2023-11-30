@@ -35,7 +35,7 @@ class Jobsheet extends CI_Controller
 
         // jika memakai IS NULL pada where sql
         $isWhere = null;
-        $group = '';
+        $group = 'GROUP BY b.shipment_id';
         // $isWhere = 'artikel.deleted_at IS NULL';
         header('Content-Type: application/json');
         echo $this->M_Datatables->get_tables_query($query, $search, $where, $isWhere,$group);

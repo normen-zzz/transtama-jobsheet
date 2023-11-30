@@ -312,7 +312,7 @@ class SalesOrder extends CI_Controller
     public function prosesSo($id)
     {
         $date = date('Y-m-d');
-        $deadline_mgr_js = date('Y-m-d', strtotime('+1 days', strtotime($date)));
+        $deadline_mgr_js = date('Y-m-d', strtotime('+2 days', strtotime($date)));
         $sql = $this->db->query("SELECT max(jobsheet_id) as kode FROM tbl_shp_order")->row_array();
         $no = $sql['kode'];
         // $potong = substr($no, 11, 9);
