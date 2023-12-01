@@ -149,7 +149,7 @@ setlocale(LC_TIME, "id_ID.UTF8");
                                                             </td>
                                                             <td>
                                                                 <?php foreach ($Po as $Po1) { ?>
-                                                                    <a target="_blank" href="<?= base_url('cs/ApExternal/detailInvoice/'.$Po1['unique_invoice']."/" . encrypt_url($Po1['id_vendor'])) ?>" ><?= $Po1['no_po'] ?> (<?= $Po1['vendor'] ?>)</a><br>
+                                                                    <a target="_blank" href="<?= base_url('cs/ApExternal/detailInvoice/'.$Po1['unique_invoice']."/" . $Po1['id_vendor']) ?>" ><?= $Po1['no_po'] ?> (<?= $Po1['vendor'] ?>)</a><br>
                                                                     <?php } ?>
                                                                 
                                                             </td>
