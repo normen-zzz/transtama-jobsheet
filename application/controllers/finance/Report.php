@@ -1250,8 +1250,8 @@ class Report extends CI_Controller
         foreach ($shipments as $row) {
             $sales = $this->cs->getSales($row['id_so'])->row_array();
             $puPoin = $this->cs->getPuPoin($row['id_so'])->row_array();
-            $get_do = $this->db->select('no_do,no_so, berat, koli')->get_where('tbl_no_do', ['shipment_id' => $row['shipment_id']])->result_array();
-            $jumlah = $this->db->select('no_do')->get_where('tbl_no_do', ['shipment_id' => $row['shipment_id']])->num_rows();
+            $get_do = $this->db->select('no_do,no_so, berat, koli')->get_where('tbl_no_do', ['shipment_id' => $row['shipment_id']]);
+           
             $no_invoice = $row['no_invoice'];
             $status_invoice = '';
             $tgl_bayar_invoice = '';
@@ -1289,10 +1289,10 @@ class Report extends CI_Controller
 
             $no_do = '';
             $no_so = '';
-            if ($get_do) {
+            if ($get_do->num_rows() != 0) {
                 $i = 1;
-                foreach ($get_do as $d) {
-                    $no_do = ($i == $jumlah) ? $d['no_do'] : $d['no_do'] . '/';
+                foreach ($get_do->result_array() as $d) {
+                    $no_do = ($i == $get_do->num_rows()) ? $d['no_do'] : $d['no_do'] . '/';
                     $i++;
                 }
             } else {
@@ -1300,11 +1300,11 @@ class Report extends CI_Controller
             }
 
             // no so
-            if ($get_do) {
+            if ($get_do->num_rows() != 0) {
                 $i = 1;
-                foreach ($get_do as $d) {
+                foreach ($get_do->result_array() as $d) {
 
-                    $no_so =  ($i == $jumlah) ? $d['no_so'] : $d['no_so'] . '/';
+                    $no_so =  ($i == $get_do->num_rows()) ? $d['no_so'] : $d['no_so'] . '/';
                     $i++;
                 }
             } else {
@@ -1318,26 +1318,26 @@ class Report extends CI_Controller
                 // kalo gada disc
                 if ($disc == 0) {
                     $freight  = $row['freight_kg'];
-                    $special_freight  = $row['special_freight'];
+                    $special_freight  = (int)$row['special_freight'];
                 } else {
                     $freight_discount = $row['freight_kg'] - ($row['freight_kg'] * $disc);
-                    $special_freight_discount = $row['special_freight'] - ($row['special_freight'] * $disc);
+                    $special_freight_discount = (int)$row['special_freight'] - ((int)$row['special_freight'] * $disc);
 
                     $freight = $freight_discount;
                     $special_freight  = $special_freight_discount;
                 }
                 $packing = $row['packing'];
-                $total_sales = ($row['freight_kg'] + $packing +  $row['special_freight'] +  $row['others'] + $row['surcharge'] + $row['insurance']);
-                $freight_kg = $row['special_freight'];
+                $total_sales = ($row['freight_kg'] + $packing +  (int)$row['special_freight'] +  $row['others'] + $row['surcharge'] + $row['insurance']);
+                $freight_kg = (int)$row['special_freight'];
             } else {
                 $disc = $row['disc'];
                 // kalo gada disc
                 if ($disc == 0) {
                     $freight  = $row['berat_js'] * $row['freight_kg'];
-                    $special_freight  = $row['berat_msr'] * $row['special_freight'];
+                    $special_freight  = (int)$row['berat_msr'] * (int)$row['special_freight'];
                 } else {
                     $freight_discount = $row['freight_kg'] * $disc;
-                    $special_freight_discount = $row['special_freight'] * $disc;
+                    $special_freight_discount = (int)$row['special_freight'] * $disc;
 
                     $freight = $freight_discount * $row['berat_js'];
                     $special_freight  = $special_freight_discount * $row['berat_msr'];
@@ -1346,7 +1346,7 @@ class Report extends CI_Controller
 
 
                 $packing = $row['packing'];
-                $total_sales = ($freight + $packing + $special_freight +  $row['others'] + $row['surcharge'] + $row['insurance']);
+                $total_sales = ((int)$freight + (int)$packing + (int)$special_freight +  (int)$row['others'] + (int)$row['surcharge'] + (int)$row['insurance']);
 
                 $total_sales = $total_sales;
             }
@@ -1361,24 +1361,24 @@ class Report extends CI_Controller
                     $row['sdm2'] + $row['others2'];
             } else {
                 // sdm
-                $sdm_biasa  = $row['berat_js'] * $row['sdm2'];
-                $sdm_special  = $row['berat_msr'] * $row['sdm2'];
+                $sdm_biasa  = (int)$row['berat_js'] *(int) $row['sdm2'];
+                $sdm_special  = (int)$row['berat_msr'] * (int)$row['sdm2'];
                 $sdm = $sdm_biasa + $sdm_special;
                 // ra
                 $ra_biasa  = $row['berat_js'] * $row['ra2'];
-                $ra_special  = $row['berat_msr'] * $row['ra2'];
+                $ra_special  = (int)$row['berat_msr'] * $row['ra2'];
                 $ra = $ra_biasa + $ra_special;
                 // packing
                 $packing_biasa  = $row['berat_js'] * $row['packing2'];
-                $packing_special  = $row['berat_msr'] * $row['packing2'];
+                $packing_special  = (int)$row['berat_msr'] * $row['packing2'];
                 $packing = $packing_biasa + $packing_special;
                 // hand cgk
                 $hand_cgk_biasa  = $row['berat_js'] * $row['hand_cgk2'];
-                $hand_cgk_special  = $row['berat_msr'] * $row['hand_cgk2'];
+                $hand_cgk_special  = (int)$row['berat_msr'] * $row['hand_cgk2'];
                 $hand_cgk = $hand_cgk_biasa + $hand_cgk_special;
                 // hand pickup
                 $hand_pickup_biasa  = $row['berat_js'] * $row['hand_pickup2'];
-                $hand_pickup_special  = $row['berat_msr'] * $row['hand_pickup2'];
+                $hand_pickup_special  = (int)$row['berat_msr'] * $row['hand_pickup2'];
                 $hand_pickup = $hand_pickup_biasa + $hand_pickup_special;
 
                 $total_cost = $row['flight_msu2'] + $ra + $packing +
@@ -1387,32 +1387,32 @@ class Report extends CI_Controller
                     $sdm + $row['others2'];
             }
             if ($service == 'Charter Service') {
-                $ra = $row['ra2'];
-                $packing = $row['packing2'];
-                $hand_cgk = $row['hand_cgk2'];
-                $hand_pickup =  $row['hand_pickup2'];
-                $sdm = $row['sdm2'];
+                $ra = (int)$row['ra2'];
+                $packing = (int)$row['packing2'];
+                $hand_cgk = (int)$row['hand_cgk2'];
+                $hand_pickup =  (int)$row['hand_pickup2'];
+                $sdm = (int)$row['sdm2'];
             } else {
 
                 $ra_biasa  = $row['berat_js'] * $row['ra2'];
-                $ra_special  = $row['berat_msr'] * $row['ra2'];
+                $ra_special  = (int)$row['berat_msr'] * $row['ra2'];
                 $ra = $ra_biasa + $ra_special;
 
                 $packing_biasa  = $row['berat_js'] * $row['packing2'];
-                $packing_special  = $row['berat_msr'] * $row['packing2'];
+                $packing_special  = (int)$row['berat_msr'] * $row['packing2'];
                 $packing = $packing_biasa + $packing_special;
 
                 $hand_cgk_biasa  = $row['berat_js'] * $row['hand_cgk2'];
-                $hand_cgk_special  = $row['berat_msr'] * $row['hand_cgk2'];
+                $hand_cgk_special  = (int)$row['berat_msr'] * $row['hand_cgk2'];
                 $hand_cgk = $hand_cgk_biasa + $hand_cgk_special;
 
 
                 $hand_pickup_biasa  = $row['berat_js'] * $row['hand_pickup2'];
-                $hand_pickup_special  = $row['berat_msr'] * $row['hand_pickup2'];
+                $hand_pickup_special  = (int)$row['berat_msr'] * $row['hand_pickup2'];
                 $hand_pickup = $hand_pickup_biasa + $hand_pickup_special;
 
-                $sdm_biasa  = $row['berat_js'] * $row['sdm2'];
-                $sdm_special  = $row['berat_msr'] * $row['sdm2'];
+                $sdm_biasa  = (int)$row['berat_js'] * (int)$row['sdm2'];
+                $sdm_special  = (int)$row['berat_msr'] * (int)$row['sdm2'];
                 $sdm = $sdm_biasa + $sdm_special;
             }
 
@@ -1425,7 +1425,7 @@ class Report extends CI_Controller
                 ->setAutoSize(true);
             $sheet->setCellValue('B' . $x, $row['tgl_pickup'])->getColumnDimension('B')
                 ->setAutoSize(true);
-            $sheet->setCellValue('C' . $x, $row['shipment_id'] )->getColumnDimension('C')
+            $sheet->setCellValue('C' . $x, $row['resi'] )->getColumnDimension('C')
                 ->setAutoSize(true);
             $sheet->setCellValue('D' . $x, $row['shipper'])->getColumnDimension('D')
                 ->setAutoSize(true);
@@ -1446,7 +1446,7 @@ class Report extends CI_Controller
             $sheet->setCellValue('L' . $x, $row['koli'])->getColumnDimension('L')
                 ->setAutoSize(true);
             $sheet->setCellValue('M' . $x, $row['berat_js']);
-            $sheet->setCellValue('N' . $x, $row['berat_msr'])->getColumnDimension('N')
+            $sheet->setCellValue('N' . $x, (int)$row['berat_msr'])->getColumnDimension('N')
                 ->setAutoSize(true);
             if ($row['freight_kg'] != 0) {
                 $sheet->getStyle("O" . $x)->getNumberFormat()->setFormatCode("(\"Rp.\"* #,##0);(\"Rp.\"* \(#,##0\);(\"$\"* \"-\"??);(@_)");
@@ -1624,12 +1624,15 @@ class Report extends CI_Controller
                 $sheet->setCellValue('AJ' . $x, $profit)->getColumnDimension('AJ')
                     ->setAutoSize(true);
             }
-            $sheet->setCellValue('AK' . $x, round($profit / $total_sales * 100, 0))->getColumnDimension('AK')
+            // $sheet->setCellValue('AK' . $x, round($profit / $total_sales * 100, 0))->getColumnDimension('AK')
+            //     ->setAutoSize(true);
+            
+            $sheet->setCellValue('AK' . $x, '-')->getColumnDimension('AK')
                 ->setAutoSize(true);
 
             $sheet->setCellValue('AL' . $x, $sales['nama_user'])->getColumnDimension('AL')
                 ->setAutoSize(true);
-            $sheet->setCellValue('AM' . $x, $row['note_pic_js'])->getColumnDimension('AM')
+            $sheet->setCellValue('AM' . $x, '-')->getColumnDimension('AM')
                 ->setAutoSize(true);
             $sheet->setCellValue('AN' . $x, $no_invoice . '/' . $status_invoice)->getColumnDimension('AN')
                 ->setAutoSize(true);
@@ -1652,15 +1655,15 @@ class Report extends CI_Controller
         $no2 = 1;
         $x2 = 2;
         foreach ($shipments_void as $row) {
-            $get_do = $this->db->select('no_do,no_so, berat, koli')->get_where('tbl_no_do', ['shipment_id' => $row['shipment_id']])->result_array();
-            $jumlah = $this->db->select('no_do')->get_where('tbl_no_do', ['shipment_id' => $row['shipment_id']])->num_rows();
+            $get_do = $this->db->select('no_do,no_so, berat, koli')->get_where('tbl_no_do', ['shipment_id' => $row['shipment_id']]);
+           
 
             $no_do = '';
             $no_so = '';
-            if ($get_do) {
+            if ($get_do->num_rows()) {
                 $i = 1;
-                foreach ($get_do as $d) {
-                    $no_do = ($i == $jumlah) ? $d['no_do'] : $d['no_do'] . '/';
+                foreach ($get_do->result_array() as $d) {
+                    $no_do = ($i == $get_do->num_rows()) ? $d['no_do'] : $d['no_do'] . '/';
                     $i++;
                 }
             } else {
@@ -1668,11 +1671,11 @@ class Report extends CI_Controller
             }
 
             // no so
-            if ($get_do) {
+            if ($get_do->num_rows()) {
                 $i = 1;
-                foreach ($get_do as $d) {
+                foreach ($get_do->result_array() as $d) {
 
-                    $no_so =  ($i == $jumlah) ? $d['no_so'] : $d['no_so'] . '/';
+                    $no_so =  ($i == $get_do->num_rows()) ? $d['no_so'] : $d['no_so'] . '/';
                     $i++;
                 }
             } else {

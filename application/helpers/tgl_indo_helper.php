@@ -122,13 +122,18 @@ if (!function_exists('longdate_indo')) {
     if (!function_exists('bulan_indo')) {
         function bulan_indo($tanggal)
         {
-            date_default_timezone_set('Asia/Jakarta');
-            $ubah = gmdate($tanggal, time() + 60 * 60 * 8);
-            $pecah = explode("-", $ubah);
-            $tgl = $pecah[2];
-            $thn = $pecah[0];
-            $bulan = bulan($pecah[1]);
-            return $tgl . ' ' . $bulan . ' ' . $thn;
+            if ($tanggal == NULL) {
+                return "-";
+            } else {
+                date_default_timezone_set('Asia/Jakarta');
+                $ubah = gmdate($tanggal, time() + 60 * 60 * 8);
+                $pecah = explode("-", $ubah);
+                $tgl = $pecah[2];
+                $thn = $pecah[0];
+                $bulan = bulan($pecah[1]);
+                return $tgl . ' ' . $bulan . ' ' . $thn;
+            }
+           
         }
     }
     if (!function_exists('tanggal_invoice')) {

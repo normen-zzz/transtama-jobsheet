@@ -528,7 +528,7 @@ class CsModel extends M_Datatables
 			$query = $this->db->get();
 			return $query;
 		} else {
-			$this->db->select('b.*,c.*,a.*,e.nama_user, b.status as status_invoice, d.service_name');
+			$this->db->select('a.tgl_pickup,a.shipper,a.consigne,a.tree_consignee,a.city_consigne,a.pu_commodity,a.no_flight,a.no_smu,a.koli,a.cn,b.date,a.id_so,a.note_cs,a.no_so,a.disc,a.berat_js,a.freight_kg,a.berat_msr,a.special_freight,a.packing,a.others,a.surcharge,a.insurance,a.shipment_id,b.no_invoice,b.payment_date,b.due_date,e.nama_user, b.status as status_invoice,c.*, d.service_name,a.shipment_id as resi');
 			$this->db->from('tbl_shp_order a');
 			$this->db->join('tbl_invoice b', 'b.shipment_id=a.id', 'LEFT');
 			$this->db->join('tbl_modal c', 'c.shipment_id=a.id', 'LEFT');
@@ -745,7 +745,7 @@ class CsModel extends M_Datatables
 			$this->db->select('a.id_invoice,a.no_po,a.due_date,a.status,a.id_vendor,a.no_invoice,a.unique_invoice,a.date,a.vendor,a.total_ap,a.ppn,a.special_ppn,a.pph,a.special_pph,a.payment_date, b.shipper,b.shipment_id as resi');
 			$this->db->from('tbl_invoice_ap_final a');
 			$this->db->join('tbl_shp_order b', 'a.shipment_id=b.id');
-			$this->db->group_by('a.no_invoice');
+			$this->db->group_by('a.no_po');
 			$this->db->order_by('a.created_at', 'DESC');
 			$query = $this->db->get();
 			return $query;

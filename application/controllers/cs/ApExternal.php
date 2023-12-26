@@ -554,11 +554,11 @@ class ApExternal extends CI_Controller
     function getDataPoCreated()
     {
         $query  = "SELECT a.id_invoice,a.no_po,a.due_date,a.status,a.id_vendor,a.no_invoice,a.unique_invoice,a.date,a.vendor,a.total_ap,a.ppn,a.special_ppn,a.pph,a.special_pph,a.payment_date, b.shipper,b.shipment_id as resi FROM tbl_invoice_ap_final AS a INNER JOIN tbl_shp_order AS b ON a.shipment_id = b.id";
-        $search = array('a.no_po');
+        $search = array('a.no_po','a.vendor');
         $where  = null;
         // jika memakai IS NULL pada where sql
         $isWhere = null;
-        $group = 'GROUP BY a.no_invoice';
+        $group = 'GROUP BY a.no_po';
         // $isWhere = 'artikel.deleted_at IS NULL';
         header('Content-Type: application/json');
         echo $this->M_Datatables->get_tables_query($query, $search, $where, $isWhere,$group);
