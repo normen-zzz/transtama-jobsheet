@@ -74,7 +74,7 @@
 
 
                                                         $service =  $inv['service_name'];
-                                                        if ($service == 'Charter Service') {
+                                                        if ($service == 'Charter Service' || $service == 'Manpower Service' || $service == 'Multidrop Service'|| $service == 'Warehouse Service') {
                                                             $packing = $inv['packing'];
                                                             $total_sales = ($inv['freight_kg'] + $packing +  $inv['special_freight'] +  $inv['others'] + $inv['surcharge'] + $inv['insurance']);
                                                         } else {
@@ -265,7 +265,7 @@
                             <div class="col-md-4">
                                 <?php
                                 $f = new NumberFormatter('en', NumberFormatter::SPELLOUT);
-                                $terbilang = $f->format($total_amount) . ' Rupiahs';
+                                $terbilang = $f->format(round($total_amount)) . ' Rupiahs';
                                 $terbilang = ucwords($terbilang);
                                 ?>
                                 <label for="pic" class="font-weight-bold">Customer</label>

@@ -40,6 +40,8 @@ setlocale(LC_TIME, "id_ID.UTF8");
                                     <div class="col text-center">
                                         <h2>RESI TRACKING <?php if ($resi != NULL) {
                                                                 echo $resi;
+                                                            } ?> <?php if ($shipment['deleted'] == 1) {
+                                                                echo ' (VOID)';
                                                             } ?></h2>
 
                                         <?php if ($resi != NULL) { ?>
@@ -155,6 +157,20 @@ setlocale(LC_TIME, "id_ID.UTF8");
                                                             </td>
                                                         </tr>
                                                     <?php } ?>
+
+                                                    <?php if ($shipment['deleted'] == 1) {?>
+
+                                                        <tr>
+                                                            <td>
+                                                                <h5>Reason Delete : </h5>
+                                                            </td>
+                                                            <td>
+                                                                <p><?= $shipment['reason_delete'] ?></p>
+                                                                
+                                                            </td>
+                                                        </tr>
+                                                        
+                                                   <?php  } ?>
 
                                             </table>
                                             <?php if ($shipment['status_so'] >= 1) { ?>

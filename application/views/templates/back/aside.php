@@ -69,6 +69,16 @@
                         </a>
                     </li>
                     <li class="menu-section">
+                        <h4 class="menu-text">Data Sales</h4>
+                        <i class="menu-icon ki ki-bold-more-hor icon-md"></i>
+                    </li>
+                    <li class="menu-item" aria-haspopup="true">
+                        <a href="<?= base_url('finance/SalesTracker') ?>" class="menu-link">
+                            <i class="fa fa-book mt-2 fa-1x mr-2 text-danger"></i>
+                            <span class="menu-text">Sales Tracker</span>
+                        </a>
+                    </li>
+                    <li class="menu-section">
                         <h4 class="menu-text">JOBSHEET</h4>
                         <i class="menu-icon ki ki-bold-more-hor icon-md"></i>
                     </li>

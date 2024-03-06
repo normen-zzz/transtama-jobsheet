@@ -127,7 +127,7 @@ class Jobsheet extends CI_Controller
             $pesan = "Hallo, Mohon Untuk dicek dan di Approve Pengajuan Revisi SO Melalu Link Berikut : $link";
             // no sam
             // $this->wa->pickup('+628111910711', "$pesan");
-            $this->wa->pickup('+6281808008082', "$pesan");
+            // $this->wa->pickup('+6281808008082', "$pesan");
             // No Norman
             $this->wa->pickup('+6285697780467', "$pesan");
 
@@ -141,6 +141,8 @@ class Jobsheet extends CI_Controller
             redirect('finance/jobsheet/final');
         }
     }
+
+    
     public function declineRevisiGm($id)
     {
         $data = array(

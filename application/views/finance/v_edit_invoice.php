@@ -74,7 +74,7 @@
 
 
                                                         $service =  $inv['service_name'];
-                                                        if ($service == 'Charter Service') {
+                                                        if ($service == 'Charter Service' || $service == 'Manpower Service' || $service == 'Multidrop Service'|| $service == 'Warehouse Service') {
                                                             $packing = $inv['packing'];
                                                             $total_sales = ($inv['freight_kg'] + $packing +  $inv['special_freight'] +  $inv['others'] + $inv['surcharge'] + $inv['insurance']);
                                                         } else {

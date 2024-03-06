@@ -78,7 +78,7 @@
     } */
 </style>
 
-<body style="font-family:'Open Sans',sans-serif; margin:-5px; margin-top:0px; margin-bottom: 35px;" onload="window.print()">
+<body style="font-family:'Open Sans',sans-serif; margin:-5px; margin-top:0px; margin-bottom: 20px;" onload="window.print()">
 
     <div class="content" style="border: none;margin-left: -5px; margin-right:5px">
         <div class="header">
@@ -184,7 +184,7 @@
                 <table id="hehe" border="1" style="width:100%; border-bottom:none; border-left:none;">
                     <thead>
                         <tr>
-                            <th style="text-align: center;height:3%">AWB</th>
+                            <th style="text-align: center;height:3%;">AWB</th>
                             <?php if ($info['print_do'] == 1) {
                             ?>
                                 <th style="text-align: center;height:3%">No Do</th>
@@ -232,7 +232,7 @@
                             $total_do = $get_do->num_rows();
                             $no = 1;
                             $service =  $inv['service_name'];
-                            if ($service == 'Charter Service') {
+                            if ($service == 'Charter Service' || $service == 'Manpower Service' || $service == 'Multidrop Service'|| $service == 'Warehouse Service' ) {
                                 $packing = $inv['packing'];
                                 $insurance = $inv['insurance'];
                                 $total_sales = ($inv['freight_kg'] + $packing +  $inv['special_freight'] + $inv['surcharge'] + $insurance  + $inv['others']);
@@ -301,11 +301,25 @@
                                         <td style="text-align: left;"><?php
                                                                         echo  rupiah($inv['freight_kg']);
                                                                         ?></td>
-                                    <?php } else { ?>
-                                        <td rowspan="2" style="text-align: left;"><?php
-                                                                                    echo  rupiah($inv['freight_kg']);
-                                                                                    ?></td>
-                                    <?php } ?>
+                                        <?php } else {
+                                        if ($service != 'Charter Service') {
+                                        ?>
+                                            <?php if ($inv['freight_kg'] == 0) { ?>
+                                                <td rowspan="2" style="text-align: left;"><?php
+                                                                                            echo rupiah($inv['special_freight']);
+                                                                                            ?></td>
+                                            <?php } else { ?>
+                                                <td rowspan="2" style="text-align: left;"><?php
+                                                                                            echo  rupiah($inv['freight_kg']);
+                                                                                            ?></td>
+                                            <?php } ?>
+
+                                        <?php } else { ?>
+                                            <td rowspan="2" style="text-align: left;"><?php
+                                                                                        echo  rupiah($inv['special_freight']);
+                                                                                        ?></td>
+                                    <?php }
+                                    } ?>
                                     <?php if ($inv['freight_kg'] != 0) { ?>
                                         <td rowspan="2" style="text-align: left;"><?php
                                                                                     echo rupiah($total_sales);
@@ -336,7 +350,7 @@
                             <?php } else {
 
                             ?>
-                                <th style="text-align: center; width:13%;height:3%" rowspan="<?= $total_do * 2 ?>"><?= $inv['shipment_id'] ?></th>
+                                <th style="text-align: center; width:5%;height:3%" rowspan="<?= $total_do * 2 ?>"><?= $inv['shipment_id'] ?></th>
 
                                 <?php $x = 1;
 
@@ -349,9 +363,9 @@
                                         <?php if ($info['print_do'] == 1) {
                                         ?>
 
-                                            <td style="text-align: left;width:12%" rowspan="2"><?= $d['no_do'] ?></td>
+                                            <td style="text-align: left;width:12%;word-wrap: break-word;" rowspan="2"><?= $d['no_do'] ?></td>
                                         <?php } ?>
-                                        <?php if ($service == 'Charter Service') {
+                                        <?php if ($service == 'Charter Service' || $service == 'Manpower Service' || $service == 'Multidrop Service' || $service == 'Warehouse Service') {
                                             if ($x == 1) {
                                         ?>
                                                 <?php if ($info['is_remarks'] == 1) {
@@ -373,7 +387,7 @@
                                                                                                 } else {
                                                                                                     echo  $inv['service_name'];;
                                                                                                 } ?></td>
-                                        <?php if ($service == 'Charter Service') {
+                                        <?php if ($service == 'Charter Service' || $service == 'Manpower Service' || $service == 'Multidrop Service' || $service == 'Warehouse Service') {
                                             if ($x == 1) {
                                         ?>
                                                 <td style="text-align: center;width:6%" rowspan="<?= $total_do * 2 ?>"><?= $inv['koli'] ?></td>
@@ -382,7 +396,7 @@
                                             <td style="text-align: center;width:6%" rowspan="2"><?= $inv['koli'] ?></td>
                                         <?php } ?>
 
-                                        <?php if ($service == 'Charter Service') {
+                                        <?php if ($service == 'Charter Service' || $service == 'Manpower Service' || $service == 'Multidrop Service' || $service == 'Warehouse Service') {
                                             if ($x == 1) {
                                         ?>
                                                 <?php if ($info['is_packing'] == 1) {
@@ -398,7 +412,7 @@
                                         <?php } ?>
 
 
-                                        <?php if ($service == 'Charter Service') {
+                                        <?php if ($service == 'Charter Service' || $service == 'Manpower Service' || $service == 'Multidrop Service' || $service == 'Warehouse Service') {
                                             if ($x == 1) {
                                         ?>
                                                 <?php if ($info['is_insurance'] == 1) {
@@ -414,7 +428,7 @@
                                         <?php } ?>
 
 
-                                        <?php if ($service == 'Charter Service') {
+                                        <?php if ($service == 'Charter Service' || $service == 'Manpower Service' || $service == 'Multidrop Service' || $service == 'Warehouse Service') {
                                             if ($x == 1) {
                                         ?>
                                                 <?php if ($info['is_others'] == 1) {
@@ -429,7 +443,7 @@
                                             <?php  } ?>
                                         <?php } ?>
 
-                                        <?php if ($service == 'Charter Service') {
+                                        <?php if ($service == 'Charter Service' || $service == 'Manpower Service' || $service == 'Multidrop Service' || $service == 'Warehouse Service') {
                                             if ($x == 1) {
                                         ?>
                                                 <td rowspan="<?= $total_do * 2 ?>" style="text-align: center;width:6%"><?= $inv['berat_msr']; ?></td>
@@ -441,7 +455,7 @@
                                                 <td rowspan="2" style="text-align: center;width:6%"><?= $d['berat']; ?></td>
                                         <?php }
                                         } ?>
-                                        <?php if ($service == 'Charter Service') {
+                                        <?php if ($service == 'Charter Service' || $service == 'Manpower Service' || $service == 'Multidrop Service' || $service == 'Warehouse Service') {
                                             if ($x == 1) {
                                         ?>
                                                 <?php if ($inv['freight_kg'] != 0) { ?>
@@ -449,49 +463,56 @@
                                                                                                                     echo  rupiah($inv['freight_kg']);
                                                                                                                     ?></td>
                                                 <?php } else { ?>
-                                                    <td rowspan="<?= $total_do * 2 ?>" style="text-align: left;"><?php
-                                                                                                                    echo  rupiah($inv['special_freight']);
-                                                                                                                    ?></td>
+                                                    <td rowspan="<?= $total_do * 2 ?>" style="text-align: left;width:10%"><?php
+                                                                                                                            echo  rupiah($inv['special_freight']);
+                                                                                                                            ?></td>
                                                 <?php } ?>
                                             <?php    }
                                         } else { ?>
                                             <?php if ($inv['freight_kg'] != 0) {
-                                                if ($inv['special_freight'] == 0) { ?>
-                                                    <td rowspan="2" style="text-align: left;"><?php
-                                                                                                echo  rupiah($inv['freight_kg']);
-                                                                                                ?></td>
-                                                <?php } else { ?>
+                                                if ($inv['special_freight'] == 0) {
+                                                    if ($x == 1) {
+                                            ?>
+
+                                                        <td rowspan="<?= $total_do * 2 ?>" style="text-align: left;"><?php
+                                                                                                                        echo  rupiah($inv['freight_kg']);
+                                                                                                                        ?></td>
+                                                    <?php }
+                                                } else { ?>
 
 
-                                                    <td style="text-align: left;"><?php
-                                                                                    echo  rupiah($inv['freight_kg']);
-                                                                                    ?></td>
+                                                    <td style="text-align: left;width:15%"><?php
+                                                                                            echo  rupiah($inv['freight_kg']);
+                                                                                            ?></td>
                                                 <?php }
                                             } else { ?>
-                                                <td rowspan="2" style="text-align: left;"><?php
-                                                                                            echo  rupiah($inv['special_freight']);
-                                                                                            ?></td>
+                                                <td rowspan="2" style="text-align: left;width:15%"><?php
+                                                                                                    echo  rupiah($inv['special_freight']);
+                                                                                                    ?></td>
                                         <?php }
                                         } ?>
 
 
-                                        <?php if ($service == 'Charter Service') {
+                                        <?php if ($service == 'Charter Service' || $service == 'Manpower Service' || $service == 'Multidrop Service' || $service == 'Warehouse Service') {
                                             if ($x == 1) {
                                         ?>
-                                                <td rowspan="<?= $total_do * 2 ?>" style="text-align: left;"><?php if ($service == 'Charter Service') {
-                                                                                                                    echo rupiah($total_sales);
-                                                                                                                } else {
-                                                                                                                    echo  rupiah($inv['freight_kg'] * $d['berat']);
-                                                                                                                } ?></td>
+                                                <td rowspan="<?= $total_do * 2 ?>" style="text-align: left;width:15%"><?php if ($service == 'Charter Service' || $service == 'Manpower Service' || $service == 'Multidrop Service' || $service == 'Warehouse Service') {
+                                                                                                                            echo rupiah($total_sales);
+                                                                                                                        } else {
+                                                                                                                            echo  rupiah($inv['freight_kg'] * $d['berat']);
+                                                                                                                        } ?></td>
                                             <?php    }
-                                        } else { ?>
+                                        } else {
+                                            if ($x == 1) {
+                                            ?>
 
-                                            <td rowspan="2" style="text-align: left;"><?php if ($service == 'Charter Service') {
-                                                                                            echo rupiah($total_sales);
-                                                                                        } else {
-                                                                                            echo  rupiah($total_sales);
-                                                                                        } ?></td>
-                                        <?php } ?>
+                                                <td rowspan="<?= $total_do * 2 ?>" style="text-align: left;width:15%"><?php if ($service == 'Charter Service' || $service == 'Manpower Service' || $service == 'Multidrop Service' || $service == 'Warehouse Service') {
+                                                                                                                            echo rupiah($total_sales);
+                                                                                                                        } else {
+                                                                                                                            echo  rupiah($total_sales);
+                                                                                                                        } ?></td>
+                                        <?php }
+                                        } ?>
 
                                     </tr>
 
@@ -596,7 +617,7 @@
                                 <td style="text-align: center;"><?= $total_weight  ?></td>
                             <?php } else { ?>
 
-                                <td style="text-align: center;"><?= $total_special_weight ?></td>
+                                <td style="text-align: center;"><?= $total_special_weight + $total_weight ?></td>
                             <?php } ?>
 
 
@@ -667,15 +688,21 @@
 
                             <?php if ($info['is_remarks'] == 1) {
                             ?>
-                                <td></td>
+                                <td style="border-left:none">
+                                </td>
 
                             <?php } ?>
-
-                            <?php if ($info['is_insurance'] == 1) {
+                            <?php if ($info['is_others'] == 1) {
                             ?>
-                                <td></td>
+
 
                             <?php } ?>
+
+                            <?php if ($info['is_insurance'] == 1 && $info['is_others'] == 1) {
+                            ?>
+                                <td style="border-left:none">
+                                </td>
+                            <?php  } ?>
 
 
                             <?php if ($info['is_ppn'] == 1) {
@@ -757,12 +784,22 @@
                                 </td>
 
                             <?php } ?>
+                            <?php if ($info['is_others'] == 1) {
+                            ?>
 
-
-                            <?php if ($info['is_remarks'] == 1) { ?>
-                                <td></td>
 
                             <?php } ?>
+
+                            <?php if ($info['is_remarks'] == 1) { ?>
+                                <td style="border-left:none">
+                                </td>
+
+                            <?php } ?>
+                            <?php if ($info['is_insurance'] == 1 && $info['is_others'] == 1) {
+                            ?>
+                                <td style="border-left:none">
+                                </td>
+                            <?php  } ?>
 
 
                             <td class="font-weight-bold" style="text-align: center; font-weight:bold;height:3%;">
@@ -788,7 +825,7 @@
                             <th style="text-align: center;height:3%">AWB</th>
                             <?php if ($info['print_do'] == 1) {
                             ?>
-                                <th style="text-align: center;height:3%">No Do</th>
+                                <th style="text-align: center;height:3%;width:5%">No Do</th>
                             <?php  } ?>
                             <?php if ($info['is_remarks'] == 1) {
                             ?>
@@ -836,7 +873,7 @@
 
                             $no = 1;
                             $service =  $inv['service_name'];
-                            if ($service == 'Charter Service') {
+                            if ($service == 'Charter Service'  || $service == 'Manpower Service' || $service == 'Warehouse Service' || $service == 'Multidrop Service') {
                                 $packing = $inv['packing'];
                                 $insurance = $inv['insurance'];
                                 $total_sales = ($inv['freight_kg'] + $packing +  $inv['special_freight'] +  $inv['others'] + $inv['surcharge'] + $insurance);
@@ -882,7 +919,12 @@
                                                                                     echo  $inv['service_name'];;
                                                                                 } ?></td>
                                     <td style="text-align: center;width:6%"><?= $inv['koli'] ?></td>
-                                    <td style="text-align: center;width:8%"><?= $inv['berat_js']; ?></td>
+                                    <?php if ($service == 'Charter Service' || $service == 'Warehouse Service' || $service == 'Manpower Service'|| $service == 'Multidrop Service') { ?>
+
+                                        <td style="text-align: center;width:8%"><?= $inv['berat_msr']; ?></td>
+                                    <?php } else { ?>
+                                        <td style="text-align: center;width:8%"><?= $inv['berat_js']; ?></td>
+                                    <?php } ?>
                                     <?php if ($info['is_packing'] == 1) {
                                     ?>
                                         <td style="text-align: center;width:10%"><?= rupiah($inv['packing']); ?></td>
@@ -896,7 +938,7 @@
                                         <td style="text-align: center;width:10%"><?= rupiah($inv['others']); ?></td>
                                     <?php  } ?>
 
-                                    <td style="text-align: left;"><?php if ($service == 'Charter Service') {
+                                    <td style="text-align: left;"><?php if ($service == 'Charter Service' || $service == 'Warehouse Service' || $service == 'Manpower Service' || $service == 'Multidrop Service') {
                                                                         echo rupiah($inv['special_freight']);
                                                                     } else {
                                                                         echo  rupiah($inv['freight_kg']);
@@ -936,7 +978,11 @@
                                                                                                                 } else {
                                                                                                                     echo  $inv['service_name'];;
                                                                                                                 } ?></td>
-                                        <td rowspan="<?= $total_do * 2 ?>" style="text-align: center;width:6%"><?= $d['koli'] ?></td>
+                                        <td rowspan="<?= $total_do * 2 ?>" style="text-align: center;width:6%"><?php if ($d['koli'] != NULL) {
+                                                                                                                    echo $d['koli'];
+                                                                                                                } else {
+                                                                                                                    echo $inv['koli'];
+                                                                                                                } ?></td>
                                         <td <?php if ($inv['freight_kg'] != 0 && $inv['special_freight'] != 0) {
                                             ?> rowspan="<?= $total_do ?>" <?php } else { ?>rowspan="<?= $total_do * 2 ?>" <?php } ?> style="text-align: center;width:8%"><?= $d['berat']; ?></td>
                                         <?php if ($info['is_packing'] == 1) {
@@ -953,17 +999,17 @@
                                         <?php  } ?>
 
                                         <td <?php if ($inv['freight_kg'] != 0 && $inv['special_freight'] != 0) {
-                                            ?> rowspan="<?= $total_do ?>" <?php } else { ?>rowspan="<?= $total_do * 2 ?>" <?php } ?> style="text-align: left;"><?php if ($service == 'Charter Service') {
+                                            ?> rowspan="<?= $total_do ?>" <?php } else { ?>rowspan="<?= $total_do * 2 ?>" <?php } ?> style="text-align: left;"><?php if ($service == 'Charter Service' || $service == 'Warehouse Service' || $service == 'Manpower Service' || $service == 'Multidrop Service') {
                                                                                                                                                                     echo rupiah($inv['special_freight']);
                                                                                                                                                                 } else {
                                                                                                                                                                     if ($inv['freight_kg'] != 0 && $inv['special_freight'] != 0) {
                                                                                                                                                                         echo  rupiah($inv['freight_kg']);
                                                                                                                                                                     } else {
-                                                                                                                                                                        echo  rupiah($inv['freight_kg']).'hrr';
+                                                                                                                                                                        echo  rupiah($inv['freight_kg']);
                                                                                                                                                                     }
                                                                                                                                                                 } ?></td>
 
-                                        <td rowspan="<?= $total_do * 2 ?>" style="text-align: left;"><?php if ($service == 'Charter Service') {
+                                        <td rowspan="<?= $total_do * 2 ?>" style="text-align: left;"><?php if ($service == 'Charter Service' || $service == 'Warehouse Service' || $service == 'Manpower Service' || $service == 'Multidrop Service') {
                                                                                                             echo rupiah($total_sales);
                                                                                                         } else {
                                                                                                             echo  rupiah($total_sales_do + ($inv['special_freight'] * $inv['berat_msr']));
@@ -1068,7 +1114,7 @@
 
                                             <?php if ($x == 1) {
                                             ?>
-                                                <td rowspan=<?= $total_do ?> style="text-align: left;"><?php if ($service == 'Charter Service') {
+                                                <td rowspan=<?= $total_do ?> style="text-align: left;"><?php if ($service == 'Charter Service' || $service == 'Warehouse Service' || $service == 'Manpower Service' || $service == 'Multidrop Service') {
                                                                                                             echo rupiah($inv['special_freight']);
                                                                                                         } else {
                                                                                                             echo  rupiah($inv['freight_kg']);
@@ -1081,7 +1127,7 @@
 
                                         <?php if ($x == 1) {
                                         ?>
-                                            <td rowspan=<?= $total_do ?> style="text-align: left;"><?php if ($service == 'Charter Service') {
+                                            <td rowspan=<?= $total_do ?> style="text-align: left;"><?php if ($service == 'Charter Service' || $service == 'Warehouse Service' || $service == 'Manpower Service' || $service == 'Multidrop Service') {
                                                                                                         echo rupiah($total_sales);
                                                                                                     } else {
                                                                                                         echo  rupiah($total_sales);
@@ -1241,8 +1287,18 @@
 
                                 <?php if ($info['is_remarks'] == 1) {
                                 ?>
-                                    <td style="border-left:none"></td>
+                                    <td style="border-left:none">
+                                    </td>
+
                                 <?php  } ?>
+
+                                <?php if ($info['is_insurance'] == 1) {
+                                ?>
+
+
+                                <?php  } ?>
+
+
 
 
 
@@ -1342,6 +1398,17 @@
                                 </td>
                             <?php  } ?>
 
+                            <?php if ($info['is_others'] == 1) {
+                            ?>
+
+                            <?php  } ?>
+                            <?php if ($info['is_insurance'] == 1) {
+                            ?>
+
+                            <?php  } ?>
+
+
+
                             <td class="font-weight-bold" style="text-align: center; font-weight:bold;height:3%;">
                                 TOTAL
                             </td>
@@ -1375,7 +1442,11 @@
 
             <div class="said">
 
-                <p style="font-weight: bold;margin-top: 5px;">
+                <p style="font-weight: bold; <?php if ($total_invoice >= 11 && $total_invoice <= 19) { ?> margin-top: 80px; <?php } else {
+                                                                                                                            if ($total_all_do >= 14 && $total_all_do <= 20) {
+                                                                                                                                echo "margin-top: 80px";
+                                                                                                                            } else { ?> margin-top: 10px; <?php }
+                                                                                                                                                    } ?>">
                     <?php
 
                     echo "#" . $info['terbilang'] . "#";

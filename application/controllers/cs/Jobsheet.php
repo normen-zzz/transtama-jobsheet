@@ -166,6 +166,7 @@ class Jobsheet extends CI_Controller
 
     public function detailCekResi($id)
     {
+        $shipment_id = $this->db->query('SELECT shipment_id FROM tbl_shp_order WHERE id = '.$id.' ')->row_array();
         $data['subtitle'] = 'Detail Sales Order';
         $data['title'] = 'Detail Sales Order';
         $data['msr'] = $this->cs->getDetailSo($id)->row_array();
@@ -175,6 +176,7 @@ class Jobsheet extends CI_Controller
         $data['vendor_selected'] = $this->cs->getVendorByShipment($id)->result_array();
         $data['vendor_lengkap'] = $this->db->order_by('id_vendor', 'DESC')->get_where('tbl_vendor')->result_array();
         $data['invoice'] = $this->db->get_where('tbl_invoice',array('shipment_id' => $id))->row_array();
+        $data['dimension'] = $this->db->get_where('tbl_dimension',array('shipment_id' => $shipment_id['shipment_id']))->result_array();
         $this->backend->display('cs/v_js_cek_resi', $data);
     }
     public function cekResi()
@@ -185,7 +187,7 @@ class Jobsheet extends CI_Controller
             $data['shipment'] = NULL;
             $this->backend->display('cs/v_cek_resi', $data);
         } else {
-            $resi = $this->db->query("SELECT shipper,consigne,tgl_pickup,tgl_diterima,status_so,id FROM tbl_shp_order WHERE shipment_id = ".$this->input->post('shipment_id')." ")->row_array();
+            $resi = $this->db->query("SELECT reason_delete,deleted,shipper,consigne,tgl_pickup,tgl_diterima,status_so,id FROM tbl_shp_order WHERE shipment_id = ".$this->input->post('shipment_id')." ")->row_array();
             $poExternal = $this->db->query("SELECT no_po,id_vendor,unique_invoice,vendor FROM tbl_invoice_ap_final WHERE shipment_id = ".$resi['id']." GROUP BY no_po ");
             $data['title'] = 'CEK RESI';
             $data['resi'] = $this->input->post('shipment_id');
@@ -421,6 +423,28 @@ class Jobsheet extends CI_Controller
         }
     }
 
+    public function updateSalesCostCekResi()
+    {
+        $shipment_id = $this->input->post('id');
+        $data = array(
+            'packing' => $this->input->post('packing'),
+            'others' => $this->input->post('others'),
+            'surcharge' => $this->input->post('surcharge'),
+            'insurance' => $this->input->post('insurance'),
+        );
+        $insert = $this->db->update('tbl_shp_order', $data, ['id' => $this->input->post('id')]);
+
+        if ($insert) {
+            // log_aktifitas('update', 'tbl_shp_order');
+            $this->session->set_flashdata('messageAlert', $this->messageAlert('success', 'Success'));
+            redirect('cs/jobsheet/detailCekResi/' . $shipment_id);
+        } else {
+
+            $this->session->set_flashdata('messageAlert', $this->messageAlert('error', 'Failed'));
+            redirect('cs/jobsheet/detailCekResi/' . $shipment_id);
+        }
+    }
+
 
     public function updateso()
     {
@@ -456,6 +480,43 @@ class Jobsheet extends CI_Controller
 
             $this->session->set_flashdata('messageAlert', $this->messageAlert('error', 'Failed'));
             redirect('cs/jobsheet/detail/' . $shipment_id);
+        }
+    }
+
+    public function updateSoCekResi()
+    {
+        $id_do = $this->input->post('id_do');
+        if ($id_do == NULL) {
+            $total_weight = $this->input->post('berat_js');
+        } else {
+            $total_weight = 0;
+            $weight = $this->input->post('weight');
+            for ($i = 0; $i < sizeof($id_do); $i++) {
+                $data = array(
+                    'berat' => $weight[$i],
+                );
+                $this->db->update('tbl_no_do', $data, ['id_berat' => $id_do[$i]]);
+                $total_weight += $weight[$i];
+            }
+        }
+
+        $shipment_id = $this->input->post('id');
+        $data = array(
+            'no_flight' => $this->input->post('no_flight'),
+            'no_smu' => $this->input->post('no_smu'),
+            'berat_js' => $total_weight,
+            'weight' => $total_weight,
+            'berat_msr' => $this->input->post('berat_msr'),
+        );
+        $insert = $this->db->update('tbl_shp_order', $data, ['id' => $this->input->post('id')]);
+
+        if ($insert) {
+            $this->session->set_flashdata('messageAlert', $this->messageAlert('success', 'Success'));
+            redirect('cs/jobsheet/detailCekResi/' . $shipment_id);
+        } else {
+
+            $this->session->set_flashdata('messageAlert', $this->messageAlert('error', 'Failed'));
+            redirect('cs/jobsheet/detailCekResi/' . $shipment_id);
         }
     }
 
@@ -646,6 +707,54 @@ class Jobsheet extends CI_Controller
                 'status_approve_sm' => 1
             );
             $this->db->update('tbl_approve_revisi_so', $data, ['shipment_id' => $id]);
+            $this->session->set_flashdata('messageAlert', $this->messageAlert('success', 'Success'));
+            redirect('cs/jobsheet/detailRevisi/' . $id);
+        } else {
+            $this->session->set_flashdata('messageAlert', $this->messageAlert('error', 'Failed'));
+            redirect('cs/jobsheet/detailRevisi/' . $id);
+        }
+    }
+    public function approveRevisiSm($id)
+    {
+        $data = array(
+            'status_revisi' => 7,
+        );
+        $update = $this->db->update('tbl_revisi_so', $data, ['shipment_id' => $id]);
+        if ($update) {
+            $get_new_so = $this->db->get_where('tbl_revisi_so', ['shipment_id' => $id])->row_array();
+            $get_old_so = $this->db->get_where('tbl_shp_order', ['id' => $id])->row_array();
+            $data = array(
+                'freight_kg' => $get_new_so['freight_baru'],
+                'packing' => $get_new_so['packing_baru'],
+                'special_freight' => $get_new_so['special_freight_baru'],
+                'others' => $get_new_so['others_baru'],
+                'surcharge' => $get_new_so['surcharge_baru'],
+                'insurance' => $get_new_so['insurance_baru'],
+                'disc' => $get_new_so['disc_baru'],
+                'cn' => $get_new_so['cn_baru'],
+                'specialcn' => $get_new_so['special_cn_baru'],
+            );
+            $this->db->update('tbl_shp_order', $data, ['id' => $id]);
+            $data = array(
+                'freight_lama' => $get_old_so['freight_kg'],
+                'packing_lama' => $get_old_so['packing'],
+                'special_freight_lama' => $get_old_so['special_freight'],
+                'others_lama' => $get_old_so['others'],
+                'surcharge_lama' => $get_old_so['surcharge'],
+                'insurance_lama' => $get_old_so['insurance'],
+                'disc_lama' => $get_old_so['disc'],
+                'cn_lama' => $get_old_so['cn'],
+                'special_cn_lama' => $get_old_so['specialcn'],
+                'shipment_id' => $id,
+            );
+            $this->db->insert('tbl_revisi_so_lama', $data);
+            $data = array(
+                'id_sm' => 32,
+                'tgl_approve_sm' => date('Y-m-d H:i:s'),
+                'status_approve_sm' => 1
+            );
+            $this->db->update('tbl_approve_revisi_so', $data, ['shipment_id' => $id]);
+
             $this->session->set_flashdata('messageAlert', $this->messageAlert('success', 'Success'));
             redirect('cs/jobsheet/detailRevisi/' . $id);
         } else {

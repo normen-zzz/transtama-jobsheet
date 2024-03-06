@@ -81,7 +81,7 @@
                                     </div>
 
                                     <div class="table-responsive">
-                                        <form action="<?= base_url('cs/salesOrder/updateso') ?>" method="POST">
+                                        <form action="<?= base_url('cs/salesOrder/updateSoCekResi') ?>" method="POST">
                                             <table class="table table-bordered" style="width:100%">
                                                 <thead>
                                                     <tr>
@@ -122,7 +122,7 @@
 																	<?php } ?>
                                                             </td>
                                                         </tr>
-                                                    <?php $total_berat += $do['berat'];
+                                                    <?php $total_berat += (int)$do['berat'];
                                                     } ?>
 
                                                 </tbody>
@@ -178,6 +178,47 @@
                                                 </tbody>
 
                                             </table>
+                                            <?php if ($dimension != NULL) { ?>
+												
+                                                        <h4 class="mt-4">Dimension From Outbond</h4>
+                                                        <table class="table table-bordered">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>Koli</th>
+                                                                    <th>Panjang</th>
+                                                                    <th>Lebar</th>
+                                                                    <th>Tinggi</th>
+                                                                    <th>Berat Aktual</th>
+                                                                    <th>Berat Volume</th>
+                                                                    <th>No DO</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <?php foreach ($dimension as $dimension1) { ?>
+                                                                <tr>
+                                                                    <td scope="row"><?= $dimension1['koli'] ?></td>
+                                                                    <td><?= $dimension1['panjang'] ?></td>
+                                                                    <td><?= $dimension1['lebar'] ?></td>
+                                                                    <td><?= $dimension1['tinggi'] ?></td>
+                                                                    <?php if ($dimension1['berat_aktual'] > $dimension1['berat_volume']) { ?>
+                                                                        <td><strong><?= $dimension1['berat_aktual'] ?></strong></td>
+                                                                        <td><?= $dimension1['berat_volume'] ?></td>
+                                                                    <?php } elseif ($dimension1['berat_aktual'] < $dimension1['berat_volume']){ ?>
+                                                                        
+                                                                        <td><?= $dimension1['berat_aktual'] ?></td>
+                                                                        <td><strong><?= $dimension1['berat_volume'] ?></strong></td>
+                                                                        <?php } ?>
+                                                                    
+                                                                    
+                                                                    <td><?= $dimension1['no_do'] ?></td>
+                                                                </tr>
+                                                                
+                                                                <?php } ?>
+                                                            </tbody>
+                                                        </table>
+                                                  
+                                                <?php } ?>
+                                                <!--end: Wizard Form-->
                                             <?php if ($invoice == NULL) { ?>
                                                
                                             <button class="btn btn-success">Submit</button>
@@ -217,7 +258,7 @@
                                 <!-- /.box-header -->
                                 <div class="box-body">
                                     <div class="table-responsive">
-                                        <form action="<?= base_url('cs/salesOrder/updateSalesCost') ?>" method="POST">
+                                        <form action="<?= base_url('cs/salesOrder/updateSalesCostCekResi') ?>" method="POST">
                                             <table class="table table-bordered" style="width:100%">
                                                 <thead>
                                                     <tr>
@@ -691,7 +732,7 @@
                                         <center>
                                             <h2 class="title">VENDOR & AGENTS</h2>
                                         </center>
-                                        <form action="<?= base_url('cs/salesOrder/updateso') ?>" method="POST">
+                                        <form action="<?= base_url('cs/salesOrder/updateSoCekResi') ?>" method="POST">
 
                                             <table class="table table-bordered" style="width:100%">
                                                 <thead>
@@ -794,86 +835,86 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form action="<?= base_url('cs/salesOrder/addCapitalCost') ?>" method="POST">
+                <form action="<?= base_url('cs/salesOrder/addCapitalCostCekResi') ?>" method="POST">
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="exampleInputEmail1">Flight SMU</label>
-                                    <input type="text" class="form-control" id="exampleInputEmail1" required name="flight_smu2">
+                                    <input type="text" class="form-control" id="exampleInputEmail1" value="0" required name="flight_smu2">
                                     <input type="text" class="form-control" id="exampleInputEmail1" required hidden value="<?= $msr['id'] ?>" name="shipment_id">
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="exampleInputEmail1">Sewa Gudang</label>
-                                    <input type="text" class="form-control" id="exampleInputEmail1" required name="ra2">
+                                    <input type="text" class="form-control" value="0" id="exampleInputEmail1" required name="ra2">
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="exampleInputEmail1">Wrapping</label>
-                                    <input type="text" class="form-control" id="exampleInputEmail1" required name="packing2">
+                                    <input type="text" class="form-control" value="0" id="exampleInputEmail1" required name="packing2">
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="exampleInputEmail1">Refund (%)</label>
-                                    <input type="text" class="form-control" id="exampleInputEmail1" required name="refund2">
+                                    <input type="text" class="form-control" value="0" id="exampleInputEmail1" required name="refund2">
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="exampleInputEmail1">Special Refund (Rp.)</label>
-                                    <input type="text" class="form-control" id="exampleInputEmail1" required name="specialrefund2">
+                                    <input type="text" class="form-control" value="0" id="exampleInputEmail1" required name="specialrefund2">
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="exampleInputEmail1">Insurance</label>
-                                    <input type="text" class="form-control" id="exampleInputEmail1" required name="insurance2">
+                                    <input type="text" class="form-control" value="0" id="exampleInputEmail1" required name="insurance2">
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="exampleInputEmail1">Surcharge</label>
-                                    <input type="text" class="form-control" id="exampleInputEmail1" required name="surcharge2">
+                                    <input type="text" class="form-control" value="0" id="exampleInputEmail1" required name="surcharge2">
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="exampleInputEmail1">Hand CGK</label>
-                                    <input type="text" class="form-control" id="exampleInputEmail1" required name="hand_cgk2">
+                                    <input type="text" class="form-control" value="0" id="exampleInputEmail1" required name="hand_cgk2">
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="exampleInputEmail1">Hand Pickup/Delivery</label>
-                                    <input type="text" class="form-control" id="exampleInputEmail1" required name="hand_pickup2">
+                                    <input type="text" class="form-control" value="0" id="exampleInputEmail1" required name="hand_pickup2">
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="exampleInputEmail1">HD Daerah</label>
-                                    <input type="text" class="form-control" id="exampleInputEmail1" required name="hd_daerah2">
+                                    <input type="text" class="form-control" value="0" id="exampleInputEmail1" required name="hd_daerah2">
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="exampleInputEmail1">PPH (%)</label>
-                                    <input type="text" class="form-control" placeholder="ex: 2, artinya 2 %" id="exampleInputEmail1" required name="pph2">
+                                    <input type="text" class="form-control" value="0" placeholder="ex: 2, artinya 2 %" id="exampleInputEmail1" required name="pph2">
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="exampleInputEmail1">SDM</label>
-                                    <input type="text" class="form-control" id="exampleInputEmail1" required name="sdm2">
+                                    <input type="text" class="form-control" value="0" id="exampleInputEmail1" required name="sdm2">
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="exampleInputEmail1">Others</label>
-                                    <input type="text" class="form-control" id="exampleInputEmail1" required name="others2">
+                                    <input type="text" class="form-control" value="0" id="exampleInputEmail1" required name="others2">
                                 </div>
                             </div>
 
@@ -924,7 +965,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form action="<?= base_url('cs/salesOrder/editCapitalCost') ?>" method="POST">
+                    <form action="<?= base_url('cs/salesOrder/editCapitalCostCekResi') ?>" method="POST">
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-md-4">
@@ -1061,7 +1102,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form action="<?= base_url('cs/salesOrder/editVendor') ?>" method="POST">
+                    <form action="<?= base_url('cs/salesOrder/editVendorCekResi') ?>" method="POST">
                         <div class="card-body">
                             <div class="row">
                                 <input type="text" class="form-control" id="exampleInputEmail1" hidden required value="<?= $msr['id'] ?>" name="shipment_id">
