@@ -191,7 +191,8 @@
 
                             <div class="col-md-4">
                                 <label for="pic" class="font-weight-bold">No. Invoice <span class="text-danger">*</span></label>
-                                <input type="text" name="no_invoice" class="form-control" required>
+                                <input type="text" name="no_invoice" id="no_invoice" class="form-control" required>
+                                <span id="alertNoInvoice" style="color: red; display:none">No Invoice Sudah Ada,Pastikan cek kembali agar tidak terjadi tagihan berulang</span>
                             </div>
 
                             <div class="col-md-4">
@@ -225,7 +226,7 @@
 
                             <div class="row">
                                 <div class="col-md-12">
-                                    <button type="submit" class="btn btn-success mt-6 ml-4" onclick="return confirm('Are you sure ?')">Submit PO</button>
+                                    <button type="submit" id="btnSubmitPo" class="btn btn-success mt-6 ml-4" onclick="return confirm('Are you sure ?')">Submit PO</button>
                                 </div>
                             </div>
                         </div>
@@ -235,3 +236,32 @@
     </div>
 </div>
 </div>
+
+<script>
+     //JS
+     $("#no_invoice").bind("keyup change", function() {
+
+         var no_invoice = $(this).val();
+
+         $.ajax({
+             url: '<?= base_url('cs/ApExternal/checkNoInvoice') ?>',
+             type: "get", // <---- ADD this to mention that your ajax is post
+             data: {
+
+                 no_invoice: no_invoice
+             }, // <-- ADD email here as pram to be submitted
+             success: function(data) {
+                 if (data == 1) {
+                    $('#alertNoInvoice').attr('style','color: red; display:block');
+                    $("#btnSubmitPo").prop("disabled",true);
+
+                 } else {
+                     $("#alertNoInvoice").attr('style','color: red; display:none');
+                     $("#btnSubmitPo").prop("disabled",false);
+
+                 }
+             }
+         });
+
+     });
+ </script>

@@ -563,4 +563,22 @@ class ApExternal extends CI_Controller
         header('Content-Type: application/json');
         echo $this->M_Datatables->get_tables_query($query, $search, $where, $isWhere,$group);
     }
+
+    public function checkNoInvoice()
+	{
+		$no_invoice = $this->input->get('no_invoice'); // Mengambil ID dari parameter GET
+
+
+		$data = $this->db->query('SELECT no_invoice FROM tbl_invoice_ap_final WHERE no_invoice = "'.$no_invoice.'" ');
+
+        if ($data->num_rows() == 1) {
+            $result = 1;
+        } else{
+            $result = 0;
+        }
+
+
+		// Kirim data sebagai respons JSON
+		echo json_encode($result);
+	}
 }

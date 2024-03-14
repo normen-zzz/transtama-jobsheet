@@ -1,7 +1,7 @@
 <style>
     input:read-only {
-    background: whitesmoke;
-}
+        background: whitesmoke;
+    }
 </style>
 
 <!--begin::Entry-->
@@ -110,16 +110,17 @@
                                                             <td>
                                                                 <input type="text" disabled class="form-control" name="collie[]" value="<?= $do['koli'] ?>">
                                                             </td>
-                                                             <td>
-                                                                <?php if ($invoice != NULL) { 
+                                                            <td>
+                                                                <?php if ($invoice != NULL) {
                                                                     if ($invoice['status'] == 1 || $invoice['status'] == 2) {
-                                                                    ?>
-                                                                <input type="text" class="form-control" readonly name="weight[]" value="<?= $do['berat'] ?>">
-                                                                <?php } else{ ?>
+                                                                ?>
+                                                                        <input type="text" class="form-control" readonly name="weight[]" value="<?= $do['berat'] ?>">
+                                                                    <?php } else { ?>
+                                                                        <input type="text" class="form-control" name="weight[]" value="<?= $do['berat'] ?>">
+                                                                    <?php }
+                                                                } else { ?>
                                                                     <input type="text" class="form-control" name="weight[]" value="<?= $do['berat'] ?>">
-                                                                    <?php }} else { ?>
-																	<input type="text" class="form-control" name="weight[]" value="<?= $do['berat'] ?>">
-																	<?php } ?>
+                                                                <?php } ?>
                                                             </td>
                                                         </tr>
                                                     <?php $total_berat += (int)$do['berat'];
@@ -153,82 +154,86 @@
 
                                                         <?php    } else {
                                                         ?>
-                                                        <?php if ($invoice != NULL) { 
-                                                                    if ($invoice['status'] == 1 || $invoice['status'] == 2) {
-                                                                    ?>
-                                                            <td> <input type="text" class="form-control" readonly placeholder="isi no flight" name="berat_js" value="<?= $msr['berat_js'] ?>"> </td>
+                                                            <?php if ($invoice != NULL) {
+                                                                if ($invoice['status'] == 1 || $invoice['status'] == 2) {
+                                                            ?>
+                                                                    <td> <input type="text" class="form-control" readonly placeholder="isi no flight" name="berat_js" value="<?= $msr['berat_js'] ?>"> </td>
+                                                                <?php } else { ?>
+                                                                    <td> <input type="text" class="form-control" placeholder="isi no flight" name="berat_js" value="<?= $msr['berat_js'] ?>"> </td>
+                                                                <?php }
+                                                            } else { ?>
+                                                                <td> <input type="text" class="form-control" placeholder="isi no flight" name="berat_js" value="<?= $msr['berat_js'] ?>"> </td>
+                                                        <?php }
+                                                        } ?>
+                                                        <?php if ($invoice != NULL) {
+                                                            if ($invoice['status'] == 1 || $invoice['status'] == 2) {
+                                                        ?>
+                                                                <td> <input type="text" class="form-control" readonly placeholder="isi no flight" name="berat_msr" value="<?= $msr['berat_msr'] ?>"> </td>
                                                             <?php } else { ?>
-                                                                <td> <input type="text" class="form-control" placeholder="isi no flight" name="berat_js" value="<?= $msr['berat_js'] ?>"> </td>
-                                                                <?php }} else { ?>
-                                                                <td> <input type="text" class="form-control" placeholder="isi no flight" name="berat_js" value="<?= $msr['berat_js'] ?>"> </td>
-                                                        <?php }} ?>
-                                                        <?php if ($invoice != NULL) { 
-                                                                    if ($invoice['status'] == 1 || $invoice['status'] == 2) {
-                                                                    ?>
-                                                        <td> <input type="text" class="form-control" readonly placeholder="isi no flight" name="berat_msr" value="<?= $msr['berat_msr'] ?>"> </td>
-                                                        <?php } else { ?>
+                                                                <td> <input type="text" class="form-control" placeholder="isi no flight" name="berat_msr" value="<?= $msr['berat_msr'] ?>"> </td>
+                                                            <?php }
+                                                        } else { ?>
                                                             <td> <input type="text" class="form-control" placeholder="isi no flight" name="berat_msr" value="<?= $msr['berat_msr'] ?>"> </td>
-                                                            <?php }} else { ?>
-															 <td> <input type="text" class="form-control" placeholder="isi no flight" name="berat_msr" value="<?= $msr['berat_msr'] ?>"> </td>
-															
-															<?php } ?>
-															
-															</tr>
+
+                                                        <?php } ?>
+
+                                                    </tr>
 
                                                 </tbody>
 
                                             </table>
                                             <?php if ($dimension != NULL) { ?>
-												
-                                                        <h4 class="mt-4">Dimension From Outbond</h4>
-                                                        <table class="table table-bordered">
-                                                            <thead>
-                                                                <tr>
-                                                                    <th>Koli</th>
-                                                                    <th>Panjang</th>
-                                                                    <th>Lebar</th>
-                                                                    <th>Tinggi</th>
-                                                                    <th>Berat Aktual</th>
-                                                                    <th>Berat Volume</th>
-                                                                    <th>No DO</th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                                <?php foreach ($dimension as $dimension1) { ?>
-                                                                <tr>
-                                                                    <td scope="row"><?= $dimension1['koli'] ?></td>
-                                                                    <td><?= $dimension1['panjang'] ?></td>
-                                                                    <td><?= $dimension1['lebar'] ?></td>
-                                                                    <td><?= $dimension1['tinggi'] ?></td>
-                                                                    <?php if ($dimension1['berat_aktual'] > $dimension1['berat_volume']) { ?>
-                                                                        <td><strong><?= $dimension1['berat_aktual'] ?></strong></td>
-                                                                        <td><?= $dimension1['berat_volume'] ?></td>
-                                                                    <?php } elseif ($dimension1['berat_aktual'] < $dimension1['berat_volume']){ ?>
-                                                                        
-                                                                        <td><?= $dimension1['berat_aktual'] ?></td>
-                                                                        <td><strong><?= $dimension1['berat_volume'] ?></strong></td>
-                                                                        <?php } ?>
-                                                                    
-                                                                    
-                                                                    <td><?= $dimension1['no_do'] ?></td>
-                                                                </tr>
-                                                                
+
+                                                <h4 class="mt-4">Dimension From Outbond</h4>
+                                                <table class="table table-bordered">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Koli</th>
+                                                            <th>Panjang</th>
+                                                            <th>Lebar</th>
+                                                            <th>Tinggi</th>
+                                                            <th>Berat Aktual</th>
+                                                            <th>Berat Volume</th>
+                                                            <th>No DO</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <?php foreach ($dimension as $dimension1) { ?>
+                                                            <tr>
+                                                                <td scope="row"><?= $dimension1['koli'] ?></td>
+                                                                <td><?= $dimension1['panjang'] ?></td>
+                                                                <td><?= $dimension1['lebar'] ?></td>
+                                                                <td><?= $dimension1['tinggi'] ?></td>
+                                                                <?php if ($dimension1['berat_aktual'] > $dimension1['berat_volume']) { ?>
+                                                                    <td><strong><?= $dimension1['berat_aktual'] ?></strong></td>
+                                                                    <td><?= $dimension1['berat_volume'] ?></td>
+                                                                <?php } elseif ($dimension1['berat_aktual'] < $dimension1['berat_volume']) { ?>
+
+                                                                    <td><?= $dimension1['berat_aktual'] ?></td>
+                                                                    <td><strong><?= $dimension1['berat_volume'] ?></strong></td>
                                                                 <?php } ?>
-                                                            </tbody>
-                                                        </table>
-                                                  
-                                                <?php } ?>
-                                                <!--end: Wizard Form-->
+
+
+                                                                <td><?= $dimension1['no_do'] ?></td>
+                                                            </tr>
+
+                                                        <?php } ?>
+                                                    </tbody>
+                                                </table>
+
+                                            <?php } ?>
+                                            <!--end: Wizard Form-->
                                             <?php if ($invoice == NULL) { ?>
-                                               
-                                            <button class="btn btn-success">Submit</button>
-                                            <?php } else { 
-                                                 if ($invoice['status'] == 1 || $invoice['status'] == 2) {
+
+                                                <button class="btn btn-success">Submit</button>
+                                                <?php } else {
+                                                if ($invoice['status'] == 1 || $invoice['status'] == 2) {
                                                 ?>
-                                                 
-                                                 <?php } else { ?>
+
+                                                <?php } else { ?>
                                                     <button class="btn btn-success">Submit</button>
-                                                <?php  } }?>
+                                            <?php  }
+                                            } ?>
                                         </form>
                                     </div>
 
@@ -280,36 +285,9 @@
                                                     <!--berart_js = weight js/msr-->
                                                     <!--berat_msr= special_freight-->
                                                     <?php
+                                                   
 
-                                                    $service =  $msr['service_name'];
-                                                    if ($service == 'Charter Service') {
-                                                        // $total_sales = $msr['special_freight'];
-                                                        $packing = $msr['packing'];
-                                                        $total_sales = ($msr['freight_kg'] + $packing +  $msr['special_freight'] +  $msr['others'] + $msr['surcharge'] + $msr['insurance']);
-                                                    } else {
-                                                        $disc = $msr['disc'];
-                                                        // kalo gada disc
-                                                        if ($disc == 0) {
-                                                            $freight  = $msr['berat_js'] * $msr['freight_kg'];
-                                                            $special_freight  = $msr['berat_msr'] * $msr['special_freight'];
-                                                        } else {
-                                                            $freight_discount = $msr['freight_kg'] * $disc;
-                                                            $special_freight_discount = $msr['special_freight'] * $disc;
-
-                                                            $freight = $freight_discount * $msr['berat_js'];
-                                                            $special_freight  = $special_freight_discount * $msr['berat_msr'];
-                                                        }
-
-                                                        // var_dump($freight);
-                                                        // die;
-
-                                                        $packing = $msr['packing'];
-                                                        $total_sales = ($freight + $packing + $special_freight +  $msr['others'] + $msr['surcharge'] + $msr['insurance']);
-                                                        // $comm = $msr['cn'] * $total_sales;
-                                                        // $disc = $msr['disc'] * $total_sales;
-
-                                                        $total_sales = $total_sales;
-                                                    }
+                                                    $total_sales = getTotalSales($msr['id']);
                                                     ?>
                                                     <tr>
                                                         <td>
@@ -364,7 +342,7 @@
                                                 </table>
 
                                             </div>
-                                           <button class="btn btn-success">Submit</button>
+                                            <button class="btn btn-success">Submit</button>
                                         </form>
                                     </div>
 
@@ -489,7 +467,7 @@
                                                             $sdm2 += $m['sdm2'];
                                                             $others2 += $m['others2'];
 
-                                                            if ($service == 'Charter Service') {
+                                                            if ($service == 'Charter Service' || $service == 'Multidrop Service') {
                                                                 $total_cost += $m['flight_msu2'] + ($m['ra2']) + ($m['packing2']) +
                                                                     ($total_sales * $refund) + $m['specialrefund2']  + $m['insurance2'] + $m['surcharge2'] + ($m['hand_cgk2']) +
                                                                     ($m['hand_pickup2']) + ($m['hd_daerah2']) + ($total_sales * $pph) +
@@ -807,7 +785,7 @@
 
                                             <?php  } ?>
                                         </div>
-                                        
+
                                     </div>
 
                                 </div>

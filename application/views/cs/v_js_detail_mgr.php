@@ -231,13 +231,13 @@
                                                 </thead>
                                                 <tbody>
                                                     <?php
-                                                        $total_sales = totalSales($msr['shipment_id']);
+                                                        $total_sales = getTotalSales($msr['id']);
                                                     ?>
                                                     <tr>
                                                         <td>
                                                             <i><b> Value</b></i>
-                                                        </td>
-                                                        <td>
+                                                            </td>
+                                                            <td>
                                                             <!-- <?= rupiah($msr['freight_kg']) ?> -->
                                                             <input type="text" readonly class="form-control" name="freight_kg" value="<?= $msr['freight_kg'] ?>">
                                                         </td>

@@ -58,7 +58,7 @@ $autoload['packages'] = array();
 |
 |	$autoload['libraries'] = array('user_agent' => 'ua');
 */
-$autoload['libraries'] = array('database', 'session', 'frontend', 'backend','datatables');
+$autoload['libraries'] = array('database', 'session', 'frontend', 'backend', 'datatables');
 
 /*
 | -------------------------------------------------------------------
@@ -89,7 +89,7 @@ $autoload['drivers'] = array();
 |
 |	$autoload['helper'] = array('url', 'file');
 */
-$autoload['helper'] = array('url', 'Activity', 'security', 'text', 'rupiah', 'tgl_indo', 'Nilai', 'cek','status','sales');
+$autoload['helper'] = array('url', 'Activity', 'security', 'text', 'rupiah', 'tgl_indo', 'Nilai', 'cek', 'status', 'sales', 'rate');
 
 /*
 | -------------------------------------------------------------------
