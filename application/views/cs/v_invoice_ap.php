@@ -158,8 +158,7 @@
                     "data": 'status',
                     "render": function(data, type, row, meta) {
                         if (data == 0) {
-                            return '<a href="<?= base_url('cs/apExternal/detailInvoice/') ?>' + row.unique_invoice + '/' + row.id_vendor + '" class="btn btn-sm text-light" style="background-color: #9c223b;">Detail</a>' +
-                                ' <a href="<?= base_url('cs/apExternal/editInvoice/') ?>' + row.unique_invoice + '/' + row.id_vendor + '" class=" btn btn-sm text-light mt-2" style="background-color: #9c223b;">Edit</a>' +
+                            return  ' <a href="<?= base_url('cs/apExternal/editInvoice/') ?>' + row.unique_invoice + '/' + row.id_vendor + '" class=" btn btn-sm text-light mt-2" style="background-color: #9c223b;">Edit</a>' +
                                 '<?php $id_atasan = $this->session->userdata('id_atasan');
                                     if ($id_atasan == NULL || $id_atasan == 0) { ?>  <a href="<?= base_url('cs/apExternal/approveAtasan/') ?>' + row.unique_invoice + '" class=" btn btn-sm mt-2 text-light tombol-konfirmasi" style="background-color: #9c223b;">Approve</a> <?php } ?>';
                         } else if (data == 1) {
@@ -178,5 +177,6 @@
 
             ],
         });
+        $('#tablePoCreatedCs').DataTable().searchPanes.rebuildPane();
     });
 </script>
