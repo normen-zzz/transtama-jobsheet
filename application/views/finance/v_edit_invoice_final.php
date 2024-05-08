@@ -76,7 +76,7 @@
                                                         $service =  $inv['service_name'];
                                                         if ($service == 'Charter Service' || $service == 'Manpower Service' || $service == 'Multidrop Service'|| $service == 'Warehouse Service') {
                                                             $packing = $inv['packing'];
-                                                            $total_sales = ($inv['freight_kg'] + $packing +  $inv['special_freight'] +  $inv['others'] + $inv['surcharge'] + $inv['insurance']);
+                                                            $total_sales = ((int)$inv['freight_kg'] + (int)$packing +  (int)$inv['special_freight'] +  (int)$inv['others'] + (int)$inv['surcharge'] + (int)$inv['insurance']);
                                                         } else {
                                                             $disc = $inv['disc'];
                                                             // kalo gada disc
@@ -144,7 +144,7 @@
                                                                     <input hidden type="text" name="shipment_id[]" value="<?= $inv['id'] ?>">
                                                                     <td><?= bulan_indo($inv['tgl_pickup']) ?></td>
                                                                     <td><?= $inv['tree_consignee'] ?></td>
-                                                                    <td><?= $d['no_do'] ?></td>
+                                                                    <td><input type="text" name="no_do[]" value="<?= $d['no_do'] ?>"><input hidden type="text" name="id_berat[]" value="<?= $d['id_berat'] ?>"></td>
                                                                     <td>
                                                                         <input type="text" name="so_note[]" value="<?= $inv['so_note'] ?>">
                                                                     </td>
@@ -169,7 +169,7 @@
                                                                     <td> <a href="<?= base_url('finance/invoice/deleteInvoiceFinal/' . $inv['id_invoice'] . '/' . $inv['no_invoice'] . '/' . $inv['shipment_id']) ?>" class=" btn btn-sm text-light tombol-hapus" data-flashdata="<?= $inv['shipment_id'] ?>" style="background-color: #9c223b;">Delete</a></td>
 
                                                                 </tr>
-                                                            <?php $total_koli = $total_koli + $d['koli'];
+                                                            <?php $total_koli = (int)$total_koli + (int)$d['koli'];
                                                             } ?>
 
                                                         <?php  } ?>

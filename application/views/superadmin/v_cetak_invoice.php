@@ -292,10 +292,10 @@
                                     <?php  } ?>
 
 
-                                    <?php if ($inv['freight_kg'] != 0 && $inv['special_freight'] != 0) { ?>
+                                    <?php if ($inv['freight_kg'] == 0 && $inv['special_freight'] != 0) { ?>
                                         <td style="text-align: center;width:6%"><?= $inv['berat_js']; ?></td>
                                     <?php } else { ?>
-                                        <td rowspan="2" style="text-align: center;width:6%"><?= $inv['berat_js']; ?></td>
+                                        <td rowspan="2" style="text-align: center;width:6%"><?= $inv['berat_msr']; ?></td>
                                     <?php } ?>
                                     <?php if ($inv['freight_kg'] != 0 && $inv['special_freight'] != 0) { ?>
                                         <td style="text-align: left;"><?php
@@ -1294,7 +1294,7 @@
 
                                 <?php if ($info['is_insurance'] == 1) {
                                 ?>
-
+								
 
                                 <?php  } ?>
 
@@ -1404,6 +1404,7 @@
                             <?php  } ?>
                             <?php if ($info['is_insurance'] == 1) {
                             ?>
+							
 
                             <?php  } ?>
 

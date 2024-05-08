@@ -169,7 +169,7 @@
                                                                     <td> <a href="<?= base_url('finance/invoice/deleteInvoice/' . $inv['id_invoice'] . '/' . $inv['no_invoice'] . '/' . $inv['shipment_id']) ?>" class=" btn btn-sm text-light tombol-hapus" data-flashdata="<?= $inv['shipment_id'] ?>" style="background-color: #9c223b;">Delete</a></td>
 
                                                                 </tr>
-                                                            <?php $total_koli = $total_koli + $d['koli'];
+                                                            <?php $total_koli = (int)$total_koli + (int)$d['koli'];
                                                             } ?>
 
                                                         <?php  } ?>

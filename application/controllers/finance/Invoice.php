@@ -441,6 +441,8 @@ class Invoice extends CI_Controller
         $shipment_id =  $this->input->post('shipment_id');
         $note_cs = $this->input->post('note_cs');
 		  $so_note = $this->input->post('so_note');
+          $no_do = $this->input->post('no_do');
+          $id_berat = $this->input->post('id_berat');
         // KALO DIA ADA PPN DAN PPH
         if ($is_ppn != 1) {
             $ppn = 0;
@@ -452,13 +454,34 @@ class Invoice extends CI_Controller
         } else {
             $pph = 0.02 * $invoice;
         }
-        for ($i = 0; $i < sizeof($shipment_id); $i++) {
-            $data = array(
-                'note_cs' => $note_cs[$i],
-				 'so_note' => $so_note[$i],
-                // 'pu_moda' => $pu_muda[$i],
+        if (isset($so_note) ) {
+            for ($i = 0; $i < sizeof($shipment_id); $i++) {
+                $data = array(
+                    
+                    'so_note' => $so_note[$i],
+                    // 'pu_moda' => $pu_muda[$i],
+                );
+                $this->db->update('tbl_shp_order', $data, ['id' => $shipment_id[$i]]);
+            }
+        }
+
+        if (isset($note_cs) ) {
+            for ($i = 0; $i < sizeof($shipment_id); $i++) {
+                $data = array(
+                    'note_cs' => $note_cs[$i],
+                    
+                    // 'pu_moda' => $pu_muda[$i],
+                );
+                $this->db->update('tbl_shp_order', $data, ['id' => $shipment_id[$i]]);
+            }
+        }
+        
+        for ($k = 0; $k < sizeof($id_berat); $k++) {
+            $data_do = array(
+                'no_do' => $no_do[$k],
+
             );
-            $this->db->update('tbl_shp_order', $data, ['id' => $shipment_id[$i]]);
+            $this->db->update('tbl_no_do', $data_do, ['id_berat' => $id_berat[$k]]);
         }
         $data = array(
 			'date' => $date,
