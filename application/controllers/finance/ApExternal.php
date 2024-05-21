@@ -27,12 +27,39 @@ class ApExternal extends CI_Controller
         $this->backend->display('finance/v_ap_external', $data);
     }
 
+    // public function created()
+    // {
+    //     $shipment_id = $this->input->post('shipment_id');
+    //     $awal = $this->input->post('awal');
+    //     $akhir = $this->input->post('akhir');
+    //     if ($awal == NULL && $akhir == NULL) {
+    //         $data['title'] = 'Payment Order Vendor/Agent';
+    //         $breadcrumb_items = [];
+    //         $data['awal'] = date('Y-m-d');
+    //         $data['akhir'] = date('Y-m-d');
+    //         $data['subtitle'] = 'Payment Order Vendor/Agent';
+    //         $this->breadcrumb->add_item($breadcrumb_items);
+    //         $data['breadcrumb_bootstrap_style'] = $this->breadcrumb->generate();
+    //         $data['proforma'] = $this->cs->getApVendor()->result_array();
+    //         $this->backend->display('finance/v_invoice_ap', $data);
+    //     } else {
+
+    //         $data['title'] = 'Payment Order Vendor/Agent';
+    //         $data['awal'] = $awal;
+    //         $data['akhir'] = $akhir;
+    //         $breadcrumb_items = [];
+    //         $data['subtitle'] = 'Payment Order Vendor/Agent';
+    //         $this->breadcrumb->add_item($breadcrumb_items);
+    //         $data['breadcrumb_bootstrap_style'] = $this->breadcrumb->generate();
+    //         $data['proforma'] = $this->cs->getApVendorByDate($awal, $akhir)->result_array();
+    //         $this->backend->display('finance/v_invoice_ap', $data);
+    //     }
+    // }
+
     public function created()
     {
-        $shipment_id = $this->input->post('shipment_id');
-        $awal = $this->input->post('awal');
-        $akhir = $this->input->post('akhir');
-        if ($awal == NULL && $akhir == NULL) {
+        
+      
             $data['title'] = 'Payment Order Vendor/Agent';
             $breadcrumb_items = [];
             $data['awal'] = date('Y-m-d');
@@ -42,18 +69,20 @@ class ApExternal extends CI_Controller
             $data['breadcrumb_bootstrap_style'] = $this->breadcrumb->generate();
             $data['proforma'] = $this->cs->getApVendor()->result_array();
             $this->backend->display('finance/v_invoice_ap', $data);
-        } else {
+       
+    }
 
-            $data['title'] = 'Payment Order Vendor/Agent';
-            $data['awal'] = $awal;
-            $data['akhir'] = $akhir;
-            $breadcrumb_items = [];
-            $data['subtitle'] = 'Payment Order Vendor/Agent';
-            $this->breadcrumb->add_item($breadcrumb_items);
-            $data['breadcrumb_bootstrap_style'] = $this->breadcrumb->generate();
-            $data['proforma'] = $this->cs->getApVendorByDate($awal, $akhir)->result_array();
-            $this->backend->display('finance/v_invoice_ap', $data);
-        }
+    function getDataPoCreated()
+    {
+        $query  = "SELECT a.id_invoice,a.no_po,a.due_date,a.status,a.id_vendor,a.no_invoice,a.unique_invoice,a.date,a.vendor,a.total_ap,a.ppn,a.special_ppn,a.pph,a.special_pph,a.payment_date, b.shipper,b.shipment_id as resi FROM tbl_invoice_ap_final AS a INNER JOIN tbl_shp_order AS b ON a.shipment_id = b.id";
+        $search = array('a.no_po','a.vendor');
+        $where  = null;
+        // jika memakai IS NULL pada where sql
+        $isWhere = null;
+        $group = 'GROUP BY a.no_po';
+        // $isWhere = 'artikel.deleted_at IS NULL';
+        header('Content-Type: application/json');
+        echo $this->M_Datatables->get_tables_query($query, $search, $where, $isWhere,$group);
     }
 	
 	public function multiPaid()
