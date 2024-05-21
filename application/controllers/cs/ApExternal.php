@@ -13,6 +13,7 @@ class ApExternal extends CI_Controller
         $this->load->library('upload');
         $this->load->model('M_Datatables');
         $this->load->model('CsModel', 'cs');
+        $this->load->model('Sendwa', 'wa');
         $this->db->query("SET sql_mode=(SELECT REPLACE(@@sql_mode, 'ONLY_FULL_GROUP_BY', ''));");
         cek_role();
     }
@@ -342,10 +343,10 @@ class ApExternal extends CI_Controller
         $pesan = "Hallo, ada pengajuan Ap External No. *$no_po* Oleh *$nama*  Dengan Tujuan *$purpose* Tanggal *$date*. Silahkan Approve Melalu Link Berikut : $link . Terima Kasih";
 
         //NO MBA LINA
-        $this->wa->pickup('+6281385687290', "$pesan");
+        // $this->wa->pickup('+6281385687290', "$pesan");
 
         //NO BU LILI
-        $this->wa->pickup('+6281293753199', "$pesan");
+        // $this->wa->pickup('+6281293753199', "$pesan");
 
         //NO NORMAN
         $this->wa->pickup('+6285697780467', "$pesan");

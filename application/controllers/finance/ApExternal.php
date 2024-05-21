@@ -76,7 +76,7 @@ class ApExternal extends CI_Controller
     {
         $query  = "SELECT a.id_invoice,a.no_po,a.due_date,a.status,a.id_vendor,a.no_invoice,a.unique_invoice,a.date,a.vendor,a.total_ap,a.ppn,a.special_ppn,a.pph,a.special_pph,a.payment_date, b.shipper,b.shipment_id as resi FROM tbl_invoice_ap_final AS a INNER JOIN tbl_shp_order AS b ON a.shipment_id = b.id";
         $search = array('a.no_po','a.vendor');
-        $where  = null;
+        $where  = array('a.status >' => 2);
         // jika memakai IS NULL pada where sql
         $isWhere = null;
         $group = 'GROUP BY a.no_po';
@@ -170,7 +170,7 @@ class ApExternal extends CI_Controller
     }
     public function editInvoice($unique_invoice, $id_vendor)
     {
-        $id_vendor = decrypt_url($id_vendor);
+       
         $data['title'] = "Edit Invoice AP";
         $breadcrumb_items = [];
         $data['subtitle'] = "Edit Invoice AP";
@@ -183,7 +183,7 @@ class ApExternal extends CI_Controller
     }
     public function detailInvoice($unique_invoice, $id_vendor)
     {
-        $id_vendor = decrypt_url($id_vendor);
+       
         $data['title'] = "Detail Invoice AP";
         $breadcrumb_items = [];
         $data['subtitle'] = "Detail Invoice AP";

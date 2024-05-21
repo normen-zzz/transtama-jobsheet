@@ -28,20 +28,20 @@
 
                                         <table id="tablePoCreatedFinance" class="table table-bordered" style="width:100%">
                                             <thead>
-                                            <tr>
-                                                        <th>#</th>
-                                                        <th>Vendor/Agent</th>
-                                                        <th>No PO</th>
-                                                        <th>Date Created</th>
-                                                        <th>Due Date</th>
-                                                        <th>Invoice</th>
-                                                        <th>PPN</th>
-                                                        <th>PPH</th>
-                                                        <th>Total Invoice</th>
-                                                        <th>PO Status</th>
-                                                        <th>Payment Status</th>
-                                                        <th>Action</th>
-                                                    </tr>
+                                                <tr>
+
+                                                    <th>Vendor/Agent</th>
+                                                    <th>No PO</th>
+                                                    <th>Date Created</th>
+                                                    <th>Due Date</th>
+                                                    <th>Invoice</th>
+                                                    <th>PPN</th>
+                                                    <th>PPH</th>
+                                                    <th>Total Invoice</th>
+                                                    <th>PO Status</th>
+                                                    <th>Payment Status</th>
+                                                    <th>Action</th>
+                                                </tr>
                                             </thead>
 
 
@@ -61,17 +61,43 @@
     </div>
 </div>
 
+<div class="modal fade" id="modal-paid-external">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Proof of Payment</b> </h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="<?= base_url('finance/apExternal/paid') ?>" method="POST" enctype="multipart/form-data">
+                <div id="mod">
+
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </form>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+
 
 
 <script>
     var tabel = null;
     $(document).ready(function() {
         tabel = $('#tablePoCreatedFinance').DataTable({
+            
             "processing": true,
 
             "serverSide": true,
             "ordering": true, // Set true agar bisa di sorting
-            "dom": "<'row'<'col-lg-10 col-md-10 col-xs-12'f>>" +
+            "dom": "<'row'<'col-lg-10 col-md-10 col-xs-12'f p>>" +
                 "<'row'<'col-sm-12'tr>>" +
                 "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>" +
                 "<'row'<'col-lg-10 col-md-10 col-xs-12'l>>",
@@ -119,14 +145,14 @@
                             separator = sisa ? '.' : '';
                             rupiah += separator + ribuan.join('.');
                         }
-                        return 'Rp.'+rupiah;
+                        return 'Rp.' + rupiah;
                     }
 
                 },
                 {
                     "data": 'ppn',
                     "render": function(data, type, row, meta) {
-                        var ppn = data+row.special_ppn
+                        var ppn = parseInt(data) + parseInt(row.special_ppn)
                         var number_string = ppn.toString(),
                             sisa = number_string.length % 3,
                             rupiah = number_string.substr(0, sisa),
@@ -136,14 +162,14 @@
                             separator = sisa ? '.' : '';
                             rupiah += separator + ribuan.join('.');
                         }
-                        return 'Rp.'+rupiah;
+                        return 'Rp.' + rupiah;
                     }
 
                 },
                 {
                     "data": 'pph',
                     "render": function(data, type, row, meta) {
-                        var pph = data+row.special_pph
+                        var pph = parseInt(data) + parseInt(row.special_pph)
                         var number_string = pph.toString(),
                             sisa = number_string.length % 3,
                             rupiah = number_string.substr(0, sisa),
@@ -153,16 +179,16 @@
                             separator = sisa ? '.' : '';
                             rupiah += separator + ribuan.join('.');
                         }
-                        return 'Rp.'+rupiah;
+                        return 'Rp.' + rupiah;
                     }
 
                 },
-                
-               
+
+
                 {
                     "data": 'total_ap',
                     "render": function(data, type, row, meta) {
-                        var totalInvoice = data+row.ppn+row.special_ppn+pph+row.special_pph;
+                        var totalInvoice = parseInt(data) + parseInt(row.ppn) + parseInt(row.special_ppn) + parseInt(row.pph) + parseInt(row.special_pph);
                         var number_string = totalInvoice.toString(),
                             sisa = number_string.length % 3,
                             rupiah = number_string.substr(0, sisa),
@@ -172,7 +198,7 @@
                             separator = sisa ? '.' : '';
                             rupiah += separator + ribuan.join('.');
                         }
-                        return 'Rp.'+rupiah;
+                        return 'Rp.' + rupiah;
                     }
 
                 },
@@ -203,7 +229,7 @@
                 {
                     "data": 'status',
                     "render": function(data, type, row, meta) {
-                         if (data == 4) {
+                        if (data == 4) {
                             return '<span class="label label-success label-inline font-weight-lighter">Paid</span> <br>';
                         } else {
                             return '<span class="label label-secondary label-inline font-weight-lighter">Pending</span>';
@@ -216,23 +242,63 @@
                     "data": 'status',
                     "render": function(data, type, row, meta) {
                         if (data == 3) {
-                            return  ' <a href="<?= base_url('cs/apExternal/editInvoice/') ?>' + row.unique_invoice + '/' + row.id_vendor + '" class=" btn btn-sm text-light mt-2" style="background-color: #9c223b;">Edit</a>' +
-                                '<?php $id_atasan = $this->session->userdata('id_atasan');
-                                    if ($id_atasan == NULL || $id_atasan == 0) { ?>  <a href="<?= base_url('cs/apExternal/approveAtasan/') ?>' + row.unique_invoice + '" class=" btn btn-sm mt-2 text-light tombol-konfirmasi" style="background-color: #9c223b;">Approve</a> <?php } ?>';
+                            return '<?php if ($this->session->userdata('id_atasan') == NULL || $this->session->userdata('id_atasan') == 0) { ?>' +
+                                //jika MGR FINANCE
+                                '<?php if ($this->session->userdata('id_role') == 6 && $this->session->userdata('id_jabatan') == 2) { ?>' +
+                                '<a href="<?= base_url('finance/apExternal/detailInvoice/') ?>' + row.unique_invoice + '/' + row.id_vendor + '" class="btn btn-sm text-light" style="background-color: #9c223b;">Detail</a>' +
+                                '<a href="<?= base_url('finance/apExternal/approveMgrFinance/') ?>' + row.unique_invoice + '" class=" btn btn-sm text-light mt-2 tombol-konfirmasi" style="background-color: #9c223b;">Approve</a>' +
+                                //JIKA GM
+                                '<?php } elseif ($this->session->userdata('id_role') == 6 && $this->session->userdata('id_jabatan') == 11) {  ?>' +
+                                '<a href="<?= base_url('finance/apExternal/detailInvoice/') ?>' + row.unique_invoice + '/' + row.id_vendor + '" class="btn btn-sm text-light" style="background-color: #9c223b;">Detail</a>' +
+                                //JIKA STAFF FINANCE
+                                '<?php }
+                                    } else { ?>' +
+                                '<a href="<?= base_url('finance/apExternal/detailInvoice/') ?>' + row.unique_invoice + '/' + row.id_vendor + '" class="btn btn-sm text-light" style="background-color: #9c223b;">Detail</a>';
+                            '<?php } ?>';
                         } else if (data == 4) {
-                            return '<a href="<?= base_url('cs/apExternal/detailInvoice/') ?>' + row.unique_invoice + '/' + row.id_vendor + '" class="btn btn-sm text-light" style="background-color: #9c223b;">Detail</a>' +
-                                '<?php $jabatan = $this->session->userdata('id_jabatan');
-                                    if ($jabatan == 10) { ?> <a href="<?= base_url('cs/apExternal/approveSm/') ?>' + row.unique_invoice + '" class=" btn btn-sm text-light tombol-konfirmasi mt-2" style="background-color: #9c223b;">Approve</a> <?php } ?>';
-                        }else if (data == 5) {
-                            return '<a href="<?= base_url('cs/apExternal/detailInvoice/') ?>' + row.unique_invoice + '/' + row.id_vendor + '" class="btn btn-sm text-light" style="background-color: #9c223b;">Detail</a>' +
-                                '<?php $jabatan = $this->session->userdata('id_jabatan');
-                                    if ($jabatan == 10) { ?> <a href="<?= base_url('cs/apExternal/approveSm/') ?>' + row.unique_invoice + '" class=" btn btn-sm text-light tombol-konfirmasi mt-2" style="background-color: #9c223b;">Approve</a> <?php } ?>';
-                        }else if (data == 7) {
-                            return '<a href="<?= base_url('cs/apExternal/detailInvoice/') ?>' + row.unique_invoice + '/' + row.id_vendor + '" class="btn btn-sm text-light" style="background-color: #9c223b;">Detail</a>' +
-                                '<?php $jabatan = $this->session->userdata('id_jabatan');
-                                    if ($jabatan == 10) { ?> <a href="<?= base_url('cs/apExternal/approveSm/') ?>' + row.unique_invoice + '" class=" btn btn-sm text-light tombol-konfirmasi mt-2" style="background-color: #9c223b;">Approve</a> <?php } ?>';
+                            return '<?php if ($this->session->userdata('id_atasan') == NULL || $this->session->userdata('id_atasan') == 0) { ?>' +
+                                //jika MGR FINANCE
+                                '<?php if ($this->session->userdata('id_role') == 6 && $this->session->userdata('id_jabatan') == 2) { ?>' +
+                                '<a href="<?= base_url('finance/apExternal/detailInvoice/') ?>' + row.unique_invoice + '/' + row.id_vendor + '" class="btn btn-sm text-light" style="background-color: #9c223b;">Detail</a>' +
+                                //JIKA GM
+                                '<?php } elseif ($this->session->userdata('id_role') == 6 && $this->session->userdata('id_jabatan') == 11) {  ?>' +
+                                '<a href="<?= base_url('finance/apExternal/detailInvoice/') ?>' + row.unique_invoice + '/' + row.id_vendor + '" class="btn btn-sm text-light" style="background-color: #9c223b;">Detail</a>' +
+                                //JIKA STAFF FINANCE
+                                '<?php }
+                                    } else { ?>' +
+                                '<a href="<?= base_url('finance/apExternal/detailInvoice/') ?>' + row.unique_invoice + '/' + row.id_vendor + '" class="btn btn-sm text-light" style="background-color: #9c223b;">Detail</a>';
+                            '<?php } ?>';
+                        } else if (data == 5) {
+                            return '<?php if ($this->session->userdata('id_atasan') == NULL || $this->session->userdata('id_atasan') == 0) { ?>' +
+                                //jika MGR FINANCE
+                                '<?php if ($this->session->userdata('id_role') == 6 && $this->session->userdata('id_jabatan') == 2) { ?>' +
+                                '<a href="<?= base_url('finance/apExternal/editInvoice/') ?>' + row.unique_invoice + '/' + row.id_vendor + '" class="btn btn-sm text-light" style="background-color: #9c223b;">Detail</a>'+
+                            '<button type="button" class="btn btn-sm text-light mt-2 mod" data-toggle="modal" data-unique_invoice="' + row.unique_invoice + '" data-no_po="' + row.no_po + '" data-target="#modal-paid-external" style="background-color: #9c223b;">Paid</button>' +
+                                //JIKA GM
+                                '<?php } elseif ($this->session->userdata('id_role') == 6 && $this->session->userdata('id_jabatan') == 11) {  ?>' +
+                                '<a href="<?= base_url('finance/apExternal/detailInvoice/') ?>' + row.unique_invoice + '/' + row.id_vendor + '" class="btn btn-sm text-light" style="background-color: #9c223b;">Detail</a>' +
+                                //JIKA STAFF FINANCE
+                                '<?php }
+                                    } else { ?>' +
+                                '<a href="<?= base_url('finance/apExternal/editInvoice/') ?>' + row.unique_invoice + '/' + row.id_vendor + '" class="btn btn-sm text-light" style="background-color: #9c223b;">Detail</a>'+
+                            '<button type="button" class="btn btn-sm text-light mt-2 mod" data-toggle="modal" data-unique_invoice="' + row.unique_invoice + '" data-no_po="' + row.no_po + '" data-target="#modal-paid-external" style="background-color: #9c223b;">Paid</button>' +
+                            '<?php } ?>';
+                        } else if (data == 7) {
+                            return '<?php if ($this->session->userdata('id_atasan') == NULL || $this->session->userdata('id_atasan') == 0) { ?>' +
+                                //jika MGR FINANCE
+                                '<?php if ($this->session->userdata('id_role') == 6 && $this->session->userdata('id_jabatan') == 2) { ?>' +
+                                '<a href="<?= base_url('finance/apExternal/detailInvoice/') ?>' + row.unique_invoice + '/' + row.id_vendor + '" class="btn btn-sm text-light" style="background-color: #9c223b;">Detail</a>' +
+                                //JIKA GM
+                                '<?php } elseif ($this->session->userdata('id_role') == 6 && $this->session->userdata('id_jabatan') == 11) {  ?>' +
+                                '<a href="<?= base_url('finance/apExternal/detailInvoice/') ?>' + row.unique_invoice + '/' + row.id_vendor + '" class="btn btn-sm text-light" style="background-color: #9c223b;">Detail</a>' +
+                                '<a href="<?= base_url('finance/apExternal/approveGM/') ?>' + row.unique_invoice + '" class=" btn btn-sm text-light mt-2 tombol-konfirmasi" style="background-color: #9c223b;">Approve</a>' +
+                                //JIKA STAFF FINANCE
+                                '<?php }
+                                    } else { ?>' +
+                                '<a href="<?= base_url('finance/apExternal/editInvoice/') ?>' + row.unique_invoice + '/' + row.id_vendor + '" class="btn btn-sm text-light" style="background-color: #9c223b;">Detail</a>';
+                            '<?php } ?>';
                         } else {
-                            return '<a href="<?= base_url('cs/apExternal/detailInvoice/') ?>' + row.unique_invoice + '/' + row.id_vendor + '" class="btn btn-sm text-light" style="background-color: #9c223b;">Detail</a>';
+                            return '<a href="<?= base_url('finance/apExternal/editInvoice/') ?>' + row.unique_invoice + '/' + row.id_vendor + '" class="btn btn-sm text-light" style="background-color: #9c223b;">Detail</a>';
                         }
                     }
 
@@ -246,3 +312,38 @@
         $('#tablePoCreatedFinance').DataTable().searchPanes.rebuildPane();
     });
 </script>
+
+<script>
+    $(document).ready(function() {
+        $('body').on('click', '.mod', function() {
+            console.log('Tombol diklik');
+            var no_po = $(this).data('no_po'); // Mendapatkan ID dari atribut data-id tombol yang diklik
+            var unique_invoice = $(this).data('unique_invoice');
+            $('#mod').html('');
+            // Memuat data menggunakan AJAX dengan mengirimkan ID sebagai parameter
+
+            // Menampilkan data ke dalam modal
+            var content = '<div class="modal-body">' +
+                '<p> No PO : ' + no_po + ' </p>' +
+                '<div class="form-group">' +
+                '<label for="due_date" class="font-weight-bold">Payment Date</label>' +
+                '<input type="date" class="form-control" name="payment_date" required>' +
+                '<input type="text" hidden class="form-control" name="unique_invoice" value="' + unique_invoice + '" required>' +
+                '</div>' +
+                '<div class="form-group">' +
+                '<label class="col-form-label text-lg-right font-weight-bold">Upload Proof</label>' +
+                '<input type="file" id="input-file-now" name="ktp" />' +
+                '</div>' +
+                '</div>';
+            $('#mod').html(content);
+
+
+
+        });
+
+        $cbs = $('input[name="no_po[]"]').click(function() {
+            $("#submitPaid").toggle($cbs.is(":checked"));
+        });
+    });
+</script>
+
