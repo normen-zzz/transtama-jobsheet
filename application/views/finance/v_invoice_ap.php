@@ -39,7 +39,6 @@
                                                     <th>PPH</th>
                                                     <th>Total Invoice</th>
                                                     <th>PO Status</th>
-                                                    <th>Payment Status</th>
                                                     <th>Action</th>
                                                 </tr>
                                             </thead>
@@ -110,7 +109,7 @@
             },
             "deferRender": true,
 
-            "pageLength": 50,
+            "pageLength": 10,
             "aLengthMenu": [
                 [10, 50, 100],
                 [10, 50, 100]
@@ -188,7 +187,7 @@
                 {
                     "data": 'total_ap',
                     "render": function(data, type, row, meta) {
-                        var totalInvoice = parseInt(data) + parseInt(row.ppn) + parseInt(row.special_ppn) + parseInt(row.pph) + parseInt(row.special_pph);
+                        var totalInvoice = parseInt(data) + parseInt(row.ppn) + parseInt(row.special_ppn) - parseInt(row.pph) - parseInt(row.special_pph);
                         var number_string = totalInvoice.toString(),
                             sisa = number_string.length % 3,
                             rupiah = number_string.substr(0, sisa),
@@ -206,19 +205,19 @@
                     "data": 'status',
                     "render": function(data, type, row, meta) {
                         if (data == 0) {
-                            return '<span class="label label-danger label-inline font-weight-lighter" style="height:50px; ">Request Ap</span>';
+                            return '<span class="label label-danger label-inline font-weight-lighter" style="height:50px; ">Request Ap</span><br><span class="label label-secondary label-inline font-weight-lighter mt-2">Pending</span>';
                         } else if (data == 1) {
-                            return '<span class="label label-primary label-inline font-weight-lighter" style="height:50px;background-color:#00a9bf;">Approved By Manager</span>';
+                            return '<span class="label label-primary label-inline font-weight-lighter" style="height:50px;background-color:#00a9bf;">Approved By Manager</span><br><span class="label label-secondary label-inline font-weight-lighter mt-2">Pending</span>';
                         } else if (data == 2) {
-                            return '<span class="label label-primary label-inline font-weight-lighter" style="height:50px; background-color:#ff4d00">Approved By SM</span>';
+                            return '<span class="label label-primary label-inline font-weight-lighter" style="height:50px; background-color:#ff4d00">Approved By SM</span><br><span class="label label-secondary label-inline font-weight-lighter mt-2">Pending</span>';
                         } else if (data == 3) {
-                            return '<span class="label label-warning label-inline font-weight-lighter" style="height:50px">Received By Finance</span>';
+                            return '<span class="label label-warning label-inline font-weight-lighter" style="height:50px">Received By Finance</span><br><span class="label label-secondary label-inline font-weight-lighter mt-2">Pending</span>';
                         } else if (data == 6) {
-                            return '<span class="label label-secondary label-inline font-weight-lighter">Void</span>';
+                            return '<span class="label label-secondary label-inline font-weight-lighter">Void</span><br><span class="label label-secondary label-inline font-weight-lighter mt-2">Pending</span>';
                         } else if (data == 5) {
-                            return '<span class="label label-success label-inline font-weight-lighter" style="height:50px; background-color:#7c4dff;">Approved By GM</span>';
+                            return '<span class="label label-success label-inline font-weight-lighter" style="height:50px; background-color:#7c4dff;">Approved By GM</span><br><span class="label label-secondary label-inline font-weight-lighter mt-2">Pending</span>';
                         } else if (data == 7) {
-                            return '<span class="label label-primary label-inline font-weight-lighter" style="height:50px">Approved By Mgr Finance</span>';
+                            return '<span class="label label-primary label-inline font-weight-lighter" style="height:50px">Approved By Mgr Finance</span><br><span class="label label-secondary label-inline font-weight-lighter mt-2">Pending</span>';
                         } else {
                             return '<span class="label label-success label-inline font-weight-lighter">Paid</span>';
                         }
@@ -226,17 +225,7 @@
 
                 },
 
-                {
-                    "data": 'status',
-                    "render": function(data, type, row, meta) {
-                        if (data == 4) {
-                            return '<span class="label label-success label-inline font-weight-lighter">Paid</span> <br>';
-                        } else {
-                            return '<span class="label label-secondary label-inline font-weight-lighter">Pending</span>';
-                        }
-                    }
-
-                },
+               
 
                 {
                     "data": 'status',
