@@ -324,10 +324,10 @@ class ApExternal extends CI_Controller
         }
         if ($update) {
             $this->session->set_flashdata('messageAlert', $this->messageAlert('success', 'Success Update AP'));
-            redirect('finance/apExternal/editInvoice/' . $unique_invoice . '/' . encrypt_url($id_vendor));
+            redirect('finance/apExternal/editInvoice/' . $unique_invoice . '/' . $id_vendor);
         } else {
             $this->session->set_flashdata('messageAlert', $this->messageAlert('error', 'Failed'));
-            redirect('finance/apExternal/editInvoice/' . $unique_invoice . '/' . encrypt_url($id_vendor));
+            redirect('finance/apExternal/editInvoice/' . $unique_invoice . '/' . $id_vendor);
         }
     }
 

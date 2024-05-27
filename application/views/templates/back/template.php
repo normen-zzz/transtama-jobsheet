@@ -9,7 +9,14 @@
     <meta name="description" content="Shipper Apps Transtama Logistics" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <!--begin::Fonts-->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" />
+    
+    <!-- buat khusus bu lili pake font tebel  -->
+    <?php if ($this->session->userdata('id_user') == 43) { ?>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:700" />
+    <?php  } else { ?>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" />
+    <?php } ?>
+
     <!--end::Fonts-->
     <!--begin::Page Vendors Styles(used by this page)-->
     <link href="<?= base_url('assets/') ?>back/metronic2/plugins/custom/fullcalendar/fullcalendar.bundle.css" rel="stylesheet" type="text/css" />
@@ -950,4 +957,3 @@ $dataflash = json_encode($this->session->flashdata('message'));
         });
     });
 </script>
-
