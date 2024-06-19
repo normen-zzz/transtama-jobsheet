@@ -285,7 +285,7 @@
                                                     <!--berart_js = weight js/msr-->
                                                     <!--berat_msr= special_freight-->
                                                     <?php
-                                                   
+
 
                                                     $total_sales = getTotalSales($msr['id']);
                                                     ?>
@@ -769,22 +769,27 @@
 
                                 <div class="box-body">
                                     <div class="row">
-                                        <div class="col-md-4">
-                                            <?php if ($modal) {
-                                            ?>
-                                                <h2><?php $profit = $total_sales - $total_cost;
-                                                    echo rupiah($profit);
-                                                    ?></h2>
-                                            <?php  } ?>
+                                        <?php if ($modal) {
+                                            if ($total_sales != 0) {
+                                        ?>
+                                                <div class="col-md-4">
 
-                                        </div>
-                                        <div class="col-md-4">
-                                            <?php if ($modal) {
-                                            ?>
-                                                <h1><i class="fas fa-file-invoice-dollar text-primary"></i> Total Profit <?= round($profit / $total_sales * 100, 0) ?> % </h1>
+                                                    <h2><?php $profit = $total_sales - $total_cost;
+                                                        echo rupiah($profit);
+                                                        ?></h2>
 
-                                            <?php  } ?>
-                                        </div>
+
+                                                </div>
+                                                <div class="col-md-4">
+
+                                                    <h1><i class="fas fa-file-invoice-dollar text-primary"></i> Total Profit <?= round($profit / $total_sales * 100, 0) ?> % </h1>
+
+
+                                                </div>
+                                        <?php  } else { ?>
+                                            <p class="text-danger">Abnormal Accumulation (TOTAL SALES 0)</p>
+                                        <?php }
+                                        } ?>
 
                                     </div>
 

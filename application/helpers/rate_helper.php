@@ -20,8 +20,8 @@ function getTotalSales($id)
             $freight  = $msr['berat_js'] * $msr['freight_kg'];
             $special_freight  = $msr['berat_msr'] * $msr['special_freight'];
         } else {
-            $freight_discount = $msr['freight_kg'] * $disc;
-            $special_freight_discount = $msr['special_freight'] * $disc;
+            $freight_discount = $msr['freight_kg'] - ($msr['freight_kg'] * $disc);
+            $special_freight_discount = $msr['special_freight'] - ($msr['special_freight'] * $disc);
 
             $freight = $freight_discount * $msr['berat_js'];
             $special_freight  = $special_freight_discount * $msr['berat_msr'];

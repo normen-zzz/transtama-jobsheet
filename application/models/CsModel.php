@@ -28,6 +28,18 @@ class CsModel extends M_Datatables
 		$query = $this->db->get();
 		return $query;
 	}
+
+	function getJsNum()
+	{
+		$this->db->select('b.shipment_id');
+		$this->db->from('tbl_shp_order b');
+		$this->db->where('b.status_so', 1);
+		$this->db->where('b.deleted', 0);
+		$this->db->order_by('b.id', 'DESC');
+		$query = $this->db->get();
+		return $query;
+	}
+	
 	public function getPuPoin($id_so)
 	{
 		$this->db->select('pu_poin');
@@ -204,6 +216,16 @@ class CsModel extends M_Datatables
 		$this->db->where('b.status_so', 2);
 		$this->db->order_by('b.id', 'DESC');
 		// $this->db->order('b.id', 'DESC');
+		$query = $this->db->get();
+		return $query;
+	}
+	function getJsApproveCsNum()
+	{
+		$this->db->select('b.shipment_id');
+		$this->db->from('tbl_shp_order b');
+		$this->db->where('b.status_so', 2);
+		$this->db->order_by('b.id', 'DESC');
+		
 		$query = $this->db->get();
 		return $query;
 	}

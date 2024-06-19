@@ -21,8 +21,8 @@ class Dashboard extends CI_Controller
 		// $data['sub_header_page'] = 'exist';
 		$this->breadcrumb->add_item($breadcrumb_items);
 		$data['breadcrumb_bootstrap_style'] = $this->breadcrumb->generate();
-		$data['so'] = $this->cs->getJs()->num_rows();
-		$data['js'] = $this->cs->getJsApproveCs()->num_rows();
+		$data['so'] = $this->cs->getJsNum()->num_rows();
+		$data['js'] = $this->cs->getJsApproveCsNum()->num_rows();
 		$data['title'] = 'Dashboard';
 		$this->backend->display('cs/index', $data);
 	}
