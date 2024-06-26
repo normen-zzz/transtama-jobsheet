@@ -53,6 +53,7 @@
                                                         <th>OTHERS</th>
                                                         <th>INSURANCE</th>
                                                         <th>SURCHARGE</th>
+                                                        <th>DISCOUNT</th>
                                                         <th>TOTAL AMOUNT</th>
                                                         <th>Action</th>
                                                     </tr>
@@ -74,7 +75,7 @@
 
 
                                                         $service =  $inv['service_name'];
-                                                        if ($service == 'Charter Service' || $service == 'Manpower Service' || $service == 'Multidrop Service'|| $service == 'Warehouse Service') {
+                                                        if ($service == 'Charter Service' || $service == 'Manpower Service' || $service == 'Multidrop Service' || $service == 'Warehouse Service') {
                                                             $packing = $inv['packing'];
                                                             $total_sales = ($inv['freight_kg'] + $packing +  $inv['special_freight'] +  $inv['others'] + $inv['surcharge'] + $inv['insurance']);
                                                         } else {
@@ -84,8 +85,8 @@
                                                                 $freight  = $inv['berat_js'] * $inv['freight_kg'];
                                                                 $special_freight  = $inv['berat_msr'] * $inv['special_freight'];
                                                             } else {
-                                                                $freight_discount = $inv['freight_kg'] * $disc;
-                                                                $special_freight_discount = $inv['special_freight'] * $disc;
+                                                                $freight_discount = $inv['freight_kg'] - ($inv['freight_kg'] * $disc);
+                                                                $special_freight_discount = $inv['special_freight'] - ($inv['special_freight'] * $disc);
                                                                 $freight = $freight_discount * $inv['berat_js'];
                                                                 $special_freight  = $special_freight_discount * $inv['berat_msr'];
                                                             }
@@ -126,6 +127,7 @@
                                                                 <td><?= rupiah($inv['others']); ?></td>
                                                                 <td><?= rupiah($inv['insurance']); ?></td>
                                                                 <td><?= rupiah($inv['surcharge']); ?></td>
+                                                                <td><?= rupiah((($inv['freight_kg'] * $disc) * $inv['berat_js'])+ (($inv['special_freight'] * $disc) * $inv['berat_msr'])) ?></td>
 
                                                                 <td><?php
                                                                     echo rupiah($total_sales);
@@ -162,6 +164,7 @@
                                                                     <td><?= rupiah($inv['others']); ?></td>
                                                                     <td><?= rupiah($inv['insurance']); ?></td>
                                                                     <td><?= rupiah($inv['surcharge']); ?></td>
+                                                                    <td><?= rupiah((($inv['freight_kg'] * $disc) * $inv['berat_js'])+ (($inv['special_freight'] * $disc) * $inv['berat_msr'])) ?></td>
 
                                                                     <td><?php
                                                                         echo rupiah($total_sales);
@@ -289,7 +292,7 @@
                                 <input type="no_invoice" name="no_invoice" hidden value="<?= $inv['no_invoice'] ?>" class="form-control">
                                 <input type="text" name="id_invoice" hidden value="<?= $inv['id_invoice'] ?>" class="form-control">
                             </div>
-							<div class="col-md-3">
+                            <div class="col-md-3">
                                 <label for="date" class="font-weight-bold">Date</label>
                                 <input type="date" class="form-control" name="date" value="<?= $inv['date'] ?>" required>
 
