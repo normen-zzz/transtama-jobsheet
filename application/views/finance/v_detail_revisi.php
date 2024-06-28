@@ -815,9 +815,15 @@
                                                 <div class="col-md-6">
                                                     <?php if ($modal) {
                                                     ?>
+                                                    
+                                                    <?php if (($total_sales_new) > 0 ) {
+                                                       
+                                                    ?>
                                                         <h3><i class="fas fa-file-invoice-dollar text-primary"></i> <?= round($profit_new / $total_sales_new * 100, 0) ?> % </h3>
 
-                                                    <?php  } ?>
+                                                    <?php } else { ?>
+                                                        <h3><i class="fas fa-file-invoice-dollar text-primary"></i> 0 % </h3>
+                                                   <?php  } } ?>
                                                 </div>
                                             </div>
 

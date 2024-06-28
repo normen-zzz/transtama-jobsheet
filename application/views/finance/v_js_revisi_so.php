@@ -45,21 +45,9 @@
                                                     $no_do = $this->db->get_where('tbl_no_do', array('shipment_id' => $j['shipment_id']))->result_array();
                                                 ?>
                                                     <tr>
-                                                        <!-- Kalau jabatan dia sm -->
-                                                        <?php if ($jabatan == 10 && $j['status_revisi'] == 3) { ?>
-                                                            <td class="text-danger"><?= bulan_indo($j['tgl_pickup']) ?></td>
-                                                            <td class="text-danger"><?= $j['shipment_id'] ?></td>
-                                                            <td class="text-danger"><?php foreach ($no_do as $do) {
-                                                                                        echo $do['no_do'] . ',';
-                                                                                    } ?></td>
-                                                            <td class="text-danger"><?= $j['so_id'] ?></td>
-                                                            <td class="text-danger"><?= $j['jobsheet_id'] ?></td>
-                                                            <td class="text-danger"><?= $j['shipper'] ?></td>
-                                                            <td class="text-danger"><?= $j['tree_consignee'] ?></td>
-                                                            <td class="text-danger"><?= $j['tgl_so_new'] ?></td>
-                                                            <td class="text-danger"><?= $j['nama_user'] ?></td>
+                                                       
                                                             <!-- kalau jabatan dia gm -->
-                                                        <?php } elseif ($jabatan == 11 && $j['status_revisi'] == 2) { ?>
+                                                        <?php  if ($jabatan == 11 && $j['status_revisi'] == 3) { ?>
                                                             <td class="text-danger"><?= bulan_indo($j['tgl_pickup']) ?></td>
                                                             <td class="text-danger"><?= $j['shipment_id'] ?></td>
                                                             <td class="text-danger"><?php foreach ($no_do as $do) {
@@ -101,31 +89,33 @@
                                                             if ($j['status_revisi'] == 0) {
                                                             ?>
                                                                 <!-- <a href="<?= base_url('cs/jobsheet/detailRevisi/' . $j['id']) ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">View Revision</a> <br> -->
-                                                                <small>Jobsheet New</small> <br>
+                                                                <small>New Price Revision</small> <br>
                                                             <?php } elseif ($j['status_revisi'] == 1) {
                                                             ?>
                                                                 <!-- <a href="<?= base_url('cs/jobsheet/detailRevisi/' . $j['id']) ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">View Revision</a> <br> -->
-                                                                <small>Jobsheet Approve By Pic Js</small> <br>
+                                                                <small>Jobsheet Approved By Pic Js</small> <br>
                                                             <?php } elseif ($j['status_revisi'] == 2) {
                                                             ?>
                                                                 <!-- <a href="<?= base_url('cs/jobsheet/detailRevisi/' . $j['id']) ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">View Revision</a> <br> -->
-                                                                <small>Jobsheet Approve By Manager CS</small> <br>
+                                                                <small>Jobsheet Approved By Manager CS</small> <br>
                                                             <?php } elseif ($j['status_revisi'] == 3) {
                                                             ?>
                                                                 <!-- <a href="<?= base_url('cs/jobsheet/detailRevisi/' . $j['id']) ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">View Revision</a> <br> -->
-                                                                <small>Jobsheet Approve By GM</small> <br>
+                                                                <small>Jobsheet Approved By SM</small> <br>
                                                             <?php } elseif ($j['status_revisi'] == 4) {
                                                             ?>
                                                                 <!-- <a href="<?= base_url('cs/jobsheet/detailRevisi/' . $j['id']) ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">View Revision</a> <br> -->
-                                                                <small>Jobsheet Decline By Pic Js</small> <br>
+                                                                <small>Jobsheet Declined By Pic Js</small> <br>
                                                             <?php } elseif ($j['status_revisi'] == 5) {
                                                             ?>
                                                                 <!-- <a href="<?= base_url('cs/jobsheet/detailRevisi/' . $j['id']) ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">View Revision</a> <br> -->
-                                                                <small>Jobsheet Decline By Manager CS</small> <br>
+                                                                <small>Jobsheet Declined By Manager CS</small> <br>
                                                             <?php } elseif ($j['status_revisi'] == 6) {
                                                             ?>
                                                                 <!-- <a href="<?= base_url('cs/jobsheet/detailRevisi/' . $j['id']) ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">View Revision</a> <br> -->
                                                                 <small>Jobsheet Decline By GM</small> <br>
+                                                            <?php } elseif ($j['status_revisi'] == 7) { ?>
+                                                                <small>Jobsheet Approved By GM</small> <br>
                                                             <?php }
                                                             ?>
                                                         </td>

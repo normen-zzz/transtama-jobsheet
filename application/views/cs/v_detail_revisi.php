@@ -267,11 +267,11 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                   
+
                                                     <?php
-                                                    
-                                                        $total_sales = totalSales($msr['shipment_id']);
-                                                    
+
+                                                    $total_sales = totalSales($msr['shipment_id']);
+
                                                     ?>
                                                     <tr>
                                                         <td>
@@ -1277,260 +1277,121 @@
 
         <div class="row">
             <?php
-            $tgl_approve_revisi = $this->db->get_where('tbl_approve_revisi_so', ['shipment_id' => $request['shipment_id']])->row_array();
-            if ($request['status_revisi'] == 5 || $request['status_revisi'] == 6) {
+
+            $status = $this->db->get_where('tbl_approve_revisi_so', ['shipment_id' => $request['shipment_id']]);
+
+            $status_revisi = $status->row_array();
             ?>
-                <div class="col-md-3">
+
+            <!-- jika tidak ada field approval didatabase  -->
+            <?php if ($status->num_rows() == 0) { ?>
+                <!-- BAGIAN PIC JS -->
+                <div class="col-md-4">
                     <div class="card card-custom gutter-b example example-compact" style="height:100px;">
-                        <h3 class="text-title text-center mt-2"> <i class="fa fa-check text-success"></i> Revision Approved By PIC Jobsheet</h3> <br>
-                        <h4 class="text-title text-center"><?= $tgl_approve_revisi['tgl_approve_cs'] ?></h4>
+                        <h3 class="text-title text-center mt-2"><i class="fa fa-calendar text-warning"></i> Wait PIC JS Check Revision</h3> <br>
                     </div>
                 </div>
-                <div class="col-md-3">
-                    <?php if ($tgl_approve_revisi['id_user_mgr'] == NULL) {
-                    ?>
-                        <div class="card card-custom gutter-b example example-compact" style="height:100px;">
-                            <h3 class="text-title text-center mt-2"><i class="fa fa-calendar text-warning"></i> Wait you to check Revision</h3> <br>
-                            <!-- <h4 class="text-title text-center"><?= $tgl_approve_revisi['tgl_approve_gm'] ?></h4> -->
-                        </div>
-                    <?php  } else {
-                    ?>
-                        <div class="card card-custom gutter-b example example-compact" style="height:100px;">
-                            <?php if ($tgl_approve_revisi['status_approve_cs'] == 0) {
-                            ?>
-                                <h3 class="text-title text-center mt-2"><i class="fa fa-window-close text-danger"></i> Revision Decline By Manager Cs</h3> <br>
-                            <?php  } else {
-                            ?>
-                                <h3 class="text-title text-center mt-2"><i class="fa fa-check text-success"></i> Revision Approved By Manager Cs</h3> <br>
-                            <?php  } ?>
-                            <h4 class="text-title text-center"><?= $tgl_approve_revisi['tgl_approve_mgr_cs'] ?> / <?= $tgl_approve_revisi['note_mgr_cs'] ?></h4>
-                        </div>
-                    <?php  } ?>
-                </div>
+                <!-- BAGIAN MGR JS  -->
+                <div class="col-md-4">
 
-                <div class="col-md-3">
-                    <?php if ($tgl_approve_revisi['id_user_gm'] == NULL) {
-                    ?>
-                        <div class="card card-custom gutter-b example example-compact" style="height:100px;">
-                            <h3 class="text-title text-center mt-2"><i class="fa fa-calendar text-warning"></i> Wait GM Check Revision</h3> <br>
-                            <!-- <h4 class="text-title text-center"><?= $tgl_approve_revisi['tgl_approve_gm'] ?></h4> -->
-                        </div>
-                    <?php  } else {
-                    ?> <div class="card card-custom gutter-b example example-compact" style="height:100px;">
-                            <?php if ($tgl_approve_revisi['status_approve_gm'] == 0) {
-                            ?>
-                                <h3 class="text-title text-center mt-2"><i class="fa fa-window-close text-danger"></i> Revision Decline By GM</h3> <br>
-                            <?php  } else {
-                            ?>
-                                <h3 class="text-title text-center mt-2"><i class="fa fa-check text-success"></i> Revision Approved By By GM</h3> <br>
-                            <?php  } ?>
-                            <h4 class="text-title text-center"><?= $tgl_approve_revisi['tgl_approve_gm'] ?></h4>
-                        </div>
-
-                    <?php  } ?>
-                </div>
-
-                <?php  } else {
-                $id_atasan = $this->session->userdata('id_atasan');
-                // kalo dia atasan sales
-                if ($id_atasan == 0 || $id_atasan == NULL) {
-                    $cek_approve_cs = $this->db->select('id_user_mgr')->get_where('tbl_approve_revisi_so', ['shipment_id' => $request['shipment_id']])->row_array();
-                    $tgl_approve_revisi = $this->db->get_where('tbl_approve_revisi_so', ['shipment_id' => $request['shipment_id']])->row_array();
-                    // kalo dia ada
-                    if ($cek_approve_cs['id_user_mgr'] == NULL) {
-                ?>
-                        <div class="col-md-6">
-                            <div class="card card-custom gutter-b example example-compact" style="height:100px;">
-                                <div class="col-md-12 mt-8"> <a href="<?= base_url('cs/jobsheet/approveRevisiMgrCs/' . $msr['id']) ?>" class="btn btn-success tombol-konfirmasi">Approved Revision</a> </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <form action="<?= base_url('cs/jobsheet/declineRevisiMgrCs/') ?>" method="POST">
-                                <div class="card card-custom gutter-b example example-compact" style="height:100px;">
-                                    <div class="row">
-                                        <div class="col-md-7 ml-2">
-                                            <label for="note_mgr font-weight-bold">Reason</label>
-                                            <input type="text" name="id" hidden value="<?= $msr['id'] ?>">
-                                            <textarea name="note_mgr" class="form-control"></textarea>
-                                        </div>
-                                        <div class="col-md-4 mt-8 ml-2">
-                                            <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure ?')">Decline Revision</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    <?php } else {
-                    ?>
-                        <div class="col-md-4">
-                            <div class="card card-custom gutter-b example example-compact" style="height:100px;">
-                                <h3 class="text-title text-center mt-2"> <i class="fa fa-check text-success"></i> Revision Approved By PIC Jobsheet</h3> <br>
-                                <h4 class="text-title text-center"><?= $tgl_approve_revisi['tgl_approve_cs'] ?></h4>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <?php if ($tgl_approve_revisi['id_user_mgr'] == NULL) {
-                            ?>
-                                <div class="card card-custom gutter-b example example-compact" style="height:100px;">
-                                    <h3 class="text-title text-center mt-2"><i class="fa fa-calendar text-warning"></i> Wait you to check Revision</h3> <br>
-                                    <!-- <h4 class="text-title text-center"><?= $tgl_approve_revisi['tgl_approve_gm'] ?></h4> -->
-                                </div>
-                            <?php  } else {
-                            ?>
-                                <div class="card card-custom gutter-b example example-compact" style="height:100px;">
-                                    <?php if ($tgl_approve_revisi['status_approve_cs'] == 0) {
-                                    ?>
-                                        <h3 class="text-title text-center mt-2"><i class="fa fa-window-close text-danger"></i> Revision Decline By Manager Cs</h3> <br>
-                                    <?php  } else {
-                                    ?>
-                                        <h3 class="text-title text-center mt-2"><i class="fa fa-check text-success"></i> Revision Approved By Manager Cs</h3> <br>
-                                    <?php  } ?>
-                                    <h4 class="text-title text-center"><?= $tgl_approve_revisi['tgl_approve_mgr_cs'] ?> / <?= $tgl_approve_revisi['note_mgr_cs'] ?></h4>
-                                </div>
-                            <?php  } ?>
-                        </div>
-
-                        <div class="col-md-4">
-                            <?php if ($tgl_approve_revisi['id_user_gm'] == NULL) {
-                            ?>
-                                <div class="card card-custom gutter-b example example-compact" style="height:100px;">
-                                    <h3 class="text-title text-center mt-2"><i class="fa fa-calendar text-warning"></i> Wait GM Check Revision</h3> <br>
-                                    <!-- <h4 class="text-title text-center"><?= $tgl_approve_revisi['tgl_approve_gm'] ?></h4> -->
-                                </div>
-                            <?php  } else {
-                            ?> <div class="card card-custom gutter-b example example-compact" style="height:100px;">
-                                    <?php if ($tgl_approve_revisi['status_approve_gm'] == 0) {
-                                    ?>
-                                        <h3 class="text-title text-center mt-2"><i class="fa fa-window-close text-danger"></i> Revision Decline By GM</h3> <br>
-                                    <?php  } else {
-                                    ?>
-                                        <h3 class="text-title text-center mt-2"><i class="fa fa-check text-success"></i> Revision Approved By GM</h3> <br>
-                                    <?php  } ?>
-                                    <h4 class="text-title text-center"><?= $tgl_approve_revisi['tgl_approve_gm'] ?></h4>
-                                </div>
-
-                            <?php  } ?>
-                        </div>
-
-
-
-                    <?php  } ?>
-
-                    <?php } else {
-                    // kalo dia pic jobsheet
-                    $cek_approve_cs = $this->db->select('id_user_cs')->get_where('tbl_approve_revisi_so', ['shipment_id' => $request['shipment_id']])->row_array();
-                    $tgl_approve_revisi = $this->db->get_where('tbl_approve_revisi_so', ['shipment_id' => $request['shipment_id']])->row_array();
-                    // kalo dia ada
-                    // var_dump($cek_approve_cs);
-                    // die;
-                    if ($cek_approve_cs['id_user_cs'] == NULL) {
-                    ?>
-                        <div class="col-md-6">
-                            <div class="card card-custom gutter-b example example-compact" style="height:100px;">
-                                <div class="col-md-12 mt-8"> <a href="<?= base_url('cs/jobsheet/approveRevisiCs/' . $msr['id']) ?>" class="btn btn-success tombol-konfirmasi">Approved Revision</a> </div>
-                            </div>
-                        </div>
-                        <!-- <div class="col-md-6">
-                            <div class="card card-custom gutter-b example example-compact" style="height:100px;">
-                                <div class="col-md-12 mt-8"> <a href="<?= base_url('cs/jobsheet/declineRevisiCs/' . $msr['id']) ?>" class="btn btn-danger tombol-konfirmasi">Decline Revision</a> </div>
-                            </div>
-                        </div> -->
-
-                    <?php } else {
-                    ?>
-                        <div class="col-md-4">
-                            <div class="card card-custom gutter-b example example-compact" style="height:100px;">
-                                <h3 class="text-title text-center mt-2"> <i class="fa fa-check text-success"></i> Revision Approved By PIC Jobsheet</h3> <br>
-                                <h4 class="text-title text-center"><?= $tgl_approve_revisi['tgl_approve_cs'] ?></h4>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <?php if ($tgl_approve_revisi['id_user_mgr'] == NULL) {
-                            ?>
-                                <div class="card card-custom gutter-b example example-compact" style="height:100px;">
-                                    <h3 class="text-title text-center mt-2"><i class="fa fa-calendar text-warning"></i> Wait you to check Revision</h3> <br>
-                                    <!-- <h4 class="text-title text-center"><?= $tgl_approve_revisi['tgl_approve_gm'] ?></h4> -->
-                                </div>
-                            <?php  } else {
-                            ?>
-                                <div class="card card-custom gutter-b example example-compact" style="height:100px;">
-                                    <?php if ($tgl_approve_revisi['status_approve_cs'] == 0) {
-                                    ?>
-                                        <h3 class="text-title text-center mt-2"><i class="fa fa-window-close text-danger"></i> Revision Decline By Manager Cs</h3> <br>
-                                    <?php  } else {
-                                    ?>
-                                        <h3 class="text-title text-center mt-2"><i class="fa fa-check text-success"></i> Revision Approved By Manager Cs</h3> <br>
-                                    <?php  } ?>
-                                    <h4 class="text-title text-center"><?= $tgl_approve_revisi['tgl_approve_mgr_cs'] ?> / <?= $tgl_approve_revisi['note_mgr_cs'] ?></h4>
-                                </div>
-                            <?php  } ?>
-                        </div>
-
-                        <div class="col-md-4">
-                            <?php if ($tgl_approve_revisi['id_user_gm'] == NULL) {
-                            ?>
-                                <div class="card card-custom gutter-b example example-compact" style="height:100px;">
-                                    <h3 class="text-title text-center mt-2"><i class="fa fa-calendar text-warning"></i> Wait GM Check Revision</h3> <br>
-                                    <!-- <h4 class="text-title text-center"><?= $tgl_approve_revisi['tgl_approve_gm'] ?></h4> -->
-                                </div>
-                            <?php  } else {
-                            ?> <div class="card card-custom gutter-b example example-compact" style="height:100px;">
-                                    <?php if ($tgl_approve_revisi['status_approve_gm'] == 0) {
-                                    ?>
-                                        <h3 class="text-title text-center mt-2"><i class="fa fa-window-close text-danger"></i> Revision Decline By GM</h3> <br>
-                                    <?php  } else {
-                                    ?>
-                                        <h3 class="text-title text-center mt-2"><i class="fa fa-check text-success"></i> Revision Approved By GM</h3> <br>
-                                    <?php  } ?>
-                                    <h4 class="text-title text-center"><?= $tgl_approve_revisi['tgl_approve_gm'] ?></h4>
-                                </div>
-
-                            <?php  } ?>
-                        </div>
-
-
-
-
-
-                    <?php  } ?>
-
-            <?php }
-            }
-            ?>
-            <div class="col-md-6">
-                <?php if ($tgl_approve_revisi['id_sm'] == NULL) {
-                ?>
                     <div class="card card-custom gutter-b example example-compact" style="height:100px;">
-                        <h3 class="text-title text-center mt-2"><i class="fa fa-calendar text-warning"></i> Wait Senior Manager To Check Revision</h3> <br>
-                        <?php if ($this->session->userdata('id_jabatan') == 10) { ?>
+                        <h3 class="text-title text-center mt-2"><i class="fa fa-calendar text-warning"></i> Wait MGR JS Check Revision</h3> <br>
+                    </div>
 
-                            <div class="row">
-                                
-                                    <div class="col-md-6"> <a href="<?= base_url('cs/jobsheet/approveRevisiSm/' . $msr['id']) ?>" class="btn btn-success tombol-konfirmasi">Approved Revision</a> </div>
-                               
-                               
-                                    <div class="col-md-6"> <a href="<?= base_url('cs/jobsheet/declineRevisiSm/' . $msr['id']) ?>" class="btn btn-danger tombol-konfirmasi">Decline Revision</a> </div>
-                              
+
+                </div>
+
+                <!-- BAGIAN SM  -->
+                <div class="col-md-4">
+
+                    <div class="card card-custom gutter-b example example-compact" style="height:100px;">
+                        <h3 class="text-title text-center mt-2"><i class="fa fa-calendar text-warning"></i> Wait SM Check Revision</h3> <br>
+                    </div>
+
+                </div>
+
+                <!-- BAGIAN GM -->
+                <div class="col-md-4">
+
+                    <div class="card card-custom gutter-b example example-compact" style="height:100px;">
+                        <h3 class="text-title text-center mt-2"><i class="fa fa-calendar text-warning"></i> Wait GM Check Revision</h3> <br>
+
+                    </div>
+
+
+                </div>
+            <?php } else { ?>
+
+                <div class="col-md-4">
+                  
+                        <?php if ($status_revisi['status_approve_picjs'] == 0) { ?>
+                            <div class="card card-custom gutter-b example example-compact" style="height:100px;">
+                                <h3 class="text-title text-center mt-2"><i class="fa fa-window-close text-danger"></i> Revision Decline By PIC JS</h3> <br>
                             </div>
-
-
-                        <?php } ?>
-                        <!-- <h4 class="text-title text-center"><?= $tgl_approve_revisi['tgl_approve_gm'] ?></h4> -->
-                    </div>
-                <?php  } else {
-                ?> <div class="card card-custom gutter-b example example-compact" style="height:100px;">
-                        <?php if ($tgl_approve_revisi['status_approve_sm'] == 0) {
+                        <?php  } elseif ($status_revisi['status_approve_picjs'] == 1) { ?>
+                            <div class="card card-custom gutter-b example example-compact" style="height:100px;">
+                                <h3 class="text-title text-center mt-2"> <i class="fa fa-check text-success"></i> Revision Approved By PIC JS</h3> <br>
+                                <h4 class="text-title text-center"><?= $status_revisi['tgl_approve_cs'] ?></h4>
+                            </div>
+                        <?php }
                         ?>
-                            <h3 class="text-title text-center mt-2"><i class="fa fa-window-close text-danger"></i> Revision Decline By SM</h3> <br>
-                        <?php  } else {
-                        ?>
-                            <h3 class="text-title text-center mt-2"><i class="fa fa-check text-success"></i> Revision Approved By SM</h3> <br>
-                        <?php  } ?>
-                        <h4 class="text-title text-center"><?= $tgl_approve_revisi['tgl_approve_sm'] ?></h4>
+
+                   
+                </div>
+
+                <!-- BAGIAN MGR JS  -->
+                <div class="col-md-4">
+                    <?php if ($status_revisi['']) {
+                        # code...
+                    } ?>
+                    <div class="card card-custom gutter-b example example-compact" style="height:100px;">
+                        <h3 class="text-title text-center mt-2"> <i class="fa fa-check text-success"></i> Revision Approved By MGR JS</h3> <br>
+                        <h4 class="text-title text-center"><?= $status_revisi['tgl_approve_cs'] ?></h4>
+                    </div>
+                    <div class="card card-custom gutter-b example example-compact" style="height:100px;">
+                        <h3 class="text-title text-center mt-2"><i class="fa fa-calendar text-warning"></i> Wait MGR JS Check Revision</h3> <br>
+                        <!-- <h4 class="text-title text-center"><?= $status_revisi['tgl_approve_gm'] ?></h4> -->
                     </div>
 
-                <?php  } ?>
-            </div>
+                    <div class="card card-custom gutter-b example example-compact" style="height:100px;">
+                        <h3 class="text-title text-center mt-2"><i class="fa fa-window-close text-danger"></i> Revision Decline By MGR JS</h3> <br>
+
+                    </div>
+                </div>
+
+                <!-- BAGIAN SM  -->
+                <div class="col-md-4">
+                    <div class="card card-custom gutter-b example example-compact" style="height:100px;">
+                        <h3 class="text-title text-center mt-2"> <i class="fa fa-check text-success"></i> Revision Approved By SM</h3> <br>
+                        <h4 class="text-title text-center"><?= $status_revisi['tgl_approve_cs'] ?></h4>
+                    </div>
+                    <div class="card card-custom gutter-b example example-compact" style="height:100px;">
+                        <h3 class="text-title text-center mt-2"><i class="fa fa-calendar text-warning"></i> Wait SM Check Revision</h3> <br>
+                        <!-- <h4 class="text-title text-center"><?= $status_revisi['tgl_approve_gm'] ?></h4> -->
+                    </div>
+                    <div class="card card-custom gutter-b example example-compact" style="height:100px;">
+                        <h3 class="text-title text-center mt-2"><i class="fa fa-window-close text-danger"></i> Revision Decline By SM</h3> <br>
+
+                    </div>
+                </div>
+
+                <!-- BAGIAN GM -->
+                <div class="col-md-4">
+                    <div class="card card-custom gutter-b example example-compact" style="height:100px;">
+                        <h3 class="text-title text-center mt-2"> <i class="fa fa-check text-success"></i> Revision Approved By GM</h3> <br>
+                        <h4 class="text-title text-center"><?= $status_revisi['tgl_approve_cs'] ?></h4>
+                    </div>
+                    <div class="card card-custom gutter-b example example-compact" style="height:100px;">
+                        <h3 class="text-title text-center mt-2"><i class="fa fa-calendar text-warning"></i> Wait GM Check Revision</h3> <br>
+                        <!-- <h4 class="text-title text-center"><?= $status_revisi['tgl_approve_gm'] ?></h4> -->
+                    </div>
+
+                    <div class="card card-custom gutter-b example example-compact" style="height:100px;">
+                        <h3 class="text-title text-center mt-2"><i class="fa fa-window-close text-danger"></i> Revision Decline By GM</h3> <br>
+
+                    </div>
+                </div>
+            <?php } ?>
 
 
 
