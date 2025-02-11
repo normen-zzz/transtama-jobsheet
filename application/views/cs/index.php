@@ -37,43 +37,6 @@
 
 		</div>
 
-		<div class="row">
-
-			<div class="col">
-				<div>
-					<canvas id="chartDashboard"></canvas>
-				</div>
-
-
-
-				<script>
-					const ctx = document.getElementById('chartDashboard');
-
-					new Chart(ctx, {
-						type: 'bar',
-						data: {
-							labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-
-							datasets: [{
-								label: '# of Votes',
-								data: [12, 19, 3, 5, 2, 3],
-								borderWidth: 1,
-								backgroundColor: ["red", "blue", "green"],
-							}]
-						},
-						options: {
-							scales: {
-								y: {
-									beginAtZero: true
-								}
-							}
-						}
-					});
-				</script>
-			</div>
-
-		</div>
-
 
 	</div>
 	<!--end::Container-->

@@ -38,7 +38,7 @@
                                                 <tr>
                                                     <td><?= bulan_indo($msr['tgl_pickup']) ?></td>
                                                     <td><?= $msr['shipment_id'] ?></td>
-                                                    <td>SO-<?= $msr['shipment_id'] ?></td>
+                                                     <td>SO-<?= $msr['shipment_id'] ?></td>
                                                     <td><?= $msr['shipper'] ?></td>
                                                     <td><?= $msr['consigne'] ?></td>
                                                     <!-- <td><?= $msr['destination'] ?></td> -->
@@ -200,7 +200,8 @@
                                                     <!--berart_js = weight js/msr-->
                                                     <!--berat_msr= special_freight-->
                                                     <?php
-                                                    $total_sales = getTotalSales($msr['id']);
+
+                                                     $total_sales = getTotalSales($msr['id']);
                                                     ?>
                                                     <tr>
                                                         <td>
@@ -215,7 +216,7 @@
                                                             <input readonly type="text" class="form-control" name="special_freight" value="<?= $msr['special_freight'] ?>">
                                                         </td>
                                                         <td> <input type="text" class="form-control" placeholder="isi no flight" name="packing" value="<?= $msr['packing'] ?>"> </td>
-                                                        <td> <input type="text" class="form-control" placeholder="isi no flight" name="others" value="<?= $msr['others'] ?>"> </td>
+                                                        <td> <input  type="text" class="form-control" placeholder="isi no flight" name="others" value="<?= $msr['others'] ?>"> </td>
                                                         <td> <input readonly type="text" class="form-control" placeholder="isi no flight" name="surcharge" value="<?= $msr['surcharge'] ?>"> </td>
                                                         <td> <input readonly type="text" class="form-control" placeholder="isi no flight" name="insurance" value="<?= $msr['insurance'] ?>"> </td>
                                                         <input type="text" class="form-control" hidden name="id" value="<?= $msr['id'] ?>">
@@ -255,7 +256,7 @@
                                                 </table>
 
                                             </div>
-                                            <button class="btn btn-success">Submit</button>
+                                             <button class="btn btn-success">Submit</button> 
                                         </form>
                                     </div>
 

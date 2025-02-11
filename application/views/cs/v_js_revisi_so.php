@@ -102,7 +102,7 @@
                                                             <?php } elseif ($j['status_revisi'] == 3) {
                                                             ?>
                                                                 <!-- <a href="<?= base_url('cs/jobsheet/detailRevisi/' . $j['id']) ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">View Revision</a> <br> -->
-                                                                <small>Jobsheet Approved By GM</small> <br>
+                                                                <small>Jobsheet Approved By SM</small> <br>
                                                             <?php } elseif ($j['status_revisi'] == 4) {
                                                             ?>
                                                                 <!-- <a href="<?= base_url('cs/jobsheet/detailRevisi/' . $j['id']) ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">View Revision</a> <br> -->
@@ -116,7 +116,7 @@
                                                                 <!-- <a href="<?= base_url('cs/jobsheet/detailRevisi/' . $j['id']) ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">View Revision</a> <br> -->
                                                                 <small>Jobsheet Declined By GM</small> <br>
                                                             <?php } elseif ($j['status_revisi'] == 7) { ?>
-                                                                <small>Jobsheet Approved By Manager CS</small> <br>
+                                                                <small>Jobsheet Approved By GM (DONE)</small> <br>
                                                            <?php  }
                                                             ?>
                                                         </td>

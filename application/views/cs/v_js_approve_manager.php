@@ -103,21 +103,21 @@
                                                         <!-- SO -->
                                                         <td><?php if ($get_revisi_so) {
                                                             ?>
-                                                                <a target="blank" href="<?= base_url('cs/jobsheet/cetakSo/' . $j['id'] . '/' . $j['id_so']) ?>" class="text-danger"><?= $j['so_id'] ?> </a>
+                                                                <a target="blank" href="<?= base_url('cs/jobsheet/cetakSo/' . $j['id'] . '/' . $j['id_so']) ?>" class="text-danger"><?= 'SO-'. $j['shipment_id'] ?> </a>
                                                             <?php  } else {
                                                             ?>
-                                                                <a target="blank" href="<?= base_url('cs/jobsheet/cetakSo/' . $j['id'] . '/' . $j['id_so']) ?>"><?= $j['so_id'] ?> </a>
+                                                                <a target="blank" href="<?= base_url('cs/jobsheet/cetakSo/' . $j['id'] . '/' . $j['id_so']) ?>"><?= 'SO-'. $j['shipment_id'] ?> </a>
                                                             <?php   }  ?>
                                                         </td>
 
                                                         <!-- Jobsheet -->
                                                         <td><?php if ($get_revisi_so) {
                                                             ?>
-                                                                <a target="blank" href="<?= base_url('cs/jobsheet/cetakMsr/' . $j['id']) ?>" class="text-danger"><?= $j['jobsheet_id'] ?> </a>
+                                                                <a target="blank" href="<?= base_url('cs/jobsheet/cetakMsr/' . $j['id']) ?>" class="text-danger"><?= 'JS-'. $j['shipment_id'] ?> </a>
 
                                                             <?php  } else {
                                                             ?>
-                                                                <a target="blank" href="<?= base_url('cs/jobsheet/cetakSo/' . $j['id']) ?>"><?= $j['jobsheet_id'] ?> </a>
+                                                                <a target="blank" href="<?= base_url('cs/jobsheet/cetakSo/' . $j['id']) ?>"><?= 'JS-'.$j['shipment_id'] ?> </a>
                                                             <?php }  ?>
                                                         </td>
 

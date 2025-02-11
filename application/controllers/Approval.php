@@ -64,7 +64,7 @@ class Approval extends CI_Controller
                 $date = $get_ap['date'];
                 $pesan = "Hallo Finance, ada pengajuan Ap No. *$no_ap* Dengan Tujuan *$purpose* Tanggal *$date*. Tolong Segera Cek Ya, Terima Kasih";
                 // no finance
-                // $this->wa->pickup('+6285157906966', "$pesan");
+                
                 $this->wa->pickup('+6289629096425', "$pesan");
                 $this->wa->pickup('+6287771116286', "$pesan");
                 //Norman
@@ -138,7 +138,7 @@ class Approval extends CI_Controller
                 $date = $get_ap['date'];
                 $pesan = "Ap No. *$no_ap* Dengan Tujuan *$purpose* Tanggal *$date* Sudah di Approve GM. Tolong Segera Bayar Ya, Terima Kasih";
                 // no finance
-                // $this->wa->pickup('+6285157906966', "$pesan");
+               
                 $this->wa->pickup('+6289629096425', "$pesan");
                 $this->wa->pickup('+6287771116286', "$pesan");
                 //Norman
@@ -181,77 +181,8 @@ class Approval extends CI_Controller
         $this->load->view('v_detail_revisi_sm', $data);
     }
 
-    // approve ka GM
-
+   // APPROVE GM
     public function approveRevisiGm($id)
-    {
-
-        $approveRevisiSo = $this->db->query("SELECT shipment_id FROM tbl_approve_revisi_so WHERE shipment_id = $id");
-
-        if ($approveRevisiSo == NULL) {
-            $data = array(
-                'shipment_id' => $id,
-                'id_user_cs' => $this->session->userdata('id_user')
-            );
-            $this->db->insert('tbl_approve_revisi_so', $data);
-
-            $data = array(
-                'id_user_mgr' => $this->session->userdata('id_user'),
-                'tgl_approve_mgr_cs' => date('Y-m-d H:i:s'),
-                'status_approve_cs' => 1
-            );
-            $this->db->update('tbl_approve_revisi_so', $data, ['shipment_id' => $id]);
-        }
-        $data = array(
-            'status_revisi' => 3,
-        );
-        $update = $this->db->update('tbl_revisi_so', $data, ['shipment_id' => $id]);
-        if ($update) {
-            $data = array(
-                'id_user_gm' => 14,
-                'tgl_approve_gm' => date('Y-m-d H:i:s'),
-                'status_approve_gm' => 1
-            );
-            $this->db->update('tbl_approve_revisi_so', $data, ['shipment_id' => $id]);
-            $link = "https://jobsheet.transtama.com/approval/detailRevisiSm/$id";
-
-            $pesan = "Hallo, Mohon Untuk dicek dan di Approve Pengajuan Revisi SO Melalu Link Berikut : $link";
-            // no sam
-            // $this->wa->pickup('+628111910711', "$pesan");
-            $this->wa->pickup('+6285157906966', "$pesan");
-            //Norman
-            $this->wa->pickup('+6285697780467', "$pesan");
-
-            echo "<script>alert('Success Approve')</script>";
-            echo "<script>window.close();</script>";
-        } else {
-            echo "<script>alert('Failed Approve')</script>";
-            echo "<script>window.close();</script>";
-        }
-    }
-    public function declineRevisiGm($id)
-    {
-        $data = array(
-            'status_revisi' => 6,
-        );
-        $update = $this->db->update('tbl_revisi_so', $data, ['shipment_id' => $id]);
-        if ($update) {
-            $data = array(
-                'id_user_gm' => 14,
-                'tgl_approve_gm' => date('Y-m-d H:i:s'),
-                'status_approve_gm' => 0
-            );
-            $this->db->update('tbl_approve_revisi_so', $data, ['shipment_id' => $id]);
-            echo "<script>alert('Success Decline')</script>";
-            echo "<script>window.close();</script>";
-        } else {
-            echo "<script>alert('Failed Decline')</script>";
-            echo "<script>window.close();</script>";
-        }
-    }
-
-    // APPROVE SM
-    public function approveRevisiSm($id)
     {
         $data = array(
             'status_revisi' => 7,
@@ -286,9 +217,9 @@ class Approval extends CI_Controller
             );
             $this->db->insert('tbl_revisi_so_lama', $data);
             $data = array(
-                'id_sm' => 32,
-                'tgl_approve_sm' => date('Y-m-d H:i:s'),
-                'status_approve_sm' => 1
+                'id_user_gm' => 14,
+                'tgl_approve_gm' => date('Y-m-d H:i:s'),
+                'status_approve_gm' => 1
             );
             $this->db->update('tbl_approve_revisi_so', $data, ['shipment_id' => $id]);
 
@@ -299,7 +230,59 @@ class Approval extends CI_Controller
             echo "<script>window.close();</script>";
         }
     }
-    public function declineRevisiSm($id)
+     public function declineRevisiGm($id)
+    {
+        $data = array(
+            'status_revisi' => 6,
+        );
+        $update = $this->db->update('tbl_revisi_so', $data, ['shipment_id' => $id]);
+        if ($update) {
+            $data = array(
+                'id_user_gm' => 14,
+                'tgl_approve_gm' => date('Y-m-d H:i:s'),
+                'status_approve_gm' => 0
+            );
+            $this->db->update('tbl_approve_revisi_so', $data, ['shipment_id' => $id]);
+            echo "<script>alert('Success Decline')</script>";
+            echo "<script>window.close();</script>";
+        } else {
+            echo "<script>alert('Failed Decline')</script>";
+            echo "<script>window.close();</script>";
+        }
+    }
+
+   // approve SM
+
+    public function approveRevisiSm($id)
+    {
+
+        $data = array(
+            'status_revisi' => 3,
+        );
+        $update = $this->db->update('tbl_revisi_so', $data, ['shipment_id' => $id]);
+        if ($update) {
+            $data = array(
+                'id_sm' => 32,
+                'tgl_approve_sm' => date('Y-m-d H:i:s'),
+                'status_approve_sm' => 1
+            );
+            $this->db->update('tbl_approve_revisi_so', $data, ['shipment_id' => $id]);
+            $link = "https://jobsheet.transtama.com/approval/detailRevisiGm/$id";
+
+            $pesan = "Hallo, Mohon Untuk dicek dan di Approve Pengajuan Revisi SO Melalu Link Berikut : $link";
+             //NO VEMA
+             $this->wa->pickup('+628111910711', "$pesan");
+            //Norman
+            $this->wa->pickup('+6285697780467', "$pesan");
+
+            echo "<script>alert('Success Approve')</script>";
+            echo "<script>window.close();</script>";
+        } else {
+            echo "<script>alert('Failed Approve')</script>";
+            echo "<script>window.close();</script>";
+        }
+    }
+   public function declineRevisiSm($id)
     {
         $data = array(
             'status_revisi' => 8,

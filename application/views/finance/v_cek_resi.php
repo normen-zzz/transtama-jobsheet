@@ -114,7 +114,7 @@ setlocale(LC_TIME, "id_ID.UTF8");
                                                                 } elseif ($invoice['status'] == 1) {
                                                                     echo 'On Invoice (Pending)';
                                                                 } elseif ($invoice['status'] == 2) {
-                                                                    echo 'On Invoice (Paid)';
+                                                                      echo 'On Invoice (Paid) '. date('d-m-Y',strtotime($invoice['payment_date'])) ;
                                                                 } elseif ($invoice['status'] == 3) {
                                                                     echo 'On Invoice (UnPaid)';
                                                                 }

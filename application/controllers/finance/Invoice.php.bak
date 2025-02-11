@@ -38,7 +38,7 @@ class Invoice extends CI_Controller
             $data['subtitle'] = 'Invoice';
             $this->breadcrumb->add_item($breadcrumb_items);
             $data['breadcrumb_bootstrap_style'] = $this->breadcrumb->generate();
-            $data['proforma'] = $this->cs->getProformaInvoiceFinal()->result_array();
+            // $data['proforma'] = $this->cs->getProformaInvoiceFinal()->result_array();
             $this->backend->display('finance/v_invoice', $data);
         } else {
              $cek_data = $this->cs->cekShipment($shipment_id)->row_array();
@@ -50,13 +50,63 @@ class Invoice extends CI_Controller
                 $data['subtitle'] = 'Invoice';
                 $this->breadcrumb->add_item($breadcrumb_items);
                 $data['breadcrumb_bootstrap_style'] = $this->breadcrumb->generate();
-                $data['proforma'] = $this->cs->getProformaInvoiceFinal()->result_array();
+                // $data['proforma'] = $this->cs->getProformaInvoiceFinal()->result_array();
                 $this->backend->display('finance/v_invoice', $data);
             } else {
                 $this->session->set_flashdata('messageAlert', $this->messageAlert('error', 'Shipment ID Not Found'));
                 redirect('finance/invoice/final');
             }
         }
+    }
+
+    public function getNoInvoice()
+    {
+        $no_invoice = $this->input->get('no_invoice');
+        
+
+        $data = [
+            'no_invoice' => $no_invoice,
+            
+        ];
+        echo json_encode($data);
+    }
+
+    function getDataInvoiceFinal()
+    {
+        $query  = "SELECT a.no_invoice,a.due_date,a.date,a.status,a.customer,a.customer_pickup,a.id_invoice, b.shipper FROM tbl_invoice AS a INNER JOIN tbl_shp_order AS b ON a.shipment_id = b.id";
+        $search = array('a.no_invoice','a.customer');
+        $where  = array('a.status' => 1);
+        $isWhere = null;
+        $group = 'GROUP BY a.no_invoice';
+        header('Content-Type: application/json');
+        echo $this->M_Datatables->get_tables_query($query, $search, $where, $isWhere,$group);
+    }
+
+    public function paidInvoice()
+    {
+        $no_invoice =  $this->input->post('no_invoice');
+        if ($no_invoice == NULL) {
+            $this->session->set_flashdata('messageAlert', $this->messageAlert('error', 'Please Select Minimun 1 Invoice'));
+            redirect('finance/Invoice/final');
+        }
+
+        $invoice = array();
+
+        for ($i = 0; $i < sizeof($no_invoice); $i++) {
+            $dataInvoice = $this->cs->getProformaInvoiceFinalDetail($no_invoice[$i])->row_array();
+            $invoice[] = $dataInvoice;
+        }
+
+        // var_dump($invoice);
+        
+        $data['title'] = 'Create Invoice';
+        $breadcrumb_items = [];
+        $data['subtitle'] = 'Create Invoice';
+        // $data['sub_header_page'] = 'exist';
+        $this->breadcrumb->add_item($breadcrumb_items);
+        $data['breadcrumb_bootstrap_style'] = $this->breadcrumb->generate();
+        $data['noInvoice'] = $invoice;
+        $this->backend->display('finance/v_paidInvoice', $data);
     }
     public function edit($id_invoice, $no_invoice)
     {
@@ -126,6 +176,23 @@ class Invoice extends CI_Controller
             redirect('finance/invoice/final');
         }
     }
+
+    public function bulkPaid()
+    {
+
+        $no_invoice = $this->input->post('no_invoice');
+
+        for ($i = 0; $i < sizeof($no_invoice); $i++) {
+            $data = array(
+                'payment_date' => $this->input->post('datePaid'),
+                'status' => 2
+            );
+            $update = $this->db->update('tbl_invoice', $data, ['no_invoice' => $no_invoice[$i]]);
+        }
+
+        $this->session->set_flashdata('messageAlert', $this->messageAlert('success', 'Success Paid'));
+        redirect('finance/invoice/final');
+    }
 	public function editPaid()
     {
         $data = array(
@@ -171,7 +238,7 @@ class Invoice extends CI_Controller
         $update = $this->db->update('tbl_invoice', $data, ['no_invoice' => $this->input->post('no_invoice')]);
         if ($update) {
             $this->session->set_flashdata('messageAlert', $this->messageAlert('success', 'Success Paid'));
-            redirect('finance/invoice/final');
+            redirect('finance/invoice/invoicePaid');
         } else {
             $this->session->set_flashdata('messageAlert', $this->messageAlert('error', 'Failed'));
             redirect('finance/invoice/invoicePaid');
@@ -242,11 +309,12 @@ class Invoice extends CI_Controller
     }
      public function approve($no_invoice, $id_invoice, $total_amount)
     {
-        $update = $this->db->update('tbl_invoice',  ['status' => 1, 'total_invoice' => decrypt_url($total_amount)], ['no_invoice' => $no_invoice]);
+        // $update = $this->db->update('tbl_invoice',  ['status' => 1, 'total_invoice' => decrypt_url($total_amount)], ['no_invoice' => $no_invoice],['invoice_at' => date('Y-m-d H:i:s')] );
+        $update = $this->db->update('tbl_invoice',  ['status' => 1, 'total_invoice' => decrypt_url($total_amount)], ['no_invoice' => $no_invoice] );
         if ($update) {
             $data = array(
                 'no_invoice' => $no_invoice,
-                'id_user' => $this->session->userdata('id_user')
+                'id_user' => $this->session->userdata('id_user'),
             );
             $this->db->insert('tbl_approve_invoice', $data);
             $this->session->set_flashdata('messageAlert', $this->messageAlert('success', 'Success'));
@@ -274,6 +342,7 @@ class Invoice extends CI_Controller
         $total_invoice = $this->input->post('total_invoice');
         $invoice = $this->input->post('invoice');
         $ppn = $this->input->post('ppn');
+		 $percent_ppn =  $this->input->post('percent_ppn');
         $pph = $this->input->post('pph');
         $is_ppn = $this->input->post('is_ppn');
         $is_pph = $this->input->post('is_pph');
@@ -291,7 +360,7 @@ class Invoice extends CI_Controller
         if ($is_ppn != 1) {
             $ppn = 0;
         } else {
-            $ppn =  0.011 * $invoice;
+           $ppn =    $invoice * ($percent_ppn / 100);
         }
         if ($is_pph != 1) {
             $pph = 0;
@@ -330,6 +399,7 @@ class Invoice extends CI_Controller
             'total_invoice' => $total_invoice,
             'invoice' => $invoice,
             'ppn' => $ppn,
+			'percent_ppn' => $percent_ppn,
             'pph' => $pph,
             'is_ppn' => $is_ppn,
             'is_pph' => $is_pph,
@@ -361,6 +431,7 @@ class Invoice extends CI_Controller
         $total_invoice = $this->input->post('total_invoice');
         $invoice = $this->input->post('invoice');
         $ppn = $this->input->post('ppn');
+		$percent_ppn =  $this->input->post('percent_ppn');
         $pph = $this->input->post('pph');
         $is_ppn = $this->input->post('is_ppn');
         $is_pph = $this->input->post('is_pph');
@@ -373,24 +444,54 @@ class Invoice extends CI_Controller
         $shipment_id =  $this->input->post('shipment_id');
         $note_cs = $this->input->post('note_cs');
 		  $so_note = $this->input->post('so_note');
+		   $no_do = $this->input->post('no_do');
+          $id_berat = $this->input->post('id_berat');
+		  $remarks_do = $this->input->post('remarks_do');
         // KALO DIA ADA PPN DAN PPH
         if ($is_ppn != 1) {
             $ppn = 0;
         } else {
-            $ppn =  0.011 * $invoice;
+           $ppn =    $invoice * ($percent_ppn / 100);
         }
         if ($is_pph != 1) {
             $pph = 0;
         } else {
             $pph = 0.02 * $invoice;
         }
-        for ($i = 0; $i < sizeof($shipment_id); $i++) {
-            $data = array(
-                'note_cs' => $note_cs[$i],
-				 'so_note' => $so_note[$i],
-                // 'pu_moda' => $pu_muda[$i],
+        if (isset($so_note) ) {
+            for ($i = 0; $i < sizeof($shipment_id); $i++) {
+                $data = array(
+                    
+                    'so_note' => $so_note[$i],
+                    // 'pu_moda' => $pu_muda[$i],
+                );
+                $this->db->update('tbl_shp_order', $data, ['id' => $shipment_id[$i]]);
+            }
+        }
+
+        if (isset($note_cs) ) {
+            for ($i = 0; $i < sizeof($shipment_id); $i++) {
+                $data = array(
+                    'note_cs' => $note_cs[$i],
+                    
+                    // 'pu_moda' => $pu_muda[$i],
+                );
+                $this->db->update('tbl_shp_order', $data, ['id' => $shipment_id[$i]]);
+            }
+        }
+        
+        for ($k = 0; $k < sizeof($id_berat); $k++) {
+            $data_do = array(
+                'no_do' => $no_do[$k],
+
             );
-            $this->db->update('tbl_shp_order', $data, ['id' => $shipment_id[$i]]);
+            $this->db->update('tbl_no_do', $data_do, ['id_berat' => $id_berat[$k]]);
+			$remarks = $this->db->query('SELECT * FROM remarks_do WHERE id_do = ' . $id_berat[$k]);
+            if ($remarks->num_rows() > 0) {
+               $this->db->update('remarks_do', ['remarks' => $remarks_do[$k]], ['id_do' => $id_berat[$k]]);
+            } else{
+                $this->db->insert('remarks_do', ['remarks' => $remarks_do[$k], 'id_do' => $id_berat[$k],'created_at' => date('Y-m-d H:i:s'),'created_by' => $this->session->userdata('id_user')]);
+            }
         }
         $data = array(
 			'date' => $date,

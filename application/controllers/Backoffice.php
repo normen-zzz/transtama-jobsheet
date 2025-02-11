@@ -8,7 +8,6 @@ class Backoffice extends CI_Controller
         parent::__construct();
         $this->load->library('form_validation');
     }
-    #[\ReturnTypeWillChange]
     public function index()
     {
         $this->form_validation->set_rules('username', 'Username', 'trim|required');
@@ -21,7 +20,7 @@ class Backoffice extends CI_Controller
         }
     }
 
-    private function _login()
+     private function _login()
     {
         $username = $this->security->xss_clean(trim($this->input->post('username')));
         $password = trim($this->input->post('password'));
@@ -56,8 +55,6 @@ class Backoffice extends CI_Controller
                     }
                 }
                 else{
-
-                
                 if (password_verify($password, $user['password'])) {
                     $data = [
                         'username' => $user['username'],
@@ -86,7 +83,7 @@ class Backoffice extends CI_Controller
                     $this->session->set_flashdata('messageAlert', $this->messageAlert('error', 'Wrong Password'));
                     redirect('backoffice');
                 }
-            }
+            } 
             } else {
                 $this->session->set_flashdata('messageAlert', $this->messageAlert('error', 'Account not active'));
                 redirect('backoffice');
@@ -100,7 +97,7 @@ class Backoffice extends CI_Controller
     public function logout()
     {
         $id_user = $this->session->userdata('id_user');
-        // $this->db->update('tb_user', ['status_login' => 0], ['id_user' => $id_user]);
+        $this->db->update('tb_user', ['status_login' => 0], ['id_user' => $id_user]);
         $this->session->unset_userdata('email');
         $this->session->unset_userdata('id_role');
         $this->session->unset_userdata('id_fakultas');

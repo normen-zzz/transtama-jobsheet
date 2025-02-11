@@ -89,14 +89,7 @@
                                 <div class="mr-auto">
 
                                     <div class="d-inline-block align-items-center">
-                                        <?php if ($invoice[0]['status'] == 0) {
-
-                                        ?>
-                                            <a href="<?= base_url('Apexternal/approveCs/' . $this->uri->segment(3) . '/' . $this->uri->segment(4)) ?>" class="btn text-light" style="background-color: #9c223b;">
-                                                Approve</a>
-                                        <?php } else {
-                                            echo 'Approved';
-                                        } ?>
+                                        
                                     </div>
                                 </div>
                             </div>
@@ -350,6 +343,14 @@
                                                     <span class="label label-xl label-light label-inline my-lg-0 my-2 text-dark-50 font-weight-bolder">
                                                         <?= rupiah($sub_total_hd_daerah + $inv['other']) ?>
                                                     </span>
+													<?php if ($invoice[0]['status'] == 0) {
+
+                                        ?>
+                                            <a href="<?= base_url('Apexternal/approveCs/' . $this->uri->segment(3) . '/' . $this->uri->segment(4)) ?>" class="btn text-light" style="background-color: #9c223b;">
+                                                Approve</a>
+                                        <?php } else {
+                                            echo 'Approved';
+                                        } ?>
                                                 </div>
                                             <?php  } ?>
                                         </div>

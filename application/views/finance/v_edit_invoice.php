@@ -53,7 +53,7 @@
                                                         <th>OTHERS</th>
                                                         <th>INSURANCE</th>
                                                         <th>SURCHARGE</th>
-                                                        <th>DISCOUNT</th>
+														<th>DISCOUNT</th>
                                                         <th>TOTAL AMOUNT</th>
                                                         <th>Action</th>
                                                     </tr>
@@ -75,7 +75,7 @@
 
 
                                                         $service =  $inv['service_name'];
-                                                        if ($service == 'Charter Service' || $service == 'Manpower Service' || $service == 'Multidrop Service' || $service == 'Warehouse Service') {
+                                                        if ($service == 'Charter Service' || $service == 'Manpower Service' || $service == 'Multidrop Service'|| $service == 'Warehouse Service') {
                                                             $packing = $inv['packing'];
                                                             $total_sales = ($inv['freight_kg'] + $packing +  $inv['special_freight'] +  $inv['others'] + $inv['surcharge'] + $inv['insurance']);
                                                         } else {
@@ -127,7 +127,7 @@
                                                                 <td><?= rupiah($inv['others']); ?></td>
                                                                 <td><?= rupiah($inv['insurance']); ?></td>
                                                                 <td><?= rupiah($inv['surcharge']); ?></td>
-                                                                <td><?= rupiah((($inv['freight_kg'] * $disc) * $inv['berat_js'])+ (($inv['special_freight'] * $disc) * $inv['berat_msr'])) ?></td>
+																<td><?= rupiah((($inv['freight_kg'] * $disc) * $inv['berat_js'])+ (($inv['special_freight'] * $disc) * $inv['berat_msr'])) ?></td>
 
                                                                 <td><?php
                                                                     echo rupiah($total_sales);
@@ -164,7 +164,7 @@
                                                                     <td><?= rupiah($inv['others']); ?></td>
                                                                     <td><?= rupiah($inv['insurance']); ?></td>
                                                                     <td><?= rupiah($inv['surcharge']); ?></td>
-                                                                    <td><?= rupiah((($inv['freight_kg'] * $disc) * $inv['berat_js'])+ (($inv['special_freight'] * $disc) * $inv['berat_msr'])) ?></td>
+																	<td><?= rupiah((($inv['freight_kg'] * $disc) * $inv['berat_js'])+ (($inv['special_freight'] * $disc) * $inv['berat_msr'])) ?></td>
 
                                                                     <td><?php
                                                                         echo rupiah($total_sales);
@@ -172,7 +172,7 @@
                                                                     <td> <a href="<?= base_url('finance/invoice/deleteInvoice/' . $inv['id_invoice'] . '/' . $inv['no_invoice'] . '/' . $inv['shipment_id']) ?>" class=" btn btn-sm text-light tombol-hapus" data-flashdata="<?= $inv['shipment_id'] ?>" style="background-color: #9c223b;">Delete</a></td>
 
                                                                 </tr>
-                                                            <?php $total_koli = (int)$total_koli + (int)$d['koli'];
+                                                            <?php $total_koli = $total_koli + $d['koli'];
                                                             } ?>
 
                                                         <?php  } ?>
@@ -201,16 +201,16 @@
                                                     <!-- kalo dia ada ppn -->
                                                     <?php if ($inv['is_ppn'] == 1) {
                                                     ?>
-                                                        <tr style="border:none">
+                                                       <tr style="border:none">
                                                             <td colspan="14">
                                                             </td>
                                                             <td class="font-weight-bold">
-                                                                PPN 1,1 %
+                                                                PPN <?= $inv['percent_ppn'] ?> %
                                                             </td>
                                                             <td>
                                                                 <?php
 
-                                                                $ppn =  $amount * 0.011;
+                                                                $ppn =  $amount * $inv['percent_ppn'] / 100;
                                                                 $pph =  $amount * 0.02;
                                                                 echo rupiah($ppn);
                                                                 ?>
@@ -267,8 +267,9 @@
                             <div class="col-md-4">
                                 <?php
                                 $f = new NumberFormatter('en', NumberFormatter::SPELLOUT);
-                                $terbilang = $f->format($total_amount) . ' Rupiahs';
+                                $terbilang = $f->format(round($total_amount)) . ' Rupiahs';
                                 $terbilang = ucwords($terbilang);
+								
                                 ?>
                                 <label for="pic" class="font-weight-bold">Customer</label>
                                 <input type="text" class="form-control" name="terbilang" hidden value="<?= $terbilang ?>">
@@ -277,6 +278,10 @@
                                 <input type="text" class="form-control" name="pph" hidden value="<?= $pph ?>">
                                 <input type="text" class="form-control" name="total_invoice" hidden value="<?= $total_amount ?>">
                                 <input type="text" name="shipper" value="<?= $inv['customer'] ?>" class="form-control">
+                            </div>
+							<div class="col-md-3">
+                                <label for="percent_ppn" class="font-weight-bold">ppn (%)</label>
+                                <input type="number" name="percent_ppn" class="form-control" step="0.1" min="1.1" max="100.0" value="<?= $inv['percent_ppn'] ?>">
                             </div>
                             <div class="col-md-5">
                                 <label for="pic" class="font-weight-bold">Address</label>
@@ -292,7 +297,7 @@
                                 <input type="no_invoice" name="no_invoice" hidden value="<?= $inv['no_invoice'] ?>" class="form-control">
                                 <input type="text" name="id_invoice" hidden value="<?= $inv['id_invoice'] ?>" class="form-control">
                             </div>
-                            <div class="col-md-3">
+							<div class="col-md-3">
                                 <label for="date" class="font-weight-bold">Date</label>
                                 <input type="date" class="form-control" name="date" value="<?= $inv['date'] ?>" required>
 

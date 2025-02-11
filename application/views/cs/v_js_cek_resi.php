@@ -285,7 +285,7 @@
                                                     <!--berart_js = weight js/msr-->
                                                     <!--berat_msr= special_freight-->
                                                     <?php
-
+                                                   
 
                                                     $total_sales = getTotalSales($msr['id']);
                                                     ?>

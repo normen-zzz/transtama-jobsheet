@@ -1139,14 +1139,14 @@ class Report extends CI_Controller
         }
     }
 
-    public function soa()
+     public function soa()
     {
         $data['title'] = 'SOA';
         $breadcrumb_items = [];
         $data['subtitle'] = 'SOA';
         $this->breadcrumb->add_item($breadcrumb_items);
         $data['breadcrumb_bootstrap_style'] = $this->breadcrumb->generate();
-        $data['proforma'] = $this->cs->getSoa()->result_array();
+    
         $this->backend->display('finance/v_soa', $data);
     }
     public function soaFilter()
@@ -1164,7 +1164,7 @@ class Report extends CI_Controller
         $this->backend->display('finance/v_soa_filter', $data);
     }
 
-    public function Exportexcel($bulan = NULL, $tahun = NULL)
+   public function Exportexcel($bulan = NULL, $tahun = NULL)
     {
         $shipments = $this->cs->getInvoiceReport($bulan, $tahun)->result_array();
         $shipments_void = $this->cs->getInvoiceVoidReport($bulan, $tahun)->result_array();

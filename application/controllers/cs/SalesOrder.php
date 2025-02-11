@@ -23,6 +23,8 @@ class SalesOrder extends CI_Controller
         // $data['sub_header_page'] = 'exist';
         $this->breadcrumb->add_item($breadcrumb_items);
         $data['breadcrumb_bootstrap_style'] = $this->breadcrumb->generate();
+
+       
         $data['js'] = $this->cs->getJs()->result_array();
         // var_dump($data['js']);
         // die;
@@ -86,6 +88,48 @@ class SalesOrder extends CI_Controller
         $data['vendor_lengkap'] = $this->db->order_by('id_vendor', 'DESC')->get_where('tbl_vendor')->result_array();
         $this->backend->display('cs/v_js_detail', $data);
     }
+	
+	public function addCapitalCostCekResi()
+    {
+        $shipment_id = $this->input->post('shipment_id');
+        $vendor = $this->input->post('vendor');
+
+        $data = array(
+            'shipment_id' => $this->input->post('shipment_id'),
+            'flight_msu2' => $this->input->post('flight_smu2'),
+            'ra2' => $this->input->post('ra2'),
+            'packing2' => $this->input->post('packing2'),
+            'refund2' => $this->input->post('refund2'),
+            'specialrefund2' => $this->input->post('specialrefund2'),
+            'insurance2' => $this->input->post('insurance2'),
+            'surcharge2' => $this->input->post('surcharge2'),
+            'hand_cgk2' => $this->input->post('hand_cgk2'),
+            'hand_pickup2' => $this->input->post('hand_pickup2'),
+            'hd_daerah2' => $this->input->post('hd_daerah2'),
+            'pph2' => $this->input->post('pph2'),
+            'sdm2' => $this->input->post('sdm2'),
+            'others2' => $this->input->post('others2'),
+            'note' => $this->input->post('note'),
+            'id_vendor' => $vendor
+        );
+        $insert = $this->db->insert('tbl_modal', $data);
+        if ($insert) {
+            $data = array(
+                'id_vendor' => $vendor,
+                'shipment_id' => $this->input->post('shipment_id'),
+                'status' => 0,
+                'id_user' => $this->session->userdata('id_user')
+            );
+
+            $this->db->insert('tbl_invoice_ap', $data);
+            $this->session->set_flashdata('messageAlert', $this->messageAlert('success', 'Success'));
+            redirect('cs/Jobsheet/detailCekResi/' . $shipment_id);
+        } else {
+
+            $this->session->set_flashdata('messageAlert', $this->messageAlert('error', 'Failed'));
+            redirect('cs/Jobsheet/detailCekResi/' . $shipment_id);
+        }
+    }
 
     public function addCapitalCost()
     {
@@ -128,14 +172,13 @@ class SalesOrder extends CI_Controller
             redirect('cs/salesOrder/detail/' . $shipment_id);
         }
     }
-
-    public function addCapitalCostCekResi()
+	
+	public function editCapitalCostCekResi()
     {
         $shipment_id = $this->input->post('shipment_id');
         $vendor = $this->input->post('vendor');
-
+        $vendor_awal = $this->input->post('id_vendor_awal');
         $data = array(
-            'shipment_id' => $this->input->post('shipment_id'),
             'flight_msu2' => $this->input->post('flight_smu2'),
             'ra2' => $this->input->post('ra2'),
             'packing2' => $this->input->post('packing2'),
@@ -152,16 +195,18 @@ class SalesOrder extends CI_Controller
             'note' => $this->input->post('note'),
             'id_vendor' => $vendor
         );
-        $insert = $this->db->insert('tbl_modal', $data);
-        if ($insert) {
+        $update = $this->db->update('tbl_modal', $data, ['id_modal' => $this->input->post('id_modal')]);
+        if ($update) {
             $data = array(
                 'id_vendor' => $vendor,
-                'shipment_id' => $this->input->post('shipment_id'),
-                'status' => 0,
                 'id_user' => $this->session->userdata('id_user')
             );
 
-            $this->db->insert('tbl_invoice_ap', $data);
+            $this->db->update('tbl_invoice_ap', $data, array('id_vendor' => $vendor_awal, 'shipment_id' => $shipment_id));
+
+
+
+            // log_aktifitas('update', 'tb_modal');
             $this->session->set_flashdata('messageAlert', $this->messageAlert('success', 'Success'));
             redirect('cs/Jobsheet/detailCekResi/' . $shipment_id);
         } else {
@@ -213,52 +258,8 @@ class SalesOrder extends CI_Controller
             redirect('cs/salesOrder/detail/' . $shipment_id);
         }
     }
-
-    public function editCapitalCostCekResi()
-    {
-        $shipment_id = $this->input->post('shipment_id');
-        $vendor = $this->input->post('vendor');
-        $vendor_awal = $this->input->post('id_vendor_awal');
-        $data = array(
-            'flight_msu2' => $this->input->post('flight_smu2'),
-            'ra2' => $this->input->post('ra2'),
-            'packing2' => $this->input->post('packing2'),
-            'refund2' => $this->input->post('refund2'),
-            'specialrefund2' => $this->input->post('specialrefund2'),
-            'insurance2' => $this->input->post('insurance2'),
-            'surcharge2' => $this->input->post('surcharge2'),
-            'hand_cgk2' => $this->input->post('hand_cgk2'),
-            'hand_pickup2' => $this->input->post('hand_pickup2'),
-            'hd_daerah2' => $this->input->post('hd_daerah2'),
-            'pph2' => $this->input->post('pph2'),
-            'sdm2' => $this->input->post('sdm2'),
-            'others2' => $this->input->post('others2'),
-            'note' => $this->input->post('note'),
-            'id_vendor' => $vendor
-        );
-        $update = $this->db->update('tbl_modal', $data, ['id_modal' => $this->input->post('id_modal')]);
-        if ($update) {
-            $data = array(
-                'id_vendor' => $vendor,
-                'id_user' => $this->session->userdata('id_user')
-            );
-
-            $this->db->update('tbl_invoice_ap', $data, array('id_vendor' => $vendor_awal, 'shipment_id' => $shipment_id));
-
-
-
-            // log_aktifitas('update', 'tb_modal');
-            $this->session->set_flashdata('messageAlert', $this->messageAlert('success', 'Success'));
-            redirect('cs/Jobsheet/detailCekResi/' . $shipment_id);
-        } else {
-
-            $this->session->set_flashdata('messageAlert', $this->messageAlert('error', 'Failed'));
-            redirect('cs/Jobsheet/detailCekResi/' . $shipment_id);
-        }
-    }
-
-
-    public function updateso()
+	
+	public function updateSoCekResi()
     {
 
         $id_do = $this->input->post('id_do');
@@ -277,6 +278,7 @@ class SalesOrder extends CI_Controller
         }
 
         $shipment_id = $this->input->post('id');
+        $dataSebelum = $this->db->query('SELECT no_flight,no_smu,berat_js,weight,berat_msr FROM tbl_shp_order WHERE id = ' . $shipment_id . ' ')->row_array();
         $data = array(
             'no_flight' => $this->input->post('no_flight'),
             'no_smu' => $this->input->post('no_smu'),
@@ -284,20 +286,45 @@ class SalesOrder extends CI_Controller
             'weight' => $total_weight,
             'berat_msr' => $this->input->post('berat_msr'),
         );
-        $insert = $this->db->update('tbl_shp_order', $data, ['id' => $this->input->post('id')]);
+        $dataHistoryFrom = [
+            'shipment_id' => $shipment_id,
+            'as' => 0,
+            'no_flight' => $dataSebelum['no_flight'],
+            'no_smu' => $dataSebelum['no_smu'],
+            'berat_js' => $dataSebelum['berat_js'],
+            'weight' => $dataSebelum['weight'],
+            'berat_msr' => $dataSebelum['berat_msr'],
+            'created_by' => $this->session->userdata('id_user')
+        ];
 
-        if ($insert) {
+        $insertHistoryFrom = $this->db->insert('history_beratjs', $dataHistoryFrom);
+        $insert = $this->db->update('tbl_shp_order', $data, ['id' => $this->input->post('id')]);
+        $dataHistoryTo = [
+            'shipment_id' => $shipment_id,
+            'as' => 1,
+            'no_flight' => $this->input->post('no_flight'),
+            'no_smu' => $this->input->post('no_smu'),
+            'berat_js' => $total_weight,
+            'weight' => $total_weight,
+            'berat_msr' => $this->input->post('berat_msr'),
+            'created_by' => $this->session->userdata('id_user')
+        ];
+        $insertHistoryTo = $this->db->insert('history_beratjs', $dataHistoryTo);
+
+
+        if ($insert && $insertHistoryFrom && $insertHistoryTo) {
             // log_aktifitas('update', 'tbl_shp_order');
             $this->session->set_flashdata('messageAlert', $this->messageAlert('success', 'Success'));
-            redirect('cs/salesOrder/detail/' . $shipment_id);
+            redirect('cs/Jobsheet/detailCekResi/' . $shipment_id);
         } else {
 
             $this->session->set_flashdata('messageAlert', $this->messageAlert('error', 'Failed'));
-            redirect('cs/salesOrder/detail/' . $shipment_id);
+            redirect('cs/Jobsheet/detailCekResi/' . $shipment_id);
         }
     }
 
-    public function updateSoCekResi()
+
+   public function updateso()
     {
 
         $id_do = $this->input->post('id_do');
@@ -316,6 +343,7 @@ class SalesOrder extends CI_Controller
         }
 
         $shipment_id = $this->input->post('id');
+        $dataSebelum = $this->db->query('SELECT no_flight,no_smu,berat_js,weight,berat_msr FROM tbl_shp_order WHERE id = ' . $shipment_id . ' ')->row_array();
         $data = array(
             'no_flight' => $this->input->post('no_flight'),
             'no_smu' => $this->input->post('no_smu'),
@@ -323,16 +351,46 @@ class SalesOrder extends CI_Controller
             'weight' => $total_weight,
             'berat_msr' => $this->input->post('berat_msr'),
         );
-        $insert = $this->db->update('tbl_shp_order', $data, ['id' => $this->input->post('id')]);
 
-        if ($insert) {
+
+
+
+        $dataHistoryFrom = [
+            'shipment_id' => $shipment_id,
+            'as' => 0,
+            'no_flight' => $dataSebelum['no_flight'],
+            'no_smu' => $dataSebelum['no_smu'],
+            'berat_js' => $dataSebelum['berat_js'],
+            'weight' => $dataSebelum['weight'],
+            'berat_msr' => $dataSebelum['berat_msr'],
+            'created_by' => $this->session->userdata('id_user')
+        ];
+
+        $insertHistoryFrom = $this->db->insert('history_beratjs', $dataHistoryFrom);
+        $insert = $this->db->update('tbl_shp_order', $data, ['id' => $this->input->post('id')]);
+        $dataHistoryTo = [
+            'shipment_id' => $shipment_id,
+            'as' => 1,
+            'no_flight' => $this->input->post('no_flight'),
+            'no_smu' => $this->input->post('no_smu'),
+            'berat_js' => $total_weight,
+            'weight' => $total_weight,
+            'berat_msr' => $this->input->post('berat_msr'),
+            'created_by' => $this->session->userdata('id_user')
+        ];
+        $insertHistoryTo = $this->db->insert('history_beratjs', $dataHistoryTo);
+
+
+        if ($insert && $insertHistoryFrom && $insertHistoryTo) {
+
+
             // log_aktifitas('update', 'tbl_shp_order');
             $this->session->set_flashdata('messageAlert', $this->messageAlert('success', 'Success'));
-            redirect('cs/Jobsheet/detailCekResi/' . $shipment_id);
+            redirect('cs/salesOrder/detail/' . $shipment_id);
         } else {
 
             $this->session->set_flashdata('messageAlert', $this->messageAlert('error', 'Failed'));
-            redirect('cs/Jobsheet/detailCekResi/' . $shipment_id);
+            redirect('cs/salesOrder/detail/' . $shipment_id);
         }
     }
 
@@ -374,6 +432,30 @@ class SalesOrder extends CI_Controller
     //         redirect('cs/salesOrder/detail/' . $shipment_id);
     //     }
     // }
+	
+	public function updateSalesCostCekResi()
+    {
+        $shipment_id = $this->input->post('id');
+        $data = array(
+            'freight_kg' => $this->input->post('freight_kg'),
+            'special_freight' => $this->input->post('special_freight'),
+            'packing' => $this->input->post('packing'),
+            'others' => $this->input->post('others'),
+            'surcharge' => $this->input->post('surcharge'),
+            'insurance' => $this->input->post('insurance'),
+        );
+        $insert = $this->db->update('tbl_shp_order', $data, ['id' => $this->input->post('id')]);
+
+        if ($insert) {
+            // log_aktifitas('update', 'tbl_shp_order');
+            $this->session->set_flashdata('messageAlert', $this->messageAlert('success', 'Success'));
+            redirect('cs/Jobsheet/detailCekResi/' . $shipment_id);
+        } else {
+
+            $this->session->set_flashdata('messageAlert', $this->messageAlert('error', 'Failed'));
+            redirect('cs/Jobsheet/detailCekResi/' . $shipment_id);
+        }
+    }
     public function updateSalesCost()
     {
         $shipment_id = $this->input->post('id');
@@ -395,30 +477,6 @@ class SalesOrder extends CI_Controller
 
             $this->session->set_flashdata('messageAlert', $this->messageAlert('error', 'Failed'));
             redirect('cs/salesOrder/detail/' . $shipment_id);
-        }
-    }
-
-    public function updateSalesCostCekResi()
-    {
-        $shipment_id = $this->input->post('id');
-        $data = array(
-            'freight_kg' => $this->input->post('freight_kg'),
-            'special_freight' => $this->input->post('special_freight'),
-            'packing' => $this->input->post('packing'),
-            'others' => $this->input->post('others'),
-            'surcharge' => $this->input->post('surcharge'),
-            'insurance' => $this->input->post('insurance'),
-        );
-        $insert = $this->db->update('tbl_shp_order', $data, ['id' => $this->input->post('id')]);
-
-        if ($insert) {
-            // log_aktifitas('update', 'tbl_shp_order');
-            $this->session->set_flashdata('messageAlert', $this->messageAlert('success', 'Success'));
-            redirect('cs/Jobsheet/detailCekResi/' . $shipment_id);
-        } else {
-
-            $this->session->set_flashdata('messageAlert', $this->messageAlert('error', 'Failed'));
-            redirect('cs/Jobsheet/detailCekResi/' . $shipment_id);
         }
     }
     public function approve($id_request)
@@ -596,6 +654,26 @@ class SalesOrder extends CI_Controller
             redirect('cs/salesOrder/');
         }
     }
+	
+	public function editVendorCekResi()
+    {
+        $shipment_id = $this->input->post('shipment_id');
+        $data = array(
+            'id_vendor' => $this->input->post('vendor'),
+        );
+        $insert = $this->db->update('tbl_invoice_ap', $data, ['id_invoice' => $this->input->post('id_invoice')]);
+        // var_dump($insert);
+        // die;
+        if ($insert) {
+            // log_aktifitas('update', 'tb_modal');
+            $this->session->set_flashdata('messageAlert', $this->messageAlert('success', 'Success'));
+            redirect('cs/jobsheet/detailCekResi/' . $shipment_id);
+        } else {
+
+            $this->session->set_flashdata('messageAlert', $this->messageAlert('error', 'Failed'));
+            redirect('cs/jobsheet/detailCekResi/' . $shipment_id);
+        }
+    }
 
     public function editVendor()
     {
@@ -614,26 +692,6 @@ class SalesOrder extends CI_Controller
 
             $this->session->set_flashdata('messageAlert', $this->messageAlert('error', 'Failed'));
             redirect('cs/salesOrder/detail/' . $shipment_id);
-        }
-    }
-
-    public function editVendorCekResi()
-    {
-        $shipment_id = $this->input->post('shipment_id');
-        $data = array(
-            'id_vendor' => $this->input->post('vendor'),
-        );
-        $insert = $this->db->update('tbl_invoice_ap', $data, ['id_invoice' => $this->input->post('id_invoice')]);
-        // var_dump($insert);
-        // die;
-        if ($insert) {
-            // log_aktifitas('update', 'tb_modal');
-            $this->session->set_flashdata('messageAlert', $this->messageAlert('success', 'Success'));
-            redirect('cs/jobsheet/detailCekResi/' . $shipment_id);
-        } else {
-
-            $this->session->set_flashdata('messageAlert', $this->messageAlert('error', 'Failed'));
-            redirect('cs/jobsheet/detailCekResi/' . $shipment_id);
         }
     }
 

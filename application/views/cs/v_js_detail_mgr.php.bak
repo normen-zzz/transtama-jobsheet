@@ -27,19 +27,11 @@
                                                     <th>SO Number</th>
                                                     <th>Customer</th>
                                                     <th>Consignee</th>
-                                                    <!-- <th>Destination</th> -->
                                                     <th>Service</th>
                                                     <th>Comm</th>
-                                                    <!-- <th>Shipper</th> -->
-                                                    <!-- <th>No. Flight</th>
-                                                    <th>No. SMU</th> -->
                                                     <th>Colly</th>
                                                     <th>Destination</th>
-                                                    <!-- <th>WEIGHT JS(Kg)</th> -->
-                                                    <!-- <th>Freight</th> -->
                                                     <th>Sales</th>
-                                                    <!-- <th>Status</th> -->
-                                                    <!-- <th>Note</th> -->
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -56,18 +48,10 @@
                                                             echo  $msr['service_name'];;
                                                         } ?></td>
                                                     <td><?= $msr['pu_commodity'] ?></td>
-                                                    <!-- <td><?= $msr['id_user'] ?></td> -->
-                                                    <!-- <td> <input type="text" class="form-control" value="<?= $msr['no_flight'] ?>"> </td>
-                                                    <td> <input type="text" class="form-control" value="<?= $msr['no_smu'] ?>"> </td> -->
-                                                    <!-- <td></td> -->
                                                     <td><?= $msr['koli'] ?></td>
                                                     <td><?= $msr['destination'] ?></td>
-                                                    <!-- <td><?= $msr['berat_msr'] ?></td> -->
-                                                    <!-- <td><?= $msr['berat_js'] ?></td> -->
-                                                    <!-- <td><?= rupiah($msr['freight_kg']) ?></td> -->
 
                                                     <td><?= $msr['nama_user'] ?></td>
-                                                    <!-- <td><?= $msr['pu_note'] ?></td> -->
                                                 </tr>
 
                                             </tbody>
@@ -91,11 +75,12 @@
                                     </div>
 
                                     <div class="table-responsive">
-                                        <form action="<?= base_url('cs/jobsheet/updateso') ?>" method="POST">
+                                        <form action="<?= base_url('cs/salesOrder/updateso') ?>" method="POST">
                                             <table class="table table-bordered" style="width:100%">
                                                 <thead>
                                                     <tr>
                                                         <th>NO DO</th>
+                                                        <th>NO PO/SO</th>
                                                         <th>Collie</th>
                                                         <th>Weight</th>
                                                         <!-- <th>Note</th> -->
@@ -110,13 +95,25 @@
                                                         <tr>
                                                             <td>
                                                                 <input type="text" disabled class="form-control" name="note_cs[]" value="<?= $do['no_do'] ?>">
+
                                                                 <input type="text" class="form-control" hidden name="id_do[]" value="<?= $do['id_berat'] ?>">
+                                                            </td>
+                                                            <td>
+                                                                <input type="text" disabled class="form-control" name="note_cs[]" value="<?= $do['no_so'] ?>">
                                                             </td>
                                                             <td>
                                                                 <input type="text" disabled class="form-control" name="collie[]" value="<?= $do['koli'] ?>">
                                                             </td>
-                                                            <td>
-                                                                <input type="text" class="form-control" name="weight[]" value="<?= $do['berat'] ?>">
+                                                             <td>
+                                                                <?php if ($invoice != NULL) { 
+                                                                    if ($invoice['status'] == 1 || $invoice['status'] == 2) {
+                                                                    ?>
+                                                                <input type="text" class="form-control" readonly name="weight[]" value="<?= $do['berat'] ?>">
+                                                                <?php } else{ ?>
+                                                                    <input type="text" class="form-control" name="weight[]" value="<?= $do['berat'] ?>">
+                                                                    <?php }} else { ?>
+																	<input type="text" class="form-control" name="weight[]" value="<?= $do['berat'] ?>">
+																	<?php } ?>
                                                             </td>
                                                         </tr>
                                                     <?php $total_berat += $do['berat'];
@@ -132,11 +129,11 @@
                                                         <th>No. SMU</th>
                                                         <th>WEIGHT JS/MSR</th>
                                                         <th>WEIGHT SPECIAL HD</th>
-
                                                         <!-- <th>Note</th> -->
                                                     </tr>
                                                 </thead>
                                                 <tbody>
+
                                                     <tr>
 
                                                         <td> <input type="text" class="form-control" placeholder="isi no flight" name="no_flight" value="<?= $msr['no_flight'] ?>"> </td>
@@ -144,28 +141,47 @@
                                                             <input type="text" class="form-control" hidden name="id" value="<?= $msr['id'] ?>">
                                                         </td>
                                                         <?php if ($get_do) {
+                                                            // kalo dia ada no do nya
                                                         ?>
-                                                            <td> <input type="text" class="form-control" name="berat_js" disabled value="<?= $total_berat ?>"> </td>
+                                                            <td> <input type="text" class="form-control" placeholder="isi no flight" name="berat_js" disabled value="<?= $total_berat ?>"> </td>
 
                                                         <?php    } else {
                                                         ?>
-                                                            <td> <input type="text" class="form-control" name="berat_js" value="<?= $msr['berat_js'] ?>"> </td>
-
-                                                        <?php } ?>
-                                                        <td> <input type="text" class="form-control" name="berat_msr" value="<?= $msr['berat_msr'] ?>"> </td>
-                                                    </tr>
+                                                        <?php if ($invoice != NULL) { 
+                                                                    if ($invoice['status'] == 1 || $invoice['status'] == 2) {
+                                                                    ?>
+                                                            <td> <input type="text" class="form-control" readonly placeholder="isi no flight" name="berat_js" value="<?= $msr['berat_js'] ?>"> </td>
+                                                            <?php } else { ?>
+                                                                <td> <input type="text" class="form-control" placeholder="isi no flight" name="berat_js" value="<?= $msr['berat_js'] ?>"> </td>
+                                                                <?php }} else { ?>
+                                                                <td> <input type="text" class="form-control" placeholder="isi no flight" name="berat_js" value="<?= $msr['berat_js'] ?>"> </td>
+                                                        <?php }} ?>
+                                                        <?php if ($invoice != NULL) { 
+                                                                    if ($invoice['status'] == 1 || $invoice['status'] == 2) {
+                                                                    ?>
+                                                        <td> <input type="text" class="form-control" readonly placeholder="isi no flight" name="berat_msr" value="<?= $msr['berat_msr'] ?>"> </td>
+                                                        <?php } else { ?>
+                                                            <td> <input type="text" class="form-control" placeholder="isi no flight" name="berat_msr" value="<?= $msr['berat_msr'] ?>"> </td>
+                                                            <?php }} else { ?>
+															 <td> <input type="text" class="form-control" placeholder="isi no flight" name="berat_msr" value="<?= $msr['berat_msr'] ?>"> </td>
+															
+															<?php } ?>
+															
+															</tr>
 
                                                 </tbody>
 
                                             </table>
-
-
+                                            <?php if ($invoice == NULL) { ?>
+                                               
                                             <button class="btn btn-success">Submit</button>
-
-                                            <!-- <?php if ($msr['status_so'] == 2) {
-                                                    ?>
-                                                <button class="btn btn-success">Submit</button>
-                                            <?php } ?> -->
+                                            <?php } else { 
+                                                 if ($invoice['status'] == 1 || $invoice['status'] == 2) {
+                                                ?>
+                                                 
+                                                 <?php } else { ?>
+                                                    <button class="btn btn-success">Submit</button>
+                                                <?php  } }?>
                                         </form>
                                     </div>
 
@@ -195,7 +211,7 @@
                                 <!-- /.box-header -->
                                 <div class="box-body">
                                     <div class="table-responsive">
-                                        <form action="<?= base_url('cs/jobsheet/updateSalesCost') ?>" method="POST">
+                                        <form action="<?= base_url('cs/salesOrder/updateSalesCost') ?>" method="POST">
                                             <table class="table table-bordered" style="width:100%">
                                                 <thead>
                                                     <tr>
@@ -206,7 +222,7 @@
                                                         <th>Others</th>
                                                         <th>Surcharge</th>
                                                         <th>Insurance</th>
-                                                        <th>Disc.</th>
+                                                        <th>Ter Discount</th>
                                                         <th>Cn</th>
                                                         <th>Special Cn</th>
                                                         <th>Action</th>
@@ -214,46 +230,28 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <!--berart js = weight js/msr-->
+                                                    <!--berart_js = weight js/msr-->
                                                     <!--berat_msr= special_freight-->
                                                     <?php
-                                                    $service =  $msr['service_name'];
-                                                    if ($service == 'Charter Service') {
-                                                        $packing = $msr['packing'];
-                                                        $total_sales = ($msr['freight_kg'] + $packing +  $msr['special_freight'] +  $msr['others'] + $msr['surcharge'] + $msr['insurance']);
-                                                    } else {
-                                                        $disc = $msr['disc'];
-                                                        // kalo gada disc
-                                                        if ($disc == 0) {
-                                                            $freight  = $msr['berat_js'] * $msr['freight_kg'];
-                                                            $special_freight  = $msr['berat_msr'] * $msr['special_freight'];
-                                                        } else {
-                                                            $freight_discount = $msr['freight_kg'] * $disc;
-                                                            $special_freight_discount = $msr['special_freight'] * $disc;
 
-                                                            $freight = $freight_discount * $msr['berat_js'];
-                                                            $special_freight  = $special_freight_discount * $msr['berat_msr'];
-                                                        }
-
-                                                        $packing = $msr['packing'];
-                                                        $total_sales = ($freight + $packing + $special_freight +  $msr['others'] + $msr['surcharge'] + $msr['insurance']);
-                                                        $total_sales = $total_sales;
-                                                    }
+                                                     $total_sales = getTotalSales($msr['id']);
                                                     ?>
                                                     <tr>
                                                         <td>
                                                             <i><b> Value</b></i>
                                                         </td>
                                                         <td>
-                                                            <?= rupiah($msr['freight_kg']) ?>
+                                                            <!-- <?= rupiah($msr['freight_kg']) ?> -->
+                                                            <input type="text" readonly class="form-control" name="freight_kg" value="<?= $msr['freight_kg'] ?>">
                                                         </td>
                                                         <td>
-                                                            <?= rupiah($msr['special_freight']) ?>
+                                                            <!-- <?= rupiah($msr['special_freight']) ?> -->
+                                                            <input type="text" class="form-control" name="special_freight" readonly value="<?= $msr['special_freight'] ?>">
                                                         </td>
                                                         <td> <input type="text" class="form-control" placeholder="isi no flight" name="packing" value="<?= $msr['packing'] ?>"> </td>
-                                                        <td> <input type="text" class="form-control" placeholder="isi no flight" name="others" value="<?= $msr['others'] ?>"> </td>
-                                                        <td> <input type="text" class="form-control" placeholder="isi no flight" name="surcharge" value="<?= $msr['surcharge'] ?>"> </td>
-                                                        <td> <input type="text" class="form-control" placeholder="isi no flight" name="insurance" value="<?= $msr['insurance'] ?>"> </td>
+                                                        <td> <input type="text" class="form-control" placeholder="isi no flight" readonly name="others" value="<?= $msr['others'] ?>"> </td>
+                                                        <td> <input type="text" class="form-control" placeholder="isi no flight" readonly name="surcharge" value="<?= $msr['surcharge'] ?>"> </td>
+                                                        <td> <input type="text" class="form-control" placeholder="isi no flight" readonly name="insurance" value="<?= $msr['insurance'] ?>"> </td>
                                                         <input type="text" class="form-control" hidden name="id" value="<?= $msr['id'] ?>">
                                                         <td>
                                                             <?= $msr['disc'] ?> / <?= $msr['disc'] * 100 ?> %
@@ -262,8 +260,9 @@
                                                             <?= $msr['cn'] ?> / <?= $msr['cn'] * 100 ?> %
                                                         </td>
                                                         <td>
-                                                            <?= $msr['specialcn'] ?>
+                                                            Rp. <?= $msr['specialcn'] ?>
                                                         </td>
+                                                        <td></td>
                                                     </tr>
                                                     <tr>
                                                         <td>
@@ -290,10 +289,7 @@
                                                 </table>
 
                                             </div>
-                                            <?php if ($msr['status_so'] == 2) {
-                                            ?>
-                                                <button class="btn btn-success">Submit</button>
-                                            <?php } ?>
+                                           <button class="btn btn-success">Submit</button>
                                         </form>
                                     </div>
 
@@ -322,17 +318,13 @@
                                 </div>
                                 <!-- /.box-header -->
                                 <div class="box-body">
-                                    <?php
-                                    if ($modal) {
-                                    } else {
-                                    ?>
-                                        <button type="button" class="btn btn btn-sm btn-xs align-middle text-light mb-2" data-toggle="modal" data-target="#modal-acc" style="background-color: #9c223b;">
-                                            <i class="fas fa-plus"></i>
-                                            Add Capital Cost
-                                        </button>
 
-                                    <?php  }
-                                    ?>
+                                    <button type="button" class="btn btn btn-sm btn-xs align-middle text-light mb-2" data-toggle="modal" data-target="#modal-acc" style="background-color: #9c223b;">
+                                        <i class="fas fa-plus"></i>
+                                        Add Capital Cost
+                                    </button>
+
+
 
                                     <div class="table-responsive">
                                         <table class="table table-bordered" style="width:100%">
@@ -352,90 +344,119 @@
                                                     <th>PPH %</th>
                                                     <th>SDM</th>
                                                     <th>Others</th>
+                                                    <th>Vendor/Agent</th>
                                                     <th>Action</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <?php foreach ($modal as $m) {
+                                                <?php
+                                                $flight_smu = 0;
+                                                $ra2 = 0;
+                                                $packing2 = 0;
+                                                $refund2 = 0;
+                                                $special_refund2 = 0;
+                                                $insurance2 = 0;
+                                                $surcharge2 = 0;
+                                                $handcgk2 = 0;
+                                                $handpickup2 = 0;
+                                                $pph2 = 0;
+                                                $sdm2 = 0;
+                                                $others2 = 0;
+
+                                                $total_cost = 0;
+                                                $hd_daerah2 = 0;
+                                                if ($modal) {
+                                                    foreach ($modal as $m) {
+                                                        $vendoragent = $this->db->get_where('tbl_vendor', array('id_vendor' => $m['id_vendor']))->row_array();
                                                 ?>
-                                                    <tr>
-                                                        <td> <i><b>Variabel</b></i> </td>
-                                                        <td><?= rupiah($m['flight_msu2']) ?></td>
-                                                        <td><?= rupiah($m['ra2']) ?></td>
-                                                        <td><?= rupiah($m['packing2']) ?></td>
-                                                        <td><?= $m['refund2'] ?> %</td>
-                                                        <td><?= 'Rp' . $m['specialrefund2'] ?></td>
-                                                        <td><?= rupiah($m['insurance2']) ?></td>
-                                                        <td><?= rupiah($m['surcharge2']) ?></td>
-                                                        <td><?= rupiah($m['hand_cgk2']) ?></td>
-                                                        <td><?= rupiah($m['hand_pickup2']) ?></td>
-                                                        <td><?= rupiah($m['hd_daerah2']) ?></td>
-                                                        <td><?= $m['pph2'] ?></td>
-                                                        <td><?= rupiah($m['sdm2']) ?></td>
-                                                        <td><?= rupiah($m['others2']) ?></td>
-                                                        <td>
-                                                            <?php
-                                                            $id_atasan = $this->session->userdata('id_atasan');
-                                                            // kalo dia atasan sales
-                                                            if ($id_atasan == 0 || $id_atasan == NULL) {
-                                                            ?>
-                                                                <button type="button" class="btn btn btn-sm btn-xs align-middle text-light mb-2" data-toggle="modal" data-target="#modal-acc-edit" style="background-color: #9c223b;">
+                                                        <tr>
+                                                            <td> <i><b>Variabel</b></i> </td>
+                                                            <td><?= rupiah($m['flight_msu2']) ?></td>
+                                                            <td><?= rupiah($m['ra2']) ?></td>
+                                                            <td><?= rupiah($m['packing2']) ?></td>
+                                                            <td><?= $m['refund2'] ?> / <?= $m['refund2'] / 100 ?></td>
+                                                            <td><?= rupiah($m['specialrefund2']) ?></td>
+                                                            <td><?= rupiah($m['insurance2']) ?></td>
+                                                            <td><?= rupiah($m['surcharge2']) ?></td>
+                                                            <td><?= rupiah($m['hand_cgk2']) ?></td>
+                                                            <td><?= rupiah($m['hand_pickup2']) ?></td>
+                                                            <td><?= rupiah($m['hd_daerah2']) ?></td>
+                                                            <td><?= $m['pph2'] ?></td>
+                                                            <td><?= rupiah($m['sdm2']) ?></td>
+                                                            <td><?= rupiah($m['others2']) ?></td>
+                                                            <td><?php if ($vendoragent != NULL) {
+                                                                    echo $vendoragent['nama_vendor'];
+                                                                }  ?></td>
+
+                                                            <td>
+                                                                <button type="button" class="btn btn btn-sm btn-xs align-middle text-light mb-2" data-toggle="modal" data-target="#modal-acc-edit<?= $m['id_modal']; ?>" style="background-color: #9c223b;">
                                                                     Edit
                                                                 </button>
-                                                            <?php  }
+                                                            </td>
+                                                        </tr>
+                                                        <?php
+                                                        if ($modal) {
+                                                            $refund = $m['refund2'] / 100;
+                                                            $pph = $m['pph2'] / 100;
+                                                            $service =  $msr['service_name'];
 
-                                                            ?>
-                                                        </td>
-                                                    </tr>
-                                                <?php } ?>
+                                                            $hd_daerah2 += $m['hd_daerah2'];
+                                                            $flight_smu += $m['flight_msu2'];
+                                                            $ra2 += $m['ra2'];
+                                                            $packing2 += $m['packing2'];
+                                                            $refund2 += $m['refund2'] / 100;
+                                                            $special_refund2 += $m['specialrefund2'];
+                                                            $insurance2 += $m['insurance2'];
+                                                            $surcharge2 += $m['surcharge2'];
+                                                            $handcgk2 += $m['hand_cgk2'];
+                                                            $handpickup2 += $m['hand_pickup2'];
+                                                            $pph2  += $m['pph2'];
+                                                            $sdm2 += $m['sdm2'];
+                                                            $others2 += $m['others2'];
+
+                                                            if ($service == 'Charter Service') {
+                                                                $total_cost += $m['flight_msu2'] + ($m['ra2']) + ($m['packing2']) +
+                                                                    ($total_sales * $refund) + $m['specialrefund2']  + $m['insurance2'] + $m['surcharge2'] + ($m['hand_cgk2']) +
+                                                                    ($m['hand_pickup2']) + ($m['hd_daerah2']) + ($total_sales * $pph) +
+                                                                    $m['sdm2'] + $m['others2'];
+                                                            } else {
+
+                                                                // sdm
+                                                                $sdm_biasa  = $msr['berat_js'] * $m['sdm2'];
+                                                                $sdm_special  = $msr['berat_msr'] * $m['sdm2'];
+                                                                $sdm = $sdm_biasa + $sdm_special;
+                                                                // ra
+                                                                $ra_biasa  = $msr['berat_js'] * $m['ra2'];
+                                                                $ra_special  = $msr['berat_msr'] * $m['ra2'];
+                                                                $ra = $ra_biasa + $ra_special;
+                                                                // packing
+                                                                $packing_biasa  = $msr['berat_js'] * $m['packing2'];
+                                                                $packing_special  = $msr['berat_msr'] * $m['packing2'];
+                                                                $packing = $packing_biasa + $packing_special;
+                                                                // hand cgk
+                                                                $hand_cgk_biasa  = $msr['berat_js'] * $m['hand_cgk2'];
+                                                                $hand_cgk_special  = $msr['berat_msr'] * $m['hand_cgk2'];
+                                                                $hand_cgk = $hand_cgk_biasa + $hand_cgk_special;
+                                                                // hand pickup
+                                                                $hand_pickup_biasa  = $msr['berat_js'] * $m['hand_pickup2'];
+                                                                $hand_pickup_special  = $msr['berat_msr'] * $m['hand_pickup2'];
+                                                                $hand_pickup = $hand_pickup_biasa + $hand_pickup_special;
+
+                                                                $total_cost += $m['flight_msu2'] + $ra + $packing +
+                                                                    ($total_sales * $refund) + $m['specialrefund2'] + $m['insurance2'] + $m['surcharge2'] + $hand_cgk +
+                                                                    $hand_pickup + $m['hd_daerah2'] + ($total_sales * $pph) +
+                                                                    $sdm + $m['others2'];
+                                                            }
+                                                        } else {
+                                                            $total_cost = 0;
+                                                        }
+
+                                                        ?>
+                                                <?php }
+                                                } ?>
 
 
-                                                <?php
-                                                if ($modal) {
-                                                    $refund = $m['refund2'] / 100;
-                                                    $pph = $m['pph2'] / 100;
-                                                    $service =  $msr['service_name'];
 
-                                                    if ($service == 'Charter Service') {
-                                                        $total_cost = $m['flight_msu2'] + ($m['ra2']) + ($m['packing2']) +
-                                                            ($total_sales * $refund) + ($m['specialrefund2'] * $msr['berat_js']) + ($m['specialrefund2'] * $msr['berat_msr'])  + $m['insurance2'] + $m['surcharge2'] + ($m['hand_cgk2']) +
-                                                            ($m['hand_pickup2']) + ($m['hd_daerah2']) + ($total_sales * $pph) +
-                                                            $m['sdm2'] + $m['others2'];
-                                                    } else {
-                                                        // sdm
-                                                        $sdm_biasa  = $msr['berat_js'] * $m['sdm2'];
-                                                        $sdm_special  = $msr['berat_msr'] * $m['sdm2'];
-                                                        $sdm = $sdm_biasa + $sdm_special;
-
-                                                        // ra
-                                                        $ra_biasa  = $msr['berat_js'] * $m['ra2'];
-                                                        $ra_special  = $msr['berat_msr'] * $m['ra2'];
-                                                        $ra = $ra_biasa + $ra_special;
-                                                        // packing
-                                                        $packing_biasa  = $msr['berat_js'] * $m['packing2'];
-                                                        $packing_special  = $msr['berat_msr'] * $m['packing2'];
-                                                        $packing = $packing_biasa + $packing_special;
-
-                                                        // hand cgk
-                                                        $hand_cgk_biasa  = $msr['berat_js'] * $m['hand_cgk2'];
-                                                        $hand_cgk_special  = $msr['berat_msr'] * $m['hand_cgk2'];
-                                                        $hand_cgk = $hand_cgk_biasa + $hand_cgk_special;
-
-                                                        // hand pickup
-                                                        $hand_pickup_biasa  = $msr['berat_js'] * $m['hand_pickup2'];
-                                                        $hand_pickup_special  = $msr['berat_msr'] * $m['hand_pickup2'];
-                                                        $hand_pickup = $hand_pickup_biasa + $hand_pickup_special;
-
-                                                        $total_cost = $m['flight_msu2'] + $ra + $packing +
-                                                            ($total_sales * $refund) + ($m['specialrefund2'] * $msr['berat_js']) + ($m['specialrefund2'] * $msr['berat_msr'])  + $m['insurance2'] + $m['surcharge2'] + ($hand_cgk) +
-                                                            ($hand_pickup) + ($m['hd_daerah2']) + ($total_sales * $pph) +
-                                                            $sdm + $m['others2'];
-                                                    }
-                                                } else {
-                                                    $total_cost = 0;
-                                                }
-
-                                                ?>
 
                                                 <?php if ($modal) {
                                                 ?>
@@ -445,76 +466,89 @@
                                                             <i><b> Accumulation</b></i>
                                                         </td>
                                                         <td>
-                                                            <?= rupiah($m['flight_msu2']) ?>
+                                                            <?= rupiah($flight_smu) ?>
                                                         </td>
                                                         <td>
                                                             <?php
                                                             if ($service == 'Charter Service') {
-                                                                echo  rupiah($m['ra2']);
+                                                                echo  rupiah($ra2);
                                                             } else {
-                                                                echo rupiah($m['ra2'] * $msr['berat_js']);
+                                                                // ra
+                                                                $ra_biasa  = $msr['berat_js'] * $ra2;
+                                                                $ra_special  = $msr['berat_msr'] * $ra2;
+                                                                $ra = $ra_biasa + $ra_special;
+                                                                echo rupiah($ra);
                                                             }
                                                             ?>
                                                         </td>
                                                         <td>
                                                             <?php
                                                             if ($service == 'Charter Service') {
-                                                                echo  rupiah($m['packing2']);
+                                                                echo  rupiah($packing2);
                                                             } else {
-                                                                echo rupiah($m['packing2'] * $msr['berat_js']);
+                                                                $packing_biasa  = $msr['berat_js'] * $packing2;
+                                                                $packing_special  = $msr['berat_msr'] * $packing2;
+                                                                $packing = $packing_biasa + $packing_special;
+                                                                echo rupiah($packing);
                                                             }
                                                             ?>
                                                         </td>
                                                         <td>
-                                                            <?= rupiah($total_sales * $refund) ?>
+                                                            <?= rupiah($total_sales * $refund2) ?>
                                                         </td>
                                                         <td>
-                                                            <?= ($m['specialrefund2'] * $msr['berat_js']) + ($m['specialrefund2'] * $msr['berat_msr']) ?>
+                                                            <?= rupiah($special_refund2) ?>
                                                         </td>
                                                         <td>
-                                                            <?= rupiah($m['insurance2']) ?>
+                                                            <?= rupiah($insurance2) ?>
                                                         </td>
                                                         <td>
-                                                            <?= rupiah($m['surcharge2']) ?>
+                                                            <?= rupiah($surcharge2) ?>
                                                         </td>
                                                         <td>
                                                             <?php
                                                             if ($service == 'Charter Service') {
-                                                                echo  rupiah($m['hand_cgk2']);
+                                                                echo  rupiah($handcgk2);
                                                             } else {
-                                                                echo rupiah($m['hand_cgk2'] * $msr['berat_js']);
+                                                                $hand_cgk_biasa  = $msr['berat_js'] * $handcgk2;
+                                                                $hand_cgk_special  = $msr['berat_msr'] * $handcgk2;
+                                                                $hand_cgk = $hand_cgk_biasa + $hand_cgk_special;
+                                                                echo rupiah($hand_cgk);
                                                             }
                                                             ?>
                                                         </td>
                                                         <td>
                                                             <?php
                                                             if ($service == 'Charter Service') {
-                                                                echo  rupiah($m['hand_pickup2']);
+                                                                echo  rupiah($handpickup2);
                                                             } else {
-                                                                echo rupiah($m['hand_pickup2'] * $msr['berat_js']);
+                                                                $hand_pickup_biasa  = $msr['berat_js'] * $handpickup2;
+                                                                $hand_pickup_special  = $msr['berat_msr'] * $handpickup2;
+                                                                $hand_pickup = $hand_pickup_biasa + $hand_pickup_special;
+                                                                echo rupiah($hand_pickup);
                                                             }
                                                             ?>
                                                         </td>
                                                         <td>
-                                                            <?= rupiah(($m['hd_daerah2'])) ?>
+                                                            <?= rupiah(($hd_daerah2)) ?>
                                                         </td>
                                                         <td>
-                                                            <?= rupiah($total_sales * ($m['pph2'] / 100)) ?>
+                                                            <?= rupiah($total_sales * ($pph2 / 100)) ?>
                                                         </td>
                                                         <td>
                                                             <?php
                                                             if ($service == 'Charter Service') {
-                                                                echo  rupiah($m['sdm2']);
+                                                                echo  rupiah($sdm2);
                                                             } else {
-                                                                $sdm_biasa  = $msr['berat_js'] * $m['sdm2'];
-                                                                $sdm_special  = $msr['berat_msr'] * $m['sdm2'];
+                                                                $sdm_biasa  = $msr['berat_js'] * $sdm2;
+                                                                $sdm_special  = $msr['berat_msr'] * $sdm2;
                                                                 $sdm = $sdm_biasa + $sdm_special;
                                                                 echo rupiah($sdm);
                                                             }
                                                             ?>
                                                         </td>
                                                         <td>
-                                                            <?= rupiah(($m['others2'])) ?>
+                                                            <?= rupiah(($others2)) ?>
                                                         </td>
                                                         <td></td>
                                                     </tr>
@@ -558,36 +592,66 @@
                                                         <td>
                                                             <?= rupiah(0) ?>
                                                         </td>
+                                                        <td>
+                                                            <?= rupiah(0) ?>
+                                                        </td>
                                                         <td></td>
                                                     </tr>
                                                 <?php  } ?>
 
-                                                <tr>
-                                                    <td>
-                                                        <i><b> Total Cost</b></i>
-                                                    </td>
-                                                    <td colspan="13"> <?= rupiah($total_cost) ?> </td>
+                                                <?php if ($modal) {
+                                                ?>
+                                                    <tr>
+                                                        <td>
+                                                            <i><b> Total Cost</b></i>
+                                                        </td>
+                                                        <td colspan="14"> <?= rupiah($total_cost) ?> </td>
 
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <i><b> Note PIC Jobsheet</b></i>
-                                                    </td>
-                                                    <td colspan="13"> <?= $m['note'] ?> </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <i><b> Note PIC Jobsheet</b></i>
+                                                        </td>
+                                                        <td colspan="14"> <?= $m['note'] ?> </td>
 
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <i><b> Note Manager CS</b></i>
-                                                    </td>
-                                                    <td colspan="13"> <?= $m['note_mgr_cs'] ?> </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <i><b> Note Manager CS</b></i>
+                                                        </td>
+                                                        <td colspan="14"> <?= $m['note_mgr_cs'] ?> </td>
 
-                                                </tr>
+                                                    </tr>
+                                                <?php } else { ?>
+                                                    <tr>
+                                                        <td>
+                                                            <i><b> Total Cost</b></i>
+                                                        </td>
+                                                        <td colspan="14"> </td>
+
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <i><b> Note PIC Jobsheet</b></i>
+                                                        </td>
+                                                        <td colspan="14"> </td>
+
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <i><b> Note Manager CS</b></i>
+                                                        </td>
+                                                        <td colspan="14"> </td>
+
+                                                    </tr>
+                                                <?php } ?>
 
                                             </tbody>
 
                                         </table>
+
                                     </div>
+
 
                                     <div class="table-responsive">
                                         <center>
@@ -598,9 +662,9 @@
                                             <table class="table table-bordered" style="width:100%">
                                                 <thead>
                                                     <tr>
-                                                        <th>Nama Vendo/Agent</th>
+                                                        <th>Nama Vendor/Agent</th>
                                                         <th>Type</th>
-                                                        <th>Action</th>
+                                                        <!-- <th>Action</th> -->
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -609,13 +673,13 @@
                                                         <tr>
                                                             <td><?= $vs['nama_vendor'] ?></td>
                                                             <td><?= ($vs['type'] == 0) ? 'Vendor' : 'Agent' ?></td>
-                                                            <td><button type="button" class="btn btn-sm btn-xs align-middle text-light" data-toggle="modal" data-target="#modal-edit-vendor<?= $vs['id_invoice'] ?>" style="background-color: #9c223b;">
+                                                            <!-- <td><button type="button" class="btn btn-sm btn-xs align-middle text-light" data-toggle="modal" data-target="#modal-edit-vendor<?= $vs['id_invoice'] ?>" style="background-color: #9c223b;">
                                                                     Edit
                                                                 </button>
 
-                                                                <a href="<?= base_url('cs/jobsheet/deleteVendor/' . $vs['shipment_id'] . '/' . $vs['id_invoice']) ?>" class="btn btn-sm btn-xs align-middle text-light tombol-konfirmasi" style="background-color: #9c223b;">Delete</a> <br>
+                                                                <a href="<?= base_url('cs/salesOrder/deleteVendor/' . $vs['shipment_id'] . '/' . $vs['id_invoice']) ?>" class="btn btn-sm btn-xs align-middle text-light tombol-konfirmasi" style="background-color: #9c223b;">Delete</a> <br>
 
-                                                            </td>
+                                                            </td> -->
                                                         </tr>
 
                                                     <?php  } ?>
@@ -627,7 +691,6 @@
                                         </form>
                                     </div>
 
-
                                 </div>
                                 <!-- /.box-body -->
                             </div>
@@ -636,6 +699,8 @@
                     </div>
                 </section>
             </div>
+
+
         </div>
 
         <div class="card card-custom gutter-b example example-compact">
@@ -652,9 +717,12 @@
                                 <div class="box-body">
                                     <div class="row">
                                         <div class="col-md-4">
-                                            <h2><?php $profit = $total_sales - $total_cost;
-                                                echo rupiah($profit);
-                                                ?></h2>
+                                            <?php if ($modal) {
+                                            ?>
+                                                <h2><?php $profit = $total_sales - $total_cost;
+                                                    echo rupiah($profit);
+                                                    ?></h2>
+                                            <?php  } ?>
 
                                         </div>
                                         <div class="col-md-4">
@@ -710,20 +778,20 @@
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label for="exampleInputEmail1">Flight MSU</label>
+                                    <label for="exampleInputEmail1">Flight SMU</label>
                                     <input type="text" class="form-control" id="exampleInputEmail1" required name="flight_smu2">
                                     <input type="text" class="form-control" id="exampleInputEmail1" required hidden value="<?= $msr['id'] ?>" name="shipment_id">
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label for="exampleInputEmail1">RA</label>
+                                    <label for="exampleInputEmail1">Sewa Gudang</label>
                                     <input type="text" class="form-control" id="exampleInputEmail1" required name="ra2">
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label for="exampleInputEmail1">Packing</label>
+                                    <label for="exampleInputEmail1">Wrapping</label>
                                     <input type="text" class="form-control" id="exampleInputEmail1" required name="packing2">
                                 </div>
                             </div>
@@ -731,6 +799,12 @@
                                 <div class="form-group">
                                     <label for="exampleInputEmail1">Refund (%)</label>
                                     <input type="text" class="form-control" id="exampleInputEmail1" required name="refund2">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="exampleInputEmail1">Special Refund (Rp.)</label>
+                                    <input type="text" class="form-control" id="exampleInputEmail1" required name="specialrefund2">
                                 </div>
                             </div>
                             <div class="col-md-4">
@@ -753,7 +827,7 @@
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label for="exampleInputEmail1">Hand Pickup</label>
+                                    <label for="exampleInputEmail1">Hand Pickup/Delivery</label>
                                     <input type="text" class="form-control" id="exampleInputEmail1" required name="hand_pickup2">
                                 </div>
                             </div>
@@ -765,8 +839,8 @@
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label for="exampleInputEmail1">PPH (5)</label>
-                                    <input type="text" class="form-control" placeholder="ex: 0.2, it's mean 2 %" id="exampleInputEmail1" required name="pph2">
+                                    <label for="exampleInputEmail1">PPH (%)</label>
+                                    <input type="text" class="form-control" placeholder="ex: 2, artinya 2 %" id="exampleInputEmail1" required name="pph2">
                                 </div>
                             </div>
                             <div class="col-md-4">
@@ -774,6 +848,31 @@
                                     <label for="exampleInputEmail1">SDM</label>
                                     <input type="text" class="form-control" id="exampleInputEmail1" required name="sdm2">
                                 </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="exampleInputEmail1">Others</label>
+                                    <input type="text" class="form-control" id="exampleInputEmail1" required name="others2">
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="exampleInputEmail1">Vendor/Agent</label>
+                                    <select name="vendor" class="form-control" style="width: 300px;">
+                                        <option value="0">NO VENDOR</option>
+                                        <?php foreach ($vendor_lengkap as $v) {
+                                        ?>
+                                            <option value="<?= $v['id_vendor'] ?>"><?= $v['nama_vendor'] ?></option>
+                                        <?php  } ?>
+                                    </select>
+
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <label for="note_cs">Note</label>
+                                <textarea name="note" class="form-control"></textarea>
                             </div>
                         </div>
 
@@ -794,7 +893,7 @@
 
 <?php foreach ($modal as $m) {
 ?>
-    <div class="modal fade" id="modal-acc-edit">
+    <div class="modal fade" id="modal-acc-edit<?= $m['id_modal'] ?>">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -804,12 +903,12 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form action="<?= base_url('cs/jobsheet/editCapitalCost') ?>" method="POST">
+                    <form action="<?= base_url('cs/salesOrder/editCapitalCost') ?>" method="POST">
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label for="exampleInputEmail1">Flight MSU</label>
+                                        <label for="exampleInputEmail1">Flight SMU</label>
                                         <input type="text" class="form-control" id="exampleInputEmail1" required name="flight_smu2" value="<?= $m['flight_msu2'] ?>">
                                         <input type="text" class="form-control" id="exampleInputEmail1" hidden required value="<?= $m['id_modal'] ?>" name="id_modal">
                                         <input type="text" class="form-control" id="exampleInputEmail1" hidden required value="<?= $msr['id'] ?>" name="shipment_id">
@@ -835,6 +934,12 @@
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
+                                        <label for="exampleInputEmail1">Special Refund (Rp.)</label>
+                                        <input type="text" class="form-control" id="exampleInputEmail1" required name="specialrefund2" value="<?= $m['specialrefund2'] ?>">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
                                         <label for="exampleInputEmail1">Insurance</label>
                                         <input type="text" class="form-control" id="exampleInputEmail1" required name="insurance2" value="<?= $m['insurance2'] ?>">
                                     </div>
@@ -853,7 +958,7 @@
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label for="exampleInputEmail1">Hand Pickup</label>
+                                        <label for="exampleInputEmail1">Hand Pickup/Delivery</label>
                                         <input type="text" class="form-control" id="exampleInputEmail1" required name="hand_pickup2" value="<?= $m['hand_pickup2'] ?>">
                                     </div>
                                 </div>
@@ -881,9 +986,27 @@
                                         <input type="text" class="form-control" id="exampleInputEmail1" required name="others2" value="<?= $m['others2'] ?>">
                                     </div>
                                 </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Vendor/Agent</label>
+                                        <select name="vendor" class="form-control" style="width: 300px;">
+                                            <option value="0">NO VENDOR</option>
+                                            <?php foreach ($vendor_lengkap as $v) {
+                                            ?>
+                                                <option <?php if ($v['id_vendor'] == $m['id_vendor']) {
+                                                            echo 'selected';
+                                                        } ?> value="<?= $v['id_vendor'] ?>"><?= $v['nama_vendor'] ?></option>
+                                            <?php  } ?>
+                                        </select>
+                                        <input type="text" name="id_vendor_awal" value="<?= $m['id_vendor'] ?>" hidden>
+
+                                    </div>
+                                </div>
+
                                 <div class="col-md-12">
                                     <label for="note_cs">Note</label>
-                                    <textarea name="note_mgr_cs" class="form-control"><?= $m['note_mgr_cs'] ?> </textarea>
+                                    <textarea name="note" class="form-control"><?= $m['note'] ?></textarea>
                                 </div>
                             </div>
 
@@ -917,7 +1040,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form action="<?= base_url('cs/jobsheet/editVendor') ?>" method="POST">
+                    <form action="<?= base_url('cs/salesOrder/editVendor') ?>" method="POST">
                         <div class="card-body">
                             <div class="row">
                                 <input type="text" class="form-control" id="exampleInputEmail1" hidden required value="<?= $msr['id'] ?>" name="shipment_id">

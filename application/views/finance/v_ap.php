@@ -91,7 +91,7 @@
                                         <td>
                                             <?php
                                             
-                                            // kalo dia jabatannya GM
+                                            // kalo dia jabatannya Director
                                             if ($id_jabatan == 11) {
                                                 $url = $this->uri->segment(3);
                                                 // echo $url;
@@ -111,7 +111,7 @@
                                                 ?>
 
                                             <?php  }
-                                            // Jika yang buka bukan gm 
+                                            // Jika yang buka bukan Director 
                                             else { ?>
                                                 <a href="<?= base_url('finance/ap/detail/' . $c['no_pengeluaran']) ?>" class="btn btn-sm mb-1 text-light" style="background-color: #9c223b;">Detail</a>
                                                 <a target="blank" href="<?= base_url('finance/ap/print/' . $c['no_pengeluaran']) ?>" class="btn btn-sm mb-1 text-light" style="background-color: #9c223b;"> <i class="fa fa-print text-light"></i> Print</a>
@@ -123,7 +123,7 @@
                                                     <?php } ?>
                                                     <!-- jika rolenya ka/sales -->
                                                 <?php } elseif ($c['id_role'] == 4 || $c['id_role'] == 6) { ?>
-                                                    <?php // jika diapprove GM
+                                                    <?php // jika diapprove Director
                                                     if ($c['status'] == 5) { ?>
                                                         <button href="#" data-toggle="modal" data-target="#modal-paid" class="btn btn-sm mb-1 text-light modalPaid" data-no_pengeluaran="<?= $c['no_pengeluaran'] ?>" data-url="<?= $url ?>" style="background-color: #9c223b;" type="button">Pay</button>
                                                         <?php } else {

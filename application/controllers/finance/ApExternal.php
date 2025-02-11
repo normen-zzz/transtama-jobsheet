@@ -27,7 +27,7 @@ class ApExternal extends CI_Controller
         $this->backend->display('finance/v_ap_external', $data);
     }
 
-    // public function created()
+   // public function created()
     // {
     //     $shipment_id = $this->input->post('shipment_id');
     //     $awal = $this->input->post('awal');
@@ -153,7 +153,7 @@ class ApExternal extends CI_Controller
 
     public function detailAp($id_vendor)
     {
-        $id_vendor = decrypt_url($id_vendor);
+        
         $data['title'] = 'Detail AP';
         $breadcrumb_items = [];
         $data['subtitle'] = 'Detail AP';
@@ -170,7 +170,7 @@ class ApExternal extends CI_Controller
     }
     public function editInvoice($unique_invoice, $id_vendor)
     {
-       
+        
         $data['title'] = "Edit Invoice AP";
         $breadcrumb_items = [];
         $data['subtitle'] = "Edit Invoice AP";
@@ -183,7 +183,7 @@ class ApExternal extends CI_Controller
     }
     public function detailInvoice($unique_invoice, $id_vendor)
     {
-       
+        $id_vendor = decrypt_url($id_vendor);
         $data['title'] = "Detail Invoice AP";
         $breadcrumb_items = [];
         $data['subtitle'] = "Detail Invoice AP";
@@ -327,7 +327,7 @@ class ApExternal extends CI_Controller
             redirect('finance/apExternal/editInvoice/' . $unique_invoice . '/' . $id_vendor);
         } else {
             $this->session->set_flashdata('messageAlert', $this->messageAlert('error', 'Failed'));
-            redirect('finance/apExternal/editInvoice/' . $unique_invoice . '/' . $id_vendor);
+            redirect('finance/apExternal/editInvoice/' . $unique_invoice . '/' .$id_vendor);
         }
     }
 

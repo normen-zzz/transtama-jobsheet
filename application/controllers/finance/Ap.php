@@ -27,10 +27,11 @@ class Ap extends CI_Controller
 
         $data['title'] = 'Account Payable - Payment Order';
         $data['ap'] = $this->ap->getApByCategory(1)->result_array();
+       
 
         $this->backend->display('finance/v_ap', $data);
     }
-    public function multiPaid($link = null)
+	public function multiPaid($link = null)
     {
         $no_pengeluaran =  $this->input->post('no_pengeluaran');
         if ($no_pengeluaran == NULL) {
@@ -60,7 +61,7 @@ class Ap extends CI_Controller
         $data['url'] = $link;
         $this->backend->display('finance/v_paidAp', $data);
     }
-    public function multiPaidAct($url = NULL)
+	public function multiPaidAct($url = NULL)
     {
 
         $no_pengeluaran =  $this->input->post('no_pengeluaran');
@@ -98,7 +99,7 @@ class Ap extends CI_Controller
         $this->session->set_flashdata('messageAlert', $this->messageAlert('success', 'Success Paid'));
         redirect($url);
     }
-    public function getModalPaid()
+	public function getModalPaid()
     {
         $no_pengeluaran = $this->input->get('no_pengeluaran');
         $url = $this->input->get('url');
@@ -108,6 +109,7 @@ class Ap extends CI_Controller
             'url' => $url
         ];
         echo json_encode($data);
+
     }
 
     public function getModalPaidLangsung()
@@ -122,8 +124,8 @@ class Ap extends CI_Controller
         foreach ($result as $row) {
             $data[] = $row;
         }
-
-
+        
+        
         echo json_encode($data);
         // var_dump($data);
     }
@@ -483,7 +485,7 @@ class Ap extends CI_Controller
             $date = $get_ap['date'];
             $pesan = "Ap No. *$no_ap* Dengan Tujuan *$purpose* Tanggal *$date* Sudah di Approve GM. Tolong Segera Bayar Ya, Terima Kasih";
             // no finance
-            // $this->wa->pickup('+6285157906966', "$pesan");
+            
             $this->wa->pickup('+6289629096425', "$pesan");
             $this->wa->pickup('+6287771116286', "$pesan");
             //Norman
@@ -804,8 +806,8 @@ class Ap extends CI_Controller
 			";
         return $messageAlert;
     }
-
-    public function cekAp()
+	
+	public function cekAp()
     {
         if ($this->input->post('no_pengeluaran') == NULL) {
             $data['title'] = 'CEK AP';

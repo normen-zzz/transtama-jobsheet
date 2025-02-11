@@ -8,8 +8,8 @@ class Approval extends CI_Controller
         parent::__construct();
         $this->load->model('Sendwa', 'wa');
         $this->load->model('ApModel', 'ap');
-		$this->load->model('M_Datatables');
-		$this->load->model('CsModel', 'cs');
+        $this->load->model('M_Datatables');
+        $this->load->model('CsModel', 'cs');
     }
 
     public function detail($no_ap)
@@ -45,28 +45,30 @@ class Approval extends CI_Controller
     public function ap($no_pengeluaran)
     {
         $where = array('no_pengeluaran' => $no_pengeluaran);
-		
+
         $cek_data = $this->db->get_where('tbl_pengeluaran', $where)->row_array();
-		
+
         if ($cek_data) {
             $data = array(
                 'no_pengeluaran' => $no_pengeluaran,
                 'approve_by_sm' => 32,
                 'created_sm' => date('Y-m-d H:i:s'),
             );
-			var_dump($data); die;
+            //var_dump($data); die;
             $update = $this->db->update('tbl_approve_pengeluaran', $data, $where);
             if ($update) {
-				$this->db->update('tbl_pengeluaran', ['status' => 2], $where);
+                $this->db->update('tbl_pengeluaran', ['status' => 2], $where);
                 $get_ap = $this->db->get_where('tbl_pengeluaran', $where)->row_array();
                 $no_ap = $get_ap['no_pengeluaran'];
                 $purpose = $get_ap['purpose'];
                 $date = $get_ap['date'];
                 $pesan = "Hallo Finance, ada pengajuan Ap No. *$no_ap* Dengan Tujuan *$purpose* Tanggal *$date*. Tolong Segera Cek Ya, Terima Kasih";
                 // no finance
-                // $this->wa->pickup('+6285157906966', "$pesan");
+                
                 $this->wa->pickup('+6289629096425', "$pesan");
                 $this->wa->pickup('+6287771116286', "$pesan");
+                //Norman
+                $this->wa->pickup('+6285697780467', "$pesan");
                 echo "<script>alert('Success Approve')</script>";
                 echo "<script>window.close();</script>";
             } else {
@@ -106,6 +108,8 @@ class Approval extends CI_Controller
             $pesan = "Hallo, ada pengajuan Ap No. *$no_ap* Dengan Tujuan *$purpose* Tanggal *$date* Yang Telah Diapprove Manager Finance. Silahkan approve melalui link berikut : $link . Terima Kasih";
             // no mba vema
             $this->wa->pickup('+628111910711', "$pesan");
+            //Norman
+            $this->wa->pickup('+6285697780467', "$pesan");
 
             echo "<script>alert('Success Approve')</script>";
             echo "<script>window.close();</script>";
@@ -134,9 +138,11 @@ class Approval extends CI_Controller
                 $date = $get_ap['date'];
                 $pesan = "Ap No. *$no_ap* Dengan Tujuan *$purpose* Tanggal *$date* Sudah di Approve GM. Tolong Segera Bayar Ya, Terima Kasih";
                 // no finance
-                // $this->wa->pickup('+6285157906966', "$pesan");
+               
                 $this->wa->pickup('+6289629096425', "$pesan");
                 $this->wa->pickup('+6287771116286', "$pesan");
+                //Norman
+                $this->wa->pickup('+6285697780467', "$pesan");
 
                 echo "<script>alert('Success Approve')</script>";
                 echo "<script>window.close();</script>";
@@ -149,7 +155,7 @@ class Approval extends CI_Controller
             echo "<script>window.close();</script>";
         }
     }
-	
+
     // ini untuk approval revisi so
     public function detailRevisiGm($id)
     {
@@ -164,6 +170,7 @@ class Approval extends CI_Controller
     }
     public function detailRevisiSm($id)
     {
+        $resi = $this->db->get_where('tbl_shp_order', array('shipment_id' => $id))->row_array();
         $data['subtitle'] = 'Detail Sales Order';
         $data['title'] = 'Detail Sales Order';
         $data['msr'] = $this->cs->getDetailSo($id)->row_array();
@@ -174,36 +181,56 @@ class Approval extends CI_Controller
         $this->load->view('v_detail_revisi_sm', $data);
     }
 
-    // approve ka GM
-
+   // APPROVE GM
     public function approveRevisiGm($id)
     {
         $data = array(
-            'status_revisi' => 3,
+            'status_revisi' => 7,
         );
         $update = $this->db->update('tbl_revisi_so', $data, ['shipment_id' => $id]);
         if ($update) {
+            $get_new_so = $this->db->get_where('tbl_revisi_so', ['shipment_id' => $id])->row_array();
+            $get_old_so = $this->db->get_where('tbl_shp_order', ['id' => $id])->row_array();
+            $data = array(
+                'freight_kg' => $get_new_so['freight_baru'],
+                'packing' => $get_new_so['packing_baru'],
+                'special_freight' => $get_new_so['special_freight_baru'],
+                'others' => $get_new_so['others_baru'],
+                'surcharge' => $get_new_so['surcharge_baru'],
+                'insurance' => $get_new_so['insurance_baru'],
+                'disc' => $get_new_so['disc_baru'],
+                'cn' => $get_new_so['cn_baru'],
+                'specialcn' => $get_new_so['special_cn_baru'],
+            );
+            $this->db->update('tbl_shp_order', $data, ['id' => $id]);
+            $data = array(
+                'freight_lama' => $get_old_so['freight_kg'],
+                'packing_lama' => $get_old_so['packing'],
+                'special_freight_lama' => $get_old_so['special_freight'],
+                'others_lama' => $get_old_so['others'],
+                'surcharge_lama' => $get_old_so['surcharge'],
+                'insurance_lama' => $get_old_so['insurance'],
+                'disc_lama' => $get_old_so['disc'],
+                'cn_lama' => $get_old_so['cn'],
+                'special_cn_lama' => $get_old_so['specialcn'],
+                'shipment_id' => $id,
+            );
+            $this->db->insert('tbl_revisi_so_lama', $data);
             $data = array(
                 'id_user_gm' => 14,
                 'tgl_approve_gm' => date('Y-m-d H:i:s'),
                 'status_approve_gm' => 1
             );
             $this->db->update('tbl_approve_revisi_so', $data, ['shipment_id' => $id]);
-            $link = "https://jobsheet.transtama.com/approval/detailRevisiSm/$id";
-
-            $pesan = "Hallo, Mohon Untuk dicek dan di Approve Pengajuan Revisi SO Melalu Link Berikut : $link";
-            // no sam
-            // $this->wa->pickup('+628111910711', "$pesan");
-            $this->wa->pickup('+6285157906966', "$pesan");
 
             echo "<script>alert('Success Approve')</script>";
             echo "<script>window.close();</script>";
         } else {
-            echo "<script>alert('Failed Approve')</script>";
+            echo "<script>alert('Failed Decline')</script>";
             echo "<script>window.close();</script>";
         }
     }
-    public function declineRevisiGm($id)
+     public function declineRevisiGm($id)
     {
         $data = array(
             'status_revisi' => 6,
@@ -224,50 +251,34 @@ class Approval extends CI_Controller
         }
     }
 
-    // APPROVE SM
+   // approve SM
+
     public function approveRevisiSm($id)
     {
+
         $data = array(
-            'status_revisi' => 7,
+            'status_revisi' => 3,
         );
         $update = $this->db->update('tbl_revisi_so', $data, ['shipment_id' => $id]);
         if ($update) {
-            $get_new_so = $this->db->get_where('tbl_revisi_so', ['shipment_id' => $id])->row_array();
-            $get_old_so = $this->db->get_where('tbl_shp_order', ['id' => $id])->row_array();
-            $data = array(
-                'freight_kg' => $get_new_so['freight_baru'],
-                'packing' => $get_new_so['packing_baru'],
-                'special_freight' => $get_new_so['special_freight_baru'],
-                'others' => $get_new_so['others_baru'],
-                'surcharge' => $get_new_so['surcharge_baru'],
-                'insurance' => $get_new_so['insurance_baru'],
-                'disc' => $get_new_so['disc_baru'],
-                'cn' => $get_new_so['cn_baru'],
-            );
-            $this->db->update('tbl_shp_order', $data, ['id' => $id]);
-            $data = array(
-                'freight_lama' => $get_old_so['freight_kg'],
-                'packing_lama' => $get_old_so['packing'],
-                'special_freight_lama' => $get_old_so['special_freight'],
-                'others_lama' => $get_old_so['others'],
-                'surcharge_lama' => $get_old_so['surcharge'],
-                'insurance_lama' => $get_old_so['insurance'],
-                'disc_lama' => $get_old_so['disc'],
-                'cn_lama' => $get_old_so['cn'],
-                'shipment_id' => $id,
-            );
-            $this->db->insert('tbl_revisi_so_lama', $data);
             $data = array(
                 'id_sm' => 32,
                 'tgl_approve_sm' => date('Y-m-d H:i:s'),
                 'status_approve_sm' => 1
             );
             $this->db->update('tbl_approve_revisi_so', $data, ['shipment_id' => $id]);
+            $link = "https://jobsheet.transtama.com/approval/detailRevisiGm/$id";
+
+            $pesan = "Hallo, Mohon Untuk dicek dan di Approve Pengajuan Revisi SO Melalu Link Berikut : $link";
+             //NO VEMA
+             $this->wa->pickup('+628111910711', "$pesan");
+            //Norman
+            $this->wa->pickup('+6285697780467', "$pesan");
 
             echo "<script>alert('Success Approve')</script>";
             echo "<script>window.close();</script>";
         } else {
-            echo "<script>alert('Failed Decline')</script>";
+            echo "<script>alert('Failed Approve')</script>";
             echo "<script>window.close();</script>";
         }
     }

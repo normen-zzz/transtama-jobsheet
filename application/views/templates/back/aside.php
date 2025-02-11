@@ -60,7 +60,7 @@
                     </li>
 
                 <?php } elseif ($role == 6) {
-                    $total_revisi = $this->db->get_where('tbl_revisi_so', ['status_revisi' => 2])->num_rows(); ?>
+                    $total_revisi = $this->db->get_where('tbl_revisi_so', ['status_revisi' => 3])->num_rows(); ?>
                     <!-- keuangan -->
                     <li class="menu-item" aria-haspopup="true">
                         <a href="<?= base_url('finance/dashboard') ?>" class="menu-link">
@@ -334,10 +334,10 @@
                     // $total_aktivasi = 0;
                     // $total_aktivasi_sales = 0;
 
-                    $total_revisi = $this->db->get_where('tbl_request_revisi', ['status' => 0])->num_rows();
-                    $total_so_cs = $this->db->get_where('tbl_revisi_so', ['status_revisi' => 0])->num_rows();
-                    $total_so_mgr = $this->db->get_where('tbl_revisi_so', ['status_revisi' => 1])->num_rows();
-                    $total_so_gm = $this->db->get_where('tbl_revisi_so', ['status_revisi' => 3])->num_rows();
+                    $total_revisi = $this->db->get_where('tbl_request_revisi', ['status' => 0])->num_rows(); //total so yang baru diajukan sales
+                    $total_so_sales = $this->db->get_where('tbl_revisi_so', ['status_revisi' => 0])->num_rows();// total so yang dibuat sales
+                    $total_so_cs = $this->db->get_where('tbl_revisi_so', ['status_revisi' => 1])->num_rows();// total so yang diapprove pic js
+                    $totalSoSmNeedApprove = $this->db->get_where('tbl_revisi_so', ['status_revisi' => 2])->num_rows();// total so yang harus diapprove sm
                     $total_ap = $this->db->group_by('a.no_pengeluaran')->get_where('tbl_pengeluaran a', ['a.status' => 1, 'a.is_approve_sm' => 1])->num_rows();
 
                 ?>
@@ -358,23 +358,27 @@
                             <span class="menu-text" style="font-size:11px">List Sales Order</span>
                         </a>
                     </li>
-                    <li class="d-flex ml-8 mb-2" aria-haspopup="true">
-                        <a href="<?= base_url('cs/SalesOrder/revisiSo') ?>" class="menu-link text-dark">
-                            <i class="fa fa-book mt-3 fa-1x mr-2 text-danger"></i>
-                            <span class="menu-text" style="font-size:11px">Request Revisi SO
+                     <?php if ($this->session->userdata('id_jabatan') != 10) { ?>
 
-                                <pre class="badge badge-<?php if ($total_revisi == 0) {
-                                                            echo "success";
-                                                        } else {
-                                                            echo "secondary";
-                                                        } ?> ml-1"><a class="text-<?php if ($total_revisi == 0) {
+
+                        <li class="d-flex ml-8 mb-2" aria-haspopup="true">
+                            <a href="<?= base_url('cs/SalesOrder/revisiSo') ?>" class="menu-link text-dark">
+                                <i class="fa fa-book mt-3 fa-1x mr-2 text-danger"></i>
+                                <span class="menu-text" style="font-size:11px">Request Revisi SO
+
+                                    <pre class="badge badge-<?php if ($total_revisi == 0) {
+                                                                echo "success";
+                                                            } else {
+                                                                echo "secondary";
+                                                            } ?> ml-1"><a class="text-<?php if ($total_revisi == 0) {
                                                                                         echo "white";
                                                                                     } else {
                                                                                         echo "dark";
                                                                                     } ?>" href="<?= base_url('cs/SalesOrder/revisiSoNeedApprove') ?> "><?= $total_revisi ?></a> </pre>
-                            </span>
-                        </a>
-                    </li>
+                                </span>
+                            </a>
+                        </li>
+                    <?php } ?>
                     <li class="d-flex ml-8" aria-haspopup="true">
                         <a href="<?= base_url('cs/salesOrder/viewRevisiSo') ?>" class="menu-link text-dark">
                             <i class="fa fa-pen mt-3 fa-1x mr-2 text-danger"></i>
@@ -385,35 +389,35 @@
                                 if ($jabatan == 10) {
                                 ?>
 
-                                    <pre class="badge badge-<?php if ($total_so_gm == 0) {
+                                    <pre class="badge badge-<?php if ($totalSoSmNeedApprove == 0) {
                                                                 echo "success";
                                                             } else {
                                                                 echo "secondary";
-                                                            } ?> ml-1"><a class="text-<?php if ($total_so_gm  == 0) {
+                                                            } ?> ml-1"><a class="text-<?php if ($totalSoSmNeedApprove  == 0) {
                                                                                             echo "white";
                                                                                         } else {
                                                                                             echo "dark";
-                                                                                        } ?>" href="<?= base_url('cs/SalesOrder/viewRevisiSoNeedApprove') ?> "><?= $total_so_gm  ?></a></pre>
+                                                                                        } ?>" href="<?= base_url('cs/SalesOrder/viewRevisiSoNeedApprove') ?> "><?= $totalSoSmNeedApprove  ?></a></pre>
                                 <?php   } else {
                                 ?>
-                                    <pre class="badge badge-<?php if ($total_so_mgr == 0 || $total_so_cs == 0) {
+                                    <pre class="badge badge-<?php if ($total_so_cs == 0) {
                                                                 echo "success";
                                                             } else {
                                                                 echo "secondary";
                                                             } ?> ml-1">
                                       <?php
                                         if ($id_atasan == NULL || $id_atasan == 0) { ?>
-                                            <a class="text-<?php if ($total_so_mgr  == 0) {
+                                            <a class="text-<?php if ($total_so_cs  == 0) {
                                                                 echo "white";
                                                             } else {
                                                                 echo "dark";
-                                                            } ?>" href="<?= base_url('cs/SalesOrder/viewRevisiSoNeedApprove') ?> "><?= $total_so_mgr  ?></a>
+                                                            } ?>" href="<?= base_url('cs/SalesOrder/viewRevisiSoNeedApprove') ?> "><?= $total_so_cs  ?></a>
                                        <?php } else { ?>
-                                        <a class="text-<?php if ($total_so_cs  == 0) {
+                                        <a class="text-<?php if ($total_so_sales == 0) {
                                                             echo "white";
                                                         } else {
                                                             echo "dark";
-                                                        } ?>" href="<?= base_url('cs/SalesOrder/viewRevisiSoNeedApprove') ?> "><?= $total_so_cs  ?></a>
+                                                        } ?>" href="<?= base_url('cs/SalesOrder/viewRevisiSoNeedApprove') ?> "><?= $total_so_sales  ?></a>
                                        <?php }
 
                                         ?>

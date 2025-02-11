@@ -67,7 +67,7 @@
                                                     // $pph = 0;
 
                                                     foreach ($invoice as $inv) {
-                                                        $get_do = $this->db->get_where('tbl_no_do', ['shipment_id' => $inv['shipment_id']]);
+                                                         $get_do = $this->db->query('SELECT a.*,b.remarks FROM tbl_no_do a LEFT JOIN remarks_do b ON a.id_berat = b.id_do  WHERE a.shipment_id = "' . $inv['shipment_id'] . '"');
                                                         $data_do = $get_do->result_array();
                                                         $total_do = $get_do->num_rows();
                                                         $no = 1;
@@ -76,7 +76,7 @@
                                                         $service =  $inv['service_name'];
                                                         if ($service == 'Charter Service' || $service == 'Manpower Service' || $service == 'Multidrop Service'|| $service == 'Warehouse Service') {
                                                             $packing = $inv['packing'];
-                                                            $total_sales = ((int)$inv['freight_kg'] + (int)$packing +  (int)$inv['special_freight'] +  (int)$inv['others'] + (int)$inv['surcharge'] + (int)$inv['insurance']);
+                                                            $total_sales = ($inv['freight_kg'] + $packing +  $inv['special_freight'] +  $inv['others'] + $inv['surcharge'] + $inv['insurance']);
                                                         } else {
                                                             $disc = $inv['disc'];
                                                             // kalo gada disc
@@ -146,7 +146,7 @@
                                                                     <td><?= $inv['tree_consignee'] ?></td>
                                                                     <td><input type="text" name="no_do[]" value="<?= $d['no_do'] ?>"><input hidden type="text" name="id_berat[]" value="<?= $d['id_berat'] ?>"></td>
                                                                     <td>
-                                                                        <input type="text" name="so_note[]" value="<?= $inv['so_note'] ?>">
+                                                                        <input type="text" name="remarks_do[]" value="<?= $d['remarks'] ?>">
                                                                     </td>
                                                                     <td><?= $inv['prefix'] ?></td>
                                                                     <td><?= $d['koli'] ?></td>
@@ -169,7 +169,7 @@
                                                                     <td> <a href="<?= base_url('finance/invoice/deleteInvoiceFinal/' . $inv['id_invoice'] . '/' . $inv['no_invoice'] . '/' . $inv['shipment_id']) ?>" class=" btn btn-sm text-light tombol-hapus" data-flashdata="<?= $inv['shipment_id'] ?>" style="background-color: #9c223b;">Delete</a></td>
 
                                                                 </tr>
-                                                            <?php $total_koli = (int)$total_koli + (int)$d['koli'];
+                                                            <?php $total_koli = $total_koli + $d['koli'];
                                                             } ?>
 
                                                         <?php  } ?>
@@ -203,12 +203,12 @@
                                                             <td colspan="14">
                                                             </td>
                                                             <td class="font-weight-bold">
-                                                                PPN 1,1 %
+                                                                PPN <?= $inv['percent_ppn'] ?> %
                                                             </td>
                                                             <td>
                                                                 <?php
 
-                                                                $ppn =  $amount * 0.011;
+                                                                $ppn =  $amount * $inv['percent_ppn'] / 100;
                                                                 $pph =  $amount * 0.02;
                                                                 echo rupiah($ppn);
                                                                 ?>
@@ -275,6 +275,10 @@
                                 <input type="text" class="form-control" name="pph" hidden value="<?= $pph ?>">
                                 <input type="text" class="form-control" name="total_invoice" hidden value="<?= $total_amount ?>">
                                 <input type="text" name="shipper" value="<?= $inv['customer'] ?>" class="form-control">
+                            </div>
+							<div class="col-md-3">
+                                <label for="percent_ppn" class="font-weight-bold">ppn (%)</label>
+                                <input type="number" name="percent_ppn" class="form-control" step="0.1" min="1.1" max="100.0" value="<?= $inv['percent_ppn'] ?>">
                             </div>
                             <div class="col-md-5">
                                 <label for="pic" class="font-weight-bold">Address</label>

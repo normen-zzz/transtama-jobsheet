@@ -24,37 +24,102 @@ class ApExternal extends CI_Controller
         $this->breadcrumb->add_item($breadcrumb_items);
         $data['breadcrumb_bootstrap_style'] = $this->breadcrumb->generate();
         $data['vendors'] = $this->db->order_by('id_vendor', 'DESC')->get('tbl_vendor')->result_array();
-        $this->backend->display('finance/v_ap', $data);
+        $this->backend->display('finance/v_ap_external', $data);
     }
+
+   // public function created()
+    // {
+    //     $shipment_id = $this->input->post('shipment_id');
+    //     $awal = $this->input->post('awal');
+    //     $akhir = $this->input->post('akhir');
+    //     if ($awal == NULL && $akhir == NULL) {
+    //         $data['title'] = 'Payment Order Vendor/Agent';
+    //         $breadcrumb_items = [];
+    //         $data['awal'] = date('Y-m-d');
+    //         $data['akhir'] = date('Y-m-d');
+    //         $data['subtitle'] = 'Payment Order Vendor/Agent';
+    //         $this->breadcrumb->add_item($breadcrumb_items);
+    //         $data['breadcrumb_bootstrap_style'] = $this->breadcrumb->generate();
+    //         $data['proforma'] = $this->cs->getApVendor()->result_array();
+    //         $this->backend->display('finance/v_invoice_ap', $data);
+    //     } else {
+
+    //         $data['title'] = 'Payment Order Vendor/Agent';
+    //         $data['awal'] = $awal;
+    //         $data['akhir'] = $akhir;
+    //         $breadcrumb_items = [];
+    //         $data['subtitle'] = 'Payment Order Vendor/Agent';
+    //         $this->breadcrumb->add_item($breadcrumb_items);
+    //         $data['breadcrumb_bootstrap_style'] = $this->breadcrumb->generate();
+    //         $data['proforma'] = $this->cs->getApVendorByDate($awal, $akhir)->result_array();
+    //         $this->backend->display('finance/v_invoice_ap', $data);
+    //     }
+    // }
 
     public function created()
     {
-        $shipment_id = $this->input->post('shipment_id');
-        if ($shipment_id == NULL) {
+        
+      
             $data['title'] = 'Payment Order Vendor/Agent';
             $breadcrumb_items = [];
+            $data['awal'] = date('Y-m-d');
+            $data['akhir'] = date('Y-m-d');
             $data['subtitle'] = 'Payment Order Vendor/Agent';
             $this->breadcrumb->add_item($breadcrumb_items);
             $data['breadcrumb_bootstrap_style'] = $this->breadcrumb->generate();
             $data['proforma'] = $this->cs->getApVendor()->result_array();
             $this->backend->display('finance/v_invoice_ap', $data);
-        } else {
-            $cek_data = $this->cs->cekShipment($shipment_id)->row_array();
-            if ($cek_data) {
-                $data['invoice'] = $this->db->get_where('tbl_invoice', ['shipment_id' => $cek_data['id']])->row_array();
-                $data['title'] = 'Payment Order Vendor/Agent';
-                $data['shipment_id'] = $shipment_id;
-                $breadcrumb_items = [];
-                $data['subtitle'] = 'Payment Order Vendor/Agent';
-                $this->breadcrumb->add_item($breadcrumb_items);
-                $data['breadcrumb_bootstrap_style'] = $this->breadcrumb->generate();
-                $data['proforma'] = $this->cs->getApVendor()->result_array();
-                $this->backend->display('finance/v_invoice_ap', $data);
-            } else {
-                $this->session->set_flashdata('messageAlert', $this->messageAlert('error', 'Shipment ID Not Found'));
-                redirect('finance/apExternal/created');
-            }
+       
+    }
+
+    function getDataPoCreated()
+    {
+        $query  = "SELECT a.id_invoice,a.no_po,a.due_date,a.status,a.id_vendor,a.no_invoice,a.unique_invoice,a.date,a.vendor,a.total_ap,a.ppn,a.special_ppn,a.pph,a.special_pph,a.payment_date, b.shipper,b.shipment_id as resi FROM tbl_invoice_ap_final AS a INNER JOIN tbl_shp_order AS b ON a.shipment_id = b.id";
+        $search = array('a.no_po','a.vendor');
+        $where  = array('a.status >' => 2);
+        // jika memakai IS NULL pada where sql
+        $isWhere = null;
+        $group = 'GROUP BY a.no_po';
+        // $isWhere = 'artikel.deleted_at IS NULL';
+        header('Content-Type: application/json');
+        echo $this->M_Datatables->get_tables_query($query, $search, $where, $isWhere,$group);
+    }
+	
+	public function multiPaid()
+    {
+        $no_po =  $this->input->post('no_po');
+        if ($no_po == NULL) {
+            $this->session->set_flashdata('messageAlert', $this->messageAlert('error', 'Please Select Minimun 1 AP'));
+            redirect('finance/apExternal/created');
         }
+
+        $apexternal = array();
+
+        for ($i = 0; $i < sizeof($no_po); $i++) {
+            $dataNoPo = $this->cs->getApVendorByNoPo($no_po[$i])->row_array();
+            $apexternal[] = $dataNoPo;
+        }
+
+        // var_dump($apexternal);
+
+        $data['title'] = 'Paid Ap External';
+        $breadcrumb_items = [];
+        $data['subtitle'] = 'PaidApExternal';
+
+        $this->breadcrumb->add_item($breadcrumb_items);
+        $data['breadcrumb_bootstrap_style'] = $this->breadcrumb->generate();
+        $data['noInvoice'] = $apexternal;
+        $this->backend->display('finance/v_paidApExternal', $data);
+    }
+	 public function getModalApPaid()
+    {
+        $no_po = $this->input->get('no_po'); // Mengambil ID dari parameter GET
+        
+		$po = $this->cs->getApVendor($no_po)->row();
+       
+
+        // Kirim data sebagai respons JSON
+        echo json_encode($po);
     }
     public function ApInternal()
     {
@@ -88,7 +153,7 @@ class ApExternal extends CI_Controller
 
     public function detailAp($id_vendor)
     {
-        $id_vendor = decrypt_url($id_vendor);
+        
         $data['title'] = 'Detail AP';
         $breadcrumb_items = [];
         $data['subtitle'] = 'Detail AP';
@@ -105,15 +170,15 @@ class ApExternal extends CI_Controller
     }
     public function editInvoice($unique_invoice, $id_vendor)
     {
-        $id_vendor = decrypt_url($id_vendor);
+        
         $data['title'] = "Edit Invoice AP";
         $breadcrumb_items = [];
         $data['subtitle'] = "Edit Invoice AP";
         $this->breadcrumb->add_item($breadcrumb_items);
         $data['breadcrumb_bootstrap_style'] = $this->breadcrumb->generate();
         $data['vendor'] = $this->db->get_where('tbl_vendor', ['id_vendor' => $id_vendor])->row_array();
-        $data['invoice'] = $this->cs->getApByNoInvoice($unique_invoice)->result_array();
-        $data['total_invoice'] = $this->cs->getApByNoInvoice($unique_invoice)->num_rows();
+        $data['invoice'] = $this->cs->getApByNoInvoice2($unique_invoice, $id_vendor)->result_array();
+        $data['total_invoice'] = $this->cs->getApByNoInvoice2($unique_invoice, $id_vendor)->num_rows();
         $this->backend->display('finance/v_detail_invoice_ap', $data);
     }
     public function detailInvoice($unique_invoice, $id_vendor)
@@ -125,8 +190,8 @@ class ApExternal extends CI_Controller
         $this->breadcrumb->add_item($breadcrumb_items);
         $data['breadcrumb_bootstrap_style'] = $this->breadcrumb->generate();
         $data['vendor'] = $this->db->get_where('tbl_vendor', ['id_vendor' => $id_vendor])->row_array();
-        $data['invoice'] = $this->cs->getApByNoInvoice($unique_invoice)->result_array();
-        $data['total_invoice'] = $this->cs->getApByNoInvoice($unique_invoice)->num_rows();
+        $data['invoice'] = $this->cs->getApByNoInvoice2($unique_invoice, $id_vendor)->result_array();
+        $data['total_invoice'] = $this->cs->getApByNoInvoice2($unique_invoice, $id_vendor)->num_rows();
         $this->backend->display('finance/v_detail_invoice_ap_paid', $data);
     }
 
@@ -228,43 +293,29 @@ class ApExternal extends CI_Controller
         $id_invoice =  $this->input->post('id_invoice');
         $variabel =  $this->input->post('variabel');
         $unique_invoice =  $this->input->post('unique_invoice');
-
+        $other = $this->input->post('other');
         $due_date = $this->input->post('due_date');
-        $total_ap = $this->input->post('total_ap');
+        $total_ap = $this->input->post('total_ap') + $other;
         $no_invoice = $this->input->post('no_invoice');
-        $ppn = $this->input->post('ppn');
-        $pph = $this->input->post('pph');
+        $ppn = ($total_ap) * ($this->input->post('ppn') / 100);
+        $special_ppn = $this->input->post('special_ppn') ;
+        $pph = ($total_ap) * ($this->input->post('pph') / 100);
+        $special_pph = $this->input->post('special_pph') ;
         $terbilang = $this->input->post('terbilang');
         $id_vendor = $this->input->post('id_vendor');
-
-
-        // KALO DIA TIDAK ADA PPN DAN PPH
-        if ($ppn != 1) {
-            $is_ppn = 0;
-            $ppn = 0;
-        } else {
-            $is_ppn = 1;
-            $ppn =  $total_ap * 0.011;
-        }
-        if ($pph != 1) {
-            $is_pph = 0;
-            $pph =  0;
-        } else {
-            $is_pph = 1;
-            $pph =  $total_ap * 0.02;
-        }
 
         for ($i = 0; $i < sizeof($id_invoice); $i++) {
             $data = array(
                 'variabel' => $variabel[$i],
-                'is_ppn' => $is_ppn,
-                'is_pph' => $is_pph,
-                'no_invoice' => $no_invoice,
-                'due_date' => $due_date,
+                // 'no_invoice' => $no_invoice,
+                // 'due_date' => $due_date,
                 'terbilang' => $terbilang,
                 'total_ap' => $total_ap,
+                'other' => $other,
                 'ppn' => $ppn,
                 'pph' => $pph,
+                'special_ppn' => $special_ppn,
+                'special_pph' => $special_pph,
                 'update_by' => $this->session->userdata('id_user'),
                 'update_at' => date('Y-m-d H:i:s')
             );
@@ -315,6 +366,39 @@ class ApExternal extends CI_Controller
         // $sekarang = date("d:F:Y:h:m:s");
         $this->dompdf->stream("Invoice$no_invoice.pdf", array('Attachment' => 0));
     }
+	
+	 public function bulkPaid()
+    {
+
+        $no_po = $this->input->post('no_po');
+
+        for ($i = 0; $i < sizeof($no_po); $i++) {
+            $data = array(
+                'payment_date' => $this->input->post('paymentDate'),
+                'status' => 4,
+                'payment_eksekusi' => date('Y-m-d H:i:s'),
+                'user_payment' => $this->session->userdata('id_user'),
+                'type_payment' => $this->input->post('typePayment'),
+            );
+            $folderUpload = "./uploads/ap_proof/";
+            $files = $_FILES;
+            $namaFile = $files['photo_pengeluaran']['name'][$i];
+            $lokasiTmp = $files['photo_pengeluaran']['tmp_name'][$i];
+
+            # kita tambahkan uniqid() agar nama gambar bersifat unik
+            $namaBaru = uniqid() . '-' . $namaFile;
+
+            array_push($listNamaBaru, $namaBaru);
+            $lokasiBaru = "{$folderUpload}/{$namaBaru}";
+            move_uploaded_file($lokasiTmp, $lokasiBaru);
+
+            $ktp = array('bukti_bayar' => $namaBaru);
+            $data = array_merge($data, $ktp);
+            $this->db->update('tbl_invoice_ap_final', $data, ['no_po' => $no_po[$i]]);
+        }
+        $this->session->set_flashdata('messageAlert', $this->messageAlert('success', 'Success Paid'));
+        redirect('finance/apExternal/created');
+    }
 
 
     public function paid()
@@ -324,6 +408,21 @@ class ApExternal extends CI_Controller
             'status' => 4,
             'payment_eksekusi' => date('Y-m-d H:i:s')
         );
+        $folderUpload = "./uploads/ap_proof/";
+        $files = $_FILES;
+        $namaFile = $files['ktp']['name'];
+        $lokasiTmp = $files['ktp']['tmp_name'];
+
+        # kita tambahkan uniqid() agar nama gambar bersifat unik
+        $namaBaru = uniqid() . '-' . $namaFile;
+
+        array_push($listNamaBaru, $namaBaru);
+        $lokasiBaru = "{$folderUpload}/{$namaBaru}";
+        move_uploaded_file($lokasiTmp, $lokasiBaru);
+
+        $ktp = array('bukti_bayar' => $namaBaru);
+        $data = array_merge($data, $ktp);
+
 
         $update = $this->db->update('tbl_invoice_ap_final', $data, ['unique_invoice' => $this->input->post('unique_invoice')]);
         if ($update) {
@@ -352,7 +451,8 @@ class ApExternal extends CI_Controller
         $data['vendor'] = $this->db->get_where('tbl_vendor', ['id_vendor' => $id_vendor])->row_array();
         $data['approval'] = $this->db->get_where('tbl_approve_pengeluaran_external', ['no_pengeluaran' => $unique_invoice])->row_array();
 
-         
+        // var_dump($data['approval']);
+        // die;
 
         $this->load->view('superadmin/v_cetak_ap_external', $data);
         $html = $this->output->get_output();
@@ -366,6 +466,43 @@ class ApExternal extends CI_Controller
         ob_end_clean();
         // file_put_contents('uploads/barcode' . '/' . "$shipment_id.pdf", $output);
         $this->dompdf->stream("Cetak" . $sekarang . ".pdf", array('Attachment' => 0));
+    }
+
+    public function approveGm($no_pengeluaran)
+    {
+
+        // $where = array('no_pengeluaran' => $no_pengeluaran);
+        // $data = array(
+        //     'approve_by_gm' => $this->session->userdata('id_user'),
+        //     'created_gm' => date('Y-m-d H:i:s'),
+        // );
+        // $update = $this->db->update('tbl_approve_pengeluaran_external', $data, $where);
+        if ($this->db->update('tbl_invoice_ap_final', ['status' => 5], ['unique_invoice' => $no_pengeluaran])) {
+            $this->session->set_flashdata('message', 'Success Approve');
+            redirect("finance/apExternal/created");
+        } else {
+            $this->session->set_flashdata('message', 'Failed Approve');
+            redirect("finance/apExternal/created");
+        }
+    }
+
+    public function approveMgrFinance($no_pengeluaran)
+    {
+
+        // $where = array('no_pengeluaran' => $no_pengeluaran);
+        // $data = array(
+        //     'approve_by_gm' => $this->session->userdata('id_user'),
+        //     'created_gm' => date('Y-m-d H:i:s'),
+        // );
+        // $update = $this->db->update('tbl_approve_pengeluaran_external', $data, $where);
+        $update = $this->db->update('tbl_invoice_ap_final', ['status' => 7], ['unique_invoice' => $no_pengeluaran]);
+        if ($update) {
+            $this->session->set_flashdata('message', 'Success Approve');
+            redirect("finance/apExternal/created");
+        } else {
+            $this->session->set_flashdata('message', 'Failed Approve');
+            redirect("finance/apExternal/created");
+        }
     }
     public function messageAlert($type, $title)
     {

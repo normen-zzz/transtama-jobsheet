@@ -9,53 +9,49 @@ class Jobsheet extends CI_Controller
         if (!$this->session->userdata('id_user')) {
             redirect('backoffice');
         }
+		$this->db->query("SET sql_mode=(SELECT REPLACE(@@sql_mode, 'ONLY_FULL_GROUP_BY', ''));");
         $this->load->library('breadcrumb');
         $this->load->model('M_Datatables');
         $this->load->model('CsModel', 'cs');
-		$this->load->model('Sendwa', 'wa');
+        $this->load->model('Sendwa', 'wa');
         cek_role();
     }
     public function index()
     {
+        
         $data['title'] = 'Enter Jobsheet';
         $breadcrumb_items = [];
         $data['subtitle'] = 'Enter Jobsheet';
         $this->breadcrumb->add_item($breadcrumb_items);
         $data['breadcrumb_bootstrap_style'] = $this->breadcrumb->generate();
-        $customer = $this->input->post('customer');
+        $this->backend->display('finance/v_js_approve', $data);
+    }
+	function getDataEnterJobsheet()
+    {
+        $query  = "SELECT a.tgl_pickup, b.shipment_id,b.id,b.so_id,b.jobsheet_id,b.shipper,b.tree_consignee,b.status_so,b.id_so, c.nama_user,d.service_name,e.status_revisi FROM tbl_shp_order AS b INNER JOIN tbl_so AS a ON b.id_so = a.id_so INNER JOIN tb_user AS c ON a.id_sales = c.id_user INNER JOIN tb_service_type AS d on b.service_type = d.code LEFT JOIN tbl_revisi_so  e ON b.id = e.shipment_id";
+        $search = array('b.shipment_id', 'b.shipper');
+        $where  = array('b.status_so' => 3);
+        // $where  = array('a.id_user' => $this->session->userdata('id_user'));
 
-        if ($customer == NULL) {
-            $data['customer'] = $customer;
-            $data['customers'] = $this->db->get('tb_customer')->result_array();
-            $data['js'] = $this->cs->getAll()->result_array();
-            $this->backend->display('finance/v_js_approve', $data);
-        } else {
-            $data['customer'] = $customer;
-            $data['customers'] = $this->db->get('tb_customer')->result_array();
-            $data['js'] = $this->cs->getAll($customer)->result_array();
-            $this->backend->display('finance/v_js_approve', $data);
-        }
+        // jika memakai IS NULL pada where sql
+        $isWhere = null;
+        $group = '';
+        // $isWhere = 'artikel.deleted_at IS NULL';
+        header('Content-Type: application/json');
+        echo $this->M_Datatables->get_tables_query($query, $search, $where, $isWhere, $group);
     }
     public function final()
     {
-        $data['title'] = 'Jobsheet Final';
-        $breadcrumb_items = [];
-        $data['subtitle'] = 'Jobsheet Final';
-        // $data['sub_header_page'] = 'exist';
-        $this->breadcrumb->add_item($breadcrumb_items);
-        $data['breadcrumb_bootstrap_style'] = $this->breadcrumb->generate();
-
-        $data['total_users'] = $this->db->get('tb_user')->num_rows();
-        $data['total_dosen'] = $this->db->get_where('tb_user', ['id_role' => 4])->num_rows();
-        $data['total_mahasiswa'] = $this->db->get_where('tb_user', ['id_role' => 5])->num_rows();
-        $data['total_nonaktif'] = $this->db->get_where('tb_user', ['status' => 0])->num_rows();
-        $data['activity'] = $this->db->order_by('id_log', 'desc')->get('tb_log_login')->result_array();
-        $data['js'] = $this->cs->getJsApproveFinance()->result_array();
-        // var_dump($data['js']);
-        // die;
+        $data = [
+            'title' => 'Jobsheet Final',
+            'subtitle' => 'Jobsheet Final',
+            'breadcrumb_bootstrap_style' => $this->breadcrumb->generate(),
+            'js' => $this->cs->getJsApproveFinance2() // Tidak perlu `result_array()` lagi di sini
+        ];
+    
         $this->backend->display('finance/v_js_final', $data);
     }
-	 public function viewRevisiSo()
+    public function viewRevisiSo()
     {
         $data['title'] = 'List Revisi Jobsheet';
         $breadcrumb_items = [];
@@ -72,9 +68,9 @@ class Jobsheet extends CI_Controller
         $data['subtitle'] = 'Detail Sales Order';
         $data['title'] = 'Detail Sales Order';
         $data['msr'] = $this->cs->getDetailSo($id)->row_array();
-       // $data['sales'] = $this->db->get_where('tbl_sales', ['id_msr' => $id])->result_array();
+        // $data['sales'] = $this->db->get_where('tbl_sales', ['id_msr' => $id])->result_array();
         $data['modal'] = $this->db->get_where('tbl_modal', ['shipment_id' => $id])->result_array();
-		 $data['approve_managerial'] = $this->db->get_where('tbl_approve_so_cs', ['shipment_id' => $id])->row_array();
+        $data['approve_managerial'] = $this->db->get_where('tbl_approve_so_cs', ['shipment_id' => $id])->row_array();
         $data['approve_manager_sales'] = $this->db->get_where('tbl_approve_so', ['id_so' => $id_so])->row_array();
         // var_dump($data['modal']);
         // die;
@@ -93,31 +89,82 @@ class Jobsheet extends CI_Controller
         $data['modal'] = $this->db->get_where('tbl_modal', ['shipment_id' => $id])->result_array();
         $this->backend->display('finance/v_detail_revisi', $data);
     }
-    public function approveRevisiGm($id)
+     public function approveRevisiGm($id)
     {
+        $approveRevisiSo = $this->db->query("SELECT shipment_id FROM tbl_approve_revisi_so WHERE shipment_id = $id");
+
+        if ($approveRevisiSo->num_rows() == NULL) {
+            $data = array(
+                'shipment_id' => $id,
+                'id_user_cs' => $this->session->userdata('id_user')
+            );
+            $this->db->insert('tbl_approve_revisi_so', $data);
+
+            $data = array(
+                'id_user_mgr' => $this->session->userdata('id_user'),
+                'tgl_approve_mgr_cs' => date('Y-m-d H:i:s'),
+                'status_approve_cs' => 1
+            );
+            $this->db->update('tbl_approve_revisi_so', $data, ['shipment_id' => $id]);
+        }
+
         $data = array(
-            'status_revisi' => 3,
+            'status_revisi' => 7,
         );
         $update = $this->db->update('tbl_revisi_so', $data, ['shipment_id' => $id]);
+
         if ($update) {
+
+            $get_new_so = $this->db->get_where('tbl_revisi_so', ['shipment_id' => $id])->row_array();
+            $get_old_so = $this->db->get_where('tbl_shp_order', ['id' => $id])->row_array();
+            $data = array(
+                'freight_kg' => $get_new_so['freight_baru'],
+                'packing' => $get_new_so['packing_baru'],
+                'special_freight' => $get_new_so['special_freight_baru'],
+                'others' => $get_new_so['others_baru'],
+                'surcharge' => $get_new_so['surcharge_baru'],
+                'insurance' => $get_new_so['insurance_baru'],
+                'disc' => $get_new_so['disc_baru'],
+                'cn' => $get_new_so['cn_baru'],
+                'specialcn' => $get_new_so['special_cn_baru'],
+            );
+            $this->db->update('tbl_shp_order', $data, ['id' => $id]);
+            $data = array(
+                'freight_lama' => $get_old_so['freight_kg'],
+                'packing_lama' => $get_old_so['packing'],
+                'special_freight_lama' => $get_old_so['special_freight'],
+                'others_lama' => $get_old_so['others'],
+                'surcharge_lama' => $get_old_so['surcharge'],
+                'insurance_lama' => $get_old_so['insurance'],
+                'disc_lama' => $get_old_so['disc'],
+                'cn_lama' => $get_old_so['cn'],
+                'special_cn_lama' => $get_old_so['specialcn'],
+                'shipment_id' => $id,
+            );
+            $this->db->insert('tbl_revisi_so_lama', $data);
+            
             $data = array(
                 'id_user_gm' => $this->session->userdata('id_user'),
                 'tgl_approve_gm' => date('Y-m-d H:i:s'),
                 'status_approve_gm' => 1
             );
             $this->db->update('tbl_approve_revisi_so', $data, ['shipment_id' => $id]);
-			  $link = "https://jobsheet.transtama.com/approval/detailRevisiSm/$id";
-            $pesan = "Hallo, Mohon Untuk dicek dan di Approve Pengajuan Revisi SO Melalu Link Berikut : $link";
-            // no sam
-            // $this->wa->pickup('+628111910711', "$pesan");
-            $this->wa->pickup('+6285157906966', "$pesan");
-			
             $this->session->set_flashdata('messageAlert', $this->messageAlert('success', 'Success'));
-            redirect('finance/jobsheet/final');
+            $cekResiInInvoice = $this->db->query('SELECT no_invoice FROM tbl_invoice WHERE shipment_id = ' . $id . ' AND status = 1 ')->row_array();
+            $no_invoice = $cekResiInInvoice['no_invoice'];
+
+            if ($cekResiInInvoice != NULL) {
+                $resi = $this->db->query('SELECT shipment_id FROM tbl_shp_order WHERE id = ' . $id . ' ')->row_array();
+                $resi = $resi['shipment_id'];
+                $pesan = "Revisi SO dengan resi $resi dan No Invoice $no_invoice Telah di Approve oleh GM, Silahkan cek kembali Invoice tersebut";
+                $this->wa->pickup('+6285771006587', "$pesan");
+				$this->wa->pickup('+6285697780467', "$pesan");
+            }
+            redirect('finance/jobsheet/detailRevisi/' . $id);
         } else {
 
             $this->session->set_flashdata('messageAlert', $this->messageAlert('error', 'Failed'));
-            redirect('finance/jobsheet/final');
+           redirect('finance/jobsheet/detailRevisi/' . $id);
         }
     }
     public function declineRevisiGm($id)
@@ -150,7 +197,7 @@ class Jobsheet extends CI_Controller
         $insert = $this->db->update('tbl_shp_order', $data, ['id' => $id]);
 
         if ($insert) {
-           $data = array(
+            $data = array(
                 'approve_finance' => $this->session->userdata('id_user'),
                 'created_at_finance' => date('Y-m-d H:i:s')
             );
@@ -163,7 +210,7 @@ class Jobsheet extends CI_Controller
             redirect('finance/jobsheet/');
         }
     }
-	public function Exportexcel($id)
+    public function Exportexcel($id)
     {
         $detail = $this->db->get_where('tbl_shp_order', ['id' => $id])->row_array();
         header("Content-type: application/octet-stream");
@@ -173,7 +220,7 @@ class Jobsheet extends CI_Controller
 
         $this->load->view('finance/export_invoice', $data);
     }
-	public function downloadByCustomer($customer=NULL)
+    public function downloadByCustomer($customer = NULL)
     {
         $customer = str_replace('%20', ' ', $customer);
         // var_dump($customer);
@@ -189,7 +236,29 @@ class Jobsheet extends CI_Controller
 
         $this->load->view('finance/export_invoice_customer', $data);
     }
-	public function createInvoice()
+    public function cekResi()
+    {
+        if ($this->input->post('shipment_id') == NULL) {
+            $data['title'] = 'CEK RESI';
+            $data['resi'] = NULL;
+            $data['shipment'] = NULL;
+            $this->backend->display('finance/v_cek_resi', $data);
+        } else {
+            $data['title'] = 'CEK RESI';
+            $resi = $this->db->query("SELECT shipper,consigne,tgl_pickup,tgl_diterima,status_so,id FROM tbl_shp_order WHERE shipment_id = ".$this->input->post('shipment_id')." ")->row_array();
+            $poExternal = $this->db->query("SELECT no_po,id_vendor,unique_invoice,vendor FROM tbl_invoice_ap_final WHERE shipment_id = ".$resi['id']." GROUP BY no_po ");
+            $data['title'] = 'CEK RESI';
+            $data['resi'] = $this->input->post('shipment_id');
+            // $data['shipment'] = $this->db->get_where('tbl_shp_order', array('shipment_id' => $this->input->post('shipment_id')))->row_array();
+            $data['shipment'] = $resi;
+            $data['invoice'] = $this->db->query("SELECT status,no_invoice,payment_date FROM tbl_invoice WHERE shipment_id = ".$resi['id']." ")->row_array();
+            if ($poExternal->num_rows() != NULL) {
+                $data['Po'] = $poExternal->result_array();
+            }
+            $this->backend->display('finance/v_cek_resi', $data);
+        }
+    }
+    public function createInvoice()
     {
         $shipment_id =  $this->input->post('shipment_id');
         if ($shipment_id == NULL) {
@@ -208,7 +277,12 @@ class Jobsheet extends CI_Controller
         $data['shipment_id'] = $shipment_id;
         $this->backend->display('finance/v_create_invoice', $data);
     }
-      public function procesCreateInvoice()
+    public function cekInvoice()
+    {
+        $query = $this->db->query('SELECT no_invoice FROM tbl_no_invoice WHERE id_nomor_invoice = (SELECT MAX(id_nomor_invoice) FROM tbl_no_invoice)')->row_array();
+        var_dump($query['no_invoice']);
+    }
+    public function procesCreateInvoice()
     {
         $shipment_id =  $this->input->post('shipment_id');
         $due_date = $this->input->post('due_date');
@@ -217,19 +291,21 @@ class Jobsheet extends CI_Controller
         $total_invoice = $this->input->post('total_invoice');
         $is_ppn = $this->input->post('is_ppn');
         $is_pph = $this->input->post('is_pph');
-		$is_reimbursment = $this->input->post('is_reimbursment');
-		 $is_special = $this->input->post('is_special');
-		$is_insurance = $this->input->post('is_insurance');
-		$is_others = $this->input->post('is_others');
-		 $is_remarks = $this->input->post('is_remarks');
+        $is_reimbursment = $this->input->post('is_reimbursment');
+        $is_special = $this->input->post('is_special');
+        $is_insurance = $this->input->post('is_insurance');
+        $is_others = $this->input->post('is_others');
+        $is_packing = $this->input->post('is_packing');
+        $is_remarks = $this->input->post('is_remarks');
         $invoice = $this->input->post('invoice');
         $ppn = $this->input->post('ppn');
+		$percent_ppn = $this->input->post('percent_ppn');
         $pph = $this->input->post('pph');
         $pic = $this->input->post('pic');
         $terbilang = $this->input->post('terbilang');
         $note_cs = $this->input->post('note_cs');
-		 $so_note = $this->input->post('so_note');
-        $cek_no_invoice = $this->db->select_max('no_invoice')->get('tbl_no_invoice')->row_array();
+        $so_note = $this->input->post('so_note');
+        $cek_no_invoice = $this->db->query('SELECT no_invoice FROM tbl_no_invoice WHERE id_nomor_invoice = (SELECT MAX(id_nomor_invoice) FROM tbl_no_invoice)')->row_array();
         $date = date('Y-m-d');
         $tahun = date("y");
         $bulan = date("m");
@@ -238,13 +314,13 @@ class Jobsheet extends CI_Controller
         // 000010122
         if ($cek_no_invoice['no_invoice'] == NULL) {
             $no_invoice = "$bulan$tahun";
-            $no_invoice = '00001' . $no_invoice;
+            $no_invoice = '1' . $no_invoice;
         } else {
             $no_invoice = "$bulan$tahun";
-            $potong = substr($cek_no_invoice['no_invoice'], 0, 5);
-            $no = $potong + 1;
-            $kode =  sprintf("%05s", $no);
-            $no_invoice  = "$kode$no_invoice";
+            // $potongNolInvoice = ltrim($cek_no_invoice['no_invoice'], '0');
+            $potongDateInvoice = substr($cek_no_invoice['no_invoice'], 0, -4);
+            $no = $potongDateInvoice + 1;
+            $no_invoice  = "$no$no_invoice";
         }
         // KALO DIA ADA PPN DAN PPH
         if ($is_ppn != 1) {
@@ -264,11 +340,11 @@ class Jobsheet extends CI_Controller
                 'is_ppn' => $is_ppn,
                 'is_pph' => $is_pph,
                 'is_reimbursment' => $is_reimbursment,
-				'is_special' => $is_special,
-				'is_insurance' => $is_insurance,
-				'is_packing' => $is_packing,
-				'is_others' => $is_others,
-				 'is_remarks' => $is_remarks,
+                'is_special' => $is_special,
+                'is_insurance' => $is_insurance,
+                'is_packing' => $is_packing,
+                'is_others' => $is_others,
+                'is_remarks' => $is_remarks,
                 'customer_pickup' => $customer_pickup,
                 'terbilang' => $terbilang,
                 'customer' => $this->input->post('shipper'),
@@ -279,6 +355,7 @@ class Jobsheet extends CI_Controller
                 'total_invoice' => $total_invoice,
                 'invoice' => $invoice,
                 'ppn' => $ppn,
+				'percent_ppn' => $percent_ppn,
                 'pph' => $pph,
                 'id_user' => $this->session->userdata('id_user')
             );
@@ -288,7 +365,7 @@ class Jobsheet extends CI_Controller
             );
             $this->db->insert('tbl_no_invoice', $data);
             if ($is_reimbursment == 1) {
-                $cek_no_invoice = $this->db->select_max('no_invoice')->get('tbl_no_invoice')->row_array();
+                $cek_no_invoice = $this->db->query('SELECT no_invoice FROM tbl_no_invoice WHERE id_nomor_invoice = (SELECT MAX(id_nomor_invoice) FROM tbl_no_invoice)')->row_array();
                 $date = date('Y-m-d');
                 $tahun = date("y");
                 $bulan = date("m");
@@ -337,7 +414,7 @@ class Jobsheet extends CI_Controller
 
             $data = array(
                 'note_cs' => $note_cs[$i],
-				 'so_note' => $so_note[$i],
+                'so_note' => $so_note[$i],
                 'status_so' => 5
                 // 'pu_moda' => $pu_muda[$i]
             );
@@ -351,7 +428,7 @@ class Jobsheet extends CI_Controller
             redirect('finance/invoice');
         }
     }
-	public function download()
+    public function download()
     {
         $shipment_id =  $this->input->post('shipment_id');
         if ($shipment_id == NULL) {

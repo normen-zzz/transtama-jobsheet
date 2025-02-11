@@ -66,7 +66,7 @@
                                                             ?>
                                                                 <a href="<?= base_url('cs/jobsheet/approveAktivasi/' . $j['id_aktivasi'] . '/' . $j['id'] . '/' . encrypt_url($j['is_atasan']) . '/' . $j['id_role']) ?>" class="btn btn-sm text-light tombol-konfirmasi" style="background-color: #9c223b;">Aktivate</a> <br>
                                                             <?php } else{ ?>
-                                                                <a href="<?= base_url('cs/jobsheet/approveAktivasi/' . $j['id_aktivasi'] . '/' . $j['id'] . '/' . encrypt_url($j['is_atasan']) . '/' . $j['id_role']) ?>" class="btn btn-sm text-light tombol-konfirmasi" style="background-color: #9c223b;">Aktivate Again</a> <br>
+                                                                <a href="<?= base_url('cs/jobsheet/approveAktivasi/' . $j['id_aktivasi'] . '/' . $j['id'] . '/' . encrypt_url($j['is_atasan']) . '/' . $j['id_role']) ?>" class="btn btn-sm text-light tombol-konfirmasi" style="background-color: #9c223b;">Aktivate</a> <br>
                                                             <?php } ?>
 
                                                         </td>

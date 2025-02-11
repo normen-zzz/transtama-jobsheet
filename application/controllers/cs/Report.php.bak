@@ -42,11 +42,11 @@ class Report extends CI_Controller
             $this->breadcrumb->add_item($breadcrumb_items);
             $data['breadcrumb_bootstrap_style'] = $this->breadcrumb->generate();
             $data['heading'] = 'Overall Delivery Report';
-            $data['total_shipments'] = $this->cs->getInvoiceReport($bulan = null, $tahun = null)->num_rows();
-            $data['invoice_created'] =  $this->cs->getTotalInvoice($bulan = null, $tahun = null)->num_rows();
-            $data['invoice_paid'] =  $this->cs->getInvoicePaid($bulan = null, $tahun = null)->num_rows();
-            $data['invoice_pending'] =  $this->cs->getInvoicePending($bulan = null, $tahun = null)->num_rows();
-            $data['invoice_proforma'] =  $this->cs->getInvoiceProforma($bulan = null, $tahun = null)->num_rows();
+            $data['total_shipments'] = $this->cs->getTotalShipments($bulan = null, $tahun = null)->num_rows();
+            $data['total_so'] = $this->cs->getTotalSo($bulan = null, $tahun = null)->num_rows();
+            $data['jobsheet_pending'] =  $this->cs->getJobsheetPending($bulan = null, $tahun = null)->num_rows();
+            $data['jobsheet_approve_pic'] =  $this->cs->getJobsheetApprovePic($bulan = null, $tahun = null)->num_rows();
+            $data['jobsheet_approve_mgr'] =  $this->cs->getJobsheetApproveMgr($bulan = null, $tahun = null)->num_rows();
             $this->backend->display('cs/v_report_ap', $data);
         } else {
             $data['title'] = 'Report MSR';
@@ -58,17 +58,17 @@ class Report extends CI_Controller
             $this->breadcrumb->add_item($breadcrumb_items);
             $data['breadcrumb_bootstrap_style'] = $this->breadcrumb->generate();
             $data['heading'] = "Repert Delivery  $bulan1 $tahun";
-            $data['total_shipments'] = $this->cs->getInvoiceReport($bulan, $tahun)->num_rows();
-            $data['invoice_created'] =  $this->cs->getTotalInvoice($bulan, $tahun)->num_rows();
-            $data['invoice_paid'] =  $this->cs->getInvoicePaid($bulan, $tahun)->num_rows();
-            $data['invoice_pending'] =  $this->cs->getInvoicePending($bulan, $tahun)->num_rows();
-            $data['invoice_proforma'] =  $this->cs->getInvoiceProforma($bulan, $tahun)->num_rows();
+            $data['total_shipments'] = $this->cs->getTotalShipments($bulan, $tahun)->num_rows();
+            $data['total_so'] = $this->cs->getTotalSo($bulan, $tahun)->num_rows();
+            $data['jobsheet_pending'] =  $this->cs->getJobsheetPending($bulan, $tahun)->num_rows();
+            $data['jobsheet_approve_pic'] =  $this->cs->getJobsheetApprovePic($bulan, $tahun)->num_rows();
+            $data['jobsheet_approve_mgr'] =  $this->cs->getJobsheetApproveMgr($bulan, $tahun)->num_rows();
             $this->backend->display('cs/v_report_ap_filter', $data);
         }
     }
     public function Exportexcel($bulan = NULL, $tahun = NULL)
     {
-        $shipments = $this->cs->getInvoiceReport($bulan, $tahun)->result_array();
+        $shipments = $this->cs->getReportMsr($bulan, $tahun)->result_array();
 
         // var_dump($shipments);
         // die;
@@ -114,6 +114,9 @@ class Report extends CI_Controller
         $sheet->setCellValue('AK1', '%');
         $sheet->setCellValue('AL1', 'AM/KA');
         $sheet->setCellValue('AM1', 'KETERANGAN');
+        $sheet->setCellValue('AN1', 'TGL DITERIMA');
+        $sheet->setCellValue('AO1', 'DITERIMA OLEH');
+
         // $sheet->setCellValue('AN1', 'NO INVOICE');
         // $sheet->setCellValue('AO1', 'STATUS INVOICE');
 
@@ -125,9 +128,12 @@ class Report extends CI_Controller
         $packing = 0;
         foreach ($shipments as $row) {
             $sales = $this->cs->getSales($row['id_so'])->row_array();
-
             $get_do = $this->db->select('no_do,no_so, berat, koli')->get_where('tbl_no_do', ['shipment_id' => $row['shipment_id']])->result_array();
             $jumlah = $this->db->select('no_do')->get_where('tbl_no_do', ['shipment_id' => $row['shipment_id']])->num_rows();
+
+            $tracking = $this->cs->getLastTracking($row['shipment_id'])->row_array();
+
+
 
             $no_do = '';
             $no_so = '';
@@ -217,38 +223,38 @@ class Report extends CI_Controller
                     $sdm + $row['others2'];
             }
             if ($service == 'Charter Service') {
-                $ra = rupiah($row['ra2']);
-                $packing = rupiah($row['packing2']);
-                $hand_cgk = rupiah($row['hand_cgk2']);
-                $hand_pickup =  rupiah($row['hand_pickup2']);
-                $sdm = rupiah($row['sdm2']);
+                $ra = $row['ra2'];
+                $packing = $row['packing2'];
+                $hand_cgk = $row['hand_cgk2'];
+                $hand_pickup =  $row['hand_pickup2'];
+                $sdm = $row['sdm2'];
             } else {
 
                 $ra_biasa  = $row['berat_js'] * $row['ra2'];
                 $ra_special  = $row['berat_msr'] * $row['ra2'];
-                $ra = rupiah($ra_biasa + $ra_special);
+                $ra = $ra_biasa + $ra_special;
 
                 $packing_biasa  = $row['berat_js'] * $row['packing2'];
                 $packing_special  = $row['berat_msr'] * $row['packing2'];
-                $packing = rupiah($packing_biasa + $packing_special);
+                $packing = $packing_biasa + $packing_special;
 
                 $hand_cgk_biasa  = $row['berat_js'] * $row['hand_cgk2'];
                 $hand_cgk_special  = $row['berat_msr'] * $row['hand_cgk2'];
-                $hand_cgk = rupiah($hand_cgk_biasa + $hand_cgk_special);
+                $hand_cgk = $hand_cgk_biasa + $hand_cgk_special;
 
 
                 $hand_pickup_biasa  = $row['berat_js'] * $row['hand_pickup2'];
                 $hand_pickup_special  = $row['berat_msr'] * $row['hand_pickup2'];
-                $hand_pickup = rupiah($hand_pickup_biasa + $hand_pickup_special);
+                $hand_pickup = $hand_pickup_biasa + $hand_pickup_special;
 
                 $sdm_biasa  = $row['berat_js'] * $row['sdm2'];
                 $sdm_special  = $row['berat_msr'] * $row['sdm2'];
-                $sdm = rupiah($sdm_biasa + $sdm_special);
+                $sdm = $sdm_biasa + $sdm_special;
             }
 
 
 
-            $refund = rupiah($total_sales * $refund);
+            $refund = $total_sales * $refund;
             $profit = $total_sales - $total_cost;
 
             $sheet->setCellValue('A' . $x, $no)->getColumnDimension('A')
@@ -278,60 +284,203 @@ class Report extends CI_Controller
             $sheet->setCellValue('M' . $x, $row['berat_js']);
             $sheet->setCellValue('N' . $x, $row['berat_msr'])->getColumnDimension('N')
                 ->setAutoSize(true);
-            $sheet->setCellValue('O' . $x, $row['freight_kg'])->getColumnDimension('O')
-                ->setAutoSize(true);
-            $sheet->setCellValue('P' . $x, rupiah($freight_kg))->getColumnDimension('P')
-                ->setAutoSize(true);
-            $sheet->setCellValue('Q' . $x, rupiah($packing))->getColumnDimension('Q')
-                ->setAutoSize(true);
-            $sheet->setCellValue('R' . $x, rupiah($row['others']))->getColumnDimension('R')
-                ->setAutoSize(true);
-            $sheet->setCellValue('S' . $x,  rupiah($row['surcharge']))->getColumnDimension('S')
-                ->setAutoSize(true);
-            $sheet->setCellValue('T' . $x,  rupiah($row['insurance']))->getColumnDimension('T')
-                ->setAutoSize(true);
+            if ($row['freight_kg'] != 0) {
+                $sheet->getStyle("O" . $x)->getNumberFormat()->setFormatCode("(\"Rp.\"* #,##0);(\"Rp.\"* \(#,##0\);(\"$\"* \"-\"??);(@_)");
+                $sheet->setCellValue('O' . $x, $row['freight_kg'])->getColumnDimension('O')
+                    ->setAutoSize(true);
+            } else {
+                $sheet->setCellValue('O' . $x, $row['freight_kg'])->getColumnDimension('O')
+                    ->setAutoSize(true);
+            }
+            if ($freight_kg != 0) {
+                $sheet->getStyle("P" . $x)->getNumberFormat()->setFormatCode("(\"Rp.\"* #,##0);(\"Rp.\"* \(#,##0\);(\"$\"* \"-\"??);(@_)");
+                $sheet->setCellValue('P' . $x, $freight_kg)->getColumnDimension('P')
+                    ->setAutoSize(true);
+            } else {
+                $sheet->setCellValue('P' . $x, $freight_kg)->getColumnDimension('P')
+                    ->setAutoSize(true);
+            }
+            if ($packing != 0) {
+                $sheet->getStyle("Q" . $x)->getNumberFormat()->setFormatCode("(\"Rp.\"* #,##0);(\"Rp.\"* \(#,##0\);(\"$\"* \"-\"??);(@_)");
+                $sheet->setCellValue('Q' . $x, $packing)->getColumnDimension('Q')
+                    ->setAutoSize(true);
+            } else {
+                $sheet->setCellValue('Q' . $x, $packing)->getColumnDimension('Q')
+                    ->setAutoSize(true);
+            }
+            if ($packing != 0) {
+                $sheet->getStyle("Q" . $x)->getNumberFormat()->setFormatCode("(\"Rp.\"* #,##0);(\"Rp.\"* \(#,##0\);(\"$\"* \"-\"??);(@_)");
+                $sheet->setCellValue('Q' . $x, $packing)->getColumnDimension('Q')
+                    ->setAutoSize(true);
+            } else {
+                $sheet->setCellValue('Q' . $x, $packing)->getColumnDimension('Q')
+                    ->setAutoSize(true);
+            }
+            if ($row['others'] != 0) {
+                $sheet->getStyle("R" . $x)->getNumberFormat()->setFormatCode("(\"Rp.\"* #,##0);(\"Rp.\"* \(#,##0\);(\"$\"* \"-\"??);(@_)");
+                $sheet->setCellValue('R' . $x, $row['others'])->getColumnDimension('R')
+                    ->setAutoSize(true);
+            } else {
+                $sheet->setCellValue('R' . $x, $row['others'])->getColumnDimension('R')
+                    ->setAutoSize(true);
+            }
+            if ($row['surcharge'] != 0) {
+                $sheet->getStyle("S" . $x)->getNumberFormat()->setFormatCode("(\"Rp.\"* #,##0);(\"Rp.\"* \(#,##0\);(\"$\"* \"-\"??);(@_)");
+                $sheet->setCellValue('S' . $x, $row['surcharge'])->getColumnDimension('S')
+                    ->setAutoSize(true);
+            } else {
+                $sheet->setCellValue('S' . $x, $row['surcharge'])->getColumnDimension('S')
+                    ->setAutoSize(true);
+            }
+            if ($row['insurance'] != 0) {
+                $sheet->getStyle("T" . $x)->getNumberFormat()->setFormatCode("(\"Rp.\"* #,##0);(\"Rp.\"* \(#,##0\);(\"$\"* \"-\"??);(@_)");
+                $sheet->setCellValue('T' . $x, $row['insurance'])->getColumnDimension('T')
+                    ->setAutoSize(true);
+            } else {
+                $sheet->setCellValue('T' . $x, $row['insurance'])->getColumnDimension('T')
+                    ->setAutoSize(true);
+            }
+
             $sheet->setCellValue('U' . $x, $disc  * 100 . '%')->getColumnDimension('U')
                 ->setAutoSize(true);
             $sheet->setCellValue('V' . $x, $row['cn'] * 100 . '%')->getColumnDimension('V')
                 ->setAutoSize(true);
-            $sheet->setCellValue('W' . $x, rupiah2($total_sales))->getColumnDimension('W')
-                ->setAutoSize(true);
-            $sheet->setCellValue('X' . $x, $row['flight_msu2'])->getColumnDimension('X')
-                ->setAutoSize(true);
-            $sheet->setCellValue('Y' . $x, $ra)->getColumnDimension('Y')
-                ->setAutoSize(true);
-            $sheet->setCellValue('Z' . $x, $packing)->getColumnDimension('Z')
-                ->setAutoSize(true);
-            $sheet->setCellValue('AA' . $x, $refund)->getColumnDimension('AA')
-                ->setAutoSize(true);
-            $sheet->setCellValue('AB' . $x, $row['insurance2'])->getColumnDimension('AB')
-                ->setAutoSize(true);
-            $sheet->setCellValue('AC' . $x, $row['surcharge2'])->getColumnDimension('AC')
-                ->setAutoSize(true);
-            $sheet->setCellValue('AD' . $x, $hand_cgk)->getColumnDimension('AD')
-                ->setAutoSize(true);
-            $sheet->setCellValue('AE' . $x, $hand_pickup)->getColumnDimension('AE')
-                ->setAutoSize(true);
-            $sheet->setCellValue('AF' . $x, $row['hd_daerah2'])->getColumnDimension('AF')
-                ->setAutoSize(true);
-            $sheet->setCellValue('AG' . $x, rupiah($total_sales * ($row['pph2'] / 100)))->getColumnDimension('AG')
-                ->setAutoSize(true);
-            $sheet->setCellValue('AH' . $x, $sdm)->getColumnDimension('AH')
-                ->setAutoSize(true);
-            $sheet->setCellValue('AI' . $x, rupiah($total_cost))->getColumnDimension('AI')
-                ->setAutoSize(true);
-            $sheet->setCellValue('AJ' . $x, rupiah($profit))->getColumnDimension('AJ')
-                ->setAutoSize(true);
+
+            if ($total_sales != 0) {
+                $sheet->getStyle("W" . $x)->getNumberFormat()->setFormatCode("(\"Rp.\"* #,##0);(\"Rp.\"* \(#,##0\);(\"$\"* \"-\"??);(@_)");
+                $sheet->setCellValue('W' . $x, $total_sales)->getColumnDimension('W')
+                    ->setAutoSize(true);
+            } else {
+                $sheet->setCellValue('W' . $x, $total_sales)->getColumnDimension('W')
+                    ->setAutoSize(true);
+            }
+
+            if ($row['flight_msu2'] != 0) {
+                $sheet->getStyle("X" . $x)->getNumberFormat()->setFormatCode("(\"Rp.\"* #,##0);(\"Rp.\"* \(#,##0\);(\"$\"* \"-\"??);(@_)");
+                $sheet->setCellValue('X' . $x, $row['flight_msu2'])->getColumnDimension('X')
+                    ->setAutoSize(true);
+            } else {
+                $sheet->setCellValue('X' . $x, $row['flight_msu2'])->getColumnDimension('X')
+                    ->setAutoSize(true);
+            }
+            if ($ra != 0) {
+                $sheet->getStyle("Y" . $x)->getNumberFormat()->setFormatCode("(\"Rp.\"* #,##0);(\"Rp.\"* \(#,##0\);(\"$\"* \"-\"??);(@_)");
+                $sheet->setCellValue('Y' . $x, $ra)->getColumnDimension('Y')
+                    ->setAutoSize(true);
+            } else {
+                $sheet->setCellValue('Y' . $x, $ra)->getColumnDimension('Y')
+                    ->setAutoSize(true);
+            }
+            if ($packing != 0) {
+                $sheet->getStyle("Z" . $x)->getNumberFormat()->setFormatCode("(\"Rp.\"* #,##0);(\"Rp.\"* \(#,##0\);(\"$\"* \"-\"??);(@_)");
+                $sheet->setCellValue('Z' . $x, $packing)->getColumnDimension('Z')
+                    ->setAutoSize(true);
+            } else {
+                $sheet->setCellValue('Z' . $x, $packing)->getColumnDimension('Z')
+                    ->setAutoSize(true);
+            }
+
+            if ($refund != 0) {
+                $sheet->getStyle("AA" . $x)->getNumberFormat()->setFormatCode("(\"Rp.\"* #,##0);(\"Rp.\"* \(#,##0\);(\"$\"* \"-\"??);(@_)");
+                $sheet->setCellValue('AA' . $x, $refund)->getColumnDimension('AA')
+                    ->setAutoSize(true);
+            } else {
+                $sheet->setCellValue('AA' . $x, $refund)->getColumnDimension('AA')
+                    ->setAutoSize(true);
+            }
+            if ($row['insurance2'] != 0) {
+                $sheet->getStyle("AB" . $x)->getNumberFormat()->setFormatCode("(\"Rp.\"* #,##0);(\"Rp.\"* \(#,##0\);(\"$\"* \"-\"??);(@_)");
+                $sheet->setCellValue('AB' . $x, $row['insurance2'])->getColumnDimension('AB')
+                    ->setAutoSize(true);
+            } else {
+                $sheet->setCellValue('AB' . $x, $row['insurance2'])->getColumnDimension('AB')
+                    ->setAutoSize(true);
+            }
+            if ($row['surcharge2'] != 0) {
+                $sheet->getStyle("AC" . $x)->getNumberFormat()->setFormatCode("(\"Rp.\"* #,##0);(\"Rp.\"* \(#,##0\);(\"$\"* \"-\"??);(@_)");
+                $sheet->setCellValue('AC' . $x, $row['surcharge2'])->getColumnDimension('AC')
+                    ->setAutoSize(true);
+            } else {
+                $sheet->setCellValue('AC' . $x, $row['surcharge2'])->getColumnDimension('AC')
+                    ->setAutoSize(true);
+            }
+            if ($hand_cgk != 0) {
+                $sheet->getStyle("AD" . $x)->getNumberFormat()->setFormatCode("(\"Rp.\"* #,##0);(\"Rp.\"* \(#,##0\);(\"$\"* \"-\"??);(@_)");
+                $sheet->setCellValue('AD' . $x, $hand_cgk)->getColumnDimension('AD')
+                    ->setAutoSize(true);
+            } else {
+                $sheet->setCellValue('AD' . $x, $hand_cgk)->getColumnDimension('AD')
+                    ->setAutoSize(true);
+            }
+            if ($hand_pickup != 0) {
+                $sheet->getStyle("AE" . $x)->getNumberFormat()->setFormatCode("(\"Rp.\"* #,##0);(\"Rp.\"* \(#,##0\);(\"$\"* \"-\"??);(@_)");
+                $sheet->setCellValue('AE' . $x, $hand_pickup)->getColumnDimension('AE')
+                    ->setAutoSize(true);
+            } else {
+                $sheet->setCellValue('AE' . $x, $hand_pickup)->getColumnDimension('AE')
+                    ->setAutoSize(true);
+            }
+            if ($row['hd_daerah2'] != 0) {
+                $sheet->getStyle("AF" . $x)->getNumberFormat()->setFormatCode("(\"Rp.\"* #,##0);(\"Rp.\"* \(#,##0\);(\"$\"* \"-\"??);(@_)");
+                $sheet->setCellValue('AF' . $x, $row['hd_daerah2'])->getColumnDimension('AF')
+                    ->setAutoSize(true);
+            } else {
+                $sheet->setCellValue('AF' . $x, $row['hd_daerah2'])->getColumnDimension('AF')
+                    ->setAutoSize(true);
+            }
+            if ($total_sales * ($row['pph2'] / 100) != 0) {
+                $sheet->getStyle("AG" . $x)->getNumberFormat()->setFormatCode("(\"Rp.\"* #,##0);(\"Rp.\"* \(#,##0\);(\"$\"* \"-\"??);(@_)");
+                $sheet->setCellValue('AG' . $x, $total_sales * ($row['pph2'] / 100))->getColumnDimension('AG')
+                    ->setAutoSize(true);
+            } else {
+                $sheet->setCellValue('AG' . $x, $total_sales * ($row['pph2'] / 100))->getColumnDimension('AG')
+                    ->setAutoSize(true);
+            }
+            if ($sdm != 0) {
+                $sheet->getStyle("AH" . $x)->getNumberFormat()->setFormatCode("(\"Rp.\"* #,##0);(\"Rp.\"* \(#,##0\);(\"$\"* \"-\"??);(@_)");
+                $sheet->setCellValue('AH' . $x, $sdm)->getColumnDimension('AH')
+                    ->setAutoSize(true);
+            } else {
+                $sheet->setCellValue('AH' . $x, $sdm)->getColumnDimension('AH')
+                    ->setAutoSize(true);
+            }
+            if ($total_cost != 0) {
+                $sheet->getStyle("AI" . $x)->getNumberFormat()->setFormatCode("(\"Rp.\"* #,##0);(\"Rp.\"* \(#,##0\);(\"$\"* \"-\"??);(@_)");
+                $sheet->setCellValue('AI' . $x, $total_cost)->getColumnDimension('AI')
+                    ->setAutoSize(true);
+            } else {
+                $sheet->setCellValue('AI' . $x, $total_cost)->getColumnDimension('AI')
+                    ->setAutoSize(true);
+            }
+            if ($profit != 0) {
+                $sheet->getStyle("AJ" . $x)->getNumberFormat()->setFormatCode("(\"Rp.\"* #,##0);(\"Rp.\"* \(#,##0\);(\"$\"* \"-\"??);(@_)");
+                $sheet->setCellValue('AJ' . $x, $profit)->getColumnDimension('AJ')
+                    ->setAutoSize(true);
+            } else {
+                $sheet->setCellValue('AJ' . $x, $profit)->getColumnDimension('AJ')
+                    ->setAutoSize(true);
+            }
             $sheet->setCellValue('AK' . $x, round($profit / $total_sales * 100, 0))->getColumnDimension('AK')
                 ->setAutoSize(true);
+
             $sheet->setCellValue('AL' . $x, $sales['nama_user'])->getColumnDimension('AL')
                 ->setAutoSize(true);
             $sheet->setCellValue('AM' . $x, $row['note_pic_js'])->getColumnDimension('AM')
                 ->setAutoSize(true);
-            // $sheet->setCellValue('AN' . $x, $no_invoice . '/' . $status_invoice)->getColumnDimension('AN')
-            //     ->setAutoSize(true);
-            // $sheet->setCellValue('A0' . $x, $status_invoice)->getColumnDimension('AO')
-            //     ->setAutoSize(true);
+            $sheet->setCellValue('AN' . $x, $row['tgl_diterima'])->getColumnDimension('AN')
+                ->setAutoSize(true);
+            // if ($row['tgl_diterima'] != '' || $row['tgl_diterima'] != NULL) {
+            $sheet->setCellValue('AO' . $x, $tracking['status'])->getColumnDimension('AO')
+                ->setAutoSize(true);
+            // } else {
+            //     $sheet->setCellValue('AO' . $x, '')->getColumnDimension('AO')
+            //         ->setAutoSize(true);
+            // }
+
+
+
+
+
             $x++;
             $no++;
         }

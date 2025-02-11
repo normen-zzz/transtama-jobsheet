@@ -201,10 +201,7 @@
                                                 <!--berart js = weight js/msr-->
                                                 <!--berat_msr= special_freight-->
                                                 <?php
-                                                
-
-                                                    $total_sales = getTotalSales($msr['id']);
-                                                
+                                                 $total_sales = getTotalSales($msr['id']);
                                                 ?>
                                                 <tr>
                                                     <td>
@@ -556,7 +553,29 @@
 		
         <div class="row">
             <!-- APPROVE SALES MANAGER -->
-           
+            <?php
+            if ($approve_manager_sales['approve_manager']) {
+                $nama_user = $this->db->get_where('tb_user', ['id_user' => $approve_manager_sales['approve_manager']])->row_array();
+            ?>
+                <div class="col-md-4">
+                    <div class="card card-custom gutter-b example example-compact" style="height:100px;">
+                        <h4 class="text-title text-center mt-2"> <i class="fa fa-check text-success"></i>Approve Sales Manager</h4> <br>
+                        <h4 class="text-title text-center"><?= $nama_user['nama_user'] ?></h4>
+                        <h4 class="text-title text-center"><?= $approve_manager_sales['created_at_manager'] ?></h4>
+                    </div>
+                </div>
+
+            <?php   } else {
+            ?>
+                <div class="col-md-4">
+                    <div class="card card-custom gutter-b example example-compact" style="height:100px;">
+                        <h4 class="text-title text-center mt-2"> <i class="fa fa-time text-danger"></i>Wait Approve Sales Manager</h4> <br>
+                        <h4 class="text-title text-center"></h4>
+                    </div>
+                </div>
+
+            <?php   }
+            ?>
             <!-- APPROVE PIC JS -->
             <?php if ($approve_managerial['approve_cs']) {
                 $nama_user = $this->db->get_where('tb_user', ['id_user' => $approve_managerial['approve_cs']])->row_array();

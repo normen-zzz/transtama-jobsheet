@@ -41,12 +41,12 @@
                                                 <?php foreach ($js as $j) {
                                                 ?>
                                                     <tr>
-                                                        <td><?= bulan_indo($j['tgl_pickup']) ?></td>
-                                                        <td><?= $j['shipment_id'] ?></td>
-                                                        <td><?= $j['shipper'] ?></td>
-                                                        <td><?= $j['request_by'] ?></td>
-                                                        <td><?= $j['reason'] ?></td>
-                                                        <td><?= $j['created'] ?></td>
+                                                        <td <?php if ($j['status'] == 0) { ?> class="text-danger" <?php } ?>><?= bulan_indo($j['tgl_pickup']) ?></td>
+                                                        <td <?php if ($j['status'] == 0) { ?> class="text-danger" <?php } ?>><?= $j['shipment_id'] ?></td>
+                                                        <td <?php if ($j['status'] == 0) { ?> class="text-danger" <?php } ?>><?= $j['shipper'] ?></td>
+                                                        <td <?php if ($j['status'] == 0) { ?> class="text-danger" <?php } ?>><?= $j['request_by'] ?></td>
+                                                        <td <?php if ($j['status'] == 0) { ?> class="text-danger" <?php } ?>><?= $j['reason'] ?></td>
+                                                        <td <?php if ($j['status'] == 0) { ?> class="text-danger" <?php } ?>><?= $j['created'] ?></td>
                                                         <td>
                                                             <?php
                                                             if ($j['status'] == 0) {

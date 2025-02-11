@@ -35,7 +35,7 @@
 									<!-- /.box-header -->
 									<div class="box-body">
 										<div class="table-responsive">
-											<table class="table table-bordered" style="width:100%" id="myTable">
+											<table class="table table-bordered" style="width:100%">
 												<thead>
 													<tr>
 														<th>#</th>

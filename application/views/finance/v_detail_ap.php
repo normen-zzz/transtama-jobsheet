@@ -219,7 +219,7 @@
 											</div>
 											<div class="d-flex justify-content-between border-top mt-5 pt-10">
 												<?php $id_jabatan = $this->session->userdata('id_jabatan');
-												// Jika Usernya gm 
+												// Jika Usernya Director 
 												if ($id_jabatan == 11) {
 													// jika sudah di approve mgr finance 
 													if ($info['status'] == 7 && $info['id_role'] != 2 && $info['id_role'] != 3) { ?>
@@ -267,7 +267,7 @@
 													<?php	} elseif ($info['status'] == 5) { ?>
 														<span>
 															<span class="fa fa-check-circle text-success"></span>
-															This <b><?= $info['no_pengeluaran'] ?></b> has been <b> Approve GM</b>
+															This <b><?= $info['no_pengeluaran'] ?></b> has been <b> Approve Director</b>
 
 														</span>
 													<?php } elseif ($info['status'] == 6) { ?>
@@ -322,7 +322,7 @@
 													<?php	} elseif ($info['status'] == 5) { ?>
 														<span>
 															<span class="fa fa-check-circle text-success"></span>
-															This <b><?= $info['no_pengeluaran'] ?></b> has been <b> Approve GM</b> Please to pay according to the Approved Amount
+															This <b><?= $info['no_pengeluaran'] ?></b> has been <b> Approve Director</b> Please to pay according to the Approved Amount
 
 														</span>
 													<?php } elseif ($info['status'] == 6) { ?>
@@ -334,7 +334,7 @@
 													<?php } elseif ($info['status'] == 7) { ?>
 														<span>
 															<span class="fa fa-check-circle text-success"></span>
-															This <b><?= $info['no_pengeluaran'] ?></b> has been <b> Approve Mgr Finance</b> Please Wait GM To Check
+															This <b><?= $info['no_pengeluaran'] ?></b> has been <b> Approve Mgr Finance</b> Please Wait Director To Check
 
 														</span>
 														<?php }
@@ -360,6 +360,11 @@
 																<button type="submit" class="btn btn-sm text-light" onclick="return confirm('Are You Sure ?')" style="background-color: #9c223b;">Receive</button>
 																<a href="#" data-toggle="modal" data-target="#modal-decline" class="btn btn-sm text-light" style="background-color: #9c223b;">Void</a>
 															</div>
+														<?php } elseif ($info['is_approve_sm'] == 0 && $info['id_role'] == 8) { ?>
+															<div>
+																<button type="submit" class="btn btn-sm text-light" onclick="return confirm('Are You Sure ?')" style="background-color: #9c223b;">Receive</button>
+																<a href="#" data-toggle="modal" data-target="#modal-decline" class="btn btn-sm text-light" style="background-color: #9c223b;">Void</a>
+															</div> 
 														<?php }
 														// jika sudah diterima staff/mgr finance
 													} elseif ($info['status'] == 3) { ?>
@@ -377,7 +382,7 @@
 													<?php	} elseif ($info['status'] == 5) { ?>
 														<span>
 															<span class="fa fa-check-circle text-success"></span>
-															This <b><?= $info['no_pengeluaran'] ?></b> has been <b> Approve GM</b> Please to pay according to the Approved Amount
+															This <b><?= $info['no_pengeluaran'] ?></b> has been <b> Approve Director</b> Please to pay according to the Approved Amount
 
 														</span>
 													<?php } elseif ($info['status'] == 6) { ?>
@@ -389,7 +394,7 @@
 													<?php } elseif ($info['status'] == 7) { ?>
 														<span>
 															<span class="fa fa-check-circle text-success"></span>
-															This <b><?= $info['no_pengeluaran'] ?></b> has been <b> Approve Mgr Finance</b> Please Wait GM To Check
+															This <b><?= $info['no_pengeluaran'] ?></b> has been <b> Approve Mgr Finance</b> Please Wait Director To Check
 
 														</span>
 												<?php }

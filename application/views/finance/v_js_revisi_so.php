@@ -46,7 +46,7 @@
                                                 ?>
                                                     <tr>
                                                        
-                                                            <!-- kalau jabatan dia gm -->
+                                                            <!-- kalau jabatan dia Director -->
                                                         <?php  if ($jabatan == 11 && $j['status_revisi'] == 3) { ?>
                                                             <td class="text-danger"><?= bulan_indo($j['tgl_pickup']) ?></td>
                                                             <td class="text-danger"><?= $j['shipment_id'] ?></td>
@@ -113,9 +113,9 @@
                                                             <?php } elseif ($j['status_revisi'] == 6) {
                                                             ?>
                                                                 <!-- <a href="<?= base_url('cs/jobsheet/detailRevisi/' . $j['id']) ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">View Revision</a> <br> -->
-                                                                <small>Jobsheet Decline By GM</small> <br>
+                                                                <small>Jobsheet Decline By Director</small> <br>
                                                             <?php } elseif ($j['status_revisi'] == 7) { ?>
-                                                                <small>Jobsheet Approved By GM</small> <br>
+                                                                <small>Jobsheet Approved By Director</small> <br>
                                                             <?php }
                                                             ?>
                                                         </td>

@@ -243,7 +243,7 @@
                                         </div>
                                     </div>
                                     <div class="col-md-6">
-                                        <?php if ($inv['status'] == 3) {
+                                        <?php if ($inv['status'] == 4) {
                                         ?>
                                             <div class="d-flex align-items-center flex-wrap mb-8">
                                                 <!--begin::Symbol-->

@@ -49,7 +49,6 @@
                                                 $total_weight = 0;
                                                 $total_special_weight = 0;
                                                 $total_amount = 0;
-                                                $ppn = 0;
 
                                                 foreach ($invoice as $inv) {
                                                     $no = 1;

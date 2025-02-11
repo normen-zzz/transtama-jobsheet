@@ -4,6 +4,7 @@ class Sendwa extends CI_Model
 {
     function kirim2($phone, $msg)
     {
+		 
         $link  =  "https://jogja.wablas.com";
         $data = [
             'phone' => $phone,
@@ -31,6 +32,7 @@ class Sendwa extends CI_Model
     }
     public function kirim($phone, $msg)
     {
+		 
         $curl = curl_init();
         $token = "uk6mWOZvwaEOTprR9NE64FlNy3X0Wa0EVvFcXC6byLvd9zTjTxL0XUlj8PlEEQ4D";
         $data = [
@@ -56,7 +58,10 @@ class Sendwa extends CI_Model
     }
     public function pickup($phone, $msg)
     {
-        $result = file_get_contents("https://jogjaf.wablas.com/api/send-message?token=uk6mWOZvwaEOTprR9NE64FlNy3X0Wa0EVvFcXC6byLvd9zTjTxL0XUlj8PlEEQ4D&phone=$phone&message=$msg");
+		
+        $msg =  str_replace(" ", "%20", $msg);
+
+        $result = file_get_contents("https://jogja.wablas.com/api/send-message?token=dIcrt40Ek2SdegCv9KnkYQEVBFTyUxyztNMjTtB6ZxbQlhzYWrfbDgCGS8CVqLro.UftRIN0F&phone=$phone&message=$msg");
         return $result;
         // echo "<pre>";
         // print_r($result);

@@ -60,12 +60,22 @@
                     </li>
 
                 <?php } elseif ($role == 6) {
-                    $total_revisi = $this->db->get_where('tbl_revisi_so', ['status_revisi' => 2])->num_rows(); ?>
+                    $total_revisi = $this->db->get_where('tbl_revisi_so', ['status_revisi' => 3])->num_rows(); ?>
                     <!-- keuangan -->
                     <li class="menu-item" aria-haspopup="true">
                         <a href="<?= base_url('finance/dashboard') ?>" class="menu-link">
                             <i class="fa fa-home mt-2 fa-1x mr-2 text-danger"></i>
                             <span class="menu-text">Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="menu-section">
+                        <h4 class="menu-text">Data Sales</h4>
+                        <i class="menu-icon ki ki-bold-more-hor icon-md"></i>
+                    </li>
+                    <li class="menu-item" aria-haspopup="true">
+                        <a href="<?= base_url('finance/SalesTracker') ?>" class="menu-link">
+                            <i class="fa fa-book mt-2 fa-1x mr-2 text-danger"></i>
+                            <span class="menu-text">Sales Tracker</span>
                         </a>
                     </li>
                     <li class="menu-section">
@@ -130,12 +140,11 @@
                                         <span class="menu-text">Invoice Paid</span>
                                     </a>
                                 </li>
-
-
-
                             </ul>
                         </div>
                     </li>
+
+
 
                     <li class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
                         <a href="javascript:;" class="menu-link menu-toggle">
@@ -243,6 +252,20 @@
                         </div>
                     </li>
 
+                    <li class="menu-item" aria-haspopup="true">
+                        <a href="<?= base_url('finance/jobsheet/cekResi') ?>" class="menu-link">
+                            <i class="fa fa-book mt-2 fa-1x mr-2 text-danger"></i>
+                            <span class="menu-text" style="font-size:11px">Cek Resi</span>
+                        </a>
+                    </li>
+
+                    <li class="menu-item" aria-haspopup="true">
+                        <a href="<?= base_url('finance/ap/cekAp') ?>" class="menu-link">
+                            <i class="fa fa-search mt-2 fa-1x mr-2 text-danger"></i>
+                            <span class="menu-text" style="font-size:11px">Cek Ap</span>
+                        </a>
+                    </li>
+
                     <li class="menu-section">
                         <h4 class="menu-text">MASTER DATA</h4>
                         <i class="menu-icon ki ki-bold-more-hor icon-md"></i>
@@ -283,11 +306,19 @@
                             <i class="menu-arrow"></i>
                             <ul class="menu-subnav">
                                 <li class="menu-item" aria-haspopup="true">
+                                    <a href="<?= base_url('finance/report/profitLossHpp') ?>" class="menu-link">
+                                        <i class="menu-bullet menu-bullet-dot">
+                                            <span></span>
+                                        </i>
+                                        <span class="menu-text">HPP</span>
+                                    </a>
+                                </li>
+                                <li class="menu-item" aria-haspopup="true">
                                     <a href="<?= base_url('finance/report/profitLoss') ?>" class="menu-link">
                                         <i class="menu-bullet menu-bullet-dot">
                                             <span></span>
                                         </i>
-                                        <span class="menu-text">List Profit/Loss</span>
+                                        <span class="menu-text">REAL</span>
                                     </a>
                                 </li>
 
@@ -303,10 +334,10 @@
                     // $total_aktivasi = 0;
                     // $total_aktivasi_sales = 0;
 
-                    $total_revisi = $this->db->get_where('tbl_request_revisi', ['status' => 0])->num_rows();
-                    $total_so_cs = $this->db->get_where('tbl_revisi_so', ['status_revisi' => 0])->num_rows();
-                    $total_so_mgr = $this->db->get_where('tbl_revisi_so', ['status_revisi' => 1])->num_rows();
-                    $total_so_gm = $this->db->get_where('tbl_revisi_so', ['status_revisi' => 3])->num_rows();
+                    $total_revisi = $this->db->get_where('tbl_request_revisi', ['status' => 0])->num_rows(); //total so yang baru diajukan sales
+                    $total_so_sales = $this->db->get_where('tbl_revisi_so', ['status_revisi' => 0])->num_rows();// total so yang dibuat sales
+                    $total_so_cs = $this->db->get_where('tbl_revisi_so', ['status_revisi' => 1])->num_rows();// total so yang diapprove pic js
+                    $totalSoSmNeedApprove = $this->db->get_where('tbl_revisi_so', ['status_revisi' => 2])->num_rows();// total so yang harus diapprove sm
                     $total_ap = $this->db->group_by('a.no_pengeluaran')->get_where('tbl_pengeluaran a', ['a.status' => 1, 'a.is_approve_sm' => 1])->num_rows();
 
                 ?>
@@ -354,35 +385,35 @@
                                 if ($jabatan == 10) {
                                 ?>
 
-                                    <pre class="badge badge-<?php if ($total_so_gm == 0) {
+                                    <pre class="badge badge-<?php if ($totalSoSmNeedApprove == 0) {
                                                                 echo "success";
                                                             } else {
                                                                 echo "secondary";
-                                                            } ?> ml-1"><a class="text-<?php if ($total_so_gm  == 0) {
+                                                            } ?> ml-1"><a class="text-<?php if ($totalSoSmNeedApprove  == 0) {
                                                                                             echo "white";
                                                                                         } else {
                                                                                             echo "dark";
-                                                                                        } ?>" href="<?= base_url('cs/SalesOrder/viewRevisiSoNeedApprove') ?> "><?= $total_so_gm  ?></a></pre>
+                                                                                        } ?>" href="<?= base_url('cs/SalesOrder/viewRevisiSoNeedApprove') ?> "><?= $totalSoSmNeedApprove  ?></a></pre>
                                 <?php   } else {
                                 ?>
-                                    <pre class="badge badge-<?php if ($total_so_mgr == 0 || $total_so_cs == 0) {
+                                    <pre class="badge badge-<?php if ($total_so_cs == 0) {
                                                                 echo "success";
                                                             } else {
                                                                 echo "secondary";
                                                             } ?> ml-1">
                                       <?php
                                         if ($id_atasan == NULL || $id_atasan == 0) { ?>
-                                            <a class="text-<?php if ($total_so_mgr  == 0) {
+                                            <a class="text-<?php if ($total_so_cs  == 0) {
                                                                 echo "white";
                                                             } else {
                                                                 echo "dark";
-                                                            } ?>" href="<?= base_url('cs/SalesOrder/viewRevisiSoNeedApprove') ?> "><?= $total_so_mgr  ?></a>
+                                                            } ?>" href="<?= base_url('cs/SalesOrder/viewRevisiSoNeedApprove') ?> "><?= $total_so_cs  ?></a>
                                        <?php } else { ?>
-                                        <a class="text-<?php if ($total_so_cs  == 0) {
+                                        <a class="text-<?php if ($total_so_sales == 0) {
                                                             echo "white";
                                                         } else {
                                                             echo "dark";
-                                                        } ?>" href="<?= base_url('cs/SalesOrder/viewRevisiSoNeedApprove') ?> "><?= $total_so_cs  ?></a>
+                                                        } ?>" href="<?= base_url('cs/SalesOrder/viewRevisiSoNeedApprove') ?> "><?= $total_so_sales  ?></a>
                                        <?php }
 
                                         ?>
@@ -392,6 +423,8 @@
                             </span>
                         </a>
                     </li>
+
+                    
 
                     <li class="menu-section">
                         <h4 class="menu-text">JOBSHEET</h4>
@@ -407,6 +440,15 @@
                         <a href="<?= base_url('cs/jobsheet/final') ?>" class="menu-link">
                             <i class="fa fa-book mt-2 fa-1x mr-2 text-danger"></i>
                             <span class="menu-text" style="font-size:11px">Jobsheet Approve Manager</span>
+                        </a>
+                    </li>
+                  
+
+
+                    <li class="menu-item" aria-haspopup="true">
+                        <a href="<?= base_url('cs/jobsheet/cekResi') ?>" class="menu-link">
+                            <i class="fa fa-book mt-2 fa-1x mr-2 text-danger"></i>
+                            <span class="menu-text" style="font-size:11px">Cek Resi</span>
                         </a>
                     </li>
 

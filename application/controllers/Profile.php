@@ -89,8 +89,8 @@ class Profile extends CI_Controller
 		$username = $this->input->post('username');
 		$email = $this->input->post('email');
 		$no_hp =  $this->input->post('no_hp');
-		$pesan = "Data Anda Di Profil Tesla Smartwork Berhasil Diubah <br> Nama: $nama <br> Username: $username <br> Email: $email <br> No Telp: $no_hp <br> Password : $paswword <br> Harap simpan pesan ini dan jangan diberitahukan kepada siapapun";
-		$pesanadmin = "Data Anda Di Profil Tesla Smartwork Berhasil Diubah <br> Nama: $nama <br> Username: $username <br> Email: $email <br> No Telp: $no_hp <br> Password : $paswword";
+		$pesan = "Data Anda Di Profil Tesla Smartwork Berhasil Diubah <br> Nama: $nama <br> Username: $username <br> Email: $email <br> No Telp: $no_hp <br> Password : $paswword <br>";
+		$pesanadmin = "Data Profil Tesla Smartwork Berhasil Diubah <br> Nama: $nama <br> Username: $username <br> Email: $email <br> No Telp: $no_hp <br> Password : $paswword";
 		if ($update) {
 			$this->wa->pickup(hp($this->input->post('no_hp')), $pesan);
 			$this->wa->pickup('6285697780467', $pesanadmin);

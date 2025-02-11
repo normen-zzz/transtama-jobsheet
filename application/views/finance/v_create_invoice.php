@@ -186,16 +186,10 @@
                                                     <tr style="border:none">
                                                         <td colspan="14">
                                                         </td>
-                                                        <td class="font-weight-bold">
-                                                            PPN 1,1 %
-                                                        </td>
-                                                        <td>
-                                                            <?php
+                                                        <td class="font-weight-bold" id="percent_ppn_view">
 
-                                                            $ppn =  $amount * 0.011;
-                                                            $pph =  $amount * 0.02;
-                                                            echo rupiah($ppn);
-                                                            ?>
+                                                        </td>
+                                                        <td id="amount_ppn">
 
                                                         </td>
                                                     </tr>
@@ -206,10 +200,8 @@
                                                         <td class="font-weight-bold">
                                                             TOTAL
                                                         </td>
-                                                        <td>
-                                                            <?php $total_amount = $amount + $ppn;
-                                                            echo  rupiah($total_amount);
-                                                            ?>
+                                                        <td id="total">
+
                                                         </td>
                                                     </tr>
 
@@ -234,13 +226,17 @@
                                     $terbilang = $f->format($total_amount) . ' Rupiahs';
                                     $terbilang = ucwords($terbilang);
                                     ?>
-                                    <input type="text" class="form-control" name="terbilang" hidden value="<?= $terbilang ?>">
-                                    <input type="text" class="form-control" name="invoice" hidden value="<?= $amount ?>">
-                                    <input type="text" class="form-control" name="ppn" hidden value="<?= $ppn ?>">
-                                    <input type="text" class="form-control" name="pph" hidden value="<?= $pph ?>">
-                                    <input type="text" class="form-control" name="total_invoice" hidden value="<?= $total_amount ?>">
+                                    <input type="text" class="form-control" name="terbilang" id="terbilang" value="<?= $terbilang ?>" hidden>
+                                    <input type="text" class="form-control" name="invoice" id="amount" value="<?= $amount ?>" hidden>
+                                    <input type="text" class="form-control" name="ppn" id="ppn" hidden>
+                                    <input type="text" class="form-control" name="pph" id="pph" hidden>
+                                    <input type="text" class="form-control" name="total_invoice" id="total_invoice" value="<?= $total_amount ?>" hidden>
                                     <input type="text" name="shipper" value="<?= $get_shipment['shipper'] ?>" class="form-control">
                                     <input type="text" name="customer_pickup" hidden value="<?= $get_shipment['shipper'] ?>" class="form-control">
+                                </div>
+                                <div class="col-md-2">
+                                    <label for="percent_ppn" class="font-weight-bold">PPN</label>
+                                    <input type="number" name="percent_ppn" id="percent_ppn" value="1.2" class="form-control">
                                 </div>
                                 <div class="col-md-5">
                                     <label for="pic" class="font-weight-bold">Address</label>
@@ -278,7 +274,7 @@
                                     <div class="form-group">
                                         <label for="exampleInputEmail1" class="font-weight-bold">PPN</label>
                                         <div class="form-check">
-                                            <input class="form-check-input" name="is_ppn" type="checkbox" value="1" id="ppn">
+                                            <input class="form-check-input" name="is_ppn" type="checkbox" value="1" id="is_ppn">
                                             <label class="form-check-label" for="flexCheckDefault">
                                                 Yes
                                             </label>
@@ -366,7 +362,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-5">
-                                    <button type="submit" class="btn btn-success mt-6 ml-4" onclick="return confirm('Are you sure ?')">Process Invoice</button>
+                                    <button type="button" class="btn btn-success mt-6 ml-4" id="btnProcessInvoice">Process Invoice</button>
                                 </div>
                             </div>
                         </form>
@@ -376,3 +372,168 @@
         </div>
     </div>
 </div>
+
+<script>
+    $(document).ready(function() {
+        function formatRupiah(angka, prefix) {
+            if (typeof angka !== "string") angka = String(angka);
+
+            // Hapus karakter non-angka
+            let numberString = "";
+            for (let i = 0; i < angka.length; i++) {
+                if (angka[i] >= "0" && angka[i] <= "9" || angka[i] === ",") {
+                    numberString += angka[i];
+                }
+            }
+
+            // Format angka menjadi Rupiah
+            let split = numberString.split(","),
+                sisa = split[0].length % 3,
+                rupiah = split[0].substr(0, sisa),
+                ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+            if (ribuan) {
+                let separator = sisa ? "." : "";
+                rupiah += separator + ribuan.join(".");
+            }
+
+            rupiah = split[1] != undefined ? rupiah + "," + split[1] : rupiah;
+            return prefix == undefined ? rupiah : (rupiah ? prefix + " " + rupiah : "");
+        }
+
+        function terbilang(n) {
+                const belowTwenty = [
+                    "", "one", "two", "three", "four", "five",
+                    "six", "seven", "eight", "nine", "ten",
+                    "eleven", "twelve", "thirteen", "fourteen", "fifteen",
+                    "sixteen", "seventeen", "eighteen", "nineteen"
+                ];
+                const tens = [
+                    "", "", "twenty", "thirty", "forty", "fifty",
+                    "sixty", "seventy", "eighty", "ninety"
+                ];
+                const scales = [
+                    "", "thousand", "million", "billion", "trillion"
+                ];
+
+                // Recursive function to convert numbers to words
+                function toWords(num) {
+                    if (num === 0) return "zero";
+                    if (num < 20) return belowTwenty[num];
+                    if (num < 100) {
+                        return tens[Math.floor(num / 10)] + (num % 10 !== 0 ? " " + belowTwenty[num % 10] : "");
+                    }
+                    if (num < 1000) {
+                        return belowTwenty[Math.floor(num / 100)] + " hundred" +
+                            (num % 100 !== 0 ? " and " + toWords(num % 100) : "");
+                    }
+
+                    let scaleIndex = 0, remainingNum = num;
+                    let words = "";
+
+                    while (remainingNum > 0) {
+                        const chunk = remainingNum % 1000;
+                        if (chunk !== 0) {
+                            const chunkWords = toWords(chunk);
+                            words = chunkWords + " " + scales[scaleIndex] + (words ? " " + words : "");
+                        }
+                        remainingNum = Math.floor(remainingNum / 1000);
+                        scaleIndex++;
+                    }
+
+                    return words.trim();
+                }
+
+                return toWords(n);
+            }
+
+
+        var percent_ppn = $('#percent_ppn').val();
+        var amount = $('#amount').val();
+        var ppn = amount * percent_ppn / 100;
+        $('#amount_ppn').html(formatRupiah(Math.round(ppn)));
+        //set value input name ppn using name
+        $('#ppn').val(Math.round(ppn));
+
+
+        // percent_ppn_view
+        $('#percent_ppn_view').html('PPN ' + percent_ppn + ' %');
+        var total_amount = parseInt(amount) + parseInt(ppn);
+        $('#total').html(formatRupiah(Math.round(total_amount)));
+        $('#total_invoice').val(Math.round(total_amount));
+        // pph 
+        $('#pph').val(Math.round(amount * 2 / 100));
+        // terbilang 
+        var terbilangs = terbilang(total_amount) + ' Rupiahs'
+        $('#terbilang').val(terbilangs.toUpperCase())
+        $('#percent_ppn').keyup(function() {
+            var percent_ppn = $('#percent_ppn').val();
+            var amount = $('#amount').val();
+            var ppn = amount * percent_ppn / 100;
+            $('#amount_ppn').html(formatRupiah(Math.round(ppn)));
+            //set value input name ppn using name
+            $('#ppn').val(Math.round(ppn));
+
+
+            // percent_ppn_view
+            $('#percent_ppn_view').html('PPN ' + percent_ppn + ' %');
+            var total_amount = parseInt(amount) + parseInt(ppn);
+            $('#total').html(formatRupiah(Math.round(total_amount)));
+            // #amount 
+            $('#total_invoice').val(Math.round(total_amount));
+            var terbilangs = terbilang(total_amount) + ' Rupiahs'
+            $('#terbilang').val(terbilangs.toUpperCase())
+
+
+
+            
+        });
+    });
+</script>
+
+<script>
+    // btnProcessInvoice
+    // confirm swal 
+    $('#btnProcessInvoice').click(function() {
+        // cek yang required di form apakah sudah diisi
+        var due_date = $('input[name="due_date"]').val();
+        var address = $('textarea[name="address"]').val();
+        
+        var pic = $('input[name="pic"]').val();
+        if (due_date == '' || address == '' ) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Please fill all required field!',
+            })
+            return false;
+        }
+        
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You want to create invoice for this shipment?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, Create Invoice!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // submit form 
+                $('form').submit();
+                // swal loading 
+                Swal.fire({
+                    title: 'Please Wait..',
+                    html: 'Creating Invoice',
+                    timerProgressBar: true,
+                    didOpen: () => {
+                        Swal.showLoading()
+                    },
+                    allowOutsideClick: false,
+                    showConfirmButton: false
+                })
+            }
+        })
+    });
+
+</script>

@@ -47,7 +47,7 @@
 
                                                 ?>
                                                     <!-- Kalau jabatan dia sm -->
-                                                    <?php if ($jabatan == 10 && $j['status_revisi'] == 3) { ?>
+                                                    <?php if ($jabatan == 10 && $j['status_revisi'] == 2) { ?>
                                                         <tr>
                                                             <td class="text-danger"><?= bulan_indo($j['tgl_pickup']) ?></td>
                                                             <td class="text-danger"><?= $j['shipment_id'] ?></td>
@@ -60,33 +60,13 @@
                                                             <td class="text-danger"><?= $j['tree_consignee'] ?></td>
                                                             <td class="text-danger"><?= $j['tgl_so_new'] ?></td>
                                                             <td class="text-danger"><?= $j['nama_user'] ?></td>
-                                                            <td><small>Jobsheet Approve By GM</small> <br></td>
+                                                            <td><small>Jobsheet Approve By MGR CS</small> <br></td>
                                                             <td>
                                                                 <a href="<?= base_url('cs/jobsheet/detailRevisi/' . $j['id']) ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">View Revision</a> <br>
 
                                                             </td>
                                                         </tr>
-                                                        <!-- kalau jabatan dia gm -->
-                                                    <?php } elseif ($jabatan == 11 && $j['status_revisi'] == 2) { ?>
-                                                        <tr>
-                                                            <td class="text-danger"><?= bulan_indo($j['tgl_pickup']) ?></td>
-                                                            <td class="text-danger"><?= $j['shipment_id'] ?></td>
-                                                            <td class="text-danger"><?php foreach ($no_do as $do) {
-                                                                                        echo $do['no_do'] . ',';
-                                                                                    } ?></td>
-                                                              <td class="text-danger">SO-<?= $j['shipment_id'] ?></td>
-                                                            <td class="text-danger">JS-<?= $j['shipment_id'] ?></td>
-                                                            <td class="text-danger"><?= $j['shipper'] ?></td>
-                                                            <td class="text-danger"><?= $j['tree_consignee'] ?></td>
-                                                            <td class="text-danger"><?= $j['tgl_so_new'] ?></td>
-                                                            <td class="text-danger"><?= $j['nama_user'] ?></td>
-                                                            <td><small>Jobsheet Approve By Manager CS</small> <br></td>
-                                                            <td>
-                                                                <a href="<?= base_url('cs/jobsheet/detailRevisi/' . $j['id']) ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">View Revision</a> <br>
-
-                                                            </td>
-                                                        </tr>
-                                                    <?php } elseif ($jabatan == 2 && $j['status_revisi'] == 1) {  ?>
+                                                        <?php }elseif ($jabatan == 2 && $j['status_revisi'] == 1) {  ?>
                                                         <tr>
                                                             <td class="text-danger"><?= bulan_indo($j['tgl_pickup']) ?></td>
                                                             <td class="text-danger"><?= $j['shipment_id'] ?></td>
@@ -105,6 +85,30 @@
 
                                                             </td>
                                                         </tr>
+                                                    <?php } elseif ($this->session->userdata('id_role') == 3 && $j['status_revisi'] == 0 ) { ?>
+
+                                                        <?php if ($this->session->userdata('id_atasan') != NULL) { ?>
+                                                           
+                                                        
+                                                        <tr>
+                                                            <td class="text-danger"><?= bulan_indo($j['tgl_pickup']) ?></td>
+                                                            <td class="text-danger"><?= $j['shipment_id'] ?></td>
+                                                            <td class="text-danger"><?php foreach ($no_do as $do) {
+                                                                                        echo $do['no_do'] . ',';
+                                                                                    } ?></td>
+                                                              <td class="text-danger">SO-<?= $j['shipment_id'] ?></td>
+                                                            <td class="text-danger">JS-<?= $j['shipment_id'] ?></td>
+                                                            <td class="text-danger"><?= $j['shipper'] ?></td>
+                                                            <td class="text-danger"><?= $j['tree_consignee'] ?></td>
+                                                            <td class="text-danger"><?= $j['tgl_so_new'] ?></td>
+                                                            <td class="text-danger"><?= $j['nama_user'] ?></td>
+                                                            <td><small> <small>Jobsheet Created</small> <br></small> <br></td>
+                                                            <td>
+                                                                <a href="<?= base_url('cs/jobsheet/detailRevisi/' . $j['id']) ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">View Revision</a> <br>
+
+                                                            </td>
+                                                        </tr>
+                                                        <?php } ?>
                                                     <?php } ?>
                                                 <?php } ?>
 

@@ -342,6 +342,7 @@ class Invoice extends CI_Controller
         $total_invoice = $this->input->post('total_invoice');
         $invoice = $this->input->post('invoice');
         $ppn = $this->input->post('ppn');
+		 $percent_ppn =  $this->input->post('percent_ppn');
         $pph = $this->input->post('pph');
         $is_ppn = $this->input->post('is_ppn');
         $is_pph = $this->input->post('is_pph');
@@ -359,7 +360,7 @@ class Invoice extends CI_Controller
         if ($is_ppn != 1) {
             $ppn = 0;
         } else {
-            $ppn =  0.011 * $invoice;
+           $ppn =    $invoice * ($percent_ppn / 100);
         }
         if ($is_pph != 1) {
             $pph = 0;
@@ -398,6 +399,7 @@ class Invoice extends CI_Controller
             'total_invoice' => $total_invoice,
             'invoice' => $invoice,
             'ppn' => $ppn,
+			'percent_ppn' => $percent_ppn,
             'pph' => $pph,
             'is_ppn' => $is_ppn,
             'is_pph' => $is_pph,
@@ -429,6 +431,7 @@ class Invoice extends CI_Controller
         $total_invoice = $this->input->post('total_invoice');
         $invoice = $this->input->post('invoice');
         $ppn = $this->input->post('ppn');
+		$percent_ppn =  $this->input->post('percent_ppn');
         $pph = $this->input->post('pph');
         $is_ppn = $this->input->post('is_ppn');
         $is_pph = $this->input->post('is_pph');
@@ -441,13 +444,14 @@ class Invoice extends CI_Controller
         $shipment_id =  $this->input->post('shipment_id');
         $note_cs = $this->input->post('note_cs');
 		  $so_note = $this->input->post('so_note');
-          $no_do = $this->input->post('no_do');
+		   $no_do = $this->input->post('no_do');
           $id_berat = $this->input->post('id_berat');
+		  $remarks_do = $this->input->post('remarks_do');
         // KALO DIA ADA PPN DAN PPH
         if ($is_ppn != 1) {
             $ppn = 0;
         } else {
-            $ppn =  0.011 * $invoice;
+           $ppn =    $invoice * ($percent_ppn / 100);
         }
         if ($is_pph != 1) {
             $pph = 0;
@@ -482,6 +486,12 @@ class Invoice extends CI_Controller
 
             );
             $this->db->update('tbl_no_do', $data_do, ['id_berat' => $id_berat[$k]]);
+			$remarks = $this->db->query('SELECT * FROM remarks_do WHERE id_do = ' . $id_berat[$k]);
+            if ($remarks->num_rows() > 0) {
+               $this->db->update('remarks_do', ['remarks' => $remarks_do[$k]], ['id_do' => $id_berat[$k]]);
+            } else{
+                $this->db->insert('remarks_do', ['remarks' => $remarks_do[$k], 'id_do' => $id_berat[$k],'created_at' => date('Y-m-d H:i:s'),'created_by' => $this->session->userdata('id_user')]);
+            }
         }
         $data = array(
 			'date' => $date,
@@ -505,6 +515,7 @@ class Invoice extends CI_Controller
             'is_ppn' => $is_ppn,
             'is_pph' => $is_pph,
 			 'is_remarks' => $is_remarks,
+			 'percent_ppn' => $percent_ppn,
         );
         $update = $this->db->update('tbl_invoice', $data, ['no_invoice' => $no_invoice]);
         if ($update) {

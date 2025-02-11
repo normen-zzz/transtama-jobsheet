@@ -104,17 +104,16 @@
                                                             <td>
                                                                 <input type="text" disabled class="form-control" name="collie[]" value="<?= $do['koli'] ?>">
                                                             </td>
-                                                            <td>
-                                                                <?php if ($invoice != NULL) {
+                                                             <td>
+                                                                <?php if ($invoice != NULL) { 
                                                                     if ($invoice['status'] == 1 || $invoice['status'] == 2) {
-                                                                ?>
-                                                                        <input type="text" class="form-control" readonly name="weight[]" value="<?= $do['berat'] ?>">
-                                                                    <?php } else { ?>
-                                                                        <input type="text" class="form-control" name="weight[]" value="<?= $do['berat'] ?>">
-                                                                    <?php }
-                                                                } else { ?>
+                                                                    ?>
+                                                                <input type="text" class="form-control" readonly name="weight[]" value="<?= $do['berat'] ?>">
+                                                                <?php } else{ ?>
                                                                     <input type="text" class="form-control" name="weight[]" value="<?= $do['berat'] ?>">
-                                                                <?php } ?>
+                                                                    <?php }} else { ?>
+																	<input type="text" class="form-control" name="weight[]" value="<?= $do['berat'] ?>">
+																	<?php } ?>
                                                             </td>
                                                         </tr>
                                                     <?php $total_berat += $do['berat'];
@@ -148,45 +147,41 @@
 
                                                         <?php    } else {
                                                         ?>
-                                                            <?php if ($invoice != NULL) {
-                                                                if ($invoice['status'] == 1 || $invoice['status'] == 2) {
-                                                            ?>
-                                                                    <td> <input type="text" class="form-control" readonly placeholder="isi no flight" name="berat_js" value="<?= $msr['berat_js'] ?>"> </td>
-                                                                <?php } else { ?>
-                                                                    <td> <input type="text" class="form-control" placeholder="isi no flight" name="berat_js" value="<?= $msr['berat_js'] ?>"> </td>
-                                                                <?php }
-                                                            } else { ?>
-                                                                <td> <input type="text" class="form-control" placeholder="isi no flight" name="berat_js" value="<?= $msr['berat_js'] ?>"> </td>
-                                                        <?php }
-                                                        } ?>
-                                                        <?php if ($invoice != NULL) {
-                                                            if ($invoice['status'] == 1 || $invoice['status'] == 2) {
-                                                        ?>
-                                                                <td> <input type="text" class="form-control" readonly placeholder="isi no flight" name="berat_msr" value="<?= $msr['berat_msr'] ?>"> </td>
+                                                        <?php if ($invoice != NULL) { 
+                                                                    if ($invoice['status'] == 1 || $invoice['status'] == 2) {
+                                                                    ?>
+                                                            <td> <input type="text" class="form-control" readonly placeholder="isi no flight" name="berat_js" value="<?= $msr['berat_js'] ?>"> </td>
                                                             <?php } else { ?>
-                                                                <td> <input type="text" class="form-control" placeholder="isi no flight" name="berat_msr" value="<?= $msr['berat_msr'] ?>"> </td>
-                                                            <?php }
-                                                        } else { ?>
+                                                                <td> <input type="text" class="form-control" placeholder="isi no flight" name="berat_js" value="<?= $msr['berat_js'] ?>"> </td>
+                                                                <?php }} else { ?>
+                                                                <td> <input type="text" class="form-control" placeholder="isi no flight" name="berat_js" value="<?= $msr['berat_js'] ?>"> </td>
+                                                        <?php }} ?>
+                                                        <?php if ($invoice != NULL) { 
+                                                                    if ($invoice['status'] == 1 || $invoice['status'] == 2) {
+                                                                    ?>
+                                                        <td> <input type="text" class="form-control" readonly placeholder="isi no flight" name="berat_msr" value="<?= $msr['berat_msr'] ?>"> </td>
+                                                        <?php } else { ?>
                                                             <td> <input type="text" class="form-control" placeholder="isi no flight" name="berat_msr" value="<?= $msr['berat_msr'] ?>"> </td>
-
-                                                        <?php } ?>
-
-                                                    </tr>
+                                                            <?php }} else { ?>
+															 <td> <input type="text" class="form-control" placeholder="isi no flight" name="berat_msr" value="<?= $msr['berat_msr'] ?>"> </td>
+															
+															<?php } ?>
+															
+															</tr>
 
                                                 </tbody>
 
                                             </table>
                                             <?php if ($invoice == NULL) { ?>
-
-                                                <button class="btn btn-success">Submit</button>
-                                                <?php } else {
-                                                if ($invoice['status'] == 1 || $invoice['status'] == 2) {
+                                               
+                                            <button class="btn btn-success">Submit</button>
+                                            <?php } else { 
+                                                 if ($invoice['status'] == 1 || $invoice['status'] == 2) {
                                                 ?>
-
-                                                <?php } else { ?>
+                                                 
+                                                 <?php } else { ?>
                                                     <button class="btn btn-success">Submit</button>
-                                            <?php  }
-                                            } ?>
+                                                <?php  } }?>
                                         </form>
                                     </div>
 
@@ -235,8 +230,11 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
+                                                    <!--berart_js = weight js/msr-->
+                                                    <!--berat_msr= special_freight-->
                                                     <?php
-                                                    $total_sales = getTotalSales($msr['id']);
+
+                                                     $total_sales = getTotalSales($msr['id']);
                                                     ?>
                                                     <tr>
                                                         <td>
@@ -291,7 +289,7 @@
                                                 </table>
 
                                             </div>
-                                            <button class="btn btn-success">Submit</button>
+                                           <button class="btn btn-success">Submit</button>
                                         </form>
                                     </div>
 
@@ -736,13 +734,17 @@
                                                     $id_atasan = $this->session->userdata('id_atasan');
                                                     // kalo dia atasan sales
                                                     if ($id_atasan == 0 || $id_atasan == NULL) {
+
                                                 ?>
                                                         <div class="col-md-4">
                                                             <a href="<?= base_url('cs/jobsheet/approveSo/' . $msr['id']) ?>" class="btn btn-success tombol-konfirmasi">Approve Sales Order</a>
                                                         </div>
+
                                                     <?php  }
                                                     ?>
+
                                                 <?php }
+
                                                 ?>
                                             <?php   } else { ?>
                                                 <p class="text-danger">Abnormal Accumulation (TOTAL SALES 0)</p>
@@ -919,6 +921,7 @@
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
+                                        <label for="exampleInputEmail1">Sewa Gudang</label>
                                         <input type="text" class="form-control" id="exampleInputEmail1" required name="ra2" value="<?= $m['ra2'] ?>">
                                     </div>
                                 </div>

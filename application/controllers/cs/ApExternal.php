@@ -13,7 +13,7 @@ class ApExternal extends CI_Controller
         $this->load->library('upload');
         $this->load->model('M_Datatables');
         $this->load->model('CsModel', 'cs');
-        $this->load->model('Sendwa', 'wa');
+		 $this->load->model('Sendwa', 'wa');
         $this->db->query("SET sql_mode=(SELECT REPLACE(@@sql_mode, 'ONLY_FULL_GROUP_BY', ''));");
         cek_role();
     }
@@ -343,10 +343,10 @@ class ApExternal extends CI_Controller
         $pesan = "Hallo, ada pengajuan Ap External No. *$no_po* Oleh *$nama*  Dengan Tujuan *$purpose* Tanggal *$date*. Silahkan Approve Melalu Link Berikut : $link . Terima Kasih";
 
         //NO MBA LINA
-        // $this->wa->pickup('+6281385687290', "$pesan");
+        $this->wa->pickup('+6281385687290', "$pesan");
 
         //NO BU LILI
-        // $this->wa->pickup('+6281293753199', "$pesan");
+        $this->wa->pickup('+6281293753199', "$pesan");
 
         //NO NORMAN
         $this->wa->pickup('+6285697780467', "$pesan");
@@ -555,7 +555,7 @@ class ApExternal extends CI_Controller
     function getDataPoCreated()
     {
         $query  = "SELECT a.id_invoice,a.no_po,a.due_date,a.status,a.id_vendor,a.no_invoice,a.unique_invoice,a.date,a.vendor,a.total_ap,a.ppn,a.special_ppn,a.pph,a.special_pph,a.payment_date, b.shipper,b.shipment_id as resi FROM tbl_invoice_ap_final AS a INNER JOIN tbl_shp_order AS b ON a.shipment_id = b.id";
-        $search = array('a.no_po','a.vendor');
+        $search = array('a.no_po','a.no_invoice','a.vendor');
         $where  = null;
         // jika memakai IS NULL pada where sql
         $isWhere = null;
@@ -564,8 +564,8 @@ class ApExternal extends CI_Controller
         header('Content-Type: application/json');
         echo $this->M_Datatables->get_tables_query($query, $search, $where, $isWhere,$group);
     }
-
-    public function checkNoInvoice()
+	
+	public function checkNoInvoice()
 	{
 		$no_invoice = $this->input->get('no_invoice'); // Mengambil ID dari parameter GET
 

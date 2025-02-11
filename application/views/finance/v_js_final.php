@@ -45,122 +45,62 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <?php foreach ($js as $j) {
-                                                        $get_revisi_so = $this->db->get_where('tbl_revisi_so', ['shipment_id' => $j['id']])->row_array();
-                                                        $get_invoice = $this->db->get_where('tbl_invoice', ['shipment_id' => $j['id']])->row_array();
-                                                        $no_do = $this->db->get_where('tbl_no_do', array('shipment_id' => $j['shipment_id']))->result_array();
-                                                    ?>
+                                                    <?php foreach ($js as $j) : ?>
                                                         <tr>
                                                             <td>
-                                                                <?php if ($get_invoice) {
+                                                                <?php if (!$j['invoice_id']) : // Cek apakah invoice sudah dibuat 
                                                                 ?>
-                                                                    <?php } else {
-
-                                                                    if ($get_revisi_so) {
-                                                                        if ($get_revisi_so['status_revisi'] != 7) { ?>
-                                                                            <input type="checkbox" class="form-control" name="shipment_id[]" value="<?= $j['id'] ?>" disabled>
-
-                                                                        <?php } else { ?>
-                                                                            <input type="checkbox" class="form-control" name="shipment_id[]" value="<?= $j['id'] ?>">
-                                                                <?php    }
-                                                                    } else { ?>
-                                                                     <input type="checkbox" class="form-control" name="shipment_id[]" value="<?= $j['id'] ?>">
-                                                                <?php }} ?>
+                                                                    <input type="checkbox" class="form-control" name="shipment_id[]" value="<?= $j['id'] ?>" <?= (isset($j['status_revisi']) && $j['status_revisi'] != 7 && !in_array($j['status_revisi'], [4, 5, 6, 8])) ? 'disabled' : '' ?>>
+                                                                <?php endif; ?>
                                                             </td>
                                                             <td><?= bulan_indo($j['tgl_pickup']) ?></td>
-                                                            <!-- No shipment -->
                                                             <td><?= $j['shipment_id'] ?></td>
-                                                            <!-- No DO -->
-                                                            <td style="max-width:100px;"><?php foreach ($no_do as $do) {
-                                                                                                echo $do['no_do'] . ',';
-                                                                                            } ?></td>
-                                                            <!-- Nomor SO -->
-                                                            <td><?php if ($get_revisi_so) {
-                                                                    echo "<span class='text-danger'>$j[so_id]</span>";
-                                                                } else {
-                                                                    echo $j['so_id'];
-                                                                }  ?></td>
-
-                                                            <!-- //No Js -->
-                                                            <td><?php if ($get_revisi_so) {
-                                                                    echo "<span class='text-danger'>$j[jobsheet_id]</span>";
-                                                                } else {
-                                                                    echo $j['jobsheet_id'];
-                                                                }  ?></td>
-                                                            <td><?= $j['shipper'] ?></td>
-                                                            <td><?= $j['tree_consignee'] ?></td>
-                                                            <td><?= $j['pic_invoice'] ?></td>
-                                                            <td><?= $j['nama_user'] ?></td>
-                                                            <td><?php if ($j['status_so'] == 2) {
-                                                                    echo '<span class="label label-danger label-inline font-weight-lighter" style="width: 150px;">Approve PIC JS</span>';
-                                                                } elseif ($j['status_so'] == 3) {
-                                                                    echo '<span class="label label-primary label-inline font-weight-lighter" style="width: 150px;">Approve Manager CS</span>';
-                                                                } elseif ($j['status_so'] == 4) {
-                                                                    echo '<span class="label label-success label-inline font-weight-lighter" style="width: 150px;">Approve Finance</span>';
-                                                                    if ($get_invoice) {
-                                                                        echo '<span class="label label-primary label-inline font-weight-lighter mt-1" style="width: 150px;">Invoice Created</span>';
-                                                                    }
-                                                                    if ($get_revisi_so) {
-                                                                        if ($get_revisi_so['status_revisi'] != 7) {
-                                                                            echo '<span class="label label-primary label-inline font-weight-lighter mt-1" style="width: 150px;">On Progress Revisi So</span>';
-                                                                        }
-                                                                        
-                                                                    }
-                                                                } ?></td>
+                                                            <td><?= $j['no_do_list'] ?? '-' ?></td> <!-- Pastikan no_do_list tidak undefined -->
+                                                            <td><?= isset($j['shipment_id']) ? "SO - $j[shipment_id]" : '-' ?></td>
+                                                            <td><?= isset($j['shipment_id']) ? "JS - $j[shipment_id]" : '-' ?></td>
+                                                            <td><?= $j['shipper'] ?? '-' ?></td>
+                                                            <td><?= $j['tree_consignee'] ?? '-' ?></td>
+                                                            <td><?= $j['pic_invoice'] ?? '-' ?></td>
+                                                            <td><?= $j['nama_user'] ?? '-' ?></td>
                                                             <td>
                                                                 <?php
-                                                                if ($get_revisi_so) {
-                                                                    if ($get_revisi_so['status_revisi'] == 0) {
-                                                                ?>
-                                                                        <a href="<?= base_url('finance/jobsheet/detailRevisi/' . $j['id']) ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">View Revision</a> <br>
-                                                                        <small>Jobsheet New</small><br>
-                                                                    <?php } elseif ($get_revisi_so['status_revisi'] == 1) {
-                                                                    ?>
-                                                                        <a href="<?= base_url('finance/jobsheet/detailRevisi/' . $j['id']) ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">View Approved</a> <br>
-                                                                        <small>Jobsheet Approve By Pic Js</small><br>
-                                                                    <?php } elseif ($get_revisi_so['status_revisi'] == 2) {
-                                                                    ?>
-                                                                        <a href="<?= base_url('finance/jobsheet/detailRevisi/' . $j['id']) ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">View Approved</a> <br>
-                                                                        <small>Jobsheet Approve By Manager CS</small><br>
-                                                                    <?php } elseif ($get_revisi_so['status_revisi'] == 3) {
-                                                                    ?>
-                                                                        <a href="<?= base_url('finance/jobsheet/detailRevisi/' . $j['id']) ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">View Approved</a> <br>
-                                                                        <small>Jobsheet Approve By GM</small><br>
-                                                                    <?php } elseif ($get_revisi_so['status_revisi'] == 4) {
-                                                                    ?>
-                                                                        <a href="<?= base_url('finance/jobsheet/detailRevisi/' . $j['id']) ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">View Approved</a> <br>
-                                                                        <small>Jobsheet Decline By Pic Js</small><br>
-                                                                    <?php } elseif ($get_revisi_so['status_revisi'] == 5) {
-                                                                    ?>
-                                                                        <a href="<?= base_url('finance/jobsheet/detailRevisi/' . $j['id']) ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">View Approved</a> <br>
-                                                                        <small>Jobsheet Decline By Manager CS</small><br>
-                                                                    <?php } elseif ($get_revisi_so['status_revisi'] == 6) {
-                                                                    ?>
-                                                                        <a href="<?= base_url('finance/jobsheet/detailRevisi/' . $j['id']) ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">View Approved</a> <br>
-                                                                        <small>Jobsheet Decline By GM</small> <br>
-                                                                    <?php }
-                                                                    ?>
-                                                                <?php }
-                                                                $id_atasan = $this->session->userdata('id_atasan');
-                                                                // kalo dia atasan sales
-                                                                if ($id_atasan == 0 || $id_atasan == NULL) {
-                                                                ?>
-                                                                    <a href="<?= base_url('finance/jobsheet/detail/' . $j['id'] . '/' . $j['id_so']) ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">Detail</a>
+                                                                $status_labels = [
+                                                                    2 => "Approve PIC JS",
+                                                                    3 => "Approve Manager CS",
+                                                                    4 => "Approve Finance"
+                                                                ];
+                                                                echo '<span class="label label-inline font-weight-lighter" style="width: 150px;">' . ($status_labels[$j['status_so']] ?? '-') . '</span>';
 
+                                                                if (isset($j['invoice_id'])) {
+                                                                    echo '<span class="label label-primary label-inline font-weight-lighter mt-1" style="width: 150px;">Invoice Created</span>';
+                                                                }
+                                                                if (isset($j['status_revisi'])) {
+                                                                    echo ($j['status_revisi'] == 7) ?
+                                                                        '<span class="label label-success label-inline font-weight-lighter mt-1" style="width: 150px;">Revisi So (DONE)</span>' :
+                                                                        '<span class="label label-primary label-inline font-weight-lighter mt-1" style="width: 150px;">On Progress Revisi So</span>';
+                                                                }
+                                                                ?>
                                                             </td>
-                                                        <?php   } else {
-                                                        ?>
-                                                            <a href="<?= base_url('finance/jobsheet/detail/' . $j['id'] . '/' . $j['id_so']) ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">Detail</a>
-                                                            <a href="<?= base_url('finance/jobsheet/Exportexcel/' . $j['id']) ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;"><span class="fa fa-download"></span></a>
-                                                        <?php  }
+                                                            <td>
+                                                                <?php if (isset($j['status_revisi'])) : ?>
+                                                                    <a href="<?= base_url('finance/jobsheet/detailRevisi/' . $j['id']) ?>" class="btn btn-sm text-light" style="background-color: #9c223b;">
+                                                                        View <?= $j['status_revisi'] < 4 ? 'Approved' : 'Declined' ?>
+                                                                    </a>
+                                                                    <br><small>Jobsheet <?= $j['status_revisi'] < 4 ? 'Approved' : 'Declined' ?> By <?= ['PIC JS', 'Manager CS', 'GM', 'SM'][$j['status_revisi'] - 1] ?? '-' ?></small><br>
+                                                                <?php endif; ?>
 
-                                                        ?>
-
+                                                                <a href="<?= base_url('finance/jobsheet/detail/' . $j['id'] . '/' . $j['id_so']) ?>" class="btn btn-sm text-light" style="background-color: #9c223b;">Detail</a>
+                                                                <?php if ($this->session->userdata('id_atasan') !== null) : ?>
+                                                                    <a href="<?= base_url('finance/jobsheet/Exportexcel/' . $j['id']) ?>" class="btn btn-sm text-light" style="background-color: #9c223b;">
+                                                                        <span class="fa fa-download"></span>
+                                                                    </a>
+                                                                <?php endif; ?>
+                                                            </td>
                                                         </tr>
-
-                                                    <?php } ?>
-
+                                                    <?php endforeach; ?>
                                                 </tbody>
+
+
 
                                             </table>
                                         </div>

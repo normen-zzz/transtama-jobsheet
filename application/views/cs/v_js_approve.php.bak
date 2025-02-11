@@ -58,7 +58,7 @@
                                                         <td><?= $j['shipment_id'] ?></td>
                                                         <!-- Do -->
                                                         <td><?php foreach ($no_do as $do) {
-                                                               echo $do['no_do'] + ' , ';
+                                                               echo $do['no_do'] . ' , ';
                                                             } ?></td>
                                                         <!-- SO -->
                                                         <td><?php if ($get_revisi_so) {
@@ -84,6 +84,7 @@
                                                         <td><?= $j['tree_consignee'] ?></td>
                                                         <td><?= $j['nama_user'] ?></td>
                                                         <td><?php if ($j['status_so'] == 2) {
+															 if ($this->session->userdata('id_jabatan') == 2) {
                                                                 echo '<span class="label label-purple label-inline font-weight-lighter" style="width: 150px;">Approve PIC JS</span> <br>';
                                                                 if ($perbedaan > 0) {
                                                                     echo $perbedaan . ' <small>Days Again To Check</small>';
@@ -92,7 +93,7 @@
                                                                 } else {
                                                                     echo '<small>You Late Check</small>';
                                                                 }
-                                                            } elseif ($j['status_so'] == 3) {
+															 }} elseif ($j['status_so'] == 3) {
                                                                 echo '<span class="label label-primary label-inline font-weight-lighter" style="width: 150px;">Approve Manager CS</span>';
                                                             } elseif ($j['status_so'] == 4) {
                                                                 echo '<span class="label label-success label-inline font-weight-lighter" style="width: 150px;">Approve Finance</span>';
@@ -100,11 +101,12 @@
                                                                 echo '<span class="label label-danger label-inline font-weight-lighter" style="width: 150px;">SO Create By Sales</span>';
                                                             } ?></td>
                                                         <td>
-
+<?php if ($this->session->userdata('id_jabatan') == 2) { ?>
                                                             <?php if ($perbedaan < 0) {
                                                                 $cek_request_aktivasi = $this->db->get_where('tbl_aktivasi_cs', ['shipment_id' => $j['shipment_id']])->num_rows();
                                                                 if ($cek_request_aktivasi <= 0) {
                                                             ?>
+															
                                                                     <a href="#" class='btn btn-sm mb-1 btn-secondary text-dark mt-1' data-toggle='modal' data-target='#modal-request<?= $j['id'] ?>'>Request Aktivasi</a>
                                                                 <?php } else {
                                                                     echo '<br>Wait Approve SM';
@@ -112,7 +114,7 @@
                                                             } else {
                                                                 ?>
                                                                 <a href="<?= base_url('cs/jobsheet/detail/' . $j['id']) ?>" class=" btn btn-sm text-light" style="background-color: #9c223b;">Detail</a>
-                                                            <?php  } ?>
+                                                            <?php  }} ?>
 
                                                         </td>
 

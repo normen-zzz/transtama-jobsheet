@@ -27,9 +27,107 @@ class Ap extends CI_Controller
 
         $data['title'] = 'Account Payable - Payment Order';
         $data['ap'] = $this->ap->getApByCategory(1)->result_array();
-		$data['ap2'] = $this->ap->getApByCategory(1)->result_array();
+       
 
         $this->backend->display('finance/v_ap', $data);
+    }
+	public function multiPaid($link = null)
+    {
+        $no_pengeluaran =  $this->input->post('no_pengeluaran');
+        if ($no_pengeluaran == NULL) {
+            $this->session->set_flashdata('messageAlert', $this->messageAlert('error', 'Please Select Minimun 1 AP'));
+            if ($link == NULL) {
+                redirect('finance/Ap');
+            } else {
+                redirect('finance/Ap/' . $link);
+            }
+        }
+
+        $pengeluaran = array();
+
+        for ($i = 0; $i < sizeof($no_pengeluaran); $i++) {
+            $dataPengeluaran = $this->ap->getApByNoPengeluaran($no_pengeluaran[$i])->row_array();
+            $pengeluaran[] = $dataPengeluaran;
+        }
+
+        // var_dump($apexternal);
+
+        $data['title'] = 'Paid Ap ';
+
+        $data['subtitle'] = 'Paid Ap';
+
+
+        $data['ap'] = $pengeluaran;
+        $data['url'] = $link;
+        $this->backend->display('finance/v_paidAp', $data);
+    }
+	public function multiPaidAct($url = NULL)
+    {
+
+        $no_pengeluaran =  $this->input->post('no_pengeluaran');
+
+        if ($url == NULL) {
+            $url = "finance/ap/";
+        } else {
+            $url = "finance/ap/$url";
+        }
+        for ($i = 0; $i < sizeof($no_pengeluaran); $i++) {
+            $data = array(
+                'payment_date' => $this->input->post('datePayment'),
+                'payment_type' => $this->input->post('typePayment'),
+                'status' => 4
+            );
+
+            $folderUpload = "./uploads/ap_proof/";
+            $files = $_FILES;
+            $namaFile = $files['photo_pengeluaran']['name'][$i];
+            $lokasiTmp = $files['photo_pengeluaran']['tmp_name'][$i];
+
+            # kita tambahkan uniqid() agar nama gambar bersifat unik
+            $namaBaru = uniqid() . '-' . $namaFile;
+
+            array_push($listNamaBaru, $namaBaru);
+            $lokasiBaru = "{$folderUpload}/{$namaBaru}";
+            move_uploaded_file($lokasiTmp, $lokasiBaru);
+
+            $photo = array('payment_proof' => $namaBaru);
+            $data = array_merge($data, $photo);
+
+            $this->db->update('tbl_pengeluaran', $data, ['no_pengeluaran' => $no_pengeluaran[$i]]);
+        }
+
+        $this->session->set_flashdata('messageAlert', $this->messageAlert('success', 'Success Paid'));
+        redirect($url);
+    }
+	public function getModalPaid()
+    {
+        $no_pengeluaran = $this->input->get('no_pengeluaran');
+        $url = $this->input->get('url');
+
+        $data = [
+            'no_pengeluaran' => $no_pengeluaran,
+            'url' => $url
+        ];
+        echo json_encode($data);
+
+    }
+
+    public function getModalPaidLangsung()
+    {
+        $no_pengeluaran = $this->input->get('no_pengeluaran');
+        $url = $this->input->get('url');
+
+        $result = $this->ap->getApByNo($no_pengeluaran)->result();
+
+        $data = array();
+
+        foreach ($result as $row) {
+            $data[] = $row;
+        }
+        
+        
+        echo json_encode($data);
+        // var_dump($data);
     }
     public function history()
     {
@@ -44,7 +142,7 @@ class Ap extends CI_Controller
 
         $data['title'] = 'Account Payable - Cash Advance';
         $data['ap'] = $this->ap->getApByCategory(2)->result_array();
-		$data['ap2'] = $this->ap->getApByCategory(2)->result_array();
+        $data['ap2'] = $this->ap->getApByCategory(2)->result_array();
 
         $this->backend->display('finance/v_ap', $data);
     }
@@ -62,7 +160,7 @@ class Ap extends CI_Controller
 
         $data['title'] = 'Account Payable - Cash Advance Report';
         $data['ap'] = $this->ap->getApByCategory(3)->result_array();
-		$data['ap2'] = $this->ap->getApByCategory(3)->result_array();
+        $data['ap2'] = $this->ap->getApByCategory(3)->result_array();
 
         $this->backend->display('finance/v_ap', $data);
     }
@@ -79,7 +177,7 @@ class Ap extends CI_Controller
 
         $data['title'] = 'Account Payable - Reimbursment';
         $data['ap'] = $this->ap->getApByCategory(4)->result_array();
-		$data['ap2'] = $this->ap->getApByCategory(4)->result_array();
+        $data['ap2'] = $this->ap->getApByCategory(4)->result_array();
 
         $this->backend->display('finance/v_ap', $data);
     }
@@ -135,6 +233,7 @@ class Ap extends CI_Controller
 
         $data['title'] = 'Detail Account Payable';
         $data['ap'] = $this->ap->getApByNo($no_ap)->result_array();
+        $data['ap2'] = $this->ap->getApByNo($no_ap)->result_array();
         $data['info'] = $this->ap->getApByNo($no_ap)->row_array();
         $data['kategori_ap'] = $this->db->get('tbl_kat_ap')->result_array();
         $data['kategori_pengeluaran'] = $this->db->get('tbl_list_pengeluaran')->result_array();
@@ -250,14 +349,42 @@ class Ap extends CI_Controller
 
         for ($i = 0; $i < sizeof($id_pengeluaran); $i++) {
             $data = array(
+                'id_kategori_pengeluaran' => $this->input->post('kategori')[$i],
                 'amount_approved' => $amount_approved[$i],
                 'total_approved' => $total,
             );
             $this->db->update('tbl_pengeluaran', $data, ['id_pengeluaran' => $id_pengeluaran[$i]]);
         }
-        $data_status = array(
-            'status' => 3,
-        );
+        $get_ap = $this->db->get_where('tbl_pengeluaran', ['no_pengeluaran' => $this->input->post('no_pengeluaran1')])->row_array();
+        $no_ap = $get_ap['no_pengeluaran'];
+        $purpose = $get_ap['purpose'];
+        $date = $get_ap['date'];
+        $get_user = $this->db->get_where('tb_user', ['id_user' => $get_ap['id_user']])->row_array();
+        if ($get_ap['status'] == 3) {
+            $data_status = array(
+                'status' => 7,
+            );
+            $link = "https://jobsheet.transtama.com/approval/detailGm/$no_ap";
+            $pesan = "Hallo, ada pengajuan Ap No. *$no_ap* Dengan Tujuan *$purpose* Tanggal *$date* Yang Telah Diapprove Manager Finance. Silahkan approve melalui link berikut : $link . Terima Kasih";
+            if ($get_user['id_role'] == 4 || $get_user['id_role'] == 6) {
+                // no mba vema
+                $this->wa->pickup('+628111910711', "$pesan");
+                //Norman
+                $this->wa->pickup('+6285697780467', "$pesan");
+                // var_dump('ini finance dan sales');
+            }
+        } else {
+            $data_status = array(
+                'status' => 3,
+            );
+            $link = "https://jobsheet.transtama.com/approval/detailFinance/$no_ap";
+            $pesan = "Hallo, ada pengajuan Ap No. *$no_ap* Dengan Tujuan *$purpose* Tanggal *$date*. Silahkan approve melalui link berikut : $link . Terima Kasih";
+            // no mba dwi
+            $this->wa->pickup('+6281212311908', "$pesan");
+            //Norman
+            $this->wa->pickup('+6285697780467', "$pesan");
+        }
+
         $data_approve = array(
             'received_by' => $this->session->userdata('id_user'),
             'created_received' =>  date('Y-m-d H:i:s')
@@ -267,16 +394,9 @@ class Ap extends CI_Controller
         $this->db->update('tbl_pengeluaran', $data_status, ['no_pengeluaran' => $this->input->post('no_pengeluaran1')]);
 
         // kirim WA
-        $get_ap = $this->db->get_where('tbl_pengeluaran', ['no_pengeluaran' => $this->input->post('no_pengeluaran1')])->row_array();
-        $no_ap = $get_ap['no_pengeluaran'];
-        $purpose = $get_ap['purpose'];
-        $date = $get_ap['date'];
-        $link = "https://jobsheet.transtama.com/approval/detailFinance/$no_ap";
-        // $link = "http://jobsheet.test/approval/ap/$no_ap";
-        // echo "<li><a href='whatsapp://send?text=$actual_link'>Share</a></li>";
-        $pesan = "Hallo, ada pengajuan Ap No. *$no_ap* Dengan Tujuan *$purpose* Tanggal *$date*. Silahkan approve melalui link berikut : $link . Terima Kasih";
-        // no mba dwi
-        $this->wa->pickup('+6281212311908', "$pesan");
+
+
+
 
         $this->session->set_flashdata('message', '<div class="alert
 					alert-success" role="alert">Success</div>');
@@ -299,6 +419,7 @@ class Ap extends CI_Controller
         // kirim WA
 
         $get_ap = $this->db->get_where('tbl_pengeluaran', ['no_pengeluaran' => $no_ap])->row_array();
+        $get_user = $this->db->get_where('tb_user', ['id_user' => $get_ap['id_user']])->row_array();
         $no_ap = $get_ap['no_pengeluaran'];
         $purpose = $get_ap['purpose'];
         $date = $get_ap['date'];
@@ -306,8 +427,13 @@ class Ap extends CI_Controller
         // $link = "http://jobsheet.test/approval/ap/$no_ap";
         // echo "<li><a href='whatsapp://send?text=$actual_link'>Share</a></li>";
         $pesan = "Hallo, ada pengajuan Ap No. *$no_ap* Dengan Tujuan *$purpose* Tanggal *$date* Yang Telah Diapprove Manager Finance. Silahkan approve melalui link berikut : $link . Terima Kasih";
-        // no mba vema
-        $this->wa->pickup('+628111910711', "$pesan");
+        if ($get_user['id_role'] == 4 || $get_user['id_role'] == 6) {
+            // no mba vema
+            $this->wa->pickup('+628111910711', "$pesan");
+            //Norman
+            $this->wa->pickup('+6285697780467', "$pesan");
+            // var_dump('ini finance dan sales');
+        }
 
         $this->session->set_flashdata('message', '<div class="alert
 					alert-success" role="alert">Success</div>');
@@ -362,6 +488,8 @@ class Ap extends CI_Controller
             // $this->wa->pickup('+6285157906966', "$pesan");
             $this->wa->pickup('+6289629096425', "$pesan");
             $this->wa->pickup('+6287771116286', "$pesan");
+            //Norman
+            $this->wa->pickup('+6285697780467', "$pesan");
 
             $this->session->set_flashdata('message', 'Success Approve');
             redirect($url);
@@ -458,7 +586,7 @@ class Ap extends CI_Controller
             redirect($url);
         }
     }
-	public function paidLangsung()
+    public function paidLangsung()
     {
         $url = $this->input->post('url');
         if ($url == NULL) {
@@ -677,5 +805,31 @@ class Ap extends CI_Controller
 			  })
 			";
         return $messageAlert;
+    }
+	
+	public function cekAp()
+    {
+        if ($this->input->post('no_pengeluaran') == NULL) {
+            $data['title'] = 'CEK AP';
+            $data['no_pengeluaran'] = NULL;
+            $data['pengeluaran'] = NULL;
+            $this->backend->display('finance/v_cek_ap', $data);
+        } else {
+            $pengeluaran = $this->db->query('SELECT * FROM tbl_pengeluaran WHERE no_pengeluaran = "'.$this->input->post('no_pengeluaran').'" LIMIT 1 ');
+            $pengeluaranExternal = $this->db->query('SELECT * FROM tbl_invoice_ap_final WHERE no_po = "'.$this->input->post('no_pengeluaran').'" LIMIT 1 ');
+            $data['title'] = 'CEK AP';
+            $data['no_pengeluaran'] = $this->input->post('no_pengeluaran');
+
+            if ($pengeluaran->num_rows() == NULL && $pengeluaranExternal->num_rows() != NULL) {
+                $data['pengeluaran'] = $pengeluaranExternal->row_array();
+                $data['is'] = 1; //is external
+            } elseif ($pengeluaran->num_rows() != NULL && $pengeluaranExternal->num_rows() == NULL) {
+                $data['pengeluaran'] = $pengeluaran->row_array();
+                $data['is'] = 0; //is internal
+            }else{
+                $data['pengeluaran'] = NULL;
+            }
+            $this->backend->display('finance/v_cek_ap', $data);
+        }
     }
 }
