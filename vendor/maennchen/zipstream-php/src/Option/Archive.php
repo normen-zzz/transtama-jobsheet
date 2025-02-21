@@ -1,15 +1,18 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ZipStream\Option;
 
 final class Archive
 {
-    const DEFAULT_DEFLATE_LEVEL = 6;
+    public const DEFAULT_DEFLATE_LEVEL = 6;
+
     /**
      * @var string
      */
     private $comment = '';
+
     /**
      * Size, in bytes, of the largest file to try
      * and load into memory (used by
@@ -20,6 +23,7 @@ final class Archive
      * @var int
      */
     private $largeFileSize = 20 * 1024 * 1024;
+
     /**
      * How to handle large files.  Legal values are
      * Method::STORE() (the default), or
@@ -32,6 +36,7 @@ final class Archive
      * @var Method
      */
     private $largeFileMethod;
+
     /**
      * Boolean indicating whether or not to send
      * the HTTP headers for this file.
@@ -39,12 +44,14 @@ final class Archive
      * @var bool
      */
     private $sendHttpHeaders = false;
+
     /**
      * The method called to send headers
      *
      * @var Callable
      */
     private $httpHeaderCallback = 'header';
+
     /**
      * Enable Zip64 extension, supporting very large
      * archives (any size > 4 GB or file count > 64k)
@@ -52,6 +59,7 @@ final class Archive
      * @var bool
      */
     private $enableZip64 = true;
+
     /**
      * Enable streaming files with single read where
      * general purpose bit 3 indicates local file header
@@ -62,6 +70,7 @@ final class Archive
      * @var bool
      */
     private $zeroHeader = false;
+
     /**
      * Enable reading file stat for determining file size.
      * When a 32-bit system reads file size that is
@@ -75,11 +84,13 @@ final class Archive
      * @var bool
      */
     private $statFiles = true;
+
     /**
      * Enable flush after every write to output stream.
      * @var bool
      */
     private $flushOutput = false;
+
     /**
      * HTTP Content-Disposition.  Defaults to
      * 'attachment', where
@@ -91,6 +102,7 @@ final class Archive
      * @var string
      */
     private $contentDisposition = 'attachment';
+
     /**
      * Note that this does nothing if you are
      * not sending HTTP headers.
@@ -98,6 +110,7 @@ final class Archive
      * @var string
      */
     private $contentType = 'application/x-zip';
+
     /**
      * @var int
      */
@@ -157,12 +170,12 @@ final class Archive
         $this->sendHttpHeaders = $sendHttpHeaders;
     }
 
-    public function getHttpHeaderCallback(): Callable
+    public function getHttpHeaderCallback(): callable
     {
         return $this->httpHeaderCallback;
     }
 
-    public function setHttpHeaderCallback(Callable $httpHeaderCallback): void
+    public function setHttpHeaderCallback(callable $httpHeaderCallback): void
     {
         $this->httpHeaderCallback = $httpHeaderCallback;
     }
