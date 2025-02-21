@@ -97,14 +97,8 @@ class Backoffice extends CI_Controller
     public function logout()
     {
         $id_user = $this->session->userdata('id_user');
-        $this->db->update('tb_user', ['status_login' => 0], ['id_user' => $id_user]);
-        $this->session->unset_userdata('email');
-        $this->session->unset_userdata('id_role');
-        $this->session->unset_userdata('id_fakultas');
-        $this->session->unset_userdata('id_jurusan');
-        $this->session->unset_userdata('username');
-        $this->session->unset_userdata('id_user');
-        $this->session->unset_userdata('nama_user');
+        
+        $this->session->sess_destroy();
         $this->session->set_flashdata('message', '<div class="alert
         alert-success" role="alert">Terima Kasih</div>');
         redirect('backoffice');
