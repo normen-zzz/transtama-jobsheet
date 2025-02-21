@@ -1616,10 +1616,18 @@
                                                                                                                                                     } ?>">
                     <?php
                     $f = new NumberFormatter('en', NumberFormatter::SPELLOUT);
-                    $terbilang = $f->format(round($total_amount + $totalAdmin)) . ' Rupiahs';
-                    $terbilang = ucwords($terbilang);
-
-                    echo "#" . $terbilang . "#";
+                    if ($totalAdmin) {
+                        $terbilang = $f->format(round($total_amount + $totalAdmin)) . ' Rupiahs';
+                        $terbilang = ucwords($terbilang);
+    
+                        echo "#" . $terbilang . "#";
+                    } else{
+                        $terbilang = $f->format(round($total_amount)) . ' Rupiahs';
+                        $terbilang = ucwords($terbilang);
+    
+                        echo "#" . $terbilang . "#";
+                    }
+                    
                     ?>
                 </p>
             </div>
