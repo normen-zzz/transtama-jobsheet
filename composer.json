@@ -12,7 +12,8 @@
 	},
 	"require": {
 		"php": ">=7.3",
-		"phpoffice/phpspreadsheet": "1.21.*"
+		"phpoffice/phpspreadsheet": "1.21.*",
+		"symfony/polyfill-ctype": "^1.24" 
 	},
 	"suggest": {
 		"paragonie/random_compat": "Provides better randomness in PHP 5.x"
