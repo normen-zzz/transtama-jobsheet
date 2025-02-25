@@ -142,6 +142,9 @@ class M_Datatables extends CI_Model
     // Ambil data start
     $start = preg_replace("/[^a-zA-Z0-9.]/", '', "{$_POST['start']}");
 
+    // pastikan $search itu string walaupun yang dimasukan angka 
+    $search = (string) $search;
+
     if ($where != null) {
       $setWhere = array();
       foreach ($where as $key => $value) {
