@@ -41,7 +41,7 @@ class Jobsheet extends CI_Controller
         $group = '';
         // $isWhere = 'artikel.deleted_at IS NULL';
         header('Content-Type: application/json');
-        echo $this->M_Datatables->get_tables_query($query, $search, $where, $isWhere, $group);
+        echo $this->M_Datatables->get_tables_query_group($query, $search, $where, $isWhere, $group);
     }
     public function final()
     {
