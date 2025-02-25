@@ -32,7 +32,7 @@ class Jobsheet extends CI_Controller
         FROM tbl_revisi_so e 
         WHERE e.shipment_id = b.id 
         LIMIT 1) AS status_revisi FROM tbl_shp_order AS b INNER JOIN tbl_so AS a ON b.id_so = a.id_so INNER JOIN tb_user AS c ON a.id_sales = c.id_user INNER JOIN tb_service_type AS d on b.service_type = d.code ";
-        $search = array('b.shipment_id', 'b.shipper');
+        $search = array('b.shipment_id');
         $where  = array('b.status_so' => 3);
         // $where  = array('a.id_user' => $this->session->userdata('id_user'));
 
