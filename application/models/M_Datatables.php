@@ -237,6 +237,105 @@ class M_Datatables extends CI_Model
     return json_encode($callback); // Convert array $callback ke json
   }
 
+  function get_tables_query_group($query, $cari, $where, $iswhere, $group)
+{
+    // Sanitize and validate inputs
+    $search = htmlspecialchars($_POST['search']['value'] ?? '');
+    $limit = (int)($_POST['length'] ?? 10);
+    $start = (int)($_POST['start'] ?? 0);
+    
+    // Set up query building
+    $whereClause = '';
+    $bindParams = [];
+    $sql_count = 0;
+    $sql_filter_count = 0;
+    
+    // Build the where clause
+    if ($where != null) {
+        $setWhere = [];
+        foreach ($where as $key => $value) {
+            $setWhere[] = "$key = ?";
+            $bindParams[] = $value;
+        }
+        $whereClause = implode(' AND ', $setWhere);
+    }
+    
+    // Prepare base query with appropriate WHERE clauses
+    $baseQuery = $query;
+    if (!empty($whereClause) && !empty($iswhere)) {
+        $baseQuery .= " WHERE $iswhere AND $whereClause";
+    } elseif (!empty($whereClause)) {
+        $baseQuery .= " WHERE $whereClause";
+    } elseif (!empty($iswhere)) {
+        $baseQuery .= " WHERE $iswhere";
+    }
+    
+    // Add group by if provided
+    if (!empty($group)) {
+        $baseQuery .= " $group";
+    }
+    
+    // Execute count query for total records (utilize query caching)
+    $sql_result = $this->db->query($baseQuery);
+    $sql_count = $sql_result->num_rows();
+    
+    // Build search criteria
+    $searchClause = '';
+    if (!empty($search)) {
+        $searchTerms = [];
+        foreach ($cari as $field) {
+            $searchTerms[] = "$field LIKE ?";
+            $bindParams[] = "%$search%";
+        }
+        $searchClause = !empty($searchTerms) ? '(' . implode(' OR ', $searchTerms) . ')' : '';
+    }
+    
+    // Prepare final query with search, order and limit
+    $finalQuery = $baseQuery;
+    if (!empty($searchClause)) {
+        $finalQuery .= !empty($whereClause) || !empty($iswhere) ? " AND $searchClause" : " WHERE $searchClause";
+    }
+    
+    // Sorting
+    $orderColumn = isset($_POST['order'][0]['column']) ? (int)$_POST['order'][0]['column'] : 0;
+    $orderDir = isset($_POST['order'][0]['dir']) && strtolower($_POST['order'][0]['dir']) === 'desc' ? 'DESC' : 'ASC';
+    
+    // Validate that column index exists to prevent SQL injection
+    if (isset($_POST['columns'][$orderColumn]['data'])) {
+        $orderField = $_POST['columns'][$orderColumn]['data'];
+        $finalQuery .= " ORDER BY " . $this->db->escape_str($orderField) . " " . $orderDir;
+    }
+    
+    // Apply limit
+    $finalQuery .= " LIMIT $limit OFFSET $start";
+    
+    // Execute final query with parameters
+    $sql_data = $this->db->query($finalQuery);
+    $data = $sql_data ? $sql_data->result_array() : [];
+    
+    // Get filtered count
+    if (!empty($search)) {
+        $filterCountQuery = $baseQuery;
+        if (!empty($searchClause)) {
+            $filterCountQuery .= !empty($whereClause) || !empty($iswhere) ? " AND $searchClause" : " WHERE $searchClause";
+        }
+        $sql_filter_result = $this->db->query($filterCountQuery);
+        $sql_filter_count = $sql_filter_result->num_rows();
+    } else {
+        $sql_filter_count = $sql_count;
+    }
+    
+    // Return response
+    $callback = [
+        'draw' => isset($_POST['draw']) ? (int)$_POST['draw'] : 0,
+        'recordsTotal' => $sql_count,
+        'recordsFiltered' => $sql_filter_count,
+        'data' => $data
+    ];
+    
+    return json_encode($callback);
+}
+
   function get_tables_query_csrf($query, $cari, $where, $csrf_name, $csrf_hash)
   {
     // Ambil data yang di ketik user pada textbox pencarian

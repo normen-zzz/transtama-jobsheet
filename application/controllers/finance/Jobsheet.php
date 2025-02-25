@@ -26,7 +26,7 @@ class Jobsheet extends CI_Controller
         $data['breadcrumb_bootstrap_style'] = $this->breadcrumb->generate();
         $this->backend->display('finance/v_js_approve', $data);
     }
-	function getDataEnterJobsheet()
+	function getDataEnterJobsheet0()
     {
          $query  = "SELECT a.tgl_pickup, b.shipment_id,b.id,b.so_id,b.jobsheet_id,b.shipper,b.tree_consignee,b.status_so,b.id_so, c.nama_user,d.service_name, (SELECT e.status_revisi 
         FROM tbl_revisi_so e 
@@ -41,8 +41,51 @@ class Jobsheet extends CI_Controller
         $group = '';
         // $isWhere = 'artikel.deleted_at IS NULL';
         header('Content-Type: application/json');
-        echo $this->M_Datatables->get_tables_query($query, $search, $where, $isWhere, $group);
+        echo $this->M_Datatables->get_tables_query_group($query, $search, $where, $isWhere, $group);
     }
+    function getDataEnterJobsheet()
+{
+    // Use prepared statements and join indexable columns
+    $query = "SELECT 
+                a.tgl_pickup, 
+                b.shipment_id,
+                b.id,
+                b.so_id,
+                b.jobsheet_id,
+                b.shipper,
+                b.tree_consignee,
+                b.status_so,
+                b.id_so, 
+                c.nama_user,
+                d.service_name, 
+                e.status_revisi 
+              FROM 
+                tbl_shp_order AS b 
+              INNER JOIN 
+                tbl_so AS a ON b.id_so = a.id_so 
+              INNER JOIN 
+                tb_user AS c ON a.id_sales = c.id_user 
+              INNER JOIN 
+                tb_service_type AS d ON b.service_type = d.code
+              LEFT JOIN 
+                (SELECT shipment_id, status_revisi FROM tbl_revisi_so GROUP BY shipment_id) AS e 
+                ON e.shipment_id = b.id";
+                
+    $search = array('b.shipment_id', 'b.shipper');
+    $where  = array('b.status_so' => 3);
+    $isWhere = null;
+    $group = '';
+    
+    // Set JSON content type header
+    header('Content-Type: application/json');
+    
+    // Use a try-catch block to handle database errors gracefully
+    try {
+        echo $this->M_Datatables->get_tables_query($query, $search, $where, $isWhere, $group);
+    } catch (Exception $e) {
+        echo json_encode(['error' => 'Database error occurred', 'message' => $e->getMessage()]);
+    }
+}
     public function final()
     {
         $data = [
