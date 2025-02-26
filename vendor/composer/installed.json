@@ -2541,6 +2541,7 @@
         "sebastian/recursion-context",
         "sebastian/resource-operations",
         "sebastian/version",
+        "symfony/polyfill-ctype",
         "symfony/yaml",
         "webmozart/assert"
     ]
