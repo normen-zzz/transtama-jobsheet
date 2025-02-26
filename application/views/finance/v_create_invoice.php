@@ -236,7 +236,7 @@
                                 </div>
                                 <div class="col-md-2">
                                     <label for="percent_ppn" class="font-weight-bold">PPN</label>
-                                    <input type="number" name="percent_ppn" id="percent_ppn" value="1.2" class="form-control">
+                                    <input type="number" name="percent_ppn" id="percent_ppn" value="1.1" class="form-control">
                                 </div>
                                 <div class="col-md-5">
                                     <label for="pic" class="font-weight-bold">Address</label>
