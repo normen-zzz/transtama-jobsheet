@@ -582,4 +582,56 @@ class ApExternal extends CI_Controller
 		// Kirim data sebagai respons JSON
 		echo json_encode($result);
 	}
+
+    // voidApExternal 
+    public function voidApExternal()
+    {
+        $this->db->trans_start();
+        $no_po = $this->input->post('no_po');
+
+        try {
+            $data = array(
+                'status' => 6,
+            );
+            $update = $this->db->update('tbl_invoice_ap_final', $data, ['no_po' => $no_po]);
+            if ($update) {
+                $listResi = $this->db->query('SELECT shipment_id,id_vendor FROM tbl_invoice_ap_final WHERE no_po = "'.$no_po.'"');
+                if ($listResi) {
+                    foreach ($listResi->result_array() as $value) {
+                        $data = array(
+                            'status' => 0
+                        );
+                        $updateStatusResi = $this->db->update('tbl_invoice_ap', $data, ['shipment_id' => $value['shipment_id'], 'id_vendor' => $value['id_vendor']]);
+                        if (!$updateStatusResi) {
+                           throw new Exception("gagal update status resi ke blm ter PO");
+                        }
+                    }
+                } else{
+                    throw new Exception("gagal get list resi");
+                }
+            }
+            else{
+                throw new Exception("gagal update status PO");
+            }
+            $this->db->trans_complete();
+            if ($this->db->trans_status() === FALSE) {
+                throw new Exception('Transaction failed');
+            } else {
+                $response  = array(
+                    'status' => 'success',
+                    'message' => 'Success Void PO'
+                );
+            }
+        } catch (Exception $e) {
+            $this->db->trans_rollback();
+            $response  = array(
+                'status' => 'error',
+                'message' => $e->getMessage()
+            );
+        }
+
+        echo json_encode($response);
+        
+        
+    }
 }

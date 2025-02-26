@@ -110,7 +110,7 @@
                             separator = sisa ? '.' : '';
                             rupiah += separator + ribuan.join('.');
                         }
-                        return 'Rp.'+rupiah;
+                        return 'Rp.' + rupiah;
                     }
 
                 },
@@ -126,7 +126,7 @@
                             separator = sisa ? '.' : '';
                             rupiah += separator + ribuan.join('.');
                         }
-                        return 'Rp.'+rupiah;
+                        return 'Rp.' + rupiah;
                     }
 
                 },
@@ -157,18 +157,24 @@
                 {
                     "data": 'status',
                     "render": function(data, type, row, meta) {
+                        button = '';
                         if (data == 0) {
-                            return '<a href="<?= base_url('cs/apExternal/detailInvoice/') ?>' + row.unique_invoice + '/' + row.id_vendor + '" class="btn btn-sm text-light" style="background-color: #9c223b;">Detail</a>' +
+                            button = '<a href="<?= base_url('cs/apExternal/detailInvoice/') ?>' + row.unique_invoice + '/' + row.id_vendor + '" class="btn btn-sm text-light" style="background-color: #9c223b;">Detail</a>' +
                                 ' <a href="<?= base_url('cs/apExternal/editInvoice/') ?>' + row.unique_invoice + '/' + row.id_vendor + '" class=" btn btn-sm text-light mt-2" style="background-color: #9c223b;">Edit</a>' +
                                 '<?php $id_atasan = $this->session->userdata('id_atasan');
                                     if ($id_atasan == NULL || $id_atasan == 0) { ?>  <a href="<?= base_url('cs/apExternal/approveAtasan/') ?>' + row.unique_invoice + '" class=" btn btn-sm mt-2 text-light tombol-konfirmasi" style="background-color: #9c223b;">Approve</a> <?php } ?>';
                         } else if (data == 1) {
-                            return '<a href="<?= base_url('cs/apExternal/detailInvoice/') ?>' + row.unique_invoice + '/' + row.id_vendor + '" class="btn btn-sm text-light" style="background-color: #9c223b;">Detail</a>' +
+                            button = '<a href="<?= base_url('cs/apExternal/detailInvoice/') ?>' + row.unique_invoice + '/' + row.id_vendor + '" class="btn btn-sm text-light" style="background-color: #9c223b;">Detail</a>' +
                                 '<?php $jabatan = $this->session->userdata('id_jabatan');
                                     if ($jabatan == 10) { ?> <a href="<?= base_url('cs/apExternal/approveSm/') ?>' + row.unique_invoice + '" class=" btn btn-sm text-light tombol-konfirmasi mt-2" style="background-color: #9c223b;">Approve</a> <?php } ?>';
                         } else {
-                            return '<a href="<?= base_url('cs/apExternal/detailInvoice/') ?>' + row.unique_invoice + '/' + row.id_vendor + '" class="btn btn-sm text-light" style="background-color: #9c223b;">Detail</a>';
+                            button = '<a href="<?= base_url('cs/apExternal/detailInvoice/') ?>' + row.unique_invoice + '/' + row.id_vendor + '" class="btn btn-sm text-light" style="background-color: #9c223b;">Detail</a>';
                         }
+                        if (data != 6) {
+                            button += '<button class="btn btn-sm text-light ml-2 mt-2 buttonVoidPo" style="background-color: #9c223b;" data-no_po= ' + row.no_po + '>Void</button>';
+
+                        }
+                        return button;
                     }
 
                 },
@@ -177,6 +183,76 @@
 
 
             ],
+        });
+    });
+</script>
+
+<script>
+    // buttonVoidPo
+    $(document).on('click', '.buttonVoidPo', function() {
+        var no_po = $(this).data('no_po');
+        Swal.fire({
+            title: 'Apakah Anda Yakin?',
+            text: "Apakah anda yakin akan void " + no_po + "? Karena data yang sudah di void tidak bisa di kembalikan lagi.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, void it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // swal loading 
+                Swal.fire({
+                    title: 'Processing...',
+                    html: 'Please wait while we void this PO',
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    },
+                    showConfirmButton: false,
+                    allowOutsideClick: false
+                });
+                $.ajax({
+                    url: "<?= base_url('cs/apExternal/voidApExternal') ?>",
+                    type: "POST",
+                    data: {
+                        no_po: no_po
+                    },
+                    success: function(data) {
+                        data = JSON.parse(data);
+                        // data berbentuk array 
+                        if (data.status == 'success') {
+                            Swal.fire({
+                                title: 'Success!',
+                                text: 'Berhasil void' + no_po,
+                                icon: 'success',
+                                confirmButtonText: 'OK'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    window.location.reload();
+                                    // swal loading 
+                                    Swal.fire({
+                                        title: 'Refresh...',
+                                        html: 'Please wait while we refresh this page',
+                                        allowOutsideClick: false,
+                                        didOpen: () => {
+                                            Swal.showLoading();
+                                        },
+                                        showConfirmButton: false,
+                                        allowOutsideClick: false
+                                    });
+                                }
+                            });
+                        } else {
+                            Swal.fire(
+                                'Error!',
+                                'Failed to void PO.',
+                                'error'
+                            );
+                        }
+                    }
+                });
+            }
         });
     });
 </script>
