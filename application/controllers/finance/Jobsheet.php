@@ -24,7 +24,7 @@ class Jobsheet extends CI_Controller
         $data['subtitle'] = 'Enter Jobsheet';
         $this->breadcrumb->add_item($breadcrumb_items);
         $data['breadcrumb_bootstrap_style'] = $this->breadcrumb->generate();
-        $data['jobsheet'] = $this->db->query('SELECT a.tgl_pickup, b.shipment_id,b.id,b.so_id,b.jobsheet_id,b.shipper,b.tree_consignee,b.status_so,b.id_so, c.nama_user,d.service_name, (SELECT e.status_revisi FROM tbl_revisi_so e  WHERE e.shipment_id = b.id  LIMIT 1) AS status_revisi FROM tbl_shp_order AS b INNER JOIN tbl_so AS a ON b.id_so = a.id_so INNER JOIN tb_user AS c ON a.id_sales = c.id_user INNER JOIN tb_service_type AS d on b.service_type = d.code WHERE b.status_so = 3 AND YEAR(b.tgl_pickup) >= 2024  ')->result_array();
+        $data['jobsheet'] = $this->db->query('SELECT a.tgl_pickup, b.shipment_id,b.id,b.so_id,b.jobsheet_id,b.shipper,b.tree_consignee,b.status_so,b.id_so, c.nama_user,d.service_name, (SELECT e.status_revisi FROM tbl_revisi_so e  WHERE e.shipment_id = b.id  LIMIT 1) AS status_revisi FROM tbl_shp_order AS b INNER JOIN tbl_so AS a ON b.id_so = a.id_so INNER JOIN tb_user AS c ON a.id_sales = c.id_user INNER JOIN tb_service_type AS d on b.service_type = d.code WHERE b.status_so = 3 AND YEAR(b.tgl_pickup) >= 2023  ')->result_array();
         $this->backend->display('finance/v_js_approve', $data);
         
     }
