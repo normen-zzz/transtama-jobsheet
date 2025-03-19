@@ -102,9 +102,9 @@ class Ap extends CI_Controller
             }
 
             $no = $potong + 1;
-            $kode =  sprintf("%06s", $no);
+            $kode = sprintf("%06s", $no);
 
-            $no_pengeluaran  = "$pre$kode";
+            $no_pengeluaran = "$pre$kode";
         }
         $id_atasan = $this->db->get_where('tb_user', ['id_user' => $this->session->userdata('id_user')])->row_array();
 
@@ -136,7 +136,7 @@ class Ap extends CI_Controller
             move_uploaded_file($lokasiTmp, $lokasiBaru);
             $ktp = array('attachment' => $namaBaru);
             $data = array_merge($data, $ktp);
-            $insert =  $this->db->insert('tbl_pengeluaran', $data);
+            $insert = $this->db->insert('tbl_pengeluaran', $data);
             if ($insert) {
                 $get_last_ap = $this->db->limit(1)->order_by('no_pengeluaran', 'DESC')->get('tbl_pengeluaran')->row_array();
                 $id_atasan = $this->session->userdata('id_atasan');
@@ -146,7 +146,7 @@ class Ap extends CI_Controller
                     );
                     $data_approve = array(
                         'approve_by_atasan' => $this->session->userdata('id_user'),
-                        'no_pengeluaran' =>  $get_last_ap['no_pengeluaran']
+                        'no_pengeluaran' => $get_last_ap['no_pengeluaran']
                     );
 
                     $this->db->insert('tbl_approve_pengeluaran', $data_approve);
@@ -225,7 +225,7 @@ class Ap extends CI_Controller
                 move_uploaded_file($lokasiTmp, $lokasiBaru);
                 $ktp = array('attachment' => $namaBaru);
                 $data = array_merge($data, $ktp);
-                $insert =  $this->db->insert('tbl_pengeluaran', $data);
+                $insert = $this->db->insert('tbl_pengeluaran', $data);
                 if ($insert) {
                 } else {
                     $this->session->set_flashdata('message', '<div class="alert
@@ -266,7 +266,7 @@ class Ap extends CI_Controller
             $date = $get_ap['date'];
             $pesan = "Hallo Finance, ada pengajuan Ap No. *$no_ap* Dengan Tujuan *$purpose* Tanggal *$date*. Tolong Segera Cek Ya, Terima Kasih";
             // no finance
-           
+
             $this->wa->pickup('+6289629096425', "$pesan");
             $this->wa->pickup('+6287771116286', "$pesan");
             //Norman
