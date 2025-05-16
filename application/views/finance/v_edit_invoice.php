@@ -108,7 +108,7 @@
                                                                 <td><?= bulan_indo($inv['tgl_pickup']) ?></td>
                                                                 <td><?= $inv['tree_consignee'] ?></td>
                                                                 <td>
-                                                                    <input type="text" name="note_cs[]" class="form-control" value="<?= $inv['note_cs'] ?>">
+                                                                    <textarea name="note_cs<?= $inv['id'] ?>" class="form-control" style="width: 100%; min-width: 150px;"><?= $inv['note_cs'] ?></textarea>
                                                                 </td>
                                                                 <td>
                                                                     <input type="text" name="so_note[]" value="<?= $inv['so_note'] ?>">
