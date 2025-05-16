@@ -34,220 +34,201 @@
                                     <!-- /.box-header -->
                                     <div class="box-body">
                                         <div class="table-responsive">
-                                            <table class="table table-bordered" style="width:100%">
-                                                <thead>
-                                                    <tr>
-                                                        <th>AWB</th>
-                                                        <th>DATE</th>
-                                                        <th>DEST</th>
-                                                        <th style="width: 10%;">NO.DO</th>
-                                                        <!-- <th style="width: 25%;">MODA</th> -->
-                                                        <th style="width: 20%;">REMARKS</th>
-                                                        <th>SERVICE</th>
-                                                        <th>COLLIE</th>
-                                                        <th>WEIGHT</th>
-                                                        <th>RATE</th>
-                                                        <th>SPECIAL WEIGHT</th>
-                                                        <th>SPECIAL RATE</th>
-                                                        <th>PACKING</th>
-                                                        <th>OTHERS</th>
-                                                        <th>INSURANCE</th>
-                                                        <th>SURCHARGE</th>
-                                                        <th>TOTAL AMOUNT</th>
-                                                        <th>Action</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <?php
-                                                    $total_koli = 0;
-                                                    $total_weight = 0;
-                                                    $total_special_weight = 0;
-                                                    $total_amount = 0;
-                                                    $amount = 0;
-                                                    // $pph = 0;
-
-                                                    foreach ($invoice as $inv) {
-                                                         $get_do = $this->db->query('SELECT a.*,b.remarks FROM tbl_no_do a LEFT JOIN remarks_do b ON a.id_berat = b.id_do  WHERE a.shipment_id = "' . $inv['shipment_id'] . '"');
-                                                        $data_do = $get_do->result_array();
-                                                        $total_do = $get_do->num_rows();
-                                                        $no = 1;
-
-
-                                                        $service =  $inv['service_name'];
-                                                        if ($service == 'Charter Service' || $service == 'Manpower Service' || $service == 'Multidrop Service'|| $service == 'Warehouse Service') {
-                                                            $packing = $inv['packing'];
-                                                            $total_sales = ($inv['freight_kg'] + $packing +  $inv['special_freight'] +  $inv['others'] + $inv['surcharge'] + $inv['insurance']);
-                                                        } else {
-                                                            $disc = $inv['disc'];
-                                                            // kalo gada disc
-                                                            if ($disc == 0) {
-                                                                $freight  = $inv['berat_js'] * $inv['freight_kg'];
-                                                                $special_freight  = $inv['berat_msr'] * $inv['special_freight'];
-                                                            } else {
-                                                                $freight_discount = $inv['freight_kg'] * $disc;
-                                                                $special_freight_discount = $inv['special_freight'] * $disc;
-                                                                $freight = $freight_discount * $inv['berat_js'];
-                                                                $special_freight  = $special_freight_discount * $inv['berat_msr'];
-                                                            }
-                                                            $packing = $inv['packing'];
-                                                            $total_sales = ($freight + $packing + $special_freight +  $inv['others'] + $inv['surcharge'] + $inv['insurance']);
-                                                        }
-
-
-
-                                                    ?>
+                                            <div class="table-responsive">
+                                                <h3 class="title text-center mb-4"><i class="fa fa-file-invoice"></i> SHIPMENT DETAILS</h3>
+                                                <table class="table table-bordered" style="width:100%">
+                                                    <thead >
+                                                        <tr class="text-center">
+                                                            <th>AWB</th>
+                                                            <th>DATE</th>
+                                                            <th>DEST</th>
+                                                            <th style="width: 10%;">NO.DO</th>
+                                                            <th style="width: 20%;">REMARKS</th>
+                                                            <th>SERVICE</th>
+                                                            <th>COLLIE</th>
+                                                            <th>WEIGHT</th>
+                                                            <th>RATE</th>
+                                                            <th>SPECIAL WEIGHT</th>
+                                                            <th>SPECIAL RATE</th>
+                                                            <th>PACKING</th>
+                                                            <th>OTHERS</th>
+                                                            <th>INSURANCE</th>
+                                                            <th>SURCHARGE</th>
+                                                            <th>TOTAL AMOUNT</th>
+                                                            <th>Action</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
                                                         <?php
+                                                        $total_koli = 0;
+                                                        $total_weight = 0;
+                                                        $total_special_weight = 0;
+                                                        $total_amount = 0;
+                                                        $amount = 0;
+                                                        // $pph = 0;
 
-                                                        if ($total_do == 0) {
+                                                        foreach ($invoice as $inv) {
+                                                            $get_do = $this->db->query('SELECT a.*,b.remarks FROM tbl_no_do a LEFT JOIN remarks_do b ON a.id_berat = b.id_do  WHERE a.shipment_id = "' . $inv['shipment_id'] . '"');
+                                                            $data_do = $get_do->result_array();
+                                                            $total_do = $get_do->num_rows();
+                                                            $no = 1;
+
+                                                            $service =  $inv['service_name'];
+                                                            if ($service == 'Charter Service' || $service == 'Manpower Service' || $service == 'Multidrop Service' || $service == 'Warehouse Service') {
+                                                                $packing = $inv['packing'];
+                                                                $total_sales = ($inv['freight_kg'] + $packing +  $inv['special_freight'] +  $inv['others'] + $inv['surcharge'] + $inv['insurance']);
+                                                            } else {
+                                                                $disc = $inv['disc'];
+                                                                // kalo gada disc
+                                                                if ($disc == 0) {
+                                                                    $freight  = $inv['berat_js'] * $inv['freight_kg'];
+                                                                    $special_freight  = $inv['berat_msr'] * $inv['special_freight'];
+                                                                } else {
+                                                                    $freight_discount = $inv['freight_kg'] * $disc;
+                                                                    $special_freight_discount = $inv['special_freight'] * $disc;
+                                                                    $freight = $freight_discount * $inv['berat_js'];
+                                                                    $special_freight  = $special_freight_discount * $inv['berat_msr'];
+                                                                }
+                                                                $packing = $inv['packing'];
+                                                                $total_sales = ($freight + $packing + $special_freight +  $inv['others'] + $inv['surcharge'] + $inv['insurance']);
+                                                            }
                                                         ?>
-                                                            <tr>
-
-                                                                <input hidden type="text" name="shipment_id[]" value="<?= $inv['id'] ?>">
-                                                                <td><?= $inv['shipment_id'] ?></td>
-                                                                <td><?= bulan_indo($inv['tgl_pickup']) ?></td>
-                                                                <td><?= $inv['tree_consignee'] ?></td>
-                                                                <td>
-                                                                    <input type="text" name="note_cs[]" class="form-control" value="<?= $inv['note_cs'] ?>">
-                                                                </td>
-                                                                <td>
-                                                                    <input type="text" name="so_note[]" value="<?= $inv['so_note'] ?>">
-                                                                </td>
-                                                                <td><?= $inv['prefix'] ?></td>
-                                                                <td><?= $inv['koli'] ?></td>
-                                                                <td><?= $inv['berat_js']; ?></td>
-                                                                <td><?php
-                                                                    echo  rupiah($inv['freight_kg']);
-                                                                    ?></td>
-                                                                <td><?= $inv['berat_msr']; ?></td>
-                                                                <td><?php
-                                                                    echo rupiah($inv['special_freight']);
-                                                                    ?></td>
-                                                                <td><?= rupiah($inv['packing']); ?></td>
-                                                                <td><?= rupiah($inv['others']); ?></td>
-                                                                <td><?= rupiah($inv['insurance']); ?></td>
-                                                                <td><?= rupiah($inv['surcharge']); ?></td>
-
-                                                                <td><?php
-                                                                    echo rupiah($total_sales);
-                                                                    ?></td>
-                                                                <td> <a href="<?= base_url('finance/invoice/deleteInvoiceFinal/' . $inv['id_invoice'] . '/' . $inv['no_invoice'] . '/' . $inv['shipment_id']) ?>" class=" btn btn-sm text-light tombol-hapus" data-flashdata="<?= $inv['shipment_id'] ?>" style="background-color: #9c223b;">Delete</a></td>
-
-                                                            </tr>
-
-                                                        <?php } else {
-                                                        ?>
-                                                            <th rowspan="<?= $total_do + 1 ?>"><?= $inv['shipment_id'] ?></th>
-                                                            <?php
-                                                            foreach ($data_do as $d) {
-                                                            ?>
+                                                            <?php if ($total_do == 0) {
+                                                                 $total_koli = $total_koli +  $inv['koli'];
+                                                                ?>
                                                                 <tr>
                                                                     <input hidden type="text" name="shipment_id[]" value="<?= $inv['id'] ?>">
-                                                                    <td><?= bulan_indo($inv['tgl_pickup']) ?></td>
-                                                                    <td><?= $inv['tree_consignee'] ?></td>
-                                                                    <td><input type="text" name="no_do[]" value="<?= $d['no_do'] ?>"><input hidden type="text" name="id_berat[]" value="<?= $d['id_berat'] ?>"></td>
+                                                                    <td class="align-middle"><?= $inv['shipment_id'] ?></td>
+                                                                    <td class="align-middle"><?= bulan_indo($inv['tgl_pickup']) ?></td>
+                                                                    <td class="align-middle"><?= $inv['tree_consignee'] ?></td>
                                                                     <td>
-                                                                        <input type="text" name="remarks_do[]" value="<?= $d['remarks'] ?>">
+                                                                        <textarea name="note_cs<?= $inv['id'] ?>" class="form-control" style="width: 100%; min-width: 150px;"><?= $inv['note_cs'] ?></textarea>
                                                                     </td>
-                                                                    <td><?= $inv['prefix'] ?></td>
-                                                                    <td><?= $d['koli'] ?></td>
-                                                                    <td><?= $d['berat']; ?></td>
-                                                                    <td><?php
-                                                                        echo  rupiah($inv['freight_kg']);
-                                                                        ?></td>
-                                                                    <td><?= $inv['berat_msr']; ?></td>
-                                                                    <td><?php
-                                                                        echo rupiah($inv['special_freight']);
-                                                                        ?></td>
-                                                                    <td><?= rupiah($inv['packing']); ?></td>
-                                                                    <td><?= rupiah($inv['others']); ?></td>
-                                                                    <td><?= rupiah($inv['insurance']); ?></td>
-                                                                    <td><?= rupiah($inv['surcharge']); ?></td>
-
-                                                                    <td><?php
-                                                                        echo rupiah($total_sales);
-                                                                        ?></td>
-                                                                    <td> <a href="<?= base_url('finance/invoice/deleteInvoiceFinal/' . $inv['id_invoice'] . '/' . $inv['no_invoice'] . '/' . $inv['shipment_id']) ?>" class=" btn btn-sm text-light tombol-hapus" data-flashdata="<?= $inv['shipment_id'] ?>" style="background-color: #9c223b;">Delete</a></td>
-
+                                                                    <td>
+                                                                        <input type="text" name="so_note[]" class="form-control" value="<?= $inv['so_note'] ?>">
+                                                                    </td>
+                                                                    <td class="align-middle"><?= $inv['prefix'] ?></td>
+                                                                    <td class="align-middle text-center"><?= $inv['koli'] ?></td>
+                                                                    <td class="align-middle text-center"><?= $inv['berat_js']; ?></td>
+                                                                    <td class="align-middle text-right"><?= rupiah($inv['freight_kg']); ?></td>
+                                                                    <td class="align-middle text-center"><?= $inv['berat_msr']; ?></td>
+                                                                    <td class="align-middle text-right"><?= rupiah($inv['special_freight']); ?></td>
+                                                                    <td class="align-middle text-right"><?= rupiah($inv['packing']); ?></td>
+                                                                    <td class="align-middle text-right"><?= rupiah($inv['others']); ?></td>
+                                                                    <td class="align-middle text-right"><?= rupiah($inv['insurance']); ?></td>
+                                                                    <td class="align-middle text-right"><?= rupiah($inv['surcharge']); ?></td>
+                                                                    <td class="align-middle text-right font-weight-bold"><?= rupiah($total_sales); ?></td>
+                                                                    <td class="align-middle text-center">
+                                                                        <a href="<?= base_url('finance/invoice/deleteInvoiceFinal/' . $inv['id_invoice'] . '/' . $inv['no_invoice'] . '/' . $inv['shipment_id']) ?>" 
+                                                                           class="btn btn-sm text-light tombol-hapus" 
+                                                                           data-flashdata="<?= $inv['shipment_id'] ?>" 
+                                                                           style="background-color: #9c223b;">
+                                                                            <i class="fa fa-trash"></i> Delete
+                                                                        </a>
+                                                                    </td>
                                                                 </tr>
-                                                            <?php $total_koli = $total_koli + $d['koli'];
-                                                            } ?>
-
-                                                        <?php  } ?>
-
-                                                    <?php
-                                                        $total_koli = $total_koli + $inv['koli'];
-                                                        $total_weight = $total_weight + $inv['berat_js'];
-                                                        $total_special_weight = $total_special_weight + $inv['berat_msr'];
-                                                        $amount = $amount + $total_sales;
-                                                        $no++;
-                                                    } ?>
-                                                    <tr>
-                                                        <td colspan="5" class="text-center">TOTAL <?= $total_invoice ?> AWB</td>
-                                                        <td><?= $total_koli ?></td>
-                                                        <td><?= $total_weight ?></td>
-                                                        <td></td>
-                                                        <td><?= $total_special_weight ?></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-
-                                                        <td class="font-weight-bold">SUB TOTAL</td>
-                                                        <td><?= rupiah($amount) ?></td>
-                                                    </tr>
-                                                    <!-- kalo dia ada ppn -->
-                                                    <?php if ($inv['is_ppn'] == 1) {
-                                                    ?>
-                                                        <tr style="border:none">
-                                                            <td colspan="14">
-                                                            </td>
-                                                            <td class="font-weight-bold">
-                                                                PPN <?= $inv['percent_ppn'] ?> %
-                                                            </td>
-                                                            <td>
-                                                                <?php
-
-                                                                $ppn =  $amount * $inv['percent_ppn'] / 100;
-                                                                $pph =  $amount * 0.02;
-                                                                echo rupiah($ppn);
+                                                            <?php } else {
+                                                               
                                                                 ?>
+                                                                <input hidden type="text" name="shipment_id[]" value="<?= $inv['id'] ?>">
+                                                                <th rowspan="<?= $total_do + 1 ?>" class="align-middle text-center"><?= $inv['shipment_id'] ?></th>
+                                                                <?php foreach ($data_do as $d) {
+                                                                    $total_koli = $total_koli + $d['koli'];
+                                                                    ?>
+                                                                    <tr>
+                                                                        <td class="align-middle"><?= bulan_indo($inv['tgl_pickup']) ?></td>
+                                                                        <td class="align-middle"><?= $inv['tree_consignee'] ?></td>
+                                                                        <td>
+                                                                            <textarea name="no_do[]" class="form-control" style="width: 100%; min-width: 150px;"><?= $d['no_do'] ?></textarea>
+                                                                            <input hidden type="text" name="id_berat[]" value="<?= $d['id_berat'] ?>">
+                                                                        </td>
+                                                                        <td>
+                                                                            <input type="text" name="remarks_do[]" class="form-control" value="<?= $d['remarks'] ?>">
+                                                                        </td>
+                                                                        <td class="align-middle"><?= $inv['prefix'] ?></td>
+                                                                        <td class="align-middle text-center"><?= $d['koli'] ?></td>
+                                                                        <td class="align-middle text-center"><?= $d['berat']; ?></td>
+                                                                        <td class="align-middle text-right"><?= rupiah($inv['freight_kg']); ?></td>
+                                                                        <td class="align-middle text-center"><?= $inv['berat_msr']; ?></td>
+                                                                        <td class="align-middle text-right"><?= rupiah($inv['special_freight']); ?></td>
+                                                                        <td class="align-middle text-right"><?= rupiah($inv['packing']); ?></td>
+                                                                        <td class="align-middle text-right"><?= rupiah($inv['others']); ?></td>
+                                                                        <td class="align-middle text-right"><?= rupiah($inv['insurance']); ?></td>
+                                                                        <td class="align-middle text-right"><?= rupiah($inv['surcharge']); ?></td>
+                                                                        <td class="align-middle text-right font-weight-bold"><?= rupiah($total_sales); ?></td>
+                                                                        <td class="align-middle text-center">
+                                                                            <a href="<?= base_url('finance/invoice/deleteInvoiceFinal/' . $inv['id_invoice'] . '/' . $inv['no_invoice'] . '/' . $inv['shipment_id']) ?>" 
+                                                                               class="btn btn-sm text-light tombol-hapus" 
+                                                                               data-flashdata="<?= $inv['shipment_id'] ?>" 
+                                                                               style="background-color: #9c223b;">
+                                                                                <i class="fa fa-trash"></i> Delete
+                                                                            </a>
+                                                                        </td>
+                                                                    </tr>
+                                                                <?php 
+                                                                   
+                                                                } ?>
+                                                            <?php } ?>
 
-                                                            </td>
+                                                        <?php
+                                                            $total_koli = $total_koli;
+                                                            $total_weight = $total_weight + $inv['berat_js'];
+                                                            $total_special_weight = $total_special_weight + $inv['berat_msr'];
+                                                            $amount = $amount + $total_sales;
+                                                            $no++;
+                                                        } ?>
+                                                        <tr class="bg-light">
+                                                            <td colspan="6" class="text-center font-weight-bold">TOTAL <?= $total_invoice ?> AWB</td>
+                                                            <td class="text-center font-weight-bold"><?= $total_koli ?></td>
+                                                            <td class="text-center font-weight-bold"><?= $total_weight ?></td>
+                                                            <td></td>
+                                                            <td class="text-center font-weight-bold"><?= $total_special_weight ?></td>
+                                                            <td colspan="4"></td>
+                                                            <td class="font-weight-bold text-right">SUB TOTAL</td>
+                                                            <td class="text-right font-weight-bold"><?= rupiah($amount) ?></td>
+                                                            <td></td>
                                                         </tr>
-                                                    <?php  }  ?>
-                                                    <?php
-                                                    if ($inv['is_ppn'] == 0 || $inv['is_ppn'] == NULL) {
-                                                        $ppn = 0;
-                                                    } else {
-                                                        $ppn = $ppn;
-                                                    }
-                                                    if ($inv['is_pph'] == 0 || $inv['is_pph'] == NULL) {
-                                                        $pph = 0;
-                                                    } else {
-                                                        $pph = $pph;
-                                                    }
-
-                                                    ?>
-                                                    <tr>
-                                                        <td colspan="14">
-
-                                                        </td>
-                                                        <td class="font-weight-bold">
-                                                            TOTAL
-                                                        </td>
-                                                        <td>
-                                                            <?php $total_amount = $amount + $ppn;
-                                                            echo  rupiah($total_amount);
-                                                            ?>
-
-                                                        </td>
-                                                    </tr>
-
-                                                </tbody>
-
-
-                                            </table>
+                                                        <!-- kalo dia ada ppn -->
+                                                        <?php if ($inv['is_ppn'] == 1) { ?>
+                                                            <tr style="border:none">
+                                                                <td colspan="14"></td>
+                                                                <td class="font-weight-bold text-right">PPN <?= $inv['percent_ppn'] ?> %</td>
+                                                                <td class="text-right font-weight-bold">
+                                                                    <?php
+                                                                    $ppn =  $amount * $inv['percent_ppn'] / 100;
+                                                                    $pph =  $amount * 0.02;
+                                                                    echo rupiah($ppn);
+                                                                    ?>
+                                                                </td>
+                                                                <td></td>
+                                                            </tr>
+                                                        <?php } ?>
+                                                        <?php
+                                                        if ($inv['is_ppn'] == 0 || $inv['is_ppn'] == NULL) {
+                                                            $ppn = 0;
+                                                        } else {
+                                                            $ppn = $ppn;
+                                                        }
+                                                        if ($inv['is_pph'] == 0 || $inv['is_pph'] == NULL) {
+                                                            $pph = 0;
+                                                        } else {
+                                                            $pph = $pph;
+                                                        }
+                                                        ?>
+                                                        <tr class="bg-light">
+                                                            <td colspan="14"></td>
+                                                            <td class="font-weight-bold text-right">TOTAL</td>
+                                                            <td class="text-right font-weight-bold">
+                                                                <?php 
+                                                                $total_amount = $amount + $ppn;
+                                                                echo rupiah($total_amount);
+                                                                ?>
+                                                            </td>
+                                                            <td></td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
 
                                             <br><br>
                                             <h3 class="title text-center"><i class="fa fa-building"></i> INVOICE INFORMATION</h3>
@@ -276,7 +257,7 @@
                                 <input type="text" class="form-control" name="total_invoice" hidden value="<?= $total_amount ?>">
                                 <input type="text" name="shipper" value="<?= $inv['customer'] ?>" class="form-control">
                             </div>
-							<div class="col-md-3">
+                            <div class="col-md-3">
                                 <label for="percent_ppn" class="font-weight-bold">ppn (%)</label>
                                 <input type="number" name="percent_ppn" class="form-control" step="0.1" min="1.1" max="100.0" value="<?= $inv['percent_ppn'] ?>">
                             </div>
@@ -294,7 +275,7 @@
                                 <input type="no_invoice" name="no_invoice" hidden value="<?= $inv['no_invoice'] ?>" class="form-control">
                                 <input type="text" name="id_invoice" hidden value="<?= $inv['id_invoice'] ?>" class="form-control">
                             </div>
-							<div class="col-md-3">
+                            <div class="col-md-3">
                                 <label for="date" class="font-weight-bold">Date</label>
                                 <input type="date" class="form-control" name="date" value="<?= $inv['date'] ?>" required>
 
@@ -400,7 +381,7 @@
                                     </div>
                                 </div>
                             </div>
-							<div class="col-md-1">
+                            <div class="col-md-1">
                                 <div class="form-group">
                                     <label for="exampleInputEmail1" class="font-weight-bold">Insurance</label>
                                     <div class="form-check">

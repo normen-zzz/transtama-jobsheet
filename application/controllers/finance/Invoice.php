@@ -1,9 +1,11 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
+
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Reader\Csv;
 use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
 use PhpOffice\PhpSpreadsheet\IOFactory;
+
 class Invoice extends CI_Controller
 {
     public function __construct()
@@ -41,7 +43,7 @@ class Invoice extends CI_Controller
             // $data['proforma'] = $this->cs->getProformaInvoiceFinal()->result_array();
             $this->backend->display('finance/v_invoice', $data);
         } else {
-             $cek_data = $this->cs->cekShipment($shipment_id)->row_array();
+            $cek_data = $this->cs->cekShipment($shipment_id)->row_array();
             if ($cek_data) {
                 $data['invoice'] = $this->db->get_where('tbl_invoice', ['shipment_id' => $cek_data['id']])->row_array();
                 $data['title'] = 'Invoice';
@@ -62,11 +64,11 @@ class Invoice extends CI_Controller
     public function getNoInvoice()
     {
         $no_invoice = $this->input->get('no_invoice');
-        
+
 
         $data = [
             'no_invoice' => $no_invoice,
-            
+
         ];
         echo json_encode($data);
     }
@@ -74,12 +76,12 @@ class Invoice extends CI_Controller
     function getDataInvoiceFinal()
     {
         $query  = "SELECT a.no_invoice,a.due_date,a.date,a.status,a.customer,a.customer_pickup,a.id_invoice, b.shipper FROM tbl_invoice AS a INNER JOIN tbl_shp_order AS b ON a.shipment_id = b.id";
-        $search = array('a.no_invoice','a.customer');
+        $search = array('a.no_invoice', 'a.customer');
         $where  = array('a.status' => 1);
         $isWhere = null;
         $group = 'GROUP BY a.no_invoice';
         header('Content-Type: application/json');
-        echo $this->M_Datatables->get_tables_query($query, $search, $where, $isWhere,$group);
+        echo $this->M_Datatables->get_tables_query($query, $search, $where, $isWhere, $group);
     }
 
     public function paidInvoice()
@@ -98,7 +100,7 @@ class Invoice extends CI_Controller
         }
 
         // var_dump($invoice);
-        
+
         $data['title'] = 'Create Invoice';
         $breadcrumb_items = [];
         $data['subtitle'] = 'Create Invoice';
@@ -125,7 +127,7 @@ class Invoice extends CI_Controller
 
         $this->backend->display('finance/v_edit_invoice', $data);
     }
-	public function editInvoice($id_invoice, $no_invoice)
+    public function editInvoice($id_invoice, $no_invoice)
     {
 
         $data['title'] = 'Edit Invoice';
@@ -162,7 +164,7 @@ class Invoice extends CI_Controller
     }
     public function paid()
     {
-       $data = array(
+        $data = array(
             'payment_date' => $this->input->post('payment_date'),
             'payment_time' => $this->input->post('payment_time'),
             'status' => 2
@@ -193,7 +195,7 @@ class Invoice extends CI_Controller
         $this->session->set_flashdata('messageAlert', $this->messageAlert('success', 'Success Paid'));
         redirect('finance/invoice/final');
     }
-	public function editPaid()
+    public function editPaid()
     {
         $data = array(
             'payment_date' => $this->input->post('payment_date'),
@@ -244,7 +246,7 @@ class Invoice extends CI_Controller
             redirect('finance/invoice/invoicePaid');
         }
     }
-	public function soa()
+    public function soa()
     {
         $data['title'] = 'SOA';
         $breadcrumb_items = [];
@@ -254,7 +256,7 @@ class Invoice extends CI_Controller
         $data['proforma'] = $this->cs->getSoa()->result_array();
         $this->backend->display('finance/v_soa', $data);
     }
-	public function ExportSoa()
+    public function ExportSoa()
     {
         header("Content-type: application/octet-stream");
         header("Content-Disposition: attachment;Filename=export-soa.xls");
@@ -275,7 +277,7 @@ class Invoice extends CI_Controller
         $this->backend->display('finance/v_js_detail_mgr', $data);
     }
 
-     public function deleteInvoice($id_invoice, $no_invoice, $shipment_id)
+    public function deleteInvoice($id_invoice, $no_invoice, $shipment_id)
     {
         $delete = $this->db->delete('tbl_invoice',  ['id_invoice' => $id_invoice]);
         if ($delete) {
@@ -291,7 +293,7 @@ class Invoice extends CI_Controller
             redirect('finance/invoice/edit/' . $id_invoice . '/' . $no_invoice);
         }
     }
-	 public function deleteInvoiceFinal($id_invoice, $no_invoice, $shipment_id)
+    public function deleteInvoiceFinal($id_invoice, $no_invoice, $shipment_id)
     {
         $delete = $this->db->delete('tbl_invoice',  ['id_invoice' => $id_invoice]);
         if ($delete) {
@@ -307,10 +309,10 @@ class Invoice extends CI_Controller
             redirect('finance/invoice/editInvoice/' . $id_invoice . '/' . $no_invoice);
         }
     }
-     public function approve($no_invoice, $id_invoice, $total_amount)
+    public function approve($no_invoice, $id_invoice, $total_amount)
     {
         // $update = $this->db->update('tbl_invoice',  ['status' => 1, 'total_invoice' => decrypt_url($total_amount)], ['no_invoice' => $no_invoice],['invoice_at' => date('Y-m-d H:i:s')] );
-        $update = $this->db->update('tbl_invoice',  ['status' => 1, 'total_invoice' => decrypt_url($total_amount)], ['no_invoice' => $no_invoice] );
+        $update = $this->db->update('tbl_invoice',  ['status' => 1, 'total_invoice' => decrypt_url($total_amount)], ['no_invoice' => $no_invoice]);
         if ($update) {
             $data = array(
                 'no_invoice' => $no_invoice,
@@ -330,19 +332,19 @@ class Invoice extends CI_Controller
         $no_invoice = $this->input->post('no_invoice');
         $terbilang = $this->input->post('terbilang');
         // $pu_muda = $this->input->post('pu_muda');
-		$is_reimbursment = $this->input->post('is_reimbursment');
-		$is_special = $this->input->post('is_special');
-		$is_packing = $this->input->post('is_packing');
-		$is_insurance = $this->input->post('is_insurance');
-		$is_others = $this->input->post('is_others');
-		 $is_remarks = $this->input->post('is_remarks');
+        $is_reimbursment = $this->input->post('is_reimbursment');
+        $is_special = $this->input->post('is_special');
+        $is_packing = $this->input->post('is_packing');
+        $is_insurance = $this->input->post('is_insurance');
+        $is_others = $this->input->post('is_others');
+        $is_remarks = $this->input->post('is_remarks');
         $id_invoice = $this->input->post('id_invoice');
-		$date = $this->input->post('date');
+        $date = $this->input->post('date');
         $due_date = $this->input->post('due_date');
         $total_invoice = $this->input->post('total_invoice');
         $invoice = $this->input->post('invoice');
         $ppn = $this->input->post('ppn');
-		 $percent_ppn =  $this->input->post('percent_ppn');
+        $percent_ppn =  $this->input->post('percent_ppn');
         $pph = $this->input->post('pph');
         $is_ppn = $this->input->post('is_ppn');
         $is_pph = $this->input->post('is_pph');
@@ -352,15 +354,15 @@ class Invoice extends CI_Controller
         $address = $this->input->post('address');
         $shipper = $this->input->post('shipper');
         $shipment_id =  $this->input->post('shipment_id');
-        $note_cs = $this->input->post('note_cs');
-		 $so_note = $this->input->post('so_note');
-		 $no_do = $this->input->post('no_do');
-		 $id_berat = $this->input->post('id_berat');
+       
+        $so_note = $this->input->post('so_note');
+        $no_do = $this->input->post('no_do');
+        $id_berat = $this->input->post('id_berat');
         // KALO DIA ADA PPN DAN PPH
         if ($is_ppn != 1) {
             $ppn = 0;
         } else {
-           $ppn =    $invoice * ($percent_ppn / 100);
+            $ppn =    $invoice * ($percent_ppn / 100);
         }
         if ($is_pph != 1) {
             $pph = 0;
@@ -368,133 +370,34 @@ class Invoice extends CI_Controller
             $pph = 0.02 * $invoice;
         }
         for ($i = 0; $i < sizeof($shipment_id); $i++) {
+            $note_cs = $this->input->post('note_cs' . $shipment_id[$i]);
             $data = array(
-                'note_cs' => $note_cs[$i],
-				'so_note' => $so_note[$i],
+                'so_note' => $so_note[$i],
                 // 'pu_moda' => $pu_muda[$i],
             );
             $this->db->update('tbl_shp_order', $data, ['id' => $shipment_id[$i]]);
-        }
-		for ($k = 0; $k < sizeof($id_berat); $k++) {
-            $data_do = array(
-                'no_do' => $no_do[$k],
 
-            );
-            $this->db->update('tbl_no_do', $data_do, ['id_berat' => $id_berat[$k]]);
-        }
-        $data = array(
-			'date' => $date,
-            'due_date' => $due_date,
-            'pic' => $pic,
-            'terbilang' => $terbilang,
-            'no_telp' => $no_telp,
-            'address' => $address,
-            'print_do' => $print_do,
-            'customer' => $shipper,
-			'is_reimbursment' => $is_reimbursment,
-			'is_special' => $is_special,
-			'is_packing' => $is_packing,
-			'is_insurance' => $is_insurance,
-			'is_others' => $is_others,
-            'total_invoice' => $total_invoice,
-            'invoice' => $invoice,
-            'ppn' => $ppn,
-			'percent_ppn' => $percent_ppn,
-            'pph' => $pph,
-            'is_ppn' => $is_ppn,
-            'is_pph' => $is_pph,
-			'is_remarks' => $is_remarks,
-        );
-        $update = $this->db->update('tbl_invoice', $data, ['no_invoice' => $no_invoice]);
-        if ($update) {
-            $this->session->set_flashdata('messageAlert', $this->messageAlert('success', 'Success'));
-            redirect('finance/invoice/edit/' . $id_invoice . '/' . $no_invoice);
-        } else {
-            $this->session->set_flashdata('messageAlert', $this->messageAlert('error', 'Failed'));
-            redirect('finance/invoice/edit/' . $id_invoice . '/' . $no_invoice);
-        }
-    }
-	 public function proceseditInvoiceFinal()
-    {
-        $no_invoice = $this->input->post('no_invoice');
-        $terbilang = $this->input->post('terbilang');
-        // $pu_muda = $this->input->post('pu_muda');
-        $is_reimbursment = $this->input->post('is_reimbursment');
-        $is_special = $this->input->post('is_special');
-        $is_packing = $this->input->post('is_packing');
-        $is_insurance = $this->input->post('is_insurance');
-		 $is_revisi = $this->input->post('is_revisi');
-		 $is_others = $this->input->post('is_others');
-        $id_invoice = $this->input->post('id_invoice');
-		$date = $this->input->post('date');
-        $due_date = $this->input->post('due_date');
-        $total_invoice = $this->input->post('total_invoice');
-        $invoice = $this->input->post('invoice');
-        $ppn = $this->input->post('ppn');
-		$percent_ppn =  $this->input->post('percent_ppn');
-        $pph = $this->input->post('pph');
-        $is_ppn = $this->input->post('is_ppn');
-        $is_pph = $this->input->post('is_pph');
-		$is_remarks = $this->input->post('is_remarks');
-        $no_telp = $this->input->post('no_telp');
-        $print_do = $this->input->post('print_do');
-        $pic = $this->input->post('pic');
-        $address = $this->input->post('address');
-        $shipper = $this->input->post('shipper');
-        $shipment_id =  $this->input->post('shipment_id');
-        $note_cs = $this->input->post('note_cs');
-		  $so_note = $this->input->post('so_note');
-		   $no_do = $this->input->post('no_do');
-          $id_berat = $this->input->post('id_berat');
-		  $remarks_do = $this->input->post('remarks_do');
-        // KALO DIA ADA PPN DAN PPH
-        if ($is_ppn != 1) {
-            $ppn = 0;
-        } else {
-           $ppn =    $invoice * ($percent_ppn / 100);
-        }
-        if ($is_pph != 1) {
-            $pph = 0;
-        } else {
-            $pph = 0.02 * $invoice;
-        }
-        if (isset($so_note) ) {
-            for ($i = 0; $i < sizeof($shipment_id); $i++) {
-                $data = array(
-                    
-                    'so_note' => $so_note[$i],
-                    // 'pu_moda' => $pu_muda[$i],
-                );
-                $this->db->update('tbl_shp_order', $data, ['id' => $shipment_id[$i]]);
+            if ($note_cs != NULL) {
+                $shipment = $this->db->query('SELECT berat_js,koli,shipment_id FROM tbl_shp_order WHERE id = ' . $shipment_id[$i])->row_array();
+                $dataNewDo = [
+                    'no_do' => $note_cs,
+                    'shipment_id' => $shipment['shipment_id'],
+                    'berat ' => $shipment['berat_js'],
+                    'koli' => $shipment['koli'],
+                ];
+                // insert into('tbl_no_do', $dataNewDo);
+                $this->db->insert('tbl_no_do', $dataNewDo);
+                # code...
             }
         }
-
-        if (isset($note_cs) ) {
-            for ($i = 0; $i < sizeof($shipment_id); $i++) {
-                $data = array(
-                    'note_cs' => $note_cs[$i],
-                    
-                    // 'pu_moda' => $pu_muda[$i],
-                );
-                $this->db->update('tbl_shp_order', $data, ['id' => $shipment_id[$i]]);
-            }
-        }
-        
         for ($k = 0; $k < sizeof($id_berat); $k++) {
             $data_do = array(
                 'no_do' => $no_do[$k],
-
             );
             $this->db->update('tbl_no_do', $data_do, ['id_berat' => $id_berat[$k]]);
-			$remarks = $this->db->query('SELECT * FROM remarks_do WHERE id_do = ' . $id_berat[$k]);
-            if ($remarks->num_rows() > 0) {
-               $this->db->update('remarks_do', ['remarks' => $remarks_do[$k]], ['id_do' => $id_berat[$k]]);
-            } else{
-                $this->db->insert('remarks_do', ['remarks' => $remarks_do[$k], 'id_do' => $id_berat[$k],'created_at' => date('Y-m-d H:i:s'),'created_by' => $this->session->userdata('id_user')]);
-            }
         }
         $data = array(
-			'date' => $date,
+            'date' => $date,
             'due_date' => $due_date,
             'pic' => $pic,
             'terbilang' => $terbilang,
@@ -506,16 +409,125 @@ class Invoice extends CI_Controller
             'is_special' => $is_special,
             'is_packing' => $is_packing,
             'is_insurance' => $is_insurance,
-			'is_others' => $is_others,
-			  'is_revisi' => $is_revisi,
+            'is_others' => $is_others,
+            'total_invoice' => $total_invoice,
+            'invoice' => $invoice,
+            'ppn' => $ppn,
+            'percent_ppn' => $percent_ppn,
+            'pph' => $pph,
+            'is_ppn' => $is_ppn,
+            'is_pph' => $is_pph,
+            'is_remarks' => $is_remarks,
+        );
+        $update = $this->db->update('tbl_invoice', $data, ['no_invoice' => $no_invoice]);
+        if ($update) {
+            $this->session->set_flashdata('messageAlert', $this->messageAlert('success', 'Success'));
+            redirect('finance/invoice/edit/' . $id_invoice . '/' . $no_invoice);
+        } else {
+            $this->session->set_flashdata('messageAlert', $this->messageAlert('error', 'Failed'));
+            redirect('finance/invoice/edit/' . $id_invoice . '/' . $no_invoice);
+        }
+    }
+    public function proceseditInvoiceFinal()
+    {
+        $no_invoice = $this->input->post('no_invoice');
+        $terbilang = $this->input->post('terbilang');
+        // $pu_muda = $this->input->post('pu_muda');
+        $is_reimbursment = $this->input->post('is_reimbursment');
+        $is_special = $this->input->post('is_special');
+        $is_packing = $this->input->post('is_packing');
+        $is_insurance = $this->input->post('is_insurance');
+        $is_revisi = $this->input->post('is_revisi');
+        $is_others = $this->input->post('is_others');
+        $id_invoice = $this->input->post('id_invoice');
+        $date = $this->input->post('date');
+        $due_date = $this->input->post('due_date');
+        $total_invoice = $this->input->post('total_invoice');
+        $invoice = $this->input->post('invoice');
+        $ppn = $this->input->post('ppn');
+        $percent_ppn =  $this->input->post('percent_ppn');
+        $pph = $this->input->post('pph');
+        $is_ppn = $this->input->post('is_ppn');
+        $is_pph = $this->input->post('is_pph');
+        $is_remarks = $this->input->post('is_remarks');
+        $no_telp = $this->input->post('no_telp');
+        $print_do = $this->input->post('print_do');
+        $pic = $this->input->post('pic');
+        $address = $this->input->post('address');
+        $shipper = $this->input->post('shipper');
+        $shipment_id =  $this->input->post('shipment_id');
+        $so_note = $this->input->post('so_note');
+        $no_do = $this->input->post('no_do');
+        $id_berat = $this->input->post('id_berat');
+        $remarks_do = $this->input->post('remarks_do');
+        // KALO DIA ADA PPN DAN PPH
+        if ($is_ppn != 1) {
+            $ppn = 0;
+        } else {
+            $ppn =    $invoice * ($percent_ppn / 100);
+        }
+        if ($is_pph != 1) {
+            $pph = 0;
+        } else {
+            $pph = 0.02 * $invoice;
+        }
+        for ($i = 0; $i < sizeof($shipment_id); $i++) {
+            $note_cs = $this->input->post('note_cs' . $shipment_id[$i]);
+            $data = array(
+                'so_note' => $so_note[$i],
+                // 'pu_moda' => $pu_muda[$i],
+            );
+            $this->db->update('tbl_shp_order', $data, ['id' => $shipment_id[$i]]);
+
+            if ($note_cs != NULL) {
+                $shipment = $this->db->query('SELECT berat_js,koli,shipment_id FROM tbl_shp_order WHERE id = ' . $shipment_id[$i])->row_array();
+                $dataNewDo = [
+                    'no_do' => $note_cs,
+                    'shipment_id' => $shipment['shipment_id'],
+                    'berat ' => $shipment['berat_js'],
+                    'koli' => $shipment['koli'],
+                ];
+                // insert into('tbl_no_do', $dataNewDo);
+                $this->db->insert('tbl_no_do', $dataNewDo);
+                # code...
+            }
+        }
+        for ($k = 0; $k < sizeof($id_berat); $k++) {
+            $data_do = array(
+                'no_do' => $no_do[$k],
+            );
+            $this->db->update('tbl_no_do', $data_do, ['id_berat' => $id_berat[$k]]);
+            $remarks = $this->db->query('SELECT * FROM remarks_do WHERE id_do = ' . $id_berat[$k]);
+            if ($remarks->num_rows() > 0) {
+                $this->db->update('remarks_do', ['remarks' => $remarks_do[$k]], ['id_do' => $id_berat[$k]]);
+            } else {
+                $this->db->insert('remarks_do', ['remarks' => $remarks_do[$k], 'id_do' => $id_berat[$k], 'created_at' => date('Y-m-d H:i:s'), 'created_by' => $this->session->userdata('id_user')]);
+            }
+        }
+
+        $data = array(
+            'date' => $date,
+            'due_date' => $due_date,
+            'pic' => $pic,
+            'terbilang' => $terbilang,
+            'no_telp' => $no_telp,
+            'address' => $address,
+            'print_do' => $print_do,
+            'customer' => $shipper,
+            'is_reimbursment' => $is_reimbursment,
+            'is_special' => $is_special,
+            'is_packing' => $is_packing,
+            'is_insurance' => $is_insurance,
+            'is_others' => $is_others,
+            'is_revisi' => $is_revisi,
             'total_invoice' => $total_invoice,
             'invoice' => $invoice,
             'ppn' => $ppn,
             'pph' => $pph,
             'is_ppn' => $is_ppn,
             'is_pph' => $is_pph,
-			 'is_remarks' => $is_remarks,
-			 'percent_ppn' => $percent_ppn,
+            'is_remarks' => $is_remarks,
+            'percent_ppn' => $percent_ppn,
         );
         $update = $this->db->update('tbl_invoice', $data, ['no_invoice' => $no_invoice]);
         if ($update) {
@@ -545,7 +557,7 @@ class Invoice extends CI_Controller
         $data['shipment_id'] = $shipment_id;
         $this->backend->display('finance/v_create_invoice', $data);
     }
-	 public function addShipment()
+    public function addShipment()
     {
         $shipment_id =  $this->input->post('shipment_id');
         $due_date = $this->input->post('due_date');
@@ -648,7 +660,7 @@ class Invoice extends CI_Controller
             redirect('finance/invoice/editInvoice/' . $id_invoice . '/' . $no_invoice);
         }
     }
-    
+
     public function Exportexcel($id)
     {
         $detail = $this->db->get_where('tbl_shp_order', ['id' => $id])->row_array();
@@ -664,14 +676,14 @@ class Invoice extends CI_Controller
         $data['invoice'] = $this->cs->getInvoice($no_invoice)->result_array();
         $data['info'] = $this->cs->getInvoice($no_invoice)->row_array();
         $get_alamat_customer = $this->db->get_where('tb_customer', ['nama_pt' => $data['info']['shipper']])->row_array();
-      
+
         $data['total_invoice'] = $this->cs->getInvoice($no_invoice)->num_rows();
-		
-		//var_dump($data); die;
-		
+
+        //var_dump($data); die;
+
         // kalo dia ada reimbursment
         if ($data['info']['is_reimbursment'] == 1) {
-			$data['reimbursment'] = $this->cs->getInvoiceReimbursment($no_invoice)->row_array();
+            $data['reimbursment'] = $this->cs->getInvoiceReimbursment($no_invoice)->row_array();
             $this->load->view('superadmin/v_cetak_invoice_reimbursment', $data);
             $html = $this->output->get_output();
             $this->load->library('dompdf_gen');
@@ -691,7 +703,7 @@ class Invoice extends CI_Controller
             $this->dompdf->stream("Invoice$no_invoice.pdf", array('Attachment' => 0));
         }
     }
-	public function printProformaFull($no_invoice)
+    public function printProformaFull($no_invoice)
     {
         $data['invoice'] = $this->cs->getInvoice($no_invoice)->result_array();
         $data['info'] = $this->cs->getInvoice($no_invoice)->row_array();
@@ -712,8 +724,8 @@ class Invoice extends CI_Controller
         $this->dompdf->stream("Invoice$no_invoice.pdf", array('Attachment' => 0));
     }
 
-	
-	 public function printProformaExcell($no_invoice)
+
+    public function printProformaExcell($no_invoice)
     {
         $spreadsheet = new Spreadsheet();
         $invoice = $this->cs->getInvoice($no_invoice)->result_array();
@@ -779,8 +791,8 @@ class Invoice extends CI_Controller
         $sheet->setCellValue('H12', 'RATE')->getStyle('H12')->getAlignment()->setHorizontal('center');
         $sheet->setCellValue('I12', 'OTHERS')->getStyle('I12')->getAlignment()->setHorizontal('center');
         $sheet->setCellValue('J12', 'TOTAL AMOUNT')->getColumnDimension('J')->setAutoSize(true);
-		
-		
+
+
 
         $no = 1;
         $x = 13;
@@ -859,7 +871,7 @@ class Invoice extends CI_Controller
                     $sheet->setCellValue('H' . $x, $rate)->getColumnDimension('H')
                         ->setAutoSize(true);
                 }
-                 $sheet->setCellValue('I' . $x, rupiah($inv['others']))->getColumnDimension('I')
+                $sheet->setCellValue('I' . $x, rupiah($inv['others']))->getColumnDimension('I')
                     ->setAutoSize(true);
                 if ($total_sales != 0) {
                     $sheet->getStyle("J" . $x)->getNumberFormat()->setFormatCode("(\"Rp.\"* #,##0);(\"Rp.\"* \(#,##0\);(\"$\"* \"-\"??);(@_)");
@@ -901,15 +913,15 @@ class Invoice extends CI_Controller
                             ->setAutoSize(true);
                     }
                     $sheet->setCellValue('I' . $x, rupiah($inv['others']))->getColumnDimension('I')
-                    ->setAutoSize(true);
-                if ($total_sales != 0) {
-                    $sheet->getStyle("J" . $x)->getNumberFormat()->setFormatCode("(\"Rp.\"* #,##0);(\"Rp.\"* \(#,##0\);(\"$\"* \"-\"??);(@_)");
-                    $sheet->setCellValue('J' . $x, $total_sales)->getColumnDimension('J')
                         ->setAutoSize(true);
-                } else {
-                    $sheet->setCellValue('J' . $x, $rate)->getColumnDimension('J')
-                        ->setAutoSize(true);
-                }
+                    if ($total_sales != 0) {
+                        $sheet->getStyle("J" . $x)->getNumberFormat()->setFormatCode("(\"Rp.\"* #,##0);(\"Rp.\"* \(#,##0\);(\"$\"* \"-\"??);(@_)");
+                        $sheet->setCellValue('J' . $x, $total_sales)->getColumnDimension('J')
+                            ->setAutoSize(true);
+                    } else {
+                        $sheet->setCellValue('J' . $x, $rate)->getColumnDimension('J')
+                            ->setAutoSize(true);
+                    }
                     $total_koli = $total_koli + $d['koli'];
                 }
             }
@@ -1027,7 +1039,7 @@ class Invoice extends CI_Controller
     //         $this->load->view('finance/v_cetak_invoice_excell', $data);
     //     }
     // }
-	 public function invoicePaid()
+    public function invoicePaid()
     {
         $shipment_id = $this->input->post('shipment_id');
         if ($shipment_id == NULL) {
