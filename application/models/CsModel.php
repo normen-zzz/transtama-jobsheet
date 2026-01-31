@@ -24,6 +24,7 @@ class CsModel extends M_Datatables
 		$this->db->join('tb_user c', 'a.id_sales=c.id_user');
 		$this->db->where('b.status_so', 1);
 		$this->db->where('b.deleted', 0);
+		$this->db->where('b.tgl_pickup >=', '2025-09-01');
 		$this->db->order_by('b.id', 'DESC');
 		$query = $this->db->get();
 		return $query;
