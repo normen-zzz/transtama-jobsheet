@@ -887,7 +887,7 @@
                 <div class="col-md-4">
 
                     <div class="card card-custom gutter-b example example-compact" style="height:100px;">
-                        <h3 class="text-title text-center mt-2"><i class="fa fa-calendar text-warning"></i> Wait GM Check Revision</h3> <br>
+                        <h3 class="text-title text-center mt-2"><i class="fa fa-calendar text-warning"></i> Wait Director Check Revision</h3> <br>
 
                     </div>
 
@@ -997,13 +997,13 @@
                     </div>
                 <?php } ?>
 
-                <!-- bagian gm  -->
+                <!-- bagian Director  -->
 
                 <?php if ($status_revisi['status_approve_gm'] == 0 && $status_revisi['status_approve_gm'] != NULL) { ?>
 
                     <div class="col-md-4">
                         <div class="card card-custom gutter-b example example-compact" style="height:100px;">
-                            <h3 class="text-title text-center mt-2"><i class="fa fa-window-close text-danger"></i> Revision Decline By GM</h3> <br>
+                            <h3 class="text-title text-center mt-2"><i class="fa fa-window-close text-danger"></i> Revision Decline By Director</h3> <br>
 
                         </div>
                     </div>
@@ -1011,7 +1011,7 @@
                 <?php } elseif ($status_revisi['status_approve_gm'] == 1) { ?>
                     <div class="col-md-4">
                         <div class="card card-custom gutter-b example example-compact" style="height:100px;">
-                            <h3 class="text-title text-center mt-2"> <i class="fa fa-check text-success"></i> Revision Approved By GM</h3> <br>
+                            <h3 class="text-title text-center mt-2"> <i class="fa fa-check text-success"></i> Revision Approved By Director</h3> <br>
                             <h4 class="text-title text-center"><?= $status_revisi['tgl_approve_gm'] ?></h4>
                         </div>
                     </div>
@@ -1019,7 +1019,7 @@
                     <div class="col-md-4">
 
                         <div class="card card-custom gutter-b example example-compact" style="height:100px;">
-                            <h3 class="text-title text-center mt-2"><i class="fa fa-calendar text-warning"></i> Wait GM Check Revision</h3> <br>
+                            <h3 class="text-title text-center mt-2"><i class="fa fa-calendar text-warning"></i> Wait Director Check Revision</h3> <br>
                             <?php if ($this->session->userdata('id_jabatan') == 11 && $this->session->userdata('id_atasan') == 0 && $status_revisi['status_approve_sm'] == 1) { ?>
                                 <div class="row">
 

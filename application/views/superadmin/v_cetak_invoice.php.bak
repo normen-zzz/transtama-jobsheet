@@ -78,7 +78,7 @@
     } */
 </style>
 
-<body style="font-family:'Open Sans',sans-serif; margin:-5px; margin-top:0px; margin-bottom: 10px;" onload="window.print()">
+<body style="font-family:'Open Sans',sans-serif; margin:-5px; margin-top:0px; margin-bottom: 0px;" onload="window.print()">
 
     <div class="content" style="border: none;margin-left: -5px; margin-right:5px">
         <div class="header">
@@ -227,7 +227,7 @@
                         $total_amount = 0;
 
                         foreach ($invoice as $inv) {
-                            $get_do = $this->db->get_where('tbl_no_do', ['shipment_id' => $inv['shipment_id']]);
+                          $get_do = $this->db->get_where('tbl_no_do', ['shipment_id' => $inv['shipment_id'],'no_do !='     => '',]);
                             $data_do = $get_do->result_array();
                             $total_do = $get_do->num_rows();
                             $no = 1;
@@ -368,6 +368,7 @@
 
                                 foreach ($data_do as $d) {
                                 ?>
+								
 
                                     <tr>
 
@@ -719,6 +720,7 @@
 
                             <?php if ($info['is_ppn'] == 1) {
                             ?>
+							
 
                                 <td class="font-weight-bold" style="text-align: center;font-weight:bold;height:3%">
                                     PPN <?= $info['percent_ppn'] ?> %
@@ -812,6 +814,7 @@
                                 <td style="border-left:none">
                                 </td>
                             <?php  } ?>
+							
 
 
                             <td class="font-weight-bold" style="text-align: center; font-weight:bold;height:3%;">
@@ -882,7 +885,15 @@
                         $totalAdmin = 0;
                         foreach ($invoice as $inv) {
 
-                            $get_do = $this->db->query('SELECT a.*,b.remarks FROM tbl_no_do a LEFT JOIN remarks_do b ON a.id_berat = b.id_do  WHERE a.shipment_id = "' . $inv['shipment_id'] . '"');
+                            $get_do = $this->db->query('
+    SELECT a.*, b.remarks 
+    FROM tbl_no_do a 
+    LEFT JOIN remarks_do b ON a.id_berat = b.id_do 
+    WHERE a.shipment_id = "' . $inv['shipment_id'] . '" 
+    AND a.no_do IS NOT NULL 
+    AND a.no_do != ""
+');
+
                             $data_do = $get_do->result_array();
                             $total_do = $get_do->num_rows();
 
@@ -929,7 +940,7 @@
                                     ?>
                                         <td style="text-align: center;width:10%"><?= $inv['so_note']; ?></td>
                                     <?php  } ?>
-                                    <?php if ($inv['service_type'] = '3c8b5fdd11cb10506705c16773204f8a') {
+                                    <?php if ($inv['service_type'] == '3c8b5fdd11cb10506705c16773204f8a') {
                                         $smu = $this->db->query('SELECT smu FROM bagging WHERE id_bagging = '.$inv['bagging'].'')->row_array();
                                         ?>
                                       <td style="text-align: center;width:8%"><?= $smu['smu'] ?></td>
@@ -1611,15 +1622,23 @@
 
                 <p style="font-weight: bold; <?php if ($total_invoice >= 11 && $total_invoice <= 19) { ?> margin-top: 80px; <?php } else {
                                                                                                                             if ($total_all_do >= 14 && $total_all_do <= 20) {
-                                                                                                                                echo "margin-top: 80px";
+                                                                                                                                echo "margin-top: 50px";
                                                                                                                             } else { ?> margin-top: 10px; <?php }
                                                                                                                                                     } ?>">
                     <?php
                     $f = new NumberFormatter('en', NumberFormatter::SPELLOUT);
-                    $terbilang = $f->format(round($total_amount + $totalAdmin)) . ' Rupiahs';
-                    $terbilang = ucwords($terbilang);
-
-                    echo "#" . $terbilang . "#";
+                    if ($totalAdmin) {
+                        $terbilang = $f->format(round($total_amount + $totalAdmin)) . ' Rupiahs';
+                        $terbilang = ucwords($terbilang);
+    
+                        echo "#" . $terbilang . "#";
+                    } else{
+                        $terbilang = $f->format(round($total_amount)) . ' Rupiahs';
+                        $terbilang = ucwords($terbilang);
+    
+                        echo "#" . $terbilang . "#";
+                    }
+                    
                     ?>
                 </p>
             </div>

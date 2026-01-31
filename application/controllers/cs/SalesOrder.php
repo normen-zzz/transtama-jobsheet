@@ -30,6 +30,17 @@ class SalesOrder extends CI_Controller
         // die;
         $this->backend->display('cs/v_js_masuk', $data);
     }
+
+   public function getDataJsMasuk()
+    {
+        $query  = "SELECT a.tgl_pickup AS tgl_pickup,b.shipment_id,b.shipper,b.tree_consignee,b.deadline_pic_js,c.nama_user,d.id_aktivasi FROM tbl_so AS a INNER JOIN tbl_shp_order AS b ON a.id_so = b.id_so INNER JOIN tb_user AS c ON a.id_sales = c.id_user LEFT JOIN tbl_aktivasi_cs AS d ON b.shipment_id = d.shipment_id ";
+        $search = array('b.shipper','b.shipment_id');
+        $where  = array('b.status_so' => 1,'b.deleted' => 0,'a.tgl_pickup >' =>'2025-09-01');
+        $isWhere = null;
+        $group = '';
+        header('Content-Type: application/json');
+        echo $this->M_Datatables->get_tables_query($query, $search, $where, $isWhere, $group);
+    }
     public function revisiSo()
     {
         $data['title'] = 'List Request Revisi Sales Order';
@@ -642,6 +653,7 @@ class SalesOrder extends CI_Controller
             'reason' => $this->input->post('reason'),
             'request_by' => $this->session->userdata('nama_user'),
             'id_role' => $this->session->userdata('id_role'),
+            'type' => $this->input->post('type'),
         );
         $insert = $this->db->insert('tbl_aktivasi_cs', $data);
         if ($insert) {

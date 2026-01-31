@@ -270,6 +270,37 @@ class CsModel extends M_Datatables
 		$query = $this->db->get();
 		return $query;
 	}
+	function getJsApproveFinance2()
+	{
+		$this->db->select([
+			'b.tgl_pickup',
+			'b.shipment_id',
+			'b.id',
+			'b.so_id',
+			'b.jobsheet_id',
+			'b.shipper',
+			'b.tree_consignee',
+			'b.pic_invoice',
+			'b.status_so',
+			'b.id_so',
+			'c.nama_user',
+			'r.status_revisi',
+			'i.id_invoice as invoice_id',
+			'GROUP_CONCAT(d.no_do SEPARATOR ", ") as no_do_list' // Menggabungkan semua no_do dalam satu kolom
+		]);
+		$this->db->from('tbl_shp_order b');
+		$this->db->join('tbl_so a', 'a.id_so = b.id_so', 'inner');
+		$this->db->join('tb_user c', 'a.id_sales = c.id_user', 'left');
+		$this->db->join('tbl_revisi_so r', 'b.id = r.shipment_id', 'left');
+		$this->db->join('tbl_invoice i', 'b.id = i.shipment_id', 'left');
+		$this->db->join('tbl_no_do d', 'b.shipment_id = d.shipment_id', 'left');
+		$this->db->where('b.status_so', 4);
+		$this->db->group_by('b.id'); // Untuk menghindari duplikasi
+		$this->db->order_by('b.status_so', 'DESC');
+
+		return $this->db->get()->result_array();
+	}
+
 
 	function getShipmentAp()
 	{
@@ -308,9 +339,9 @@ class CsModel extends M_Datatables
 	{
 		$this->db->select('a.*, b.service_name, c.nama_user');
 		$this->db->from('tbl_shp_order a');
-		$this->db->join('tb_service_type b', 'a.service_type=b.code');
-		$this->db->join('tbl_so d', 'a.id_so=d.id_so');
-		$this->db->join('tb_user c', 'd.id_sales=c.id_user');
+		$this->db->join('tb_service_type b', 'a.service_type=b.code', 'LEFT');
+		$this->db->join('tbl_so d', 'a.id_so=d.id_so', 'LEFT');
+		$this->db->join('tb_user c', 'd.id_sales=c.id_user', 'LEFT');
 		$this->db->where('a.id', $id);
 		$query = $this->db->get();
 		return $query;
@@ -329,10 +360,11 @@ class CsModel extends M_Datatables
 	function getRevisiSoNew()
 	{
 		$this->db->select('a.shipment_id,a.tgl_pickup,a.so_id,a.jobsheet_id,a.shipper,a.tree_consignee,a.id, b.created_at as tgl_so_new, b.alasan, b.status_revisi, c.nama_user');
-		$this->db->from('tbl_shp_order a');
-		$this->db->join('tbl_revisi_so b', 'a.id=b.shipment_id');
+		$this->db->from('tbl_revisi_so b');
+		$this->db->join('tbl_shp_order a', 'a.id=b.shipment_id');
 		$this->db->join('tbl_so d', 'a.id_so=d.id_so');
 		$this->db->join('tb_user c', 'd.id_sales=c.id_user');
+		
 		$this->db->order_by('b.id_revisi', 'DESC');
 		$query = $this->db->get();
 		return $query;
